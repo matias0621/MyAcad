@@ -1,4 +1,4 @@
-# Proyecto Final Programacion III - E-Commerce de tecnologia
+# Proyecto Final Programacion IV - MyAcad (gestión académica)
 ## <ins>Tecnologías</ins>  
 [![My Skills](https://skillicons.dev/icons?i=html,css,angular,ts,java,spring,mysql)](https://skillicons.dev)  
 ## <ins>Descripción</ins>  

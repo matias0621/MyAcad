@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Enum;
 
 public enum Role {
-    TEACHER, STUDENT, MANAGER;
+    TEACHER, STUDENT;
+    //Agregar MANAGER CUANDO ESTE
 }

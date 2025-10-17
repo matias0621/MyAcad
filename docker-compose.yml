@@ -1,42 +1,38 @@
 version: "3.9"
 
 services:
-  db:
-    image: mysql:latest
+  mysql-db:
+    image: mysql:8.0
     container_name: mysql-db
-    restart: always
-    env_file:
-      - ./backend/.env
     environment:
-      MYSQL_ROOT_PASSWORD: ${DBPASS}
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: ${DBUSER}
-      MYSQL_PASSWORD: ${DBPASS}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: MyAcad
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - db_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
 
-  backend:
-    build: ./backend
+  spring-backend:
+    image: myacad-backend
     container_name: spring-backend
-    env_file:
-      - ./backend/.env
+    depends_on:
+      - mysql-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/MyAcad?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      default:
+        aliases:
+          - backend 
     ports:
       - "8080:8080"
-    depends_on:
-      - db
-    restart: on-failure
 
-  frontend:
-    build: ./frontend
+  angular-frontend:
+    image: myacad-frontend
     container_name: angular-frontend
     ports:
       - "4200:80"
-    depends_on:
-      - backend
-    volumes:
-      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
 volumes:
-  db_data:
+  mysql_data: {}

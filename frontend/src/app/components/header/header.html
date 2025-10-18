@@ -1,7 +1,40 @@
 <header>
-    <ul>
-        <li>
-            <a routerLink="students">Alumnos</a>
-        </li>
-    </ul>
+    <a routerLink="">
+        <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+    </a>
+    <nav>
+        <div class="dropdown">
+            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Usuarios
+            </button>
+            <ul class="dropdown-menu">
+                <li><a routerLink="">Inicio</a></li>
+                <li><a routerLink="students">Alumnos</a></li>
+                <li><a routerLink="teachers">Docentes</a></li>
+                <li><a routerLink="managers">Gestores</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Academico
+            </button>
+            <ul class="dropdown-menu">
+                <li><a routerLink="">Materias</a></li>
+                <li><a routerLink="">Mesas de examen</a></li>
+                <li><a routerLink="">Correlativas</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Ofertas académicas
+            </button>
+            <ul class="dropdown-menu">
+                <li><a routerLink="">Carreras</a></li>
+                <li><a routerLink="">Cursos</a></li>
+            </ul>
+        </div>
+    </nav>
 </header>

@@ -1,6 +1,6 @@
 package MyAcad.Project.backend.Repository;
 
-import MyAcad.Project.backend.Model.Users.Career;
+import MyAcad.Project.backend.Model.Careers.Career;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

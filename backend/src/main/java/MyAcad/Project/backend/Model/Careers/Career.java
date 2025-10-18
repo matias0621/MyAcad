@@ -1,4 +1,4 @@
-package MyAcad.Project.backend.Model.Users;
+package MyAcad.Project.backend.Model.Careers;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

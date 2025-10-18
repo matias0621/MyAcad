@@ -1,14 +1,12 @@
 package MyAcad.Project.backend.Service;
 
 import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
-import MyAcad.Project.backend.Model.Users.Career;
-import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Careers.Career;
 import MyAcad.Project.backend.Repository.CareerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

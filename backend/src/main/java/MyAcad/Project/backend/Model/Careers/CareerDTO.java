@@ -1,9 +1,8 @@
-package MyAcad.Project.backend.Model.Users;
+package MyAcad.Project.backend.Model.Careers;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor

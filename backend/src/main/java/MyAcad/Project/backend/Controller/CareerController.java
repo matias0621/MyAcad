@@ -1,13 +1,9 @@
 package MyAcad.Project.backend.Controller;
 
 
-import MyAcad.Project.backend.Enum.Role;
-import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
-import MyAcad.Project.backend.Model.Users.Career;
-import MyAcad.Project.backend.Model.Users.CareerDTO;
-import MyAcad.Project.backend.Model.Users.Student;
-import MyAcad.Project.backend.Model.Users.StudentDTO;
+import MyAcad.Project.backend.Model.Careers.Career;
+import MyAcad.Project.backend.Model.Careers.CareerDTO;
 import MyAcad.Project.backend.Service.CareerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;

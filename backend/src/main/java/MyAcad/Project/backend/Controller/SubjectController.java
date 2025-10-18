@@ -2,6 +2,7 @@ package MyAcad.Project.backend.Controller;
 
 import MyAcad.Project.backend.Model.Subjects.SubjectsDTO;
 import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+
 import MyAcad.Project.backend.Service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ public class SubjectController {
 
     // Crear una nueva materia
     @PostMapping
-    public ResponseEntity<SubjectsEntity> createSubject(@RequestBody SubjectsDTO subject) {
+    public ResponseEntity<SubjectsDTO> createSubject(@RequestBody SubjectsDTO subject) {
         subjectService.createSubject(subject);
         return ResponseEntity.ok(subject);
     }

@@ -1,1 +1,14 @@
-<p>managers works!</p>
+<h1 style="text-align: center;">Gestores</h1>
+<app-user-form endpoint="managers" (added)="getManagers()"></app-user-form>
+<ul>
+    @for (manager of managers; track $index) {
+        <li>
+            {{manager.name}} {{manager.lastName}}
+            <button (click)="deleteManager(manager.id)">Eliminar</button>
+        </li>
+    }@empty {
+        <li>
+            <p style="color: red;"> Aun no hay ningun gestor cargado.</p>
+        </li>
+    }
+</ul>

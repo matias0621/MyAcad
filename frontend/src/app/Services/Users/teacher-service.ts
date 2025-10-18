@@ -12,11 +12,14 @@ export class TeacherService {
     private http: HttpClient
   ) { }
 
-  getStudents() {
+  getTeachers() {
     return this.http.get<Teacher[]>(this.API_URL);
   }
 
-  postStudent(teacher: Teacher) {
+  postTeacher(teacher: Teacher) {
     return this.http.post<Teacher>(this.API_URL, teacher);
+  }
+  deleteTeacher(id: number) {
+    return this.http.delete<Teacher>(`${this.API_URL}/${id}`);
   }
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/students")
 @AllArgsConstructor
@@ -36,7 +35,7 @@ public class StudentController {
     }
 
     //Obtener por usuario
-    @GetMapping("/username/{username}")
+    @GetMapping("/{username}")
     public List<Student> getByUsernameIgnoringCase(@PathVariable(name = "username", required = false) String username) {
         if (username == null || username.isEmpty()) {
             return listStudents();
@@ -46,7 +45,7 @@ public class StudentController {
     }
 
     //Obtener por id
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
         Optional<Student> student = services.getById(id);
         if (student.isPresent()) {
@@ -70,7 +69,7 @@ public class StudentController {
     }
 
     //DELETE
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }

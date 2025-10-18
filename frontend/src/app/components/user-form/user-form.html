@@ -1,1 +1,46 @@
-<p>user-form works!</p>
+<form [formGroup]="form" (submit)="OnSubmit()">
+    <fieldset>
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" formControlName="name">
+        @if (form.controls['name'].invalid && form.controls['name'].touched) {
+        <p>El nombre debe tener entre 3 y 30 caracteres, solo letras.</p>
+        }
+    </fieldset>
+
+    <fieldset>
+        <label for="lastName">Apellido:</label>
+        <input type="text" id="lastName" name="lastName" formControlName="lastName">
+        @if (form.controls['lastName'].invalid && form.controls['lastName'].touched) {
+        <p>El apellido debe tener entre 2 y 30 caracteres, solo letras.</p>
+        }
+    </fieldset>
+
+    <fieldset id="email-fieldset">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" formControlName="email">
+        @if (form.controls['email'].invalid && form.controls['email'].touched) {
+        <p>El email debe tener entre 3 y 100 caracteres.</p>
+        }
+    </fieldset>
+
+    <fieldset>
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" name="username" formControlName="username">
+        @if (form.controls['username'].invalid && form.controls['username'].touched) {
+        <p>El usuario debe tener entre 3 y 30 caracteres.</p>
+        }
+    </fieldset>
+
+    <fieldset>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" formControlName="password">
+        @if (form.controls['password'].invalid && form.controls['password'].touched) {
+        <p>La contraseña debe tener entre 6 y 15 caracteres.</p>
+        }
+    </fieldset>
+
+    <div id="buttons">
+        <button type="button" (click)="cleanForm()">Limpiar</button>
+        <button type="submit" [disabled]="form.invalid">Agregar</button>
+    </div>
+</form>

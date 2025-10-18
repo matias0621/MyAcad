@@ -10,13 +10,17 @@ export class StudentService {
 
   constructor(
     private http: HttpClient
-  ){}
+  ) { }
 
-  getStudents(){
+  getStudents() {
     return this.http.get<Student[]>(this.API_URL);
   }
 
-  postStudent(student : Student){
+  postStudent(student: Student) {
     return this.http.post<Student>(this.API_URL, student);
+  }
+
+  deleteStudent(id: number) {
+    return this.http.delete<Student>(`${this.API_URL}/${id}`);
   }
 }

@@ -12,11 +12,15 @@ export class ManagerService {
     private http: HttpClient
   ) { }
 
-  getStudents() {
+  getManagers() {
     return this.http.get<Manager[]>(this.API_URL);
   }
 
-  postStudent(manager: Manager) {
+  postManager(manager: Manager) {
     return this.http.post<Manager>(this.API_URL, manager);
   }
+
+  deleteManager(id: number) {
+      return this.http.delete<Manager>(`${this.API_URL}/${id}`);
+    }
 }

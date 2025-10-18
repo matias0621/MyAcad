@@ -1,46 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { StudentService } from '../../../Services/Users/student-service';
+import { ReactiveFormsModule } from '@angular/forms';
 import Student from '../../../Models/Users/Student';
+import { StudentService } from '../../../Services/Users/student-service';
+import { UserForm } from "../../../components/user-form/user-form";
 
 @Component({
   selector: 'app-students',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, UserForm],
   templateUrl: './students.html',
   styleUrl: './students.css'
 })
 export class Students implements OnInit {
   students !: Student[];
-  form !: FormGroup;
 
   constructor(
-    private service: StudentService,
-    private fb: FormBuilder
+    private service: StudentService
   ) { }
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      name: [''],
-      lastName: [''],
-      email: [''],
-      username: [''],
-      password: [''],
-      legajo: ['']
-    })
-
     this.getStudents();
-  }
-
-  OnSubmit() {
-    this.service.postStudent(this.form.value).subscribe({
-      next: (data) => {this.getStudents() },
-      error: (error) => { console.error(error) }
-    })
   }
 
   getStudents() {
     this.service.getStudents().subscribe({
       next: (data) => { this.students = data },
+      error: (error) => { console.error(error) }
+    })
+  }
+
+  deleteStudent(id: number) {
+    this.service.deleteStudent(id).subscribe({
+      next: (data) => { this.getStudents() },
       error: (error) => { console.error(error) }
     })
   }

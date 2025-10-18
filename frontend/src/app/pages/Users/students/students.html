@@ -1,25 +1,10 @@
-<form [formGroup]="form" (submit)="OnSubmit()">
-    <label for="name">Nombre:</label>
-    <input type="text" id="name" name="name" formControlName="name">
-
-    <label for="lastName">Apellido:</label>
-    <input type="text" id="lastName" name="lastName" formControlName="lastName">
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" formControlName="email">
-
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" formControlName="username">
-
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" formControlName="password">
-    <button type="submit">Agregar Estudiante</button>
-</form>
-
+<h1 style="text-align: center;">Alumnos</h1>
+<app-user-form endpoint="students" (added)="getStudents()"></app-user-form>
 <ul>
     @for (student of students; track $index) {
         <li>
-            {{student.name}} {{student.lastName}} 
+            {{student.name}} {{student.lastName}}
+            <button (click)="deleteStudent(student.id)">Eliminar</button>
         </li>
     }@empty {
         <li>

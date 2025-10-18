@@ -32,11 +32,14 @@ public class CareerService {
         return repository.findByNameContainingIgnoreCase(name);
     }
 
-    public ResponseEntity<Void> delete(Long id){
-        if (!repository.existsById(id)) {
+    public ResponseEntity<Void> delete(Long id) {
+        Optional<Career> optionalCareer = repository.findById(id);
+        if (optionalCareer.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        repository.deleteById(id);
+        Career career = optionalCareer.get();
+        career.setActive(false);
+        repository.save(career);
         return ResponseEntity.noContent().build();
     }
 

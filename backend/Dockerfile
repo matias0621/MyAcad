@@ -14,6 +14,10 @@ RUN ./mvnw clean package -DskipTests
 # Etapa 2: imagen final ligera con JRE
 FROM eclipse-temurin:21-jre
 WORKDIR /app
+
+# Install curl for health checks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080

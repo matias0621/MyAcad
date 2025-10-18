@@ -21,7 +21,11 @@ public class SubjectsEntity {
     private String description;
     private int semesters;
 
-    @OneToMany
-    @JoinColumn(name = "subject_id")
-    private List<SubjectsEntity> subjects_for_semester;
+    @ManyToMany
+    @JoinTable(
+            name = "subject_prerequisites",
+            joinColumns = @JoinColumn(name = "subject_id"),
+            inverseJoinColumns = @JoinColumn(name = "prerequisite_id")
+    )
+    private List<SubjectsEntity> prerequisites;
 }

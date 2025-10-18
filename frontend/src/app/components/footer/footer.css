@@ -1,0 +1,77 @@
+footer{
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    background-color: var(--color-5);
+    box-shadow: 0 5px 20px 0 #4f7091f5;
+    z-index: 100;
+    min-height: 7em;
+}
+li{
+    list-style: none;
+}
+section{
+    text-align: center;
+}
+/* CONTACTO */
+#contact-list, #social-media-list{
+    display: flex;
+    gap: .5em;
+}
+.contact-item{
+    padding: .5em;
+    border-radius: 5px;
+    background-color: var(--color-1);
+    color: var(--color-4);
+}
+.contact-item:hover{
+    background-color: var(--color-4);
+    color: var(--color-3);
+}
+
+/* REDES SOCIALES */
+.social-media-item{
+    padding: .5em;
+    border-radius: 50%;
+}
+#facebook{
+    background-color: #3b5998;
+    color: white;
+}
+#facebook:hover{
+    background-color: #2d4373;
+}
+#X{
+    background-color: #000;
+    color: white;
+}
+#X:hover{
+    background-color: #494949;
+}
+#instagram{
+    background-color: #b61468;
+    color: white;
+}
+#instagram:hover{
+    background-color: #770d44;
+}
+#linkedin{
+    background-color: #0e76a8;
+    color: white;
+}
+#linkedin:hover{
+    background-color: #08415c;
+}
+#youtube{
+    background-color: #ff0000;
+    color: white;
+}
+#youtube:hover{
+    background-color: #be0000;
+}
+/* SUBTITULOS */
+h3{
+    color: var(--color-3);
+    margin-bottom: 1em;
+}

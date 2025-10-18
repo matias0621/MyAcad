@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { StudentService } from '../../Services/student-service';
-import Student from '../../Models/Student';
+import { StudentService } from '../../../Services/Users/student-service';
+import Student from '../../../Models/Users/Student';
 
 @Component({
   selector: 'app-students',

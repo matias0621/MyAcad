@@ -11,13 +11,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class Student extends User {
-    private String legajo;
-
-    public Student(StudentDTO dto) {
+public class Manager extends User{
+    public Manager(ManagerDTO dto) {
         super(dto);
-        this.legajo = dto.getLegajo();
-        this.role = Role.STUDENT;
+        this.role = Role.MANAGER;
     }
 }

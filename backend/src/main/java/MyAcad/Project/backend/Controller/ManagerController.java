@@ -3,9 +3,9 @@ package MyAcad.Project.backend.Controller;
 import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
-import MyAcad.Project.backend.Model.Users.Teacher;
-import MyAcad.Project.backend.Model.Users.TeacherDTO;
-import MyAcad.Project.backend.Service.TeacherService;
+import MyAcad.Project.backend.Model.Users.Manager;
+import MyAcad.Project.backend.Model.Users.ManagerDTO;
+import MyAcad.Project.backend.Service.ManagerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -16,30 +16,30 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/teachers")
+@RequestMapping("/manager")
 @AllArgsConstructor
-public class TeacherController {
-    private TeacherService services;
+public class ManagerController {
+    private ManagerService services;
 
     //GET
     //Listado
     @GetMapping()
-    public List<Teacher> listTeachers() {
+    public List<Manager> listManagers() {
         return services.list();
     }
 
     //Paginación
     @GetMapping("/paginated")
-    public Page<Teacher> listTeacherPaginated(@RequestParam(name = "page") int page,
+    public Page<Manager> listManagerPaginated(@RequestParam(name = "page") int page,
                                               @RequestParam(name = "size") int size) {
-        return services.listTeachersPaginated(page, size);
+        return services.listManagersPaginated(page, size);
     }
 
     //Obtener por usuario
     @GetMapping("/username/{username}")
-    public List<Teacher> getByUsernameIgnoringCase(@PathVariable(name = "username", required = false) String username) {
+    public List<Manager> getByUsernameIgnoringCase(@PathVariable(name = "username", required = false) String username) {
         if (username == null || username.isEmpty()) {
-            return listTeachers();
+            return listManagers();
         } else {
             return services.getByUsernameIgnoringCase(username);
         }
@@ -48,7 +48,7 @@ public class TeacherController {
     //Obtener por id
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Teacher> student = services.getById(id);
+        Optional<Manager> student = services.getById(id);
         if (student.isPresent()) {
             return ResponseEntity.ok(student.get());
         }else{
@@ -58,9 +58,9 @@ public class TeacherController {
 
     //POST
     @PostMapping
-    public ResponseEntity<?> addTeacher(@RequestBody TeacherDTO dto) {
+    public ResponseEntity<?> addManager(@RequestBody ManagerDTO dto) {
         try {
-            Teacher student = new Teacher(dto);
+            Manager student = new Manager(dto);
             student.setRole(Role.STUDENT);
             services.add(student);
             return ResponseEntity.ok(student);
@@ -71,13 +71,13 @@ public class TeacherController {
 
     //DELETE
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<Void> deleteTeacher(@PathVariable(name = "id") Long id){
+    public ResponseEntity<Void> deleteManager(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }
 
     //PUT
     @PutMapping
-    public ResponseEntity<?> updateTeacher(@RequestBody Teacher updatedUser) {
+    public ResponseEntity<?> updateManager(@RequestBody Manager updatedUser) {
         try {
             services.modify(updatedUser.getId(), updatedUser);
             return ResponseEntity.ok(updatedUser);

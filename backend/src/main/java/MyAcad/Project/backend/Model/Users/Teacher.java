@@ -4,7 +4,6 @@ import MyAcad.Project.backend.Enum.Role;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -12,8 +11,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Teacher extends User{
-    public Teacher(StudentDTO dto) {
+    public Teacher(TeacherDTO dto) {
         super(dto);
-        this.role = Role.STUDENT;
+        this.role = Role.TEACHER;
     }
 }

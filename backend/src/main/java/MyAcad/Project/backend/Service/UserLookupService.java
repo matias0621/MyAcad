@@ -5,6 +5,7 @@ import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.User;
+import MyAcad.Project.backend.Repository.ManagerRepository;
 import MyAcad.Project.backend.Repository.StudentRepository;
 import MyAcad.Project.backend.Repository.TeacherRepository;
 import lombok.AllArgsConstructor;
@@ -20,12 +21,14 @@ import java.util.Optional;
 public class UserLookupService implements UserDetailsService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final ManagerRepository managerRepository;
 
 
     public Optional<? extends User> findById(Long id, Role role) {
         return switch (role){
             case STUDENT -> studentRepository.findById(id);
             case TEACHER -> teacherRepository.findById(id);
+            case MANAGER -> managerRepository.findById(id);
         };
     }
 
@@ -34,8 +37,9 @@ public class UserLookupService implements UserDetailsService {
         if (student.isPresent()) return student;
 
         Optional<Teacher> teacher = teacherRepository.findByUsername(username);
-        return teacher;
-        //Agregar manager cuando se pueda y ponerle el if a teacher
+        if (teacher.isPresent()) return student;
+
+        return managerRepository.findByUsername(username);
     }
 
     public Optional<? extends User> findByEmail(String email) {
@@ -43,7 +47,9 @@ public class UserLookupService implements UserDetailsService {
         if (student.isPresent()) return student;
 
         Optional<Teacher> teacher = teacherRepository.findByEmail(email);
-        return teacher;
+        if (teacher.isPresent()) return teacher;
+
+        return managerRepository.findByEmail(email);
     }
 
     @Override

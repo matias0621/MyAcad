@@ -3,8 +3,8 @@ package MyAcad.Project.backend.Service;
 import MyAcad.Project.backend.Configuration.SecurityConfig;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
-import MyAcad.Project.backend.Model.Users.Teacher;
-import MyAcad.Project.backend.Repository.TeacherRepository;
+import MyAcad.Project.backend.Model.Users.Manager;
+import MyAcad.Project.backend.Repository.ManagerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +17,12 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class TeacherService {
-    private final TeacherRepository repository;
+public class ManagerService {
+    private final ManagerRepository repository;
     private final UserLookupService userLookupService;
     private PasswordEncoder passwordEncoder;
 
-    public void add(Teacher t) {
+    public void add(Manager t) {
         if (userLookupService.findByUsername(t.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistsException();
         }else if(userLookupService.findByEmail(t.getEmail()).isPresent()) {
@@ -32,11 +32,11 @@ public class TeacherService {
         repository.save(t);
     }
 
-    public Page<Teacher> listTeachersPaginated(int page, int size) {
+    public Page<Manager> listManagersPaginated(int page, int size) {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Teacher> getByUsernameIgnoringCase(String username) {
+    public List<Manager> getByUsernameIgnoringCase(String username) {
         return repository.findByUsernameContainingIgnoreCase(username);
     }
 
@@ -48,12 +48,12 @@ public class TeacherService {
         return ResponseEntity.noContent().build();
     }
 
-    public List<Teacher> list() {
+    public List<Manager> list() {
         return repository.findAll();
     }
 
-    public void modify (Long id, Teacher t){
-        Teacher old = repository.findById(id).get();
+    public void modify (Long id, Manager t){
+        Manager old = repository.findById(id).get();
         //Verificar si cambió el usuario o el email
         if (!old.getEmail().equals(t.getEmail())) {
             //Verificar si el email nuevo ya se encuentra en uso
@@ -79,15 +79,15 @@ public class TeacherService {
         repository.save(old);
     }
 
-    public Optional<Teacher> getById(Long id){
+    public Optional<Manager> getById(Long id){
         return repository.findById(id);
     }
 
-    public Optional<Teacher> getByUsername(String username) {
+    public Optional<Manager> getByUsername(String username) {
         return repository.findByUsername(username);
     }
 
-    public Optional<Teacher> getByEmail(String email){
+    public Optional<Manager> getByEmail(String email){
         return repository.findByEmail(email);
     }
 }

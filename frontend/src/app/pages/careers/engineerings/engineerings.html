@@ -1,0 +1,14 @@
+<h1 style="text-align: center;">Ingenierías</h1>
+<app-programs-form endpoint="engineerings" (added)="getEngineerings()"></app-programs-form>
+<ul>
+    @for (engineering of engineerings; track $index) {
+        <li>
+            {{engineering.name}} - {{engineering.durationMonths}} meses
+            <button (click)="deleteEngineering(engineering.id)">Eliminar</button>
+        </li>
+    }@empty {
+        <li>
+            <p style="color: red;"> Aun no hay ninguna ingeniería cargada.</p>
+        </li>
+    }
+</ul>

@@ -20,6 +20,7 @@ public class SubjectsEntity {
     private String name;
     private String description;
     private int semesters;
+    private boolean subjectActive;
 
     @ManyToMany
     @JoinTable(
@@ -28,4 +29,8 @@ public class SubjectsEntity {
             inverseJoinColumns = @JoinColumn(name = "prerequisite_id")
     )
     private List<SubjectsEntity> prerequisites;
+
+    public boolean getSubjectActive(){
+        return subjectActive;
+    }
 }

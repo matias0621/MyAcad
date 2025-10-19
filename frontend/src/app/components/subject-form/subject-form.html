@@ -1,0 +1,30 @@
+<form [formGroup]="form" (submit)="OnSubmit()">
+    <fieldset>
+        <label for="name">Nombre de la materia:</label>
+        <input type="text" id="name" name="name" formControlName="name">
+        @if (form.controls['name'].invalid && form.controls['name'].touched) {
+        <p>El nombre debe tener entre 3 y 30 caracteres, solo letras.</p>
+        }
+    </fieldset>
+
+    <fieldset>
+        <label for="description">Descripcion:</label>
+        <input type="text" id="description" name="description" formControlName="description">
+        @if (form.controls['description'].invalid && form.controls['description'].touched) {
+        <p>El apellido debe tener entre 2 y 30 caracteres, solo letras.</p>
+        }
+    </fieldset>
+
+    <fieldset>
+        <label for="semester">Semestre:</label>
+        <input type="number" id="semester" name="semester" formControlName="semester">
+        @if (form.controls['semester'].invalid && form.controls['semester'].touched) {
+        <p>El email debe tener entre 3 y 100 caracteres.</p>
+        }
+    </fieldset>
+
+    <div id="buttons">
+        <button type="button" (click)="cleanForm()">Limpiar</button>
+        <button type="submit" [disabled]="form.invalid">Agregar</button>
+    </div>
+</form>

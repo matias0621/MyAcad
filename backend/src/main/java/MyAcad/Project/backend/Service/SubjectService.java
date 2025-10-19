@@ -31,13 +31,14 @@ public class SubjectService {
                 .description(subject.getDescription())
                 .semesters(subject.getSemesters())
                 .prerequisites(subject.getPrerequisites())
+                .subjectActive(true)
                 .build();
 
         subjectsRepository.save(s);
     }
 
     public Page<SubjectsEntity> listSubject(int page, int size) {
-        return subjectsRepository.findAll(PageRequest.of(page, size));
+       return subjectsRepository.findBySubjectActiveTrue(PageRequest.of(page, size));
     }
 
     public List<SubjectsEntity> getByNameIgnoringCase(String name) {
@@ -48,7 +49,9 @@ public class SubjectService {
         if (!subjectsRepository.existsById(subjectId)) {
             return ResponseEntity.notFound().build();
         }
-        subjectsRepository.deleteById(subjectId);
+        SubjectsEntity subject = subjectsRepository.findById(subjectId).orElseThrow();
+        subject.setSubjectActive(false);
+        subjectsRepository.save(subject);
         return ResponseEntity.noContent().build();
     }
 

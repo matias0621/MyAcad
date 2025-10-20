@@ -22,7 +22,7 @@ export class Courses implements OnInit{
 
   getCourses() {
     this.service.getCareers().subscribe({
-      next: (data) => { this.courses = data },
+      next: (data) => { this.courses = data.filter(c => c.careerType === 'COURSE') },
       error: (error) => { console.error(error) }
     })
   }

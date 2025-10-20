@@ -6,6 +6,7 @@ import { Managers } from './pages/Users/managers/managers';
 import { Courses } from './pages/courses/courses';
 import { Engineerings } from './pages/careers/engineerings/engineerings';
 import { Technicals } from './pages/careers/technicals/technicals';
+import { ProgramsEditForm } from './components/programs-edit-form/programs-edit-form';
 
 export const routes: Routes = [
     {path: '', component: Home},
@@ -14,6 +15,7 @@ export const routes: Routes = [
     {path: 'managers', component: Managers},
     {path: 'engineerings', component: Engineerings},
     {path: 'technicals', component: Technicals},
-    {path: 'courses', component: Courses}
+    {path: 'courses', component: Courses},
+    {path: 'programs-edit-form/:id', component: ProgramsEditForm}
 
 ];

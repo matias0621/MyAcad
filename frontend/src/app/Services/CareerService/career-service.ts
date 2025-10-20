@@ -16,6 +16,10 @@ export class CareerService {
     return this.http.get<Career[]>(this.API_URL);
   }
 
+  getCareerById(id: string) {
+    return this.http.get<Career>(`${this.API_URL}/${id}`);
+  }
+
   postCareer(career: Career) {
     return this.http.post<Career>(this.API_URL, career);
   }

@@ -6,4 +6,5 @@ export default interface Career{
     monthlyFee : number
     annualFee : number
     active : boolean
+    careerType?: string
 }

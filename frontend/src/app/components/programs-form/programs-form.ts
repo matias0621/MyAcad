@@ -25,30 +25,41 @@ export class ProgramsForm implements OnInit {
     this.formPrograms = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(60), Validators.pattern(/^[a-zA-Z\s]+$/)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200), Validators.pattern(/^[a-zA-Z\s]+$/)]],
-      durationMonths: ['', [Validators.required, Validators.min(1), Validators.max(30), Validators.pattern(/^[0-9]+$/)]],
-      monthlyFee: ['', [Validators.required, Validators.min(4), Validators.max(30), Validators.pattern(/^[0-9]+$/)]],
-      annualFee: ['', [Validators.required, Validators.min(4), Validators.max(30), Validators.pattern(/^[0-9]+$/)]],
+      durationMonths: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(30), Validators.pattern(/^[0-9]+$/)]],
+      monthlyFee: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30), Validators.pattern(/^[0-9]+$/)]],
+      annualFee: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30), Validators.pattern(/^[0-9]+$/)]],
       active: [true, [Validators.required]]
     })
   }
 
   OnSubmit() {
+    if (this.formPrograms.invalid) {
+      this.formPrograms.markAllAsTouched();
+      return;
+    }
     const raw = this.formPrograms.value;
+    let careerType = '';
+    if (this.endpoint === 'engineerings') careerType = 'ENGINEERING';
+    else if (this.endpoint === 'technicals') careerType = 'TECHNICAL';
+    else if (this.endpoint === 'courses') careerType = 'COURSE';
+
     const payload = {
       ...raw,
       durationMonths: Number(raw.durationMonths),
       monthlyFee: Number(raw.monthlyFee),
-      annualFee: Number(raw.annualFee)
+      annualFee: Number(raw.annualFee),
+      careerType
     };
-
     this.service.postCareer(payload).subscribe({
       next: (data) => {
-        console.log('P creada exitosamente:', data);
+        console.log('Programa creado exitosamente:', data);
         this.formPrograms.reset();
-        this.added.emit()
+        this.added.emit();
       },
-      error: (error) => { console.error(error) }
-    })
+      error: (error) => {
+        console.error('Error al crear el programa:', error);
+      }
+    });
   }
 
   cleanForm(){

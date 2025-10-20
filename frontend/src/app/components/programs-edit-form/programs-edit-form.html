@@ -1,4 +1,4 @@
-<form [formGroup]="formPrograms" (ngSubmit)="OnSubmit()">
+<form [formGroup]="formPrograms" (submit)="send()" (submit)="onSubmit()">
     <fieldset>
         <label for="name">Nombre:</label>
         <input type="text" id="name" formControlName="name">
@@ -44,6 +44,6 @@
 
     <div id="buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>
-        <button type="submit" [disabled]="formPrograms.invalid">Agregar</button>
+        <button type="submit" [disabled]="formPrograms.invalid">Actualizar</button>
     </div>
 </form>

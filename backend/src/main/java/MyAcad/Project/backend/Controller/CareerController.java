@@ -19,6 +19,10 @@ import java.util.Optional;
 public class CareerController {
     private CareerService services;
 
+    @GetMapping()
+    public List<Career> listCareers() {
+        return services.list();
+    }
     //Paginacion
     @GetMapping("/paginated")
     public Page<Career> listCareerPaginated(@RequestParam(name = "page") int page,
@@ -27,7 +31,7 @@ public class CareerController {
     }
 
     //Obtener por id
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
         Optional<Career> career = services.getById(id);
         if (career.isPresent()) {
@@ -50,13 +54,13 @@ public class CareerController {
     }
 
     //DELETE
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCareer(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }
 
     //PUT
-    @PutMapping("/id/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateCareer(@PathVariable Long id, @RequestBody CareerDTO dto){
         try {
             Career career = new Career(dto);
@@ -65,10 +69,5 @@ public class CareerController {
         }catch (UsernameAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
-    }
-
-    @GetMapping("/listCareers")
-    public List<Career> listCareers() {
-        return services.list();
     }
 }

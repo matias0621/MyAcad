@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class Engineerings implements OnInit {
   engineerings !: Career[];
-  showDisabled = false; 
+  showDisabled = false;
 
   constructor(
     private service: CareerService,
@@ -25,15 +25,12 @@ export class Engineerings implements OnInit {
 
   getEngineerings() {
     this.service.getCareers().subscribe({
-      next: (data) => {
-        this.engineerings = data.filter(c => c.careerType === 'ENGINEERING');
-        console.log('Ingenierías filtradas:', this.engineerings);
-      },
+      next: (data) => { this.engineerings = data },
       error: (error) => { console.error(error) }
     })
   }
 
-  deleteEngineering(id: string) {
+  deleteEngineering(id: number) {
     this.service.deleteCareer(id).subscribe({
       next: (data) => { this.getEngineerings() },
       error: (error) => { console.error(error) }
@@ -52,14 +49,16 @@ export class Engineerings implements OnInit {
   }
 
   viewDisabled(career: Career) {
-      if (confirm(`¿Deseas activar "${career.name}"?`)) {
-        career.active = true;
-        this.updateCareer(career);
-      }
+    if (confirm(`¿Deseas activar "${career.name}"?`)) {
+      career.active = true;
+      this.updateCareer(career);
     }
+  }
 
   toggleDisabledView() {
     this.showDisabled = !this.showDisabled;
   }
 
 }
+
+

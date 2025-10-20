@@ -10,7 +10,7 @@
         @if (engineering.active) {
             <li>
                 {{engineering.name}} - {{engineering.monthlyFee}} - {{engineering.annualFee}} - {{engineering.durationMonths}} meses
-                <button (click)="deleteEngineering(engineering.id)">Eliminar</button>
+                <button (click)="deleteEngineering(+engineering.id)">Eliminar</button>
                 <button (click)="updateCareer(engineering)">Actualizar</button>
             </li>
         }

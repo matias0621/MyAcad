@@ -33,33 +33,14 @@ export class ProgramsForm implements OnInit {
   }
 
   OnSubmit() {
-    if (this.formPrograms.invalid) {
-      this.formPrograms.markAllAsTouched();
-      return;
-    }
-    const raw = this.formPrograms.value;
-    let careerType = '';
-    if (this.endpoint === 'engineerings') careerType = 'ENGINEERING';
-    else if (this.endpoint === 'technicals') careerType = 'TECHNICAL';
-    else if (this.endpoint === 'courses') careerType = 'COURSE';
-
-    const payload = {
-      ...raw,
-      durationMonths: Number(raw.durationMonths),
-      monthlyFee: Number(raw.monthlyFee),
-      annualFee: Number(raw.annualFee),
-      careerType
-    };
-    this.service.postCareer(payload).subscribe({
+    this.service.postCareer(this.formPrograms.value, this.endpoint).subscribe({
       next: (data) => {
         console.log('Programa creado exitosamente:', data);
         this.formPrograms.reset();
-        this.added.emit();
+        this.added.emit()
       },
-      error: (error) => {
-        console.error('Error al crear el programa:', error);
-      }
-    });
+      error: (error) => { console.error(error) }
+    })
   }
 
   cleanForm(){

@@ -1,0 +1,27 @@
+<h1 style="text-align: center;">Tecnicaturas</h1>
+<app-programs-form endpoint="technicals" (added)="getTechnicals()"></app-programs-form>
+
+<button (click)="toggleDisabledView()">
+    {{ showDisabled ? 'Deshabilitadas' : 'Deshabilitadas' }}
+</button>
+
+<ul>
+    @for (technical of technicals; track $index) {
+    @if (technical.active) {
+    <li>
+        {{technical.name}} - {{technical.durationMonths}} meses
+        <button (click)="deleteTechnical(technical.id)">Eliminar</button>
+    </li>
+    }
+    @if (!technical.active && showDisabled) {
+    <li style="color: gray;">
+        {{technical.name}} - {{technical.durationMonths}} meses (INACTIVA)
+        <button (click)="viewDisabled(technical)">Activar</button>
+    </li>
+    }
+    }@empty {
+    <li>
+        <p style="color: red;"> Aun no hay ninguna tecnicatura cargada.</p>
+    </li>
+    }
+</ul>

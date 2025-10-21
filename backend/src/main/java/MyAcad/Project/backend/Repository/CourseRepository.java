@@ -1,6 +1,6 @@
 package MyAcad.Project.backend.Repository;
 
-import MyAcad.Project.backend.Model.Courses.Course;
+import MyAcad.Project.backend.Model.Programs.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

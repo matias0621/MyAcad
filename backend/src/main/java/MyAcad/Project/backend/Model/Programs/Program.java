@@ -1,20 +1,20 @@
-package MyAcad.Project.backend.Model.Courses;
+package MyAcad.Project.backend.Model.Programs;
 
-import MyAcad.Project.backend.Model.Careers.CareerDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import MyAcad.Project.backend.Enum.ProgramType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Entity
+@MappedSuperclass
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class Course {
+@ToString
+
+public abstract class Program {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -25,12 +25,18 @@ public class Course {
     private Double annualFee;
     private Boolean active;
 
-    public Course(CourseDTO dto) {
+    @Enumerated(EnumType.STRING)
+    protected ProgramType programType;
+
+    public Program(ProgramsDTO dto) {
+        this.id = dto.getId();
         this.name = dto.getName();
         this.description = dto.getDescription();
         this.durationMonths = dto.getDurationMonths();
         this.monthlyFee = dto.getMonthlyFee();
         this.annualFee = dto.getAnnualFee();
         this.active = dto.getActive();
+        this.programType = dto.getProgramType();
     }
+
 }

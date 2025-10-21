@@ -1,10 +1,11 @@
 package MyAcad.Project.backend.Controller;
 
-
 import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Career;
 import MyAcad.Project.backend.Model.Programs.CareerDTO;
-import MyAcad.Project.backend.Service.CareerService;
+import MyAcad.Project.backend.Model.Programs.Technical;
+import MyAcad.Project.backend.Model.Programs.TechnicalDTO;
+import MyAcad.Project.backend.Service.TechnicalService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,28 +15,29 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/careers")
+@RequestMapping("/technicals")
 @AllArgsConstructor
-public class CareerController {
-    private CareerService services;
+public class TechnicalController {
+    private TechnicalService services;
 
     @GetMapping()
-    public List<Career> listCareers() {
+    public List<Technical> listTechnicals() {
         return services.list();
     }
+
     //Paginacion
     @GetMapping("/paginated")
-    public Page<Career> listCareerPaginated(@RequestParam(name = "page") int page,
-                                             @RequestParam(name = "size") int size) {
-        return services.listCareersPaginated(page, size);
+    public Page<Technical> listTechnicalPaginated(@RequestParam(name = "page") int page,
+                                            @RequestParam(name = "size") int size) {
+        return services.listTechnicalPaginated(page, size);
     }
 
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Career> career = services.getById(id);
-        if (career.isPresent()) {
-            return ResponseEntity.ok(career.get());
+        Optional<Technical> technical = services.getById(id);
+        if (technical.isPresent()) {
+            return ResponseEntity.ok(technical.get());
         }else{
             return ResponseEntity.notFound().build();
         }
@@ -43,11 +45,11 @@ public class CareerController {
 
     //POST
     @PostMapping
-    public ResponseEntity<?> addCareer(@RequestBody CareerDTO dto) {
+    public ResponseEntity<?> addTechnical(@RequestBody TechnicalDTO dto) {
         try {
-            Career career = new Career(dto);
-            services.add(career);
-            return ResponseEntity.ok(career);
+            Technical technical = new Technical(dto);
+            services.add(technical);
+            return ResponseEntity.ok(technical);
         }catch (UsernameAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
@@ -55,17 +57,17 @@ public class CareerController {
 
     //DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCareer(@PathVariable(name = "id") Long id){
+    public ResponseEntity<Void> deleteTechnical(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }
 
     //PUT
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCareer(@PathVariable Long id, @RequestBody CareerDTO dto){
+    public ResponseEntity<?> updateTechnical(@PathVariable Long id, @RequestBody TechnicalDTO dto){
         try {
-            Career career = new Career(dto);
-            services.modify(id, career);
-            return ResponseEntity.ok(career);
+            Technical technical = new Technical(dto);
+            services.modify(id, technical);
+            return ResponseEntity.ok(technical);
         }catch (UsernameAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }

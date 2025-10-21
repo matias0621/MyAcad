@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/careers/**",
                                 "/courses/**",
                                 "/subject/**",
-                                "/technicals/**"
+                                "/technicals/**",
+                                "/final-exam/**"
                         ).permitAll()
                 )
                 .authenticationProvider(authenticationProvider(service))

@@ -37,6 +37,10 @@ public class SubjectService {
         subjectsRepository.save(s);
     }
 
+    public List<SubjectsEntity> getAllSubjects() {
+        return subjectsRepository.findAll();
+    }
+
     public Page<SubjectsEntity> listSubject(int page, int size) {
        return subjectsRepository.findBySubjectActiveTrue(PageRequest.of(page, size));
     }

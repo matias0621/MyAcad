@@ -1,11 +1,8 @@
 package MyAcad.Project.backend.Controller;
 
 import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
-import MyAcad.Project.backend.Model.Careers.Career;
-import MyAcad.Project.backend.Model.Careers.CareerDTO;
-import MyAcad.Project.backend.Model.Courses.Course;
-import MyAcad.Project.backend.Model.Courses.CourseDTO;
-import MyAcad.Project.backend.Service.CareerService;
+import MyAcad.Project.backend.Model.Programs.Course;
+import MyAcad.Project.backend.Model.Programs.CourseDTO;
 import MyAcad.Project.backend.Service.CourseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;

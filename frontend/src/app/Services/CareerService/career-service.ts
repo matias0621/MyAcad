@@ -20,8 +20,8 @@ export class CareerService {
     return this.http.post<any>(`${this.API_URL}/${endpoint}`, career);
   }
 
-  deleteCareer(id: number) {
-    return this.http.delete<any>(`${this.API_URL}${id}`);
+  deleteCareer(id: number, endpoint: string) {
+    return this.http.delete<any>(`${this.API_URL}/${endpoint}/${id}`);
   }
 
   updateCareer(career: Career) {

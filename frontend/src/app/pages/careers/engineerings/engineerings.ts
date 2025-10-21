@@ -32,7 +32,7 @@ export class Engineerings implements OnInit {
   }
 
   deleteEngineering(id: number) {
-    this.service.deleteCareer(id).subscribe({
+    this.service.deleteCareer(id, 'careers').subscribe({
       next: (data) => { this.getEngineerings() },
       error: (error) => { console.error(error) }
     })

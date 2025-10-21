@@ -25,7 +25,7 @@ export class Courses implements OnInit {
   }
 
   getCourses() {
-    this.service.getCareers('careers').subscribe({
+    this.service.getCareers('courses').subscribe({
       next: (data) => {
         this.courses = data;
       },
@@ -36,7 +36,7 @@ export class Courses implements OnInit {
   }
 
   deleteCourse(id: number) {
-    this.service.deleteCareer(id).subscribe({
+    this.service.deleteCareer(id, 'courses').subscribe({
       next: (data) => { this.getCourses() },
       error: (error) => { console.error(error) }
     })

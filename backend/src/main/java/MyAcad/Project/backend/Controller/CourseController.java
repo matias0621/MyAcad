@@ -49,7 +49,7 @@ public class CourseController {
     }
 
     //DELETE
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }
@@ -66,7 +66,7 @@ public class CourseController {
         }
     }
 
-    @GetMapping("/listCourses")
+    @GetMapping()
     public List<Course> listCourses() {
         return services.list();
     }

@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CareerService } from '../../../Services/CareerService/career-service';
 import Career from '../../../Models/Users/Careers/Career';
-import { ProgramsForm } from "../../../components/programs-form/programs-form";
 import { Router } from '@angular/router';
+import Technical from '../../../Models/Users/Careers/Technical';
+import { ProgramsForm } from '../../../components/programs-form/programs-form';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-technicals',
-  imports: [ProgramsForm],
+  imports: [ProgramsForm, ReactiveFormsModule],
   templateUrl: './technicals.html',
   styleUrl: './technicals.css'
 })
 export class Technicals implements OnInit{
-  technicals !: Career[];
+  technicals !: Technical[];
   showDisabled = false;
 
   constructor(
@@ -24,39 +26,28 @@ export class Technicals implements OnInit{
   }
 
   getTechnicals() {
-    this.service.getCareers().subscribe({
+    this.service.getCareers('careers').subscribe({
       next: (data) => { 
-        this.technicals = data.filter(c => c.careerType === 'TECHNICAL');
-        console.log('Tecnicaturas filtradas:', this.technicals);
+        this.technicals = data;
       },
       error: (error) => { 
-        console.error('Error al cargar tecnicaturas:', error);
+        console.error('E', error);
       }
     })
   }
 
-  deleteTechnical(id: string) {
+  deleteTechnical(id: number) {
     this.service.deleteCareer(id).subscribe({
       next: (data) => { this.getTechnicals() },
       error: (error) => { console.error(error) }
     })
   }
 
-  updateCareer(career: Career) {
-    this.router.navigate(['/programs-edit-form', career.id]);
-  }
-
-  postCareer(career: Career) {
-    this.service.postCareer(career).subscribe({
-      next: (data) => { this.getTechnicals() },
-      error: (error) => { console.error(error) }
-    })
-  }
 
   viewDisabled(career: Career) {
     if (confirm(`¿Deseas activar "${career.name}"?`)) {
-      career.active = true;
-      this.updateCareer(career);
+        career.active = true;
+        this.router.navigate(['/programs-edit-form', career.id]);
     }
   }
 

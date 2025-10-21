@@ -11,7 +11,6 @@
     <li>
         {{technical.name}} - {{technical.durationMonths}} meses
         <button (click)="deleteTechnical(technical.id)">Eliminar</button>
-        <button (click)="updateCareer(technical)">Actualizar</button>
     </li>
     }
     @if (!technical.active && showDisabled) {

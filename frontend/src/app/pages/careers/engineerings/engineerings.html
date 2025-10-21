@@ -1,5 +1,5 @@
 <h1 style="text-align: center;">Ingenierías</h1>
-<app-programs-form endpoint="engineerings" (added)="getEngineerings()"></app-programs-form>
+<app-programs-form endpoint="careers" (added)="getEngineerings()"></app-programs-form>
 
 <button (click)="toggleDisabledView()">
     {{ showDisabled ? 'Deshabilitadas' : 'Deshabilitadas' }}
@@ -10,8 +10,7 @@
         @if (engineering.active) {
             <li>
                 {{engineering.name}} - {{engineering.monthlyFee}} - {{engineering.annualFee}} - {{engineering.durationMonths}} meses
-                <button (click)="deleteEngineering(+engineering.id)">Eliminar</button>
-                <button (click)="updateCareer(engineering)">Actualizar</button>
+                <button (click)="deleteEngineering(engineering.id)">Eliminar</button>
             </li>
         }
         @if (!engineering.active && showDisabled) {

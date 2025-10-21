@@ -17,7 +17,6 @@ export class ProgramsEditForm implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
     private cService: CareerService
   ) { }
 
@@ -33,22 +32,12 @@ export class ProgramsEditForm implements OnInit {
       active: [true, [Validators.required]]
     });
 
-    this.cService.getCareerById(this.careerId).subscribe({
-      next: (career) => {
-        this.formPrograms.patchValue(career);
-      },
-      error: (err) => {
-        console.error('Error al cargar la carrera:', err);
-      }
-    });
-
   }
 
   onSubmit() {
     const updateCareer: Career = this.formPrograms.value;
     this.cService.updateCareer(updateCareer).subscribe(() => {
       alert('Carrera Actualizada :D');
-      this.router.navigate(['/engineerings']);
     })
   }
 
@@ -59,7 +48,7 @@ export class ProgramsEditForm implements OnInit {
     }
 
     const careerData: Career = {
-      id: this.careerId,
+      id: Number(this.careerId),
       name: this.formPrograms.value.name,
       description: this.formPrograms.value.description,
       durationMonths: Number(this.formPrograms.value.durationMonths),
@@ -72,7 +61,6 @@ export class ProgramsEditForm implements OnInit {
       next: (data) => {
         console.log('Carrera actualizada:', data);
         alert('Carrera actualizada correctamente');
-        this.router.navigate(['/engineerings']);
       },
       error: (err) => {
         console.error('Error al actualizar la carrera.', err);

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CareerService } from '../../../Services/CareerService/career-service';
 import Career from '../../../Models/Users/Careers/Career';
-import { ProgramsForm } from "../../../components/programs-form/programs-form";
 import { Router } from '@angular/router';
+import { ProgramsForm } from '../../../components/programs-form/programs-form';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-engineerings',
-  imports: [ProgramsForm],
+  imports: [ProgramsForm, ReactiveFormsModule],
   templateUrl: './engineerings.html',
   styleUrl: './engineerings.css'
 })
@@ -24,7 +25,7 @@ export class Engineerings implements OnInit {
   }
 
   getEngineerings() {
-    this.service.getCareers().subscribe({
+    this.service.getCareers('careers').subscribe({
       next: (data) => { this.engineerings = data },
       error: (error) => { console.error(error) }
     })
@@ -36,22 +37,12 @@ export class Engineerings implements OnInit {
       error: (error) => { console.error(error) }
     })
   }
-
-  updateCareer(career: Career) {
-    this.router.navigate(['/programs-edit-form', career.id]);
-  }
-
-  postCareer(career: Career) {
-    this.service.postCareer(career).subscribe({
-      next: (data) => { this.getEngineerings() },
-      error: (error) => { console.error(error) }
-    })
-  }
+  
 
   viewDisabled(career: Career) {
     if (confirm(`¿Deseas activar "${career.name}"?`)) {
       career.active = true;
-      this.updateCareer(career);
+      this.router.navigate(['/programs-edit-form', career.id]);
     }
   }
 

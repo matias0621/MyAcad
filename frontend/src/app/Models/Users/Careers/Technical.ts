@@ -1,4 +1,4 @@
-export default interface Career{
+export default interface Technical{
     id : number
     name : string
     description : string

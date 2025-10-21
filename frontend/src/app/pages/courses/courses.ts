@@ -1,19 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import Career from '../../Models/Users/Careers/Career';
 import { CareerService } from '../../Services/CareerService/career-service';
-import { ProgramsForm } from "../../components/programs-form/programs-form";
+import Course from '../../Models/Users/Careers/Course';
+import { ProgramsForm } from '../../components/programs-form/programs-form';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-courses',
-  imports: [ProgramsForm],
+  imports: [ProgramsForm, ReactiveFormsModule],
   templateUrl: './courses.html',
   styleUrl: './courses.css'
 })
-export class Courses implements OnInit{
-  courses !: Career[];
+export class Courses implements OnInit {
+  courses !: Course[];
+  showDisabled = false;
 
   constructor(
-    private service: CareerService
+    private service: CareerService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -21,17 +25,32 @@ export class Courses implements OnInit{
   }
 
   getCourses() {
-    this.service.getCareers().subscribe({
-      next: (data) => { this.courses = data.filter(c => c.careerType === 'COURSE') },
-      error: (error) => { console.error(error) }
+    this.service.getCareers('careers').subscribe({
+      next: (data) => {
+        this.courses = data;
+      },
+      error: (error) => {
+        console.error(error);
+      }
     })
   }
 
-  deleteCourse(id: string) {
+  deleteCourse(id: number) {
     this.service.deleteCareer(id).subscribe({
       next: (data) => { this.getCourses() },
       error: (error) => { console.error(error) }
     })
   }
 
+  viewDisabled(course: Course) {
+    if (confirm(`¿Deseas activar "${course.name}"?`)) {
+      course.active = true;
+      this.router.navigate(['/programs-edit-form', course.id]);
+    }
+
+  }
+    toggleDisabledView() {
+      this.showDisabled = !this.showDisabled;
+    }
+  
 }

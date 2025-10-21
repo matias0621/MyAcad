@@ -67,4 +67,16 @@ export class SubjectForm implements OnInit {
       }
     })
   }
+
+  deleteSubject(id:number){
+    this.subjectService.deleteSubject(id.toString()).subscribe({
+      next: (res) => {
+        alert("Se elimino correctamente")
+        this.getAllSubject()
+      },
+      error: (err) => {
+        alert("No se pudo eliminar la materia")
+      }
+    })
+  }
 }

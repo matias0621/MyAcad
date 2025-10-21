@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Configuration;
 
 import MyAcad.Project.backend.Service.UserLookupService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,7 +42,8 @@ public class SecurityConfig {
                                 "/students/**",
                                 "/managers/**",
                                 "/careers/**",
-                                "/courses/**"
+                                "/courses/**",
+                                "/subject/**"
                         ).permitAll()
                 )
                 .authenticationProvider(authenticationProvider(service))
@@ -51,9 +53,11 @@ public class SecurityConfig {
                 .logout(LogoutConfigurer::disable)
 
                 .exceptionHandling(exception -> exception
-                //Función lambda que redirige al inicio cuando hay un error
+                // Return 401 Unauthorized instead of redirecting
                 .authenticationEntryPoint((request, response, authException) -> {
-                    response.sendRedirect("/");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Authentication required\"}");
                 })
         );
 

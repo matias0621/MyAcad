@@ -1,4 +1,11 @@
 <form [formGroup]="form" (submit)="OnSubmit()">
+
+    @if (form.invalid && form.touched) {
+    <div class="error-global">
+        <p>Por favor, completá correctamente todos los campos antes de continuar.</p>
+    </div>
+    }
+
     <fieldset>
         <label for="name">Nombre de la materia:</label>
         <input type="text" id="name" name="name" formControlName="name">
@@ -16,9 +23,9 @@
     </fieldset>
 
     <fieldset>
-        <label for="semester">Semestre:</label>
-        <input type="number" id="semester" name="semester" formControlName="semester">
-        @if (form.controls['semester'].invalid && form.controls['semester'].touched) {
+        <label for="semesters">Semestre:</label>
+        <input type="number" id="semesters" name="semesters" formControlName="semesters">
+        @if (form.controls['semesters'].invalid && form.controls['semesters'].touched) {
         <p>El email debe tener entre 3 y 100 caracteres.</p>
         }
     </fieldset>
@@ -28,3 +35,23 @@
         <button type="submit" [disabled]="form.invalid">Agregar</button>
     </div>
 </form>
+
+
+@if (subjectService.listSubject.length === 0) {
+<p>No hay materias cargadas</p>
+}
+@else {
+@for (subject of subjectService.listSubject; track $index) {
+<p>
+    {{ subject.name }}
+</p>
+
+<p>
+    {{ subject.description }}
+</p>
+
+<p>
+    {{ subject.semesters }}
+</p>
+}
+}

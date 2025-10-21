@@ -10,7 +10,7 @@ export class SubjectsService {
   
   readonly api_url = "http://localhost:8080/subject"
 
-  listSubject!:Subjects[]
+  listSubject:Subjects[] = []
 
   constructor(private http:HttpClient){}
 

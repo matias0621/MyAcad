@@ -17,8 +17,8 @@ public class FinalExamService {
     private final SubjectService subjectService;
 
     public FinalExamEntity create(FinalExamDTO dto) {
-        SubjectsEntity subject = subjectService.getById(dto.getSubject().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubject().getId()));
+        SubjectsEntity subject = subjectService.getById((long) dto.getSubjectId())
+                .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubjectId()));
 
         FinalExamEntity exam = FinalExamEntity.builder()
                 .score(dto.getScore())
@@ -41,8 +41,8 @@ public class FinalExamService {
         FinalExamEntity existingExam = finalExamRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Final exam not found with id: " + id));
 
-        SubjectsEntity subject = subjectService.getById(dto.getSubject().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubject().getId()));
+        SubjectsEntity subject = subjectService.getById((long) dto.getSubjectId())
+                .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubjectId()));
 
         existingExam.setScore(dto.getScore());
         existingExam.setSubject(subject);

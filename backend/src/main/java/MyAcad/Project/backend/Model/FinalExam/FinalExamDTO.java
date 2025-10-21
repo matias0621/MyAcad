@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -16,6 +17,6 @@ public class FinalExamDTO {
     @Max(100)
     private int score;
 
-    @NotBlank
-    private SubjectsEntity subject;
+    @NotNull
+    private int subjectId;
 }

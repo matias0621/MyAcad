@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubjectsService } from '../../Services/Subjects/subjects-service';
 
@@ -8,12 +8,15 @@ import { SubjectsService } from '../../Services/Subjects/subjects-service';
   templateUrl: './subject-form.html',
   styleUrl: './subject-form.css'
 })
-export class SubjectForm implements OnInit {
+export class SubjectForm {
 
   form!:FormGroup
   name!:FormControl
   description!:FormControl
   semesters!:FormControl
+
+  @Output()
+  added = new EventEmitter<void>;
 
   
 
@@ -29,9 +32,7 @@ export class SubjectForm implements OnInit {
     })
   }
 
-  ngOnInit(): void {
-    this.getAllSubject()
-  }
+
 
   OnSubmit(){
 
@@ -43,8 +44,8 @@ export class SubjectForm implements OnInit {
     this.subjectService.postSubject(this.form.value).subscribe({
       next: (res) => {
         alert("Se subio correctamente la nueva materia")
+        this.added.emit()
         console.log(res)
-        this.getAllSubject()
       },
       error: (err) => {
         alert("Algo salio mal")
@@ -57,26 +58,6 @@ export class SubjectForm implements OnInit {
     this.form.reset();
   }
 
-  getAllSubject(){
-    this.subjectService.getAllSubject().subscribe({
-      next: (res) => {
-        this.subjectService.listSubject = res
-      },
-      error: (err) => {
-        console.log(err)
-      }
-    })
-  }
 
-  deleteSubject(id:number){
-    this.subjectService.deleteSubject(id.toString()).subscribe({
-      next: (res) => {
-        alert("Se elimino correctamente")
-        this.getAllSubject()
-      },
-      error: (err) => {
-        alert("No se pudo eliminar la materia")
-      }
-    })
-  }
+
 }

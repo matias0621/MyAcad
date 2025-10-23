@@ -4,7 +4,7 @@
 <ul>
     @for (subject of subjectService.listSubject; track $index) {
         <li>
-            {{subject.name}} {{subject.description}}
+            {{subject.name}} {{subject.description}} {{ subject.subjectActive }}
             <button (click)="deleteSubject(subject.id)">Eliminar</button>
         </li>
     }@empty {

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubjectsService } from '../../Services/Subjects/subjects-service';
+import Subjects from '../../Models/Subjects/Subjects';
 
 @Component({
   selector: 'app-subject-form',
@@ -15,6 +16,7 @@ export class SubjectForm {
   description!:FormControl
   semesters!:FormControl
 
+
   @Output()
   added = new EventEmitter<void>;
 
@@ -28,7 +30,8 @@ export class SubjectForm {
     this.form = new FormGroup({
       name: this.name,
       description: this.description,
-      semesters: this.semesters
+      semesters: this.semesters,
+      subjectActive: new FormControl(true)    
     })
   }
 
@@ -41,8 +44,12 @@ export class SubjectForm {
       return
     }
 
+    
+    console.log(this.form.value)
+
     this.subjectService.postSubject(this.form.value).subscribe({
       next: (res) => {
+        console.log
         alert("Se subio correctamente la nueva materia")
         this.added.emit()
         console.log(res)

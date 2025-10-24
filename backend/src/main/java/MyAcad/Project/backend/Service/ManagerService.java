@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Configuration.SecurityConfig;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Manager;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.ManagerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,10 +40,13 @@ public class ManagerService {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Manager> getByLegajoContainingIgnoreCase(String legajo) {
-        return repository.findByLegajoContainingIgnoreCase(legajo);
+    public List<Manager> getByLegajoContaining(String legajo) {
+        return repository.findByLegajoContaining(legajo);
     }
 
+    public List<Manager> getByFullName(String fullName) {
+        return repository.findByFullName(fullName);
+    }
     public ResponseEntity<Void> delete(Long id){
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();

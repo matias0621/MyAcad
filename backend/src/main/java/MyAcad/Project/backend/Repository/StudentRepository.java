@@ -12,7 +12,11 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT u FROM #{#entityName} u WHERE u.legajo = :legajo")
     Optional<Student> findByLegajo(@Param("legajo") String legajo);
 
-    List<Student> findByLegajoContainingIgnoreCase(String legajo);
+    List<Student> findByLegajoContaining(String legajo);
+
+    @Query("SELECT s FROM Student s WHERE " +
+            "LOWER(CONCAT(s.name, ' ', s.lastName)) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<Student> findByFullName(@Param("term") String term);
 
     @Query("SELECT u FROM #{#entityName} u WHERE u.email = :email")
     Optional<Student> findByEmail(@Param("email")String email);

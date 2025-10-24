@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Service;
 import MyAcad.Project.backend.Configuration.SecurityConfig;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
+import MyAcad.Project.backend.Model.Users.Manager;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.TeacherRepository;
 import lombok.AllArgsConstructor;
@@ -39,8 +40,12 @@ public class TeacherService {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Teacher> getByLegajoContainingIgnoreCase(String legajo) {
-        return repository.findByLegajoContainingIgnoreCase(legajo);
+    public List<Teacher> getByLegajoContaining(String legajo) {
+        return repository.findByLegajoContaining(legajo);
+    }
+
+    public List<Teacher> getByFullName(String fullName) {
+        return repository.findByFullName(fullName);
     }
 
     public ResponseEntity<Void> delete(Long id){

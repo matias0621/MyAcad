@@ -16,6 +16,14 @@ export class ManagerService {
     return this.http.get<Manager[]>(this.API_URL);
   }
 
+  getByLegajo(legajo: string){
+    return this.http.get<Manager[]>(`${this.API_URL}/legajo/${legajo}`);
+  }
+
+  getByName(name: string){
+    return this.http.get<Manager[]>(`${this.API_URL}/name/${name}`);
+  }
+  
   postManager(manager: Manager) {
     return this.http.post<Manager>(this.API_URL, manager);
   }

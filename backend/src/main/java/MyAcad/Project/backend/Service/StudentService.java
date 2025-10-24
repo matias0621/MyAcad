@@ -40,8 +40,12 @@ public class StudentService {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Student> getByLegajoContainingIgnoreCase(String legajo) {
-        return repository.findByLegajoContainingIgnoreCase(legajo);
+    public List<Student> getByLegajoContaining(String legajo) {
+        return repository.findByLegajoContaining(legajo);
+    }
+
+    public List<Student> getByFullName(String fullName) {
+        return repository.findByFullName(fullName);
     }
 
     public ResponseEntity<Void> delete(Long id){

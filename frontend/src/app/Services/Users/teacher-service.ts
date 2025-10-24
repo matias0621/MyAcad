@@ -16,6 +16,14 @@ export class TeacherService {
     return this.http.get<Teacher[]>(this.API_URL);
   }
 
+  getByLegajo(legajo: string){
+    return this.http.get<Teacher[]>(`${this.API_URL}/legajo/${legajo}`);
+  }
+
+  getByName(name: string){
+    return this.http.get<Teacher[]>(`${this.API_URL}/name/${name}`);
+  }
+  
   postTeacher(teacher: Teacher) {
     return this.http.post<Teacher>(this.API_URL, teacher);
   }

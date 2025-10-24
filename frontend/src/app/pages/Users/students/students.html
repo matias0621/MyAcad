@@ -1,5 +1,6 @@
 <h1 style="text-align: center;">Alumnos</h1>
 <app-user-form endpoint="students" (added)="getStudents()"></app-user-form>
+<input type="text" id="search-bar" (input)="onSearch()" [(ngModel)]="search" placeholder="Busca por legajo o nombre">
 <ul>
     @for (student of students; track $index) {
         <li>

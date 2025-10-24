@@ -1,5 +1,6 @@
 <h1 style="text-align: center;">Gestores</h1>
 <app-user-form endpoint="managers" (added)="getManagers()"></app-user-form>
+<input type="text" id="search-bar" (input)="onSearch()" [(ngModel)]="search" placeholder="Busca por legajo o nombre">
 <ul>
     @for (manager of managers; track $index) {
         <li>

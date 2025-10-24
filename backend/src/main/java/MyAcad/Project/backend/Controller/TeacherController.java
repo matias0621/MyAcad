@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Controller;
 import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherDTO;
 import MyAcad.Project.backend.Service.TeacherService;
@@ -34,13 +35,24 @@ public class TeacherController {
         return services.listTeachersPaginated(page, size);
     }
 
-    //Obtener por usuario
-    @GetMapping("/{legajo}")
-    public List<Teacher> getByLegajoContainingIgnoreCase(@PathVariable(name = "legajo", required = false) String legajo) {
+
+    //Obtener por legajo
+    @GetMapping("/legajo/{legajo}")
+    public List<Teacher> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {
         if (legajo == null || legajo.isEmpty()) {
             return listTeachers();
         } else {
-            return services.getByLegajoContainingIgnoreCase(legajo);
+            return services.getByLegajoContaining(legajo);
+        }
+    }
+
+    //Obtener por nombre
+    @GetMapping("/name/{name}")
+    public List<Teacher> getByName(@PathVariable(name = "name", required = false) String name) {
+        if (name == null || name.isEmpty()) {
+            return listTeachers();
+        } else {
+            return services.getByFullName(name);
         }
     }
 

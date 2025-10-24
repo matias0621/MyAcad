@@ -34,13 +34,23 @@ public class StudentController {
         return services.listStudentsPaginated(page, size);
     }
 
-    //Obtener por usuario
-    @GetMapping("/{legajo}")
-    public List<Student> getByLegajoContainingIgnoreCase(@PathVariable(name = "legajo", required = false) String legajo) {
+    //Obtener por legajo
+    @GetMapping("/legajo/{legajo}")
+    public List<Student> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {
         if (legajo == null || legajo.isEmpty()) {
             return listStudents();
         } else {
-            return services.getByLegajoContainingIgnoreCase(legajo);
+            return services.getByLegajoContaining(legajo);
+        }
+    }
+
+    //Obtener por nombre
+    @GetMapping("/name/{name}")
+    public List<Student> getByName(@PathVariable(name = "name", required = false) String name) {
+        if (name == null || name.isEmpty()) {
+            return listStudents();
+        } else {
+            return services.getByFullName(name);
         }
     }
 

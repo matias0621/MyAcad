@@ -15,7 +15,12 @@ export class StudentService {
   getStudents() {
     return this.http.get<Student[]>(this.API_URL);
   }
-
+  getByLegajo(legajo: string){
+    return this.http.get<Student[]>(`${this.API_URL}/legajo/${legajo}`);
+  }
+  getByName(name: string){
+    return this.http.get<Student[]>(`${this.API_URL}/name/${name}`);
+  }
   postStudent(student: Student) {
     return this.http.post<Student>(this.API_URL, student);
   }

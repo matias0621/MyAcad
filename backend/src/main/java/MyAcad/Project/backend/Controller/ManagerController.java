@@ -5,6 +5,7 @@ import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Manager;
 import MyAcad.Project.backend.Model.Users.ManagerDTO;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Service.ManagerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,18 +30,28 @@ public class ManagerController {
 
     //Paginación
     @GetMapping("/paginated")
-    public Page<Manager> listManagerPaginated(@RequestParam(name = "page") int page,
-                                              @RequestParam(name = "size") int size) {
+    public Page<Manager> listManagerPaginated(@RequestParam(name = "page", defaultValue = "0") int page,
+                                              @RequestParam(name = "size", defaultValue = "10") int size) {
         return services.listManagersPaginated(page, size);
     }
 
-    //Obtener por usuario
-    @GetMapping("/{legajo}")
-    public List<Manager> getByLegajoContainingIgnoreCase(@PathVariable(name = "legajo", required = false) String legajo) {
+    //Obtener por legajo
+    @GetMapping("/legajo/{legajo}")
+    public List<Manager> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {
         if (legajo == null || legajo.isEmpty()) {
             return listManagers();
         } else {
-            return services.getByLegajoContainingIgnoreCase(legajo);
+            return services.getByLegajoContaining(legajo);
+        }
+    }
+
+    //Obtener por nombre
+    @GetMapping("/name/{name}")
+    public List<Manager> getByName(@PathVariable(name = "name", required = false) String name) {
+        if (name == null || name.isEmpty()) {
+            return listManagers();
+        } else {
+            return services.getByFullName(name);
         }
     }
 

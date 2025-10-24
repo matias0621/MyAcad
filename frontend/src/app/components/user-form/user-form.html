@@ -24,14 +24,6 @@
     </fieldset>
 
     <fieldset>
-        <label for="username">Usuario:</label>
-        <input type="text" id="username" name="username" formControlName="username">
-        @if (form.controls['username'].invalid && form.controls['username'].touched) {
-        <p>El usuario debe tener entre 3 y 30 caracteres.</p>
-        }
-    </fieldset>
-
-    <fieldset>
         <label for="password">Contraseña:</label>
         <input type="password" id="password" name="password" formControlName="password">
         @if (form.controls['password'].invalid && form.controls['password'].touched) {

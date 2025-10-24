@@ -2,7 +2,7 @@ package MyAcad.Project.backend.Controller;
 
 import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
-import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
+import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.StudentDTO;
 import MyAcad.Project.backend.Service.StudentService;
@@ -35,12 +35,12 @@ public class StudentController {
     }
 
     //Obtener por usuario
-    @GetMapping("/{username}")
-    public List<Student> getByUsernameIgnoringCase(@PathVariable(name = "username", required = false) String username) {
-        if (username == null || username.isEmpty()) {
+    @GetMapping("/{legajo}")
+    public List<Student> getByLegajoContainingIgnoreCase(@PathVariable(name = "legajo", required = false) String legajo) {
+        if (legajo == null || legajo.isEmpty()) {
             return listStudents();
         } else {
-            return services.getByUsernameIgnoringCase(username);
+            return services.getByLegajoContainingIgnoreCase(legajo);
         }
     }
 
@@ -60,10 +60,11 @@ public class StudentController {
     public ResponseEntity<?> addStudent(@RequestBody StudentDTO dto) {
         try {
             Student student = new Student(dto);
+            System.out.println(student);
             student.setRole(Role.STUDENT);
             services.add(student);
             return ResponseEntity.ok(student);
-        }catch (EmailAlreadyExistsException | UsernameAlreadyExistsException e) {
+        }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
@@ -80,7 +81,7 @@ public class StudentController {
         try {
             services.modify(updatedUser.getId(), updatedUser);
             return ResponseEntity.ok(updatedUser);
-        }catch (EmailAlreadyExistsException | UsernameAlreadyExistsException e){
+        }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

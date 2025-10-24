@@ -3,7 +3,7 @@
 <ul>
     @for (manager of managers; track $index) {
         <li>
-            {{manager.name}} {{manager.lastName}}
+            {{manager.name}} {{manager.lastName}} - {{manager.legajo}} 
             <button (click)="deleteManager(manager.id)">Eliminar</button>
         </li>
     }@empty {

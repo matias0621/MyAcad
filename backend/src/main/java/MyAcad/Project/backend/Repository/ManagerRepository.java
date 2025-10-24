@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
-    @Query("SELECT u FROM #{#entityName} u WHERE u.username = :username")
-    Optional<Manager> findByUsername(@Param("username") String username);
+    @Query("SELECT u FROM #{#entityName} u WHERE u.legajo = :legajo")
+    Optional<Manager> findByLegajo(@Param("legajo") String legajo);
 
-    List<Manager> findByUsernameContainingIgnoreCase(String username);
+    List<Manager> findByLegajoContainingIgnoreCase(String legajo);
 
     @Query("SELECT u FROM #{#entityName} u WHERE u.email = :email")
     Optional<Manager> findByEmail(@Param("email")String email);

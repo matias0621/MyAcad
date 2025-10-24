@@ -3,7 +3,7 @@
 <ul>
     @for (teacher of teachers; track $index) {
         <li>
-            {{teacher.name}} {{teacher.lastName}}
+            {{teacher.name}} {{teacher.lastName}} - {{teacher.legajo}}
             <button (click)="deleteTeacher(teacher.id)">Eliminar</button>
         </li>
     }@empty {

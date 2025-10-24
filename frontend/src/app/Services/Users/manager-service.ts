@@ -6,7 +6,7 @@ import Manager from '../../Models/Users/Manager';
   providedIn: 'root'
 })
 export class ManagerService {
-  readonly API_URL = 'http://localhost:8080/teachers';
+  readonly API_URL = 'http://localhost:8080/managers';
 
   constructor(
     private http: HttpClient

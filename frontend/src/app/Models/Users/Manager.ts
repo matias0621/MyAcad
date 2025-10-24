@@ -3,6 +3,6 @@ export default interface Manager{
     name : string;
     lastName : string;
     email : string;
-    username : string;
+    legajo : string;
     password : string; 
 }

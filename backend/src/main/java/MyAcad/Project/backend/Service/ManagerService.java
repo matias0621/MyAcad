@@ -2,7 +2,7 @@ package MyAcad.Project.backend.Service;
 
 import MyAcad.Project.backend.Configuration.SecurityConfig;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
-import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
+import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Manager;
 import MyAcad.Project.backend.Repository.ManagerRepository;
 import lombok.AllArgsConstructor;
@@ -23,12 +23,15 @@ public class ManagerService {
     private PasswordEncoder passwordEncoder;
 
     public void add(Manager t) {
-        if (userLookupService.findByUsername(t.getUsername()).isPresent()) {
-            throw new UsernameAlreadyExistsException();
+        if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
+            throw new LegajoAlreadyExistsException();
         }else if(userLookupService.findByEmail(t.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException();
         }
         t.setPassword(SecurityConfig.passwordEncoder().encode(t.getPassword()));
+        t = repository.save(t);
+        t.setLegajo(String.valueOf(t.getId() + 900000));
+
         repository.save(t);
     }
 
@@ -36,8 +39,8 @@ public class ManagerService {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Manager> getByUsernameIgnoringCase(String username) {
-        return repository.findByUsernameContainingIgnoreCase(username);
+    public List<Manager> getByLegajoContainingIgnoreCase(String legajo) {
+        return repository.findByLegajoContainingIgnoreCase(legajo);
     }
 
     public ResponseEntity<Void> delete(Long id){
@@ -54,22 +57,22 @@ public class ManagerService {
 
     public void modify (Long id, Manager t){
         Manager old = repository.findById(id).get();
-        //Verificar si cambió el usuario o el email
+        //Verificar si cambió el legajo o el email
         if (!old.getEmail().equals(t.getEmail())) {
             //Verificar si el email nuevo ya se encuentra en uso
             if (userLookupService.findByEmail(t.getEmail()).isPresent()) {
                 throw new EmailAlreadyExistsException();
             }
-        }else if (!old.getUsername().equals(t.getUsername())) {
-            //Verificar si el usuario nuevo ya se encuentra en uso
-            if (userLookupService.findByUsername(t.getUsername()).isPresent()) {
-                throw new UsernameAlreadyExistsException();
+        }else if (old.getLegajo() != t.getLegajo()) {
+            //Verificar si el legajo nuevo ya se encuentra en uso
+            if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
+                throw new LegajoAlreadyExistsException();
             }
         }
         old.setName(t.getName());
         old.setLastName(t.getLastName());
         old.setEmail(t.getEmail());
-        old.setUsername(t.getUsername());
+        old.setLegajo(t.getLegajo());
 
         // Verificar si se ingresó una contraseña nueva, si el usuario no quiso cambiarla debe dejar ese input vacío.
         if (t.getPassword() != null && !t.getPassword().isBlank()) {
@@ -83,8 +86,8 @@ public class ManagerService {
         return repository.findById(id);
     }
 
-    public Optional<Manager> getByUsername(String username) {
-        return repository.findByUsername(username);
+    public Optional<Manager> getByLegajo(String legajo) {
+        return repository.findByLegajo(legajo);
     }
 
     public Optional<Manager> getByEmail(String email){

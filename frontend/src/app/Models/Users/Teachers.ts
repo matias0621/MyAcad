@@ -1,8 +1,8 @@
-export default interface Teacher{
+export default interface Teacher {
     id: number;
-    name : string;
-    lastName : string;
-    email : string;
-    username : string;
-    password : string; 
+    name: string;
+    lastName: string;
+    email: string;
+    legajo: string;
+    password: string;
 }

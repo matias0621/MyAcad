@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,10 +30,10 @@ public class UserDTO {
     @Column(unique = true)
     protected String email;
 
-    @NotBlank(message = "El nombre no puede estar vacío")
-    @Size(max = 50)
+    @NotBlank(message = "El legajo no puede estar vacío, máximo 999.999")
+    @Size(max = 999999)
     @Column(unique = true)
-    protected String username;
+    protected String legajo;
 
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,15}$",
             message = "La contraseña debe tener entre 6 y 15 caracteres, al menos una mayuscula, " +
@@ -45,12 +44,11 @@ public class UserDTO {
     @Enumerated(EnumType.STRING)
     protected Role role;
 
-    public UserDTO(Long id, String name, String lastName, String email, String username, String password) {
+    public UserDTO(Long id, String name, String lastName, String email, String password) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
-        this.username = username;
         this.password = password;
     }
 }

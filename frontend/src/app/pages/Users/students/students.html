@@ -3,7 +3,7 @@
 <ul>
     @for (student of students; track $index) {
         <li>
-            {{student.name}} {{student.lastName}}
+            {{student.name}} {{student.lastName}} - {{student.legajo}}
             <button (click)="deleteStudent(student.id)">Eliminar</button>
         </li>
     }@empty {

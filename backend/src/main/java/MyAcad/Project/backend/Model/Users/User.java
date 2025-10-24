@@ -16,7 +16,7 @@ public abstract class User {
     @Id
     @GeneratedValue
     protected Long id;
-    protected String name, lastName, email, username, password;
+    protected String name, lastName, email, legajo, password;
 
     @Enumerated(EnumType.STRING)
     protected Role role;
@@ -26,7 +26,6 @@ public abstract class User {
         this.name = dto.getName();
         this.lastName = dto.getLastName();
         this.email = dto.getEmail();
-        this.username = dto.getUsername();
         this.password = dto.getPassword();
         this.role = dto.getRole();
     }

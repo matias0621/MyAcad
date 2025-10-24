@@ -13,7 +13,8 @@ export class UserForm implements OnInit {
   endpoint: string = "";
 
   @Output()
-  added = new EventEmitter<void>;
+  added = new EventEmitter<any[]>;
+
   form !: FormGroup;
 
   constructor(
@@ -35,13 +36,16 @@ export class UserForm implements OnInit {
       next: (data) => {
         console.log('Usuario creado exitosamente:', data);
         this.form.reset();
-        this.added.emit()
+        this.service.getUsers(this.endpoint).subscribe({
+          next: (data) => { this.added.emit(data) },
+          error: (error) => { console.error(error) }
+        })
       },
       error: (error) => { console.error(error) }
     })
   }
-  
-  cleanForm(){
+
+  cleanForm() {
     this.form.reset();
   }
 }

@@ -1,15 +1,3 @@
 <h1 style="text-align: center;">Gestores</h1>
-<app-user-form endpoint="managers" (added)="getManagers()"></app-user-form>
-<input type="text" id="search-bar" (input)="onSearch()" [(ngModel)]="search" placeholder="Busca por legajo o nombre">
-<ul>
-    @for (manager of managers; track $index) {
-        <li>
-            {{manager.name}} {{manager.lastName}} - {{manager.legajo}} 
-            <button (click)="deleteManager(manager.id)">Eliminar</button>
-        </li>
-    }@empty {
-        <li>
-            <p style="color: red;"> Aun no hay ningun gestor cargado.</p>
-        </li>
-    }
-</ul>
+<app-user-form endpoint="managers" (added)="userList.users = $event"></app-user-form>
+<app-user-list endpoint="managers" #userList></app-user-list>

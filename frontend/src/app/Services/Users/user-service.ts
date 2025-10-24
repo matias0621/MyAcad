@@ -15,7 +15,23 @@ export class UserService {
     return this.http.get<any[]>(`${this.API_URL}/${endpoint}`);
   }
 
+  getByLegajo(legajo: string, endpoint: string) {
+    return this.http.get<any[]>(`${this.API_URL}/${endpoint}/legajo/${legajo}`);
+  }
+
+  getByName(name: string, endpoint: string) {
+    return this.http.get<any[]>(`${this.API_URL}/${endpoint}/name/${name}`);
+  }
+
   postUser(user: any, endpoint: string) {
     return this.http.post<any>(`${this.API_URL}/${endpoint}`, user);
+  }
+
+  putUser(user: any, endpoint: string) {
+    return this.http.put<any>(`${this.API_URL}/${endpoint}/${user.id}`, user);
+  }
+
+  deleteUser(id: number, endpoint: string) {
+    return this.http.delete<any>(`${this.API_URL}/${endpoint}/${id}`);
   }
 }

@@ -8,6 +8,8 @@ import { Engineerings } from './pages/careers/engineerings/engineerings';
 import { Technicals } from './pages/careers/technicals/technicals';
 import { ProgramsEditForm } from './components/programs-edit-form/programs-edit-form';
 import { Subjects } from './pages/subjects/subjects';
+import { Exams } from './pages/exams/exams';
+import { FinalExams } from './pages/final-exams/final-exams';
 
 
 export const routes: Routes = [
@@ -18,6 +20,9 @@ export const routes: Routes = [
 
     {path: 'subject', component:Subjects},
     {path: 'subject/:id', component:Subjects},
+
+    {path: 'exams', component:Exams},
+    {path: 'final-exams', component:FinalExams},
 
     {path: 'engineerings', component: Engineerings},
     {path: 'technicals', component: Technicals},

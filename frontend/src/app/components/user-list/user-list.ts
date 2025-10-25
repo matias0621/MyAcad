@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserService } from '../../Services/Users/user-service';
 import { FormsModule } from '@angular/forms';
 
@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 export class UserList implements OnInit {
   @Input()
   endpoint = ""
+  @Output()
+  user = new EventEmitter<any>;
 
   users !: any[]
   search: string = '';
@@ -67,5 +69,9 @@ export class UserList implements OnInit {
       next: (data) => { this.getUsers() },
       error: (error) => { console.error(error) }
     })
+  }
+
+  modifyUser(user : any){
+    this.user.emit(user);
   }
 }

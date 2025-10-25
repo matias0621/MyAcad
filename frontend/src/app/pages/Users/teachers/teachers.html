@@ -1,3 +1,4 @@
 <h1 style="text-align: center;">Docentes</h1>
-<app-user-form endpoint="teachers" (added)="userList.users = $event"></app-user-form>
-<app-user-list endpoint="teachers" #userList></app-user-list>
+<app-user-form endpoint="teachers" (added)="userList.users = $event" #userForm></app-user-form>
+<app-user-edit-form endpoint="teachers" (added)="userList.users = $event" #userEditForm></app-user-edit-form>
+<app-user-list endpoint="teachers" (user)="userEditForm.loadData($event)" #userList></app-user-list>

@@ -3,6 +3,7 @@
     @for (user of users; track $index) {
         <li>
             {{user.name}} {{user.lastName}} - {{user.legajo}} 
+            <button (click)="modifyUser(user)">Editar</button>
             <button (click)="deleteUser(user.id)">Eliminar</button>
         </li>
     }@empty {

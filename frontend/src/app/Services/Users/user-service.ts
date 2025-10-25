@@ -28,7 +28,7 @@ export class UserService {
   }
 
   putUser(user: any, endpoint: string) {
-    return this.http.put<any>(`${this.API_URL}/${endpoint}/${user.id}`, user);
+    return this.http.put<any>(`${this.API_URL}/${endpoint}`, user);
   }
 
   deleteUser(id: number, endpoint: string) {

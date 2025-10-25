@@ -37,7 +37,9 @@ public class UserLookupService implements UserDetailsService {
         if (student.isPresent()) return student;
 
         Optional<Teacher> teacher = teacherRepository.findByLegajo(legajo);
-        if (teacher.isPresent()) return student;
+        if (teacher.isPresent()) return teacher;
+
+        System.out.println("MANAGERA SASASASSAASASAS" + managerRepository.findByLegajo(legajo));
 
         return managerRepository.findByLegajo(legajo);
     }
@@ -52,10 +54,13 @@ public class UserLookupService implements UserDetailsService {
         return managerRepository.findByEmail(email);
     }
 
+    //Se llama byUsername por defecto por el override, pero utilizamos legajo para el login
     @Override
     public UserDetails loadUserByUsername(String legajo) throws UsernameNotFoundException {
         User u = findByLegajo(legajo)
                 .orElseThrow(() -> new UsernameNotFoundException("Legajo no encontrado"));
         return new UserDetailsImpl(u);
     }
+
+
 }

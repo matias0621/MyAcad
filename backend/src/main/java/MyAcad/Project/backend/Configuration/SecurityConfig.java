@@ -17,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,13 +30,20 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, UserLookupService service) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UserLookupService service, JwtAuthFilter jwtAuthFilter) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(
+                                "/"
+                        ).hasRole("STUDENT")
+                        .requestMatchers(
+                                "/"
+                        ).hasRole("TEACHER")
                         .requestMatchers(
                                 "/**",
                                 "/teachers/**",
@@ -46,21 +54,19 @@ public class SecurityConfig {
                                 "/subject/**",
                                 "/technicals/**",
                                 "/final-exam/**"
-                        ).permitAll()
+                        ).hasRole("MANAGER")
+                        .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(service))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // Deshabilita el form de login
+                // Deshabilita el form de login por defecto
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(LogoutConfigurer::disable)
-
-                .exceptionHandling(exception -> exception
-                // Return 401 Unauthorized instead of redirecting
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Authentication required\"}");
-                })
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+                        )
         );
 
         return http.build();
@@ -86,7 +92,6 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider(UserLookupService service) {
-        // ... (Tu código actual)
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(service);
         provider.setPasswordEncoder(passwordEncoder());

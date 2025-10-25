@@ -4,7 +4,6 @@ import MyAcad.Project.backend.Enum.Role;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity

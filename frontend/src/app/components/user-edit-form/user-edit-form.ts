@@ -3,18 +3,19 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { UserService } from '../../Services/Users/user-service';
 
 @Component({
-  selector: 'app-user-form',
+  selector: 'app-user-edit-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './user-form.html',
-  styleUrl: './user-form.css'
+  templateUrl: './user-edit-form.html',
+  styleUrl: './user-edit-form.css'
 })
-export class UserForm implements OnInit {
+export class UserEditForm implements OnInit {
   @Input()
   endpoint: string = "";
 
   @Output()
   added = new EventEmitter<any[]>;
 
+  userId !: number
   form !: FormGroup;
 
   constructor(
@@ -22,19 +23,22 @@ export class UserForm implements OnInit {
     private fb: FormBuilder
   ) { }
 
+
   ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
       email: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(15)]]
+      password: ['', [Validators.minLength(6), Validators.maxLength(15)]]
     })
   }
 
+
   OnSubmit() {
-    this.service.postUser(this.form.value, this.endpoint).subscribe({
+    const modifiedUser = { id: this.userId, ...this.form.value }
+    this.service.putUser(modifiedUser, this.endpoint).subscribe({
       next: (data) => {
-        console.log('Usuario creado exitosamente:');
+        console.log('Usuario modificado exitosamente:');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
           next: (data) => { this.added.emit(data) },
@@ -43,6 +47,18 @@ export class UserForm implements OnInit {
       },
       error: (error) => { console.error(error) }
     })
+  }
+
+  loadData(userData: any) {
+    this.userId = userData.id
+
+    const mappedData = {
+      name: userData.name,
+      lastName: userData.lastName,
+      email: userData.email
+    }
+
+    this.form.patchValue(mappedData)
   }
 
   cleanForm() {

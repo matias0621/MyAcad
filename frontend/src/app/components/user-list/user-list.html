@@ -1,0 +1,14 @@
+<input type="text" id="search-bar" (input)="onSearch()" [(ngModel)]="search" placeholder="Busca por legajo o nombre">
+<ul>
+    @for (user of users; track $index) {
+        <li>
+            {{user.name}} {{user.lastName}} - {{user.legajo}} 
+            <button (click)="modifyUser(user)">Editar</button>
+            <button (click)="deleteUser(user.id)">Eliminar</button>
+        </li>
+    }@empty {
+        <li>
+            <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
+        </li>
+    }
+</ul>

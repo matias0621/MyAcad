@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ManagerDTO extends UserDTO{
 
-    public ManagerDTO(Long id, String name, String lastName, String email, String password) {
-        super(id, name, lastName, email, password);
-        this.legajo = String.valueOf((id + 800000));
+    public ManagerDTO(String name, String lastName, String email, String password) {
+        super(name, lastName, email, password);
         this.role = Role.MANAGER;
     }
 }

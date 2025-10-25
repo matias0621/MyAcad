@@ -44,8 +44,7 @@ public class UserDTO {
     @Enumerated(EnumType.STRING)
     protected Role role;
 
-    public UserDTO(Long id, String name, String lastName, String email, String password) {
-        this.id = id;
+    public UserDTO(String name, String lastName, String email, String password) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;

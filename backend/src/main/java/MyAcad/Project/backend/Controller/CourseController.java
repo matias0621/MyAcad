@@ -1,6 +1,6 @@
 package MyAcad.Project.backend.Controller;
 
-import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
+import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.CourseDTO;
 import MyAcad.Project.backend.Service.CourseService;
@@ -43,7 +43,7 @@ public class CourseController {
             Course course = new Course(dto);
             services.add(course);
             return ResponseEntity.ok(course);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
@@ -61,7 +61,7 @@ public class CourseController {
             Course course = new Course(dto);
             services.modify(id, course);
             return ResponseEntity.ok(course);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }

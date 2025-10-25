@@ -2,7 +2,8 @@ package MyAcad.Project.backend.Controller;
 
 import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
-import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
+import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherDTO;
 import MyAcad.Project.backend.Service.TeacherService;
@@ -34,13 +35,24 @@ public class TeacherController {
         return services.listTeachersPaginated(page, size);
     }
 
-    //Obtener por usuario
-    @GetMapping("/{username}")
-    public List<Teacher> getByUsernameIgnoringCase(@PathVariable(name = "username", required = false) String username) {
-        if (username == null || username.isEmpty()) {
+
+    //Obtener por legajo
+    @GetMapping("/legajo/{legajo}")
+    public List<Teacher> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {
+        if (legajo == null || legajo.isEmpty()) {
             return listTeachers();
         } else {
-            return services.getByUsernameIgnoringCase(username);
+            return services.getByLegajoContaining(legajo);
+        }
+    }
+
+    //Obtener por nombre
+    @GetMapping("/name/{name}")
+    public List<Teacher> getByName(@PathVariable(name = "name", required = false) String name) {
+        if (name == null || name.isEmpty()) {
+            return listTeachers();
+        } else {
+            return services.getByFullName(name);
         }
     }
 
@@ -63,7 +75,7 @@ public class TeacherController {
             student.setRole(Role.STUDENT);
             services.add(student);
             return ResponseEntity.ok(student);
-        }catch (EmailAlreadyExistsException | UsernameAlreadyExistsException e) {
+        }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
@@ -80,7 +92,7 @@ public class TeacherController {
         try {
             services.modify(updatedUser.getId(), updatedUser);
             return ResponseEntity.ok(updatedUser);
-        }catch (EmailAlreadyExistsException | UsernameAlreadyExistsException e){
+        }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

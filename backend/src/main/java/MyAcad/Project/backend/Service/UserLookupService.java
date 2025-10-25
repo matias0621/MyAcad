@@ -32,14 +32,14 @@ public class UserLookupService implements UserDetailsService {
         };
     }
 
-    public Optional<? extends User> findByUsername(String username) {
-        Optional<Student> student = studentRepository.findByUsername(username);
+    public Optional<? extends User> findByLegajo(String legajo) {
+        Optional<Student> student = studentRepository.findByLegajo(legajo);
         if (student.isPresent()) return student;
 
-        Optional<Teacher> teacher = teacherRepository.findByUsername(username);
+        Optional<Teacher> teacher = teacherRepository.findByLegajo(legajo);
         if (teacher.isPresent()) return student;
 
-        return managerRepository.findByUsername(username);
+        return managerRepository.findByLegajo(legajo);
     }
 
     public Optional<? extends User> findByEmail(String email) {
@@ -53,9 +53,9 @@ public class UserLookupService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User u = findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+    public UserDetails loadUserByUsername(String legajo) throws UsernameNotFoundException {
+        User u = findByLegajo(legajo)
+                .orElseThrow(() -> new UsernameNotFoundException("Legajo no encontrado"));
         return new UserDetailsImpl(u);
     }
 }

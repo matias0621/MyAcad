@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AuthGuard } from './auth-guard';
+import { JwtInterceptor } from './jwt-interceptor';
 
-describe('AuthGuard', () => {
-  let service: AuthGuard;
+describe('JwtInterceptor', () => {
+  let service: JwtInterceptor;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(AuthGuard);
+    service = TestBed.inject(JwtInterceptor);
   });
 
   it('should be created', () => {

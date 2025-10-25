@@ -39,12 +39,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(
-                                "/"
-                        ).hasRole("STUDENT")
-                        .requestMatchers(
-                                "/"
-                        ).hasRole("TEACHER")
-                        .requestMatchers(
                                 "/**",
                                 "/teachers/**",
                                 "/students/**",
@@ -62,12 +56,7 @@ public class SecurityConfig {
 
                 // Deshabilita el form de login por defecto
                 .formLogin(AbstractHttpConfigurer::disable)
-                .logout(LogoutConfigurer::disable)
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) ->
-                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
-                        )
-        );
+                .logout(LogoutConfigurer::disable);
 
         return http.build();
     }

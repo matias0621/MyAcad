@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -6,10 +6,9 @@ import { Injectable } from '@angular/core';
 })
 export class UserService {
   readonly API_URL = 'http://localhost:8080';
-
   constructor(
     private http: HttpClient
-  ) { }
+  ) {}
 
   getUsers(endpoint: string) {
     return this.http.get<any[]>(`${this.API_URL}/${endpoint}`);

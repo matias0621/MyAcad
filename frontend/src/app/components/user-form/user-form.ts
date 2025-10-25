@@ -34,7 +34,7 @@ export class UserForm implements OnInit {
   OnSubmit() {
     this.service.postUser(this.form.value, this.endpoint).subscribe({
       next: (data) => {
-        console.log('Usuario creado exitosamente:');
+        console.log('Usuario creado exitosamente');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
           next: (data) => { this.added.emit(data) },
@@ -48,4 +48,5 @@ export class UserForm implements OnInit {
   cleanForm() {
     this.form.reset();
   }
+
 }

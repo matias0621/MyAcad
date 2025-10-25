@@ -9,7 +9,7 @@ import { Technicals } from './pages/careers/technicals/technicals';
 import { ProgramsEditForm } from './components/programs-edit-form/programs-edit-form';
 import { Subjects } from './pages/subjects/subjects';
 import { Login } from './pages/login/login';
-import { AuthGuard } from './Services/auth-guard';
+import { AuthGuard } from './Services/Auth/auth-guard';
 
 
 export const routes: Routes = [

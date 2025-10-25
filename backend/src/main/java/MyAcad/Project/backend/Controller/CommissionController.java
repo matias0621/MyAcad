@@ -1,6 +1,6 @@
 package MyAcad.Project.backend.Controller;
 
-import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
+import MyAcad.Project.backend.Exception.CommissionAlreadyExistsException;
 import MyAcad.Project.backend.Model.Commission.Commission;
 import MyAcad.Project.backend.Model.Commission.CommissionDTO;
 import MyAcad.Project.backend.Model.Programs.Course;
@@ -45,7 +45,7 @@ public class CommissionController {
             Commission c = new Commission(dto);
             services.add(c);
             return ResponseEntity.ok(c);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (CommissionAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
@@ -63,7 +63,7 @@ public class CommissionController {
             Commission c = new Commission(dto);
             services.modify(id, c);
             return ResponseEntity.ok(c);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (CommissionAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }

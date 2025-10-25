@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ManagerService } from './manager-service';
+import { CommissionService } from './commission-service';
 
-describe('ManagerService', () => {
-  let service: ManagerService;
+describe('CommissionService', () => {
+  let service: CommissionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ManagerService);
+    service = TestBed.inject(CommissionService);
   });
 
   it('should be created', () => {

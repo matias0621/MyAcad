@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../Services/Users/user-service';
 
@@ -13,7 +13,8 @@ export class UserForm implements OnInit {
   endpoint: string = "";
 
   @Output()
-  added = new EventEmitter<void>;
+  added = new EventEmitter<any[]>;
+
   form !: FormGroup;
 
   constructor(
@@ -26,7 +27,6 @@ export class UserForm implements OnInit {
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
       email: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(15)]]
     })
   }
@@ -34,15 +34,18 @@ export class UserForm implements OnInit {
   OnSubmit() {
     this.service.postUser(this.form.value, this.endpoint).subscribe({
       next: (data) => {
-        console.log('Usuario creado exitosamente:', data);
+        console.log('Usuario creado exitosamente:');
         this.form.reset();
-        this.added.emit()
+        this.service.getUsers(this.endpoint).subscribe({
+          next: (data) => { this.added.emit(data) },
+          error: (error) => { console.error(error) }
+        })
       },
       error: (error) => { console.error(error) }
     })
   }
-  
-  cleanForm(){
+
+  cleanForm() {
     this.form.reset();
   }
 }

@@ -1,0 +1,38 @@
+<form [formGroup]="form" (submit)="OnSubmit()">
+    <fieldset>
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" formControlName="name">
+        @if (form.controls['name'].invalid && form.controls['name'].touched) {
+        <p>El nombre debe tener entre 3 y 30 caracteres, solo letras.</p>
+        }
+    </fieldset>
+
+    <fieldset>
+        <label for="description">Descripcion:</label>
+        <input type="text" id="description" name="description" formControlName="description">
+        @if (form.controls['description'].invalid && form.controls['description'].touched) {
+        <p>La descripcion debe tener entre 2 y 300 caracteres, solo letras.</p>
+        }
+    </fieldset>
+
+    <fieldset id="email-fieldset">
+        <label for="semesters">semesters:</label>
+        <input type="number" id="semesters" name="semesters" formControlName="semesters">
+        @if (form.controls['semesters'].invalid && form.controls['semesters'].touched) {
+        <p>Complete el campo con un numero valido</p>
+        }
+    </fieldset>
+
+    <fieldset>
+        <label for="subjectActive">Activo:</label>
+        <input type="checkbox" id="subjectActive" formControlName="subjectActive">
+        @if (form.controls['subjectActive'].invalid && form.controls['subjectActive'].touched) {
+        <p>El estado activo es obligatorio.</p>
+        }
+    </fieldset>
+
+    <div id="buttons">
+        <button type="button" (click)="cleanForm()">Limpiar</button>
+        <button type="submit" [disabled]="form.invalid">Agregar</button>
+    </div>
+</form>

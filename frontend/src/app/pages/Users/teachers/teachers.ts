@@ -1,35 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import Teacher from '../../../Models/Users/Teachers';
-import { TeacherService } from '../../../Services/Users/teacher-service';
+import { Component } from '@angular/core';
 import { UserForm } from "../../../components/user-form/user-form";
+import { FormsModule } from '@angular/forms';
+import { UserList } from "../../../components/user-list/user-list";
+import { UserEditForm } from '../../../components/user-edit-form/user-edit-form';
 
 @Component({
   selector: 'app-teachers',
-  imports: [UserForm],
+  imports: [UserForm, UserEditForm, FormsModule, UserList],
   templateUrl: './teachers.html',
   styleUrl: './teachers.css'
 })
-export class Teachers implements OnInit {
-  teachers !: Teacher[];
+export class Teachers {
 
-  constructor(
-    private service: TeacherService
-  ) { }
-
-  ngOnInit(): void {
-    this.getTeachers();
-  }
-
-  getTeachers() {
-    this.service.getTeachers().subscribe({
-      next: (data) => { this.teachers = data },
-      error: (error) => { console.error(error) }
-    })
-  }
-  deleteTeacher(id: number) {
-    this.service.deleteTeacher(id).subscribe({
-      next: (data) => { this.getTeachers() },
-      error: (error) => { console.error(error) }
-    })
-  }
 }

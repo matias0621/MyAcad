@@ -23,6 +23,10 @@ export class SubjectsService {
     return this.http.get<Subjects[]>(`${this.api_url}/search?name=${name}`)
   }
 
+  getSubjectById(id:string){
+    return this.http.get<Subjects>(`${this.api_url}/${id}`)
+  }
+
   postSubject(subject:Subjects){
     return this.http.post(this.api_url, subject)
   }

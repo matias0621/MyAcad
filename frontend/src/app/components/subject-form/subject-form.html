@@ -30,29 +30,10 @@
         }
     </fieldset>
 
+
+
     <div id="buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>
         <button type="submit" [disabled]="form.invalid">Agregar</button>
     </div>
 </form>
-
-
-@if (subjectService.listSubject.length === 0) {
-<p>No hay materias cargadas</p>
-}
-@else {
-@for (subject of subjectService.listSubject; track $index) {
-<p>
-    {{ subject.name }}
-</p>
-
-<p>
-    {{ subject.description }}
-</p>
-
-<p>
-    {{ subject.semesters }}
-</p>
-<button  >Eliminar</button>
-}
-}

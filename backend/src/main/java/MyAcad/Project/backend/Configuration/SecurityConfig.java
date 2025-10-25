@@ -37,14 +37,16 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/",
+                                "/**",
                                 "/teachers/**",
                                 "/students/**",
                                 "/managers/**",
                                 "/careers/**",
                                 "/courses/**",
                                 "/subject/**",
-                                "/final-exam/**"
+                                "/technicals/**",
+                                "/final-exam/**",
+                                "/commission/**"
                         ).permitAll()
                 )
                 .authenticationProvider(authenticationProvider(service))

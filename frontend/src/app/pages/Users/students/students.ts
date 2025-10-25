@@ -1,37 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import Student from '../../../Models/Users/Student';
-import { StudentService } from '../../../Services/Users/student-service';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UserForm } from "../../../components/user-form/user-form";
+import { UserList } from "../../../components/user-list/user-list";
+import { UserEditForm } from "../../../components/user-edit-form/user-edit-form";
 
 @Component({
   selector: 'app-students',
-  imports: [ReactiveFormsModule, UserForm],
+  imports: [UserForm, FormsModule, UserList, UserEditForm],
   templateUrl: './students.html',
   styleUrl: './students.css'
 })
-export class Students implements OnInit {
-  students !: Student[];
-
-  constructor(
-    private service: StudentService
-  ) { }
-
-  ngOnInit(): void {
-    this.getStudents();
-  }
-
-  getStudents() {
-    this.service.getStudents().subscribe({
-      next: (data) => { this.students = data },
-      error: (error) => { console.error(error) }
-    })
-  }
-
-  deleteStudent(id: number) {
-    this.service.deleteStudent(id).subscribe({
-      next: (data) => { this.getStudents() },
-      error: (error) => { console.error(error) }
-    })
-  }
+export class Students {
 }

@@ -1,0 +1,22 @@
+@if (id) {
+<h1 style="text-align: center;">Editar Materias</h1>
+<app-subject-form-edit></app-subject-form-edit>
+}
+@else {
+<h1 style="text-align: center;">Materias</h1>
+<app-subject-form (added)="getAllSubject()"></app-subject-form>
+
+<ul>
+    @for (subject of subjectService.listSubject; track $index) {
+    <li>
+        {{subject.name}} {{subject.description}} {{ subject.subjectActive }}
+        <button (click)="redirecTo(subject.id)" >Editar</button>
+        <button (click)="deleteSubject(subject.id)">Eliminar</button>
+    </li>
+    }@empty {
+    <li>
+        <p style="color: red;"> Aun no hay ninguna materia cargada.</p>
+    </li>
+    }
+</ul>
+}

@@ -26,18 +26,18 @@ export class Technicals implements OnInit{
   }
 
   getTechnicals() {
-    this.service.getCareers('careers').subscribe({
+    this.service.getCareers('technicals').subscribe({
       next: (data) => { 
         this.technicals = data;
       },
       error: (error) => { 
-        console.error('E', error);
+        console.error(error);
       }
     })
   }
 
   deleteTechnical(id: number) {
-    this.service.deleteCareer(id).subscribe({
+    this.service.deleteCareer(id, 'technicals').subscribe({
       next: (data) => { this.getTechnicals() },
       error: (error) => { console.error(error) }
     })

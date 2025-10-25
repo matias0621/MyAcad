@@ -30,7 +30,5 @@ public class SubjectsEntity {
     )
     private List<SubjectsEntity> prerequisites;
 
-    public boolean getSubjectActive(){
-        return subjectActive;
-    }
+
 }

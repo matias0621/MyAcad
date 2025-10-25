@@ -1,7 +1,8 @@
 package MyAcad.Project.backend.Controller;
 
 
-import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
+import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
+import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Career;
 import MyAcad.Project.backend.Model.Programs.CareerDTO;
 import MyAcad.Project.backend.Service.CareerService;
@@ -48,7 +49,7 @@ public class CareerController {
             Career career = new Career(dto);
             services.add(career);
             return ResponseEntity.ok(career);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (CareerAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
@@ -66,7 +67,7 @@ public class CareerController {
             Career career = new Career(dto);
             services.modify(id, career);
             return ResponseEntity.ok(career);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }

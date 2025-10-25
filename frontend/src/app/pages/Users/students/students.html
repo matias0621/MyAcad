@@ -1,14 +1,4 @@
 <h1 style="text-align: center;">Alumnos</h1>
-<app-user-form endpoint="students" (added)="getStudents()"></app-user-form>
-<ul>
-    @for (student of students; track $index) {
-        <li>
-            {{student.name}} {{student.lastName}}
-            <button (click)="deleteStudent(student.id)">Eliminar</button>
-        </li>
-    }@empty {
-        <li>
-            <p style="color: red;"> Aun no hay ningun estudiante cargado.</p>
-        </li>
-    }
-</ul>
+<app-user-form endpoint="students" (added)="userList.users = $event" #userForm></app-user-form>
+<app-user-edit-form endpoint="students" (added)="userList.users = $event" #userEditForm></app-user-edit-form>
+<app-user-list endpoint="students" (user)="userEditForm.loadData($event)" #userList></app-user-list>

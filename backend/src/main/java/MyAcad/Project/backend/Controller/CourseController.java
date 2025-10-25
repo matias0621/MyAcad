@@ -1,6 +1,6 @@
 package MyAcad.Project.backend.Controller;
 
-import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
+import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.CourseDTO;
 import MyAcad.Project.backend.Service.CourseService;
@@ -26,7 +26,7 @@ public class CourseController {
     }
 
     //Obtener por id
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
         Optional<Course> course = services.getById(id);
         if (course.isPresent()) {
@@ -43,30 +43,30 @@ public class CourseController {
             Course course = new Course(dto);
             services.add(course);
             return ResponseEntity.ok(course);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
 
     //DELETE
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }
 
     //PUT
-    @PutMapping("/id/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody CourseDTO dto){
         try {
             Course course = new Course(dto);
             services.modify(id, course);
             return ResponseEntity.ok(course);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
 
-    @GetMapping("/listCourses")
+    @GetMapping()
     public List<Course> listCourses() {
         return services.list();
     }

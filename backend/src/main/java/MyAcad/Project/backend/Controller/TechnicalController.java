@@ -1,8 +1,6 @@
 package MyAcad.Project.backend.Controller;
 
-import MyAcad.Project.backend.Exception.UsernameAlreadyExistsException;
-import MyAcad.Project.backend.Model.Programs.Career;
-import MyAcad.Project.backend.Model.Programs.CareerDTO;
+import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Technical;
 import MyAcad.Project.backend.Model.Programs.TechnicalDTO;
 import MyAcad.Project.backend.Service.TechnicalService;
@@ -50,7 +48,7 @@ public class TechnicalController {
             Technical technical = new Technical(dto);
             services.add(technical);
             return ResponseEntity.ok(technical);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
@@ -68,7 +66,7 @@ public class TechnicalController {
             Technical technical = new Technical(dto);
             services.modify(id, technical);
             return ResponseEntity.ok(technical);
-        }catch (UsernameAlreadyExistsException e) {
+        }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }

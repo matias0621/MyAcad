@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubjectsService } from '../../Services/Subjects/subjects-service';
+import Subjects from '../../Models/Subjects/Subjects';
 
 @Component({
   selector: 'app-subject-form',
@@ -8,12 +9,16 @@ import { SubjectsService } from '../../Services/Subjects/subjects-service';
   templateUrl: './subject-form.html',
   styleUrl: './subject-form.css'
 })
-export class SubjectForm implements OnInit {
+export class SubjectForm {
 
   form!:FormGroup
   name!:FormControl
   description!:FormControl
   semesters!:FormControl
+
+
+  @Output()
+  added = new EventEmitter<void>;
 
   
 
@@ -25,13 +30,12 @@ export class SubjectForm implements OnInit {
     this.form = new FormGroup({
       name: this.name,
       description: this.description,
-      semesters: this.semesters
+      semesters: this.semesters,
+      subjectActive: new FormControl(true)    
     })
   }
 
-  ngOnInit(): void {
-    this.getAllSubject()
-  }
+
 
   OnSubmit(){
 
@@ -40,11 +44,15 @@ export class SubjectForm implements OnInit {
       return
     }
 
+    
+    console.log(this.form.value)
+
     this.subjectService.postSubject(this.form.value).subscribe({
       next: (res) => {
+        console.log
         alert("Se subio correctamente la nueva materia")
+        this.added.emit()
         console.log(res)
-        this.getAllSubject()
       },
       error: (err) => {
         alert("Algo salio mal")
@@ -57,26 +65,6 @@ export class SubjectForm implements OnInit {
     this.form.reset();
   }
 
-  getAllSubject(){
-    this.subjectService.getAllSubject().subscribe({
-      next: (res) => {
-        this.subjectService.listSubject = res
-      },
-      error: (err) => {
-        console.log(err)
-      }
-    })
-  }
 
-  deleteSubject(id:number){
-    this.subjectService.deleteSubject(id.toString()).subscribe({
-      next: (res) => {
-        alert("Se elimino correctamente")
-        this.getAllSubject()
-      },
-      error: (err) => {
-        alert("No se pudo eliminar la materia")
-      }
-    })
-  }
+
 }

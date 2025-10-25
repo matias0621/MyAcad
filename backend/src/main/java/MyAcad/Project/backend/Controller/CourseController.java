@@ -26,7 +26,7 @@ public class CourseController {
     }
 
     //Obtener por id
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
         Optional<Course> course = services.getById(id);
         if (course.isPresent()) {
@@ -55,7 +55,7 @@ public class CourseController {
     }
 
     //PUT
-    @PutMapping("/id/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody CourseDTO dto){
         try {
             Course course = new Course(dto);

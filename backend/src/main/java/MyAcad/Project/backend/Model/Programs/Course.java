@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Model.Programs;
 
 import MyAcad.Project.backend.Enum.ProgramType;
+import MyAcad.Project.backend.Model.Commission.CommissionDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,5 +20,6 @@ public class Course extends Program {
         super(dto);
         this.programType = ProgramType.COURSE;
     }
+
 
 }

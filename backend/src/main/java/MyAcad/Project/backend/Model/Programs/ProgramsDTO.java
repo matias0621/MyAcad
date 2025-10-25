@@ -33,9 +33,7 @@ public class ProgramsDTO {
     @Enumerated(EnumType.STRING)
     ProgramType programType;
 
-    public ProgramsDTO(CareerDTO dto) {
 
-    }
     public ProgramsDTO(Long id, String name, String description, Integer durationMonths, Double monthlyFee, Double annualFee, Boolean active) {
     }
 

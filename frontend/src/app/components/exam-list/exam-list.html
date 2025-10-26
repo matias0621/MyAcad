@@ -1,0 +1,14 @@
+
+<ul>
+    @for (exam of exams; track $index) {
+        <li>
+            {{exam.score}} {{exam.subject.name}} 
+            <button (click)="modifyExam(exam)">Editar</button>
+            <button (click)="deleteExam(exam.id)">Eliminar</button>
+        </li>
+    }@empty {
+        <li>
+            <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
+        </li>
+    }
+</ul>

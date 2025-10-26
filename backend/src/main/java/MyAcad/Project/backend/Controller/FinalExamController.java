@@ -52,4 +52,9 @@ public class FinalExamController {
         List<FinalExamEntity> exams = finalExamService.findByScore(score);
         return ResponseEntity.ok(exams);
     }
+
+    @GetMapping("/subjects/{id}")
+    public ResponseEntity<List<FinalExamEntity>> findBySubjectId(@PathVariable Long id) {
+        return ResponseEntity.ok(finalExamService.findAllBySubjectsId(id));
+    }
 }

@@ -13,7 +13,7 @@ export class ProgramsForm implements OnInit {
   endpoint: string = "";
 
   @Output()
-  added = new EventEmitter<void>();
+  added = new EventEmitter<any[]>
   formPrograms !: FormGroup
 
   constructor(

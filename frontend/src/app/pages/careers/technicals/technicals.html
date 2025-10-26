@@ -1,4 +1,4 @@
 <h1 style="text-align: center;">Tecnicaturas</h1>
-<app-programs-form endpoint="technicals" (added)="programsList.getCareers()"></app-programs-form>
-<app-programs-edit-form endpoint="technicals" (added)="programsList.getCareers()" #programEditForm></app-programs-edit-form>
-<app-programs-list endpoint="technicals" (user)="programEditForm.loadData($event)" #programsList></app-programs-list>
+<app-programs-form endpoint="technicals" (added)="programsList.programs = $event"></app-programs-form>
+<app-programs-edit-form endpoint="technicals" (added)="programsList.programs = $event" #programEditForm></app-programs-edit-form>
+<app-programs-list endpoint="technicals" (program)="programEditForm.loadData($event)" #programsList></app-programs-list>

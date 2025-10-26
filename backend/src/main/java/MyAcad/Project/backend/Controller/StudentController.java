@@ -70,7 +70,8 @@ public class StudentController {
     public ResponseEntity<?> addStudent(@RequestBody StudentDTO dto) {
         try {
             Student student = new Student(dto);
-            System.out.println(student);
+            //Por defecto se le asigna el dni como contraseña a un usuario nuevo, luego lo cambia el mismo en su cuenta
+            student.setPassword(String.valueOf(dto.getDni()));
             student.setRole(Role.STUDENT);
             services.add(student);
             return ResponseEntity.ok(student);

@@ -28,6 +28,7 @@ export class UserEditForm implements OnInit {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
+      dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^[0-9]+$/)]],
       email: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       password: ['', [Validators.minLength(6), Validators.maxLength(15)]]
     })
@@ -36,6 +37,7 @@ export class UserEditForm implements OnInit {
 
   OnSubmit() {
     const modifiedUser = { id: this.userId, ...this.form.value }
+    
     this.service.putUser(modifiedUser, this.endpoint).subscribe({
       next: (data) => {
         console.log('Usuario modificado exitosamente:');

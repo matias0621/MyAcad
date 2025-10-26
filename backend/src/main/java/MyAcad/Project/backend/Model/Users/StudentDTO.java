@@ -11,9 +11,8 @@ import lombok.ToString;
 @ToString
 public class StudentDTO extends UserDTO{
 
-    public StudentDTO(Long id, String name, String lastName, String email, String password) {
-        super(id, name, lastName, email, password);
-        this.legajo = String.valueOf((id + 100000));
+    public StudentDTO(String name, String lastName, int dni, String email, String password) {
+        super(name, lastName, dni, email, password);
         this.role = Role.STUDENT;
     }
 }

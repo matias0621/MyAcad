@@ -7,10 +7,14 @@ form {
     gap: 1em;
     width: 40%;
     margin: 0 auto;
-    background-color: var(--color-5);
     padding: 2em;
     border-radius: 10px;
     color: var(--color-1);
+    background-color: var(--color-5);
+}
+form>h3{
+    grid-column: 1/3;
+    text-align: center;
 }
 fieldset{
     display: flex;
@@ -19,12 +23,6 @@ fieldset{
 }
 fieldset:last-child{
     column-span: all;
-}
-#email-fieldset{
-    grid-column: 1 / 3;
-}
-#email{
-    width: 50%;
 }
 input{
     width: 90%;

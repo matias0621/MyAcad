@@ -1,27 +1,4 @@
 <h1 style="text-align: center;">Ingenierías</h1>
-<app-programs-form endpoint="careers" (added)="getEngineerings()"></app-programs-form>
-
-<button (click)="toggleDisabledView()">
-    {{ showDisabled ? 'Deshabilitadas' : 'Deshabilitadas' }}
-</button>
-
-<ul>
-    @for (engineering of engineerings; track $index) {
-        @if (engineering.active) {
-            <li>
-                Nombre: {{engineering.name}} - Mensualidad: {{engineering.monthlyFee}} - Matricula: {{engineering.annualFee}} - Duración: {{engineering.durationMonths}} meses
-                <button (click)="deleteEngineering(engineering.id)">Eliminar</button>
-            </li>
-        }
-        @if (!engineering.active && showDisabled) {
-            <li style="color: gray;">
-                {{engineering.name}} - {{engineering.durationMonths}} meses (INACTIVA)
-                <button (click)="viewDisabled(engineering)">Activar</button>
-            </li>
-        }
-    }@empty {
-        <li>
-            <p style="color: red;"> Aun no hay ninguna ingeniería cargada.</p>
-        </li>
-    }
-</ul>
+<app-programs-form endpoint="careers" (added)="programsList.getCareers()"></app-programs-form>
+<app-programs-edit-form endpoint="engineerings" (added)="programsList.getCareers()" #programEditForm></app-programs-edit-form>
+<app-programs-list endpoint="engineerings" (user)="programEditForm.loadData($event)" #programsList></app-programs-list>

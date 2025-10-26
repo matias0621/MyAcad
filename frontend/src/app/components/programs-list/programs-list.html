@@ -1,0 +1,25 @@
+<button (click)="toggleDisabledView()">
+    {{ showDisabled ? 'Ocultar deshabilitadas' : 'Ver deshabilitadas' }}
+</button>
+
+<ul>
+    @for (program of programs; track $index) {
+        @if (program.active) {
+            <li>
+                Nombre: {{program.name}} - Mensualidad: {{program.monthlyFee}} - Matricula: {{program.annualFee}} - Duración: {{program.durationMonths}} meses
+                <button (click)="modifyProgram(program)">Editar</button>
+                <button (click)="deleteProgram(program.id)">Eliminar</button>
+            </li>
+        }
+        @if (!program.active && showDisabled) {
+            <li style="color: gray;">
+                {{program.name}} - {{program.durationMonths}} meses (INACTIVA)
+                <button (click)="viewDisabled(program)">Activar</button>
+            </li>
+        }
+    }@empty {
+        <li>
+            <p style="color: red;"> Aun no hay ningun programa cargado.</p>
+        </li>
+    }
+</ul>

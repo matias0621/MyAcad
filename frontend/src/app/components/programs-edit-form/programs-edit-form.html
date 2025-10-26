@@ -1,4 +1,5 @@
-<form [formGroup]="formPrograms" (submit)="send()" (submit)="onSubmit()">
+<form [formGroup]="formPrograms" (submit)="OnSubmit()">
+    <h3>Editar</h3>
     <fieldset>
         <label for="name">Nombre:</label>
         <input type="text" id="name" formControlName="name">
@@ -44,6 +45,6 @@
 
     <div id="buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>
-        <button type="submit" [disabled]="formPrograms.invalid">Actualizar</button>
+        <button type="submit" [disabled]="formPrograms.invalid">Editar</button>
     </div>
 </form>

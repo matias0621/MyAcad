@@ -1,7 +1,12 @@
 import Subjects from "../Subjects/Subjects";
 
-export default interface ExamFinal {
+export interface ExamFinal {
     id: number,
     score: number,
     subject: Subjects
+}
+
+export interface PostExamFinal {
+    score: number,
+    subjectsId: number
 }

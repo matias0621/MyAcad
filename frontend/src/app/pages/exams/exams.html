@@ -1,1 +1,5 @@
-<p>exams works!</p>
+<h1 style="text-align: center;">Examenes</h1>
+
+<app-exam-form endpoint="managers" (added)="examList.exams = $event" #examForm></app-exam-form>
+<app-exam-form-edit endpoint="managers" (added)="examList.exams = $event" #examEditForm></app-exam-form-edit>
+<app-exam-list endpoint="managers" (exam)="examEditForm.loadData($event)" #examList></app-exam-list>

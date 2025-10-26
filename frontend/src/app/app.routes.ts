@@ -27,6 +27,8 @@ export const routes: Routes = [
     { path: 'subject', component: Subjects, canActivate: [AuthGuard] },
     { path: 'subject/:id', component: Subjects, canActivate: [AuthGuard] },
 
+    { path: 'exam', component:Exams },
+
     { path: 'engineerings', component: Engineerings, canActivate: [AuthGuard] },
     { path: 'technicals', component: Technicals, canActivate: [AuthGuard] },
     { path: 'courses', component: Courses, canActivate: [AuthGuard] },

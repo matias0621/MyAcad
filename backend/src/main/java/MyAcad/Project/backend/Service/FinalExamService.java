@@ -37,6 +37,10 @@ public class FinalExamService {
                 .orElseThrow(() -> new EntityNotFoundException("Final exam not found with id: " + id));
     }
 
+    public List<FinalExamEntity> findAllBySubjectsId(Long id) {
+        return finalExamRepository.findBySubject_Id(id);
+    }
+
     public FinalExamEntity update(Long id, FinalExamDTO dto) {
         FinalExamEntity existingExam = finalExamRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Final exam not found with id: " + id));

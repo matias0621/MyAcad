@@ -9,7 +9,7 @@
     @for (engineering of engineerings; track $index) {
         @if (engineering.active) {
             <li>
-                {{engineering.name}} - {{engineering.monthlyFee}} - {{engineering.annualFee}} - {{engineering.durationMonths}} meses
+                Nombre: {{engineering.name}} - Mensualidad: {{engineering.monthlyFee}} - Matricula: {{engineering.annualFee}} - Duración: {{engineering.durationMonths}} meses
                 <button (click)="deleteEngineering(engineering.id)">Eliminar</button>
             </li>
         }

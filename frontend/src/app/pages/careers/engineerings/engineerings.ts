@@ -33,7 +33,8 @@ export class Engineerings implements OnInit {
 
   deleteEngineering(id: number) {
     this.service.deleteCareer(id, 'careers').subscribe({
-      next: (data) => { this.getEngineerings() },
+      next: (data) => { alert(`Carrera con ID ${id} eliminada exitosamente.`);
+        this.getEngineerings() },
       error: (error) => { console.error(error) }
     })
   }
@@ -41,8 +42,16 @@ export class Engineerings implements OnInit {
 
   viewDisabled(career: Career) {
     if (confirm(`¿Deseas activar "${career.name}"?`)) {
-      career.active = true;
-      this.router.navigate(['/programs-edit-form', career.id]);
+      const updatedCareer = { ...career, active: true };
+      this.service.updateCareer(updatedCareer).subscribe({
+        next: (response) => {
+          alert(`Carrera "${career.name}" activada exitosamente.`);
+          this.getEngineerings();
+        },
+        error: (error) => {
+          alert('Error al activar la carrera. Por favor, intenta nuevamente.');
+        }
+      });
     }
   }
 

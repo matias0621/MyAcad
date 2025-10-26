@@ -25,7 +25,12 @@ export class CareerService {
   }
 
   updateCareer(career: Career) {
-    return this.http.put<any>(`${this.API_URL}${career.id}`, career);
+    return this.http.put<any>(`${this.API_URL}/careers/${career.id}`, career);
+  }
+
+  // Actualiza según el recurso/endpoint correspondiente (technicals, courses, careers)
+  updateByEndpoint(entity: any, endpoint: string) {
+    return this.http.put<any>(`${this.API_URL}/${endpoint}/${entity.id}`, entity);
   }
 
 }

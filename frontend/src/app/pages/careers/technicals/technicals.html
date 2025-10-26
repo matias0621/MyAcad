@@ -9,7 +9,7 @@
     @for (technical of technicals; track $index) {
     @if (technical.active) {
     <li>
-        {{technical.name}} - {{technical.durationMonths}} meses
+        Nombre: {{technical.name}} - Mensualidad: {{technical.monthlyFee}} - Matricula: {{technical.annualFee}} - Duración: {{technical.durationMonths}} meses
         <button (click)="deleteTechnical(technical.id)">Eliminar</button>
     </li>
     }

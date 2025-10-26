@@ -43,12 +43,21 @@ export class Courses implements OnInit {
   }
 
   viewDisabled(course: Course) {
-    if (confirm(`¿Deseas activar "${course.name}"?`)) {
-      course.active = true;
-      this.router.navigate(['/programs-edit-form', course.id]);
+      console.log('Curso a activar:', course);
+      if (confirm(`¿Deseas activar "${course.name}"?`)) {
+        const updatedCourse = { ...course, active: true };
+        console.log('Enviando al servidor:', updatedCourse);
+        this.service.updateByEndpoint(updatedCourse, 'courses').subscribe({
+          next: (response) => {
+            console.log('Curso activado exitosamente', response);
+            this.getCourses();
+          },
+          error: (error) => {
+            console.error('Error al activar el curso:', error);
+          }
+        });
+      }
     }
-
-  }
     toggleDisabledView() {
       this.showDisabled = !this.showDisabled;
     }

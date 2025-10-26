@@ -10,7 +10,7 @@
     @for (course of courses; track $index) {
         @if (course.active) {
             <li>
-                {{course.name}} - {{course.monthlyFee}} - {{course.annualFee}} - {{course.durationMonths}} meses
+                Nombre: {{course.name}} - Mensualidad: {{course.monthlyFee}} - Matricula: {{course.annualFee}} - Duración: {{course.durationMonths}} meses
                 <button (click)="deleteCourse(course.id)">Eliminar</button>
             </li>
         }

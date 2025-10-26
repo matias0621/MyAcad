@@ -45,6 +45,7 @@ public class SecurityConfig {
                                 "/students/**",
                                 "/managers/**",
                                 "/careers/**",
+                                "/engineering/**",
                                 "/courses/**",
                                 "/subject/**",
                                 "/technicals/**",

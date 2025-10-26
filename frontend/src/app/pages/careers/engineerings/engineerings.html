@@ -1,4 +1,4 @@
 <h1 style="text-align: center;">Ingenierías</h1>
 <app-programs-form endpoint="careers" (added)="programsList.getCareers()"></app-programs-form>
-<app-programs-edit-form endpoint="engineerings" (added)="programsList.getCareers()" #programEditForm></app-programs-edit-form>
-<app-programs-list endpoint="engineerings" (user)="programEditForm.loadData($event)" #programsList></app-programs-list>
+<app-programs-edit-form endpoint="careers" (added)="programsList.getCareers()" #programEditForm></app-programs-edit-form>
+<app-programs-list endpoint="careers" (user)="programEditForm.loadData($event)" #programsList></app-programs-list>

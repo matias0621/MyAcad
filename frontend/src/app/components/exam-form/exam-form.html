@@ -1,16 +1,16 @@
 <form [formGroup]="form" (submit)="OnSubmit()" id="add-form">
-    <h3>Editar</h3>
+    <h3>Crear</h3>
     <fieldset>
-        <label for="score">Nombre:</label>
+        <label for="score">Nota:</label>
         <input type="number" id="score" name="score" formControlName="score">
         @if (form.controls['score'].invalid && form.controls['score'].touched) {
-        <p>El nombre debe tener entre 3 y 30 caracteres, solo letras.</p>
+        <p>El Nota debe ser un numero entre 1 y 100</p>
         }
     </fieldset>
 
     <div id="buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>
-        <button type="submit" [disabled]="form.invalid">Editar</button>
+        <button type="submit" [disabled]="form.invalid">Crear</button>
     </div>
 </form>
 

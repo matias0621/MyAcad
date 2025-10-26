@@ -7,7 +7,7 @@ import { ExamFinal, PostExamFinal } from '../../Models/Final-Exam/FinalExam';
   providedIn: 'root'
 })
 export class ExamsService {
-  readonly url_api = "http://localhost:8080/"
+  readonly url_api = "http://localhost:8080"
 
 
   constructor(private http:HttpClient){}
@@ -28,8 +28,8 @@ export class ExamsService {
     return this.http.post(`${this.url_api}/${endpoint}`, exam)
   }
 
-  putExam(endpoint:string, exam:Exam | ExamFinal){
-    return this.http.put(`${this.url_api}/${endpoint}/${exam.id}`, exam)
+  putExam(endpoint:string, exam:PostExam | PostExamFinal, id:number){
+    return this.http.put(`${this.url_api}/${endpoint}/${id}`, exam)
   }
 
   deleteExam(endpoint:string, examId:number){

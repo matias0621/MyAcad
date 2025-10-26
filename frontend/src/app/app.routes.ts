@@ -12,6 +12,7 @@ import { Login } from './pages/login/login';
 import { AuthGuard } from './Services/Auth/auth-guard';
 
 import { Exams } from './pages/exams/exams';
+import { FinalExams } from './pages/final-exams/final-exams';
 
 
 
@@ -27,7 +28,8 @@ export const routes: Routes = [
     { path: 'subject', component: Subjects, canActivate: [AuthGuard] },
     { path: 'subject/:id', component: Subjects, canActivate: [AuthGuard] },
 
-    { path: 'exam', component:Exams },
+    { path: 'exam', component:Exams, canActivate: [AuthGuard] },
+    { path: 'final-exam', component:FinalExams, canActivate: [AuthGuard] },
 
     { path: 'engineerings', component: Engineerings, canActivate: [AuthGuard] },
     { path: 'technicals', component: Technicals, canActivate: [AuthGuard] },

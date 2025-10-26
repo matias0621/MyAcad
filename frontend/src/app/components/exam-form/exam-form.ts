@@ -54,10 +54,9 @@ export class ExamForm {
     }
 
     const examLoad:PostExam | PostExamFinal = {
-      score: this.form.value,
-      subjectsId: this.idSubjects
+      score: this.form.value.score,
+      subjectId: this.idSubjects
     }
-
 
     this.service.postExam(this.endpoint , examLoad).subscribe({
       next: (data) => {

@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../Services/Users/user-service';
 import { SubjectsService } from '../../Services/Subjects/subjects-service';
-import { Exam } from '../../Models/Exam/Exam';
-import { ExamFinal } from '../../Models/Final-Exam/FinalExam';
+import { Exam, PostExam } from '../../Models/Exam/Exam';
+import { ExamFinal, PostExamFinal } from '../../Models/Final-Exam/FinalExam';
 import { ActivatedRoute } from '@angular/router';
+import { ExamsService } from '../../Services/Exams/exams-service';
 
 @Component({
   selector: 'app-exam-form-edit',
@@ -26,7 +27,7 @@ export class ExamFormEdit {
 
 
   constructor(
-    private service: UserService,
+    private service: ExamsService,
     public subjectsService: SubjectsService,
     private fb: FormBuilder,
   ) { }
@@ -49,19 +50,29 @@ export class ExamFormEdit {
 
 
   OnSubmit() {
-    const modifiedUser = { id: this.examId, ...this.form.value }
-    this.service.putUser(modifiedUser, this.endpoint).subscribe({
-      next: (data) => {
-        console.log('Usuario modificado exitosamente:');
-        this.form.reset();
-        this.service.getUsers(this.endpoint).subscribe({
-          next: (data) => { this.added.emit(data) },
-          error: (error) => { console.error(error) }
-        })
-      },
-      error: (error) => { console.error(error) }
-    })
-  }
+  
+      if (this.idSubjects == null){
+        alert("Un examen debe tener una materia asignada")
+        return
+      }
+  
+      const examLoad:PostExam | PostExamFinal = {
+        score: this.form.value.score,
+        subjectId: this.idSubjects
+      }
+  
+      this.service.putExam(this.endpoint , examLoad, this.examId).subscribe({
+        next: (data) => {
+          console.log('Examen creado exitosamente:');
+          this.form.reset();
+          this.service.getAllExams(this.endpoint).subscribe({
+            next: (data) => { this.added.emit(data) },
+            error: (error) => { console.error(error) }
+          })
+        },
+        error: (error) => { console.error(error) }
+      })
+    }
 
   loadData(examenData: Exam | ExamFinal) {
     this.examId = examenData.id

@@ -8,5 +8,5 @@ export interface Exam {
 
 export interface PostExam{
     score: number,
-    subjectsId: number
+    subjectId: number
 }

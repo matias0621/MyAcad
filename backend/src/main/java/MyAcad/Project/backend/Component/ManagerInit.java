@@ -18,6 +18,7 @@ public class ManagerInit {
             ManagerDTO dto = new ManagerDTO(
                     "manager",
                     "1",
+                    1,
                     "manager1@gmail.com",
                     "123"
             );

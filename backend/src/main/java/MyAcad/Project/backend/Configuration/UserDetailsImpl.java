@@ -28,6 +28,7 @@ public class UserDetailsImpl implements UserDetails {
     public String getRole() {
         return user.getRole().name();
     }
+    public int getDni(){return user.getDni();}
 
     public User getUser() {
         return user;

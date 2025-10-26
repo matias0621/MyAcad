@@ -39,8 +39,6 @@ public class UserLookupService implements UserDetailsService {
         Optional<Teacher> teacher = teacherRepository.findByLegajo(legajo);
         if (teacher.isPresent()) return teacher;
 
-        System.out.println("MANAGERA SASASASSAASASAS" + managerRepository.findByLegajo(legajo));
-
         return managerRepository.findByLegajo(legajo);
     }
 

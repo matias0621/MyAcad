@@ -10,8 +10,10 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class UserDTO {
     protected Long id;
@@ -23,6 +25,10 @@ public class UserDTO {
     @NotBlank(message = "El nombre no puede estar vacío")
     @Size(max = 50)
     protected String lastName;
+
+    @NotBlank(message = "El dni no puede estar vacío")
+    @Size(max = 8)
+    protected int dni;
 
     @NotBlank(message = "El nombre no puede estar vacío")
     @Size(max = 50)
@@ -44,9 +50,10 @@ public class UserDTO {
     @Enumerated(EnumType.STRING)
     protected Role role;
 
-    public UserDTO(String name, String lastName, String email, String password) {
+    public UserDTO(String name, String lastName, int dni, String email, String password) {
         this.name = name;
         this.lastName = lastName;
+        this.dni = dni;
         this.email = email;
         this.password = password;
     }

@@ -58,9 +58,9 @@ public class ManagerController {
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Manager> student = services.getById(id);
-        if (student.isPresent()) {
-            return ResponseEntity.ok(student.get());
+        Optional<Manager> manager = services.getById(id);
+        if (manager.isPresent()) {
+            return ResponseEntity.ok(manager.get());
         }else{
             return ResponseEntity.notFound().build();
         }
@@ -70,10 +70,12 @@ public class ManagerController {
     @PostMapping
     public ResponseEntity<?> addManager(@RequestBody ManagerDTO dto) {
         try {
-            Manager student = new Manager(dto);
-            student.setRole(Role.STUDENT);
-            services.add(student);
-            return ResponseEntity.ok(student);
+            Manager manager = new Manager(dto);
+            //Por defecto se le asigna el dni como contraseña a un usuario nuevo, luego lo cambia el mismo en su cuenta
+            manager.setPassword(String.valueOf(dto.getDni()));
+            manager.setRole(Role.STUDENT);
+            services.add(manager);
+            return ResponseEntity.ok(manager);
         }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }

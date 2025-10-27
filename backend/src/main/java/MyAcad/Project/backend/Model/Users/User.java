@@ -36,4 +36,6 @@ public abstract class User {
         this.password = dto.getPassword();
         this.role = dto.getRole();
     }
+
+
 }

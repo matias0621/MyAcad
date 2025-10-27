@@ -16,7 +16,7 @@ public class ExamEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "commission_id")
+    @Column(name = "exam_id")
     private Long id;
 
     private int score;

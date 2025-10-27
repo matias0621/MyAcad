@@ -12,9 +12,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MateriaXAlumnoEntity {
+public class SubjectsXStudentEntity {
 
     @Id
+    @Column(name = "subjetXStudent_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

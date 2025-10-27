@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Model.Subjects;
 
+import MyAcad.Project.backend.Enum.AcademicStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class SubjectsEntity {
     private String description;
     private int semesters;
     private boolean subjectActive;
+    private AcademicStatus academicStatus;
 
     @ManyToMany
     @JoinTable(
@@ -29,6 +31,5 @@ public class SubjectsEntity {
             inverseJoinColumns = @JoinColumn(name = "prerequisite_id")
     )
     private List<SubjectsEntity> prerequisites;
-
 
 }

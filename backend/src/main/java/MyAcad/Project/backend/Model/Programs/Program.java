@@ -1,22 +1,24 @@
 package MyAcad.Project.backend.Model.Programs;
 
 import MyAcad.Project.backend.Enum.ProgramType;
+import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
+import java.util.Set;
 
 @MappedSuperclass
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-
 public abstract class Program {
 
     @Id
     @GeneratedValue
+    @Column(name = "program_id")
     private Long id;
     private String name;
     private String description;
@@ -38,5 +40,27 @@ public abstract class Program {
         this.active = dto.getActive();
         this.programType = dto.getProgramType();
     }
+
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "program_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<Student> students;
+
+
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "program_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<Teacher> teachers;
+
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "program_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
+    )
+    private Set<SubjectsEntity> subjects;
 
 }

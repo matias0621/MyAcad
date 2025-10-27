@@ -4,6 +4,8 @@ import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -17,6 +19,8 @@ public class FinalExamEntity {
     private int id;
 
     private int score;
+
+    private LocalDate examDate;
 
     @ManyToOne
     @JoinColumn(name = "subject_id")

@@ -15,6 +15,7 @@ import lombok.ToString;
 public abstract class User {
     @Id
     @GeneratedValue
+    @Column(name = "user_id")
     protected Long id;
     @Column(unique = true)
     protected String legajo;

@@ -8,6 +8,7 @@ import lombok.*;
 @Entity
 @Table(name = "commission")
 @Getter @Setter @NoArgsConstructor @ToString
+@AllArgsConstructor
 public class Commission {
     @Id @GeneratedValue
     private Long id;

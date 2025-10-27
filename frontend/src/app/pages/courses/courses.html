@@ -1,27 +1,4 @@
 <h1 style="text-align: center;">Cursos</h1>
-<app-programs-form endpoint="courses" (added)="getCourses()"></app-programs-form>
-
-<button (click)="toggleDisabledView()">
-    {{ showDisabled ? 'Deshabilitadas' : 'Deshabilitadas' }}
-</button>
-
-
-<ul>
-    @for (course of courses; track $index) {
-        @if (course.active) {
-            <li>
-                {{course.name}} - {{course.monthlyFee}} - {{course.annualFee}} - {{course.durationMonths}} meses
-                <button (click)="deleteCourse(course.id)">Eliminar</button>
-            </li>
-        }
-        @if (!course.active && showDisabled) {
-            <li style="color: gray;">
-                {{course.name}} - {{course.durationMonths}} meses (INACTIVA)
-                <button (click)="viewDisabled(course)">Activar</button>
-            </li>
-        }
-    }@empty {
-        <li>
-            <p style="color: red;"> Aun no hay ninguna carrera cargada.</p>
-        </li>
-    }
+<app-programs-form endpoint="courses" (added)="programsList.programs = $event"></app-programs-form>
+<app-programs-edit-form endpoint="courses" (added)="programsList.programs = $event" #programEditForm></app-programs-edit-form>
+<app-programs-list endpoint="courses" (program)="programEditForm.loadData($event)" #programsList></app-programs-list>

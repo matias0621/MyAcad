@@ -59,9 +59,9 @@ public class TeacherController {
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Teacher> student = services.getById(id);
-        if (student.isPresent()) {
-            return ResponseEntity.ok(student.get());
+        Optional<Teacher> teacher = services.getById(id);
+        if (teacher.isPresent()) {
+            return ResponseEntity.ok(teacher.get());
         }else{
             return ResponseEntity.notFound().build();
         }
@@ -71,10 +71,12 @@ public class TeacherController {
     @PostMapping
     public ResponseEntity<?> addTeacher(@RequestBody TeacherDTO dto) {
         try {
-            Teacher student = new Teacher(dto);
-            student.setRole(Role.STUDENT);
-            services.add(student);
-            return ResponseEntity.ok(student);
+            Teacher teacher = new Teacher(dto);
+            //Por defecto se le asigna el dni como contraseña a un usuario nuevo, luego lo cambia el mismo en su cuenta
+            teacher.setPassword(String.valueOf(dto.getDni()));
+            teacher.setRole(Role.STUDENT);
+            services.add(teacher);
+            return ResponseEntity.ok(teacher);
         }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }

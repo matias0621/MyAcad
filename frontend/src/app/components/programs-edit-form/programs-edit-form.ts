@@ -11,6 +11,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './programs-edit-form.css'
 })
 export class ProgramsEditForm implements OnInit {
+  @Input()
+  endpoint: string = "";
+
+  @Output()
+  added = new EventEmitter<any[]>;
+
   formPrograms!: FormGroup;
   careerId!: string;
 
@@ -34,42 +40,38 @@ export class ProgramsEditForm implements OnInit {
 
   }
 
-  onSubmit() {
-    const updateCareer: Career = this.formPrograms.value;
-    this.cService.updateCareer(updateCareer).subscribe(() => {
-      alert('Carrera Actualizada :D');
+  OnSubmit() {
+    const modifiedCareer = { id: this.careerId, ...this.formPrograms.value };
+
+    this.cService.updateCareer(modifiedCareer).subscribe({
+      next: (data) => {
+        console.log('Programa modificado exitosamente:');
+        this.formPrograms.reset();
+        this.cService.getCareers(this.endpoint).subscribe({
+          next: (data) => { this.added.emit(data) },
+          error: (error) => { console.error(error) }
+        })
+      },
+      error: (error) => { console.error(error) }
     })
   }
 
-  send() {
-    if (this.formPrograms.invalid) {
-      this.formPrograms.markAllAsTouched();
-      return;
+  loadData(careerData: any) {
+    this.careerId = careerData.id
+
+    const mappedData = {
+      name: careerData.name,
+      description: careerData.description,
+      durationMonths: careerData.durationMonths,
+      monthlyFee: careerData.monthlyFee,
+      annualFee: careerData.annualFee,
+      active: careerData.active
     }
 
-    const careerData: Career = {
-      id: Number(this.careerId),
-      name: this.formPrograms.value.name,
-      description: this.formPrograms.value.description,
-      durationMonths: Number(this.formPrograms.value.durationMonths),
-      monthlyFee: Number(this.formPrograms.value.monthlyFee),
-      annualFee: Number(this.formPrograms.value.annualFee),
-      active: this.formPrograms.value.active
-    };
-
-    this.cService.updateCareer(careerData).subscribe({
-      next: (data) => {
-        console.log('Carrera actualizada:', data);
-        alert('Carrera actualizada correctamente');
-      },
-      error: (err) => {
-        console.error('Error al actualizar la carrera.', err);
-        alert('Error al actualizar la carrera.');
-      },
-    });
+    this.formPrograms.patchValue(mappedData)
   }
 
-  cleanForm(){
+  cleanForm() {
     this.formPrograms.reset();
   }
 }

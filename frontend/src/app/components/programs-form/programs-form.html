@@ -11,27 +11,31 @@
         <input type="text" id="description" formControlName="description">
         @if (formPrograms.controls['description'].invalid && formPrograms.controls['description'].touched) {
         <p>La descripción es obligatoria.</p>
+        <p>La descripción debe tener al menos 10 caracteres.</p>
         }
     </fieldset>
     <fieldset>
         <label for="durationMonths">Duración (meses):</label>
         <input type="number" id="durationMonths" formControlName="durationMonths">
         @if (formPrograms.controls['durationMonths'].invalid && formPrograms.controls['durationMonths'].touched) {
-        <p>La duración es obligatoria y debe ser un número entre 1 y 30.</p>
+        <p>La duración es obligatoria.</p>
+        <p>La duración debe ser un número entre 1 y 100</p>
         }
     </fieldset>
     <fieldset>
         <label for="monthlyFee">Cuota mensual:</label>
         <input type="number" id="monthlyFee" formControlName="monthlyFee">
         @if (formPrograms.controls['monthlyFee'].invalid && formPrograms.controls['monthlyFee'].touched) {
-        <p>La cuota mensual es obligatoria y debe ser un número entre 4 y 30.</p>
+        <p>La cuota mensual es obligatoria.</p>
+        <p>La cuota mensual debe ser un número entre 4 y 30 dígitos.</p>
         }
     </fieldset>
     <fieldset>
         <label for="annualFee">Matrícula:</label>
         <input type="number" id="annualFee" formControlName="annualFee">
         @if (formPrograms.controls['annualFee'].invalid && formPrograms.controls['annualFee'].touched) {
-        <p>La matrícula es obligatoria y debe ser un número entre 4 y 30.</p>
+        <p>La matrícula es obligatoria.</p>
+        <p>La matrícula debe ser un número entre 4 y 30 dígitos.</p>
         }
     </fieldset>
     <fieldset>

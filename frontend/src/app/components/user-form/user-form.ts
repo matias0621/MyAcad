@@ -26,15 +26,15 @@ export class UserForm implements OnInit {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
-      email: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(15)]]
+      dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^[0-9]+$/)]],
+      email: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]]
     })
   }
 
   OnSubmit() {
     this.service.postUser(this.form.value, this.endpoint).subscribe({
       next: (data) => {
-        console.log('Usuario creado exitosamente:');
+        console.log('Usuario creado exitosamente');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
           next: (data) => { this.added.emit(data) },
@@ -48,4 +48,5 @@ export class UserForm implements OnInit {
   cleanForm() {
     this.form.reset();
   }
+
 }

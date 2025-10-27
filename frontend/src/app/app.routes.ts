@@ -8,25 +8,32 @@ import { Engineerings } from './pages/careers/engineerings/engineerings';
 import { Technicals } from './pages/careers/technicals/technicals';
 import { ProgramsEditForm } from './components/programs-edit-form/programs-edit-form';
 import { Subjects } from './pages/subjects/subjects';
+import { Login } from './pages/login/login';
+import { AuthGuard } from './Services/Auth/auth-guard';
+
 import { Exams } from './pages/exams/exams';
 import { FinalExams } from './pages/final-exams/final-exams';
 
 
+
+
 export const routes: Routes = [
-    {path: '', component: Home},
-    {path: 'students', component: Students},
-    {path: 'teachers', component: Teachers},
-    {path: 'managers', component: Managers},
+    {path: 'auth/login', component:Login},
 
-    {path: 'subject', component:Subjects},
-    {path: 'subject/:id', component:Subjects},
+    { path: '', component: Home, canActivate: [AuthGuard] },
+    { path: 'students', component: Students, canActivate: [AuthGuard] },
+    { path: 'teachers', component: Teachers, canActivate: [AuthGuard] },
+    { path: 'managers', component: Managers, canActivate: [AuthGuard] },
 
-    {path: 'exams', component:Exams},
-    {path: 'final-exams', component:FinalExams},
+    { path: 'subject', component: Subjects, canActivate: [AuthGuard] },
+    { path: 'subject/:id', component: Subjects, canActivate: [AuthGuard] },
 
-    {path: 'engineerings', component: Engineerings},
-    {path: 'technicals', component: Technicals},
-    {path: 'courses', component: Courses},
-    {path: 'programs-edit-form/:id', component: ProgramsEditForm}
+    { path: 'exam', component:Exams, canActivate: [AuthGuard] },
+    { path: 'final-exam', component:FinalExams, canActivate: [AuthGuard] },
+
+    { path: 'engineerings', component: Engineerings, canActivate: [AuthGuard] },
+    { path: 'technicals', component: Technicals, canActivate: [AuthGuard] },
+    { path: 'courses', component: Courses, canActivate: [AuthGuard] },
+    { path: 'programs-edit-form/:id', component: ProgramsEditForm, canActivate: [AuthGuard] }
 
 ];

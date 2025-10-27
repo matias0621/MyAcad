@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FinalExamFormEdit } from './final-exam-form-edit';
+import { ProgramsList } from './programs-list';
 
-describe('FinalExamFormEdit', () => {
-  let component: FinalExamFormEdit;
-  let fixture: ComponentFixture<FinalExamFormEdit>;
+describe('ProgramsList', () => {
+  let component: ProgramsList;
+  let fixture: ComponentFixture<ProgramsList>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FinalExamFormEdit]
+      imports: [ProgramsList]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FinalExamFormEdit);
+    fixture = TestBed.createComponent(ProgramsList);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

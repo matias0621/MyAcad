@@ -28,6 +28,7 @@ public class UserDetailsImpl implements UserDetails {
     public String getRole() {
         return user.getRole().name();
     }
+    public int getDni(){return user.getDni();}
 
     public User getUser() {
         return user;
@@ -35,7 +36,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(() -> user.getRole().name());
+        return Collections.singletonList(() -> "ROLE_" + user.getRole().name());
     }
 
     @Override

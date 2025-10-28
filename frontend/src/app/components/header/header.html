@@ -3,41 +3,87 @@
         <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
     </a>
     <nav>
-        <div class="dropdown">
+        @if (!service.getRole()) {
+        }
+        <!-- ---------------HEADER GESTORES--------------- -->
+        @else if (service.getRole() == "ROLE_MANAGER") {
+        <div class="left-navs">
+            <a routerLink="">Inicio</a>
+            <div class="dropdown">
+                <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Usuarios
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a routerLink="students">Alumnos</a></li>
+                    <li><a routerLink="teachers">Docentes</a></li>
+                    <li><a routerLink="managers">Gestores</a></li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Academico
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a routerLink="/subject">Materias</a></li>
+                    <li><a routerLink="/final-exam">Mesas de examen</a></li>
+                    <li><a routerLink="/exam">Parciales</a></li>
+                    <li><a routerLink="">Correlativas</a></li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Ofertas académicas
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a routerLink="engineerings">Ingenierías</a></li>
+                    <li><a routerLink="technicals">Tecnicaturas</a></li>
+                    <li><a routerLink="courses">Cursos</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="dropdown" id="dropdown-profile">
             <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                Usuarios
+                <i class="fa-solid fa-circle-user"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a routerLink="">Inicio</a></li>
-                <li><a routerLink="students">Alumnos</a></li>
-                <li><a routerLink="teachers">Docentes</a></li>
-                <li><a routerLink="managers">Gestores</a></li>
+                <li><a routerLink="">Cambiar contraseña</a></li>
+                <li><a (click)="logout()">Cerrar sesión</a></li>
             </ul>
         </div>
-        <div class="dropdown">
+        }
+        <!-- ---------------HEADER PROFESORES--------------- -->
+        @else if (service.getRole() == "ROLE_TEACHER") {
+        <a routerLink="">Inicio</a>
+
+        <div class="dropdown" id="dropdown-profile">
             <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                Academico
+                <i class="fa-solid fa-circle-user"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a routerLink="/subject">Materias</a></li>
-                <li><a routerLink="/final-exam">Mesas de examen</a></li>
-                <li><a routerLink="/exam">Parciales</a></li>
-                <li><a routerLink="">Correlativas</a></li>
+                <li><a routerLink="">Cambiar contraseña</a></li>
+                <li><a (click)="logout()">Cerrar sesión</a></li>
             </ul>
         </div>
-        <div class="dropdown">
+        }
+        <!-- ---------------HEADER ALUMNOS--------------- -->
+        @else if (service.getRole() == "ROLE_STUDENT") {
+        <a routerLink="">Inicio</a>
+
+        <div class="dropdown" id="dropdown-profile">
             <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                Ofertas académicas
+                <i class="fa-solid fa-circle-user"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a routerLink="engineerings">Ingenierías</a></li>
-                <li><a routerLink="technicals">Tecnicaturas</a></li>
-                <li><a routerLink="courses">Cursos</a></li>
+                <li><a routerLink="">Cambiar contraseña</a></li>
+                <li><a (click)="logout()">Cerrar sesión</a></li>
             </ul>
         </div>
-        <button (click)="logout()">Cerrar sesión</button>
+        }
     </nav>
 </header>

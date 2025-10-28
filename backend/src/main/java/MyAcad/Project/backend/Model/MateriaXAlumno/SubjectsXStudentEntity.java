@@ -25,5 +25,6 @@ public class SubjectsXStudentEntity {
     @OneToOne
     private Student student;
 
+    @Enumerated(EnumType.STRING)
     private AcademicStatus stateStudent;
 }

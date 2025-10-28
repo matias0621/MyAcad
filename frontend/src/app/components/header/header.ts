@@ -9,9 +9,10 @@ import { AuthService } from '../../Services/Auth/auth-service';
   styleUrl: './header.css'
 })
 export class Header {
+  token = localStorage.getItem('token');
 
   constructor(
-    private service : AuthService
+    public service : AuthService
   ){}
   logout(){
     this.service.logout();

@@ -17,18 +17,23 @@ import java.util.Set;
 @AllArgsConstructor
 public class Commission {
     @Id @GeneratedValue
-    @Column(name = "commision_id")
+    @Column(name = "commission_id")
     private Long id;
     private int number;
 
     @ManyToMany
     @JoinTable(
             name = "subject_in_commission",
-            joinColumns = @JoinColumn(name = "commision_id"),
+            joinColumns = @JoinColumn(name = "commission_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private Set<SubjectsEntity> subject;
-    @OneToMany(mappedBy = "commission", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(
+            name = "students_in_this_commission",
+            joinColumns = @JoinColumn(name = "commission_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<Student> students;
     @OneToOne
     private Teacher teachers;

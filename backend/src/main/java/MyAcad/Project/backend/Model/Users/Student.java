@@ -14,12 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class Student extends User {
-
-    @ManyToOne
-    @JoinColumn(name = "commission_id")
-    private Commission commission;
 
     public Student(StudentDTO dto) {
         super(dto);

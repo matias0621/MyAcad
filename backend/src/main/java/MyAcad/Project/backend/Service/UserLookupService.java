@@ -52,6 +52,16 @@ public class UserLookupService implements UserDetailsService {
         return managerRepository.findByEmail(email);
     }
 
+    public Optional<? extends User> findByDni(int dni) {
+        Optional<Student> student = studentRepository.findByDni(dni);
+        if (student.isPresent()) return student;
+
+        Optional<Teacher> teacher = teacherRepository.findByDni(dni);
+        if (teacher.isPresent()) return teacher;
+
+        return managerRepository.findByDni(dni);
+    }
+
     //Se llama byUsername por defecto por el override, pero utilizamos legajo para el login
     @Override
     public UserDetails loadUserByUsername(String legajo) throws UsernameNotFoundException {

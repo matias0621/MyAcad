@@ -28,6 +28,7 @@ public class UserDTO {
 
     @NotBlank(message = "El dni no puede estar vacío")
     @Size(max = 8)
+    @Column(unique = true)
     protected int dni;
 
     @NotBlank(message = "El nombre no puede estar vacío")

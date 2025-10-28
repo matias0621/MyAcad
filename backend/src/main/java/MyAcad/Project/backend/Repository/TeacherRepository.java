@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Repository;
 
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
     @Query("SELECT u FROM #{#entityName} u WHERE u.email = :email")
     Optional<Teacher> findByEmail(@Param("email")String email);
+
+    @Query("SELECT u FROM #{#entityName} u WHERE u.dni = :dni")
+    Optional<Teacher> findByDni(@Param("dni")int dni);
 }

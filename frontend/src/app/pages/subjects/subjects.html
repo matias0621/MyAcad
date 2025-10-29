@@ -9,7 +9,7 @@
 <ul>
     @for (subject of subjectService.listSubject; track $index) {
     <li>
-        {{subject.name}} {{subject.description}} {{ subject.subjectActive }}
+        {{subject.name}} {{subject.description}} {{ subject.subjectActive }} {{ subject.academicStatus }}
         <button (click)="redirecTo(subject.id)" >Editar</button>
         <button (click)="deleteSubject(subject.id)">Eliminar</button>
     </li>

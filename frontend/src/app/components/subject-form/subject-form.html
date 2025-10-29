@@ -23,6 +23,14 @@
     </fieldset>
 
     <fieldset>
+        <select formControlName="academicStatus" name="academicStatus" id="academicStatus">
+            <option value="">Necesidad para correlativas</option>
+            <option value="COMPLETED">Aprobar</option>
+            <option value="APPROVED">Promocionar</option>
+        </select>
+    </fieldset>
+
+    <fieldset>
         <label for="semesters">Semestre:</label>
         <input type="number" id="semesters" name="semesters" formControlName="semesters">
         @if (form.controls['semesters'].invalid && form.controls['semesters'].touched) {

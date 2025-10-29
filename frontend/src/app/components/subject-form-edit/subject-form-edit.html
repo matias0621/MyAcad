@@ -31,6 +31,14 @@
         }
     </fieldset>
 
+    <fieldset>
+        <select formControlName="academicStatus" name="academicStatus" id="academicStatus">
+            <option value="">Necesidad para correlativas</option>
+            <option value="COMPLETED">Aprobar</option>
+            <option value="APPROVED">Promocionar</option>
+        </select>
+    </fieldset>
+
     <div id="buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>
         <button type="submit" [disabled]="form.invalid">Agregar</button>

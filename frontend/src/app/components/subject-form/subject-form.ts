@@ -15,6 +15,7 @@ export class SubjectForm {
   name!:FormControl
   description!:FormControl
   semesters!:FormControl
+  academicStatus!:FormControl
 
 
   @Output()
@@ -26,12 +27,14 @@ export class SubjectForm {
     this.name = new FormControl("", [Validators.required, Validators.maxLength(30)])
     this.description = new FormControl("", [Validators.required, Validators.maxLength(300)])
     this.semesters = new FormControl("", [Validators.required, Validators.maxLength(50)])
+    this.academicStatus = new FormControl("", [Validators.required])
 
     this.form = new FormGroup({
       name: this.name,
       description: this.description,
       semesters: this.semesters,
-      subjectActive: new FormControl(true)    
+      subjectActive: new FormControl(true),
+      academicStatus: this.academicStatus
     })
   }
 

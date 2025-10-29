@@ -5,6 +5,7 @@ export default interface Subjects {
   name: string;
   description: string;
   semesters: number;
+  academicStatus: string,
   prerequisites?: Subjects[];
   subjectActive: boolean
 }

@@ -30,6 +30,7 @@ export class Subjects implements OnInit {
   getAllSubject() {
     this.subjectService.getAllSubject().subscribe({
       next: (res) => {
+        console.log(res)
         this.subjectService.listSubject = res;
       },
       error: (err) => {

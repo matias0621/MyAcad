@@ -17,6 +17,7 @@ export class SubjectFormEdit implements OnInit {
   description!:FormControl
   semesters!:FormControl
   subjectActive!:FormControl
+  academicStatus!:FormControl
   id!:string
 
   constructor(public subjectService:SubjectsService, private activatedRouter:ActivatedRoute, private router:Router){
@@ -24,13 +25,15 @@ export class SubjectFormEdit implements OnInit {
     this.description = new FormControl("", [Validators.required, Validators.maxLength(300)])
     this.semesters = new FormControl("", [Validators.required, Validators.min(1), Validators.maxLength(50)])
     this.subjectActive = new FormControl("")
+    this.academicStatus = new FormControl("", [Validators.required])
     this.id = this.activatedRouter.snapshot.params['id']
 
     this.form = new FormGroup({
       name: this.name,
       description: this.description,
       semesters: this.semesters,
-      subjectActive: this.subjectActive   
+      subjectActive: this.subjectActive,
+      academicStatus: this.academicStatus
     })
   }
 
@@ -63,6 +66,7 @@ export class SubjectFormEdit implements OnInit {
       name: this.name.value,
       description: this.description.value,
       semesters: this.semesters.value,
+      academicStatus: this.academicStatus.value,
       subjectActive: this.subjectActive.value
     }
     this.subjectService.putSubject(subjectUpdate).subscribe({

@@ -32,6 +32,7 @@ public class SubjectService {
                 .semesters(subject.getSemesters())
                 .prerequisites(subject.getPrerequisites())
                 .subjectActive(subject.getSubjectActive())
+                .academicStatus(subject.getAcademicStatus())
                 .build();
 
         subjectsRepository.save(s);

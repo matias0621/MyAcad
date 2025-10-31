@@ -35,10 +35,18 @@ export class ProgramsList implements OnInit{
   }
 
   deleteProgram(id: number) {
-    this.service.deleteCareer(id, this.endpoint).subscribe({
-      next: (data) => { this.getCareers() },
-      error: (error) => { console.error(error) }
-    })
+    if (confirm('¿Estás seguro de que deseas eliminar este programa?')) {
+      this.service.deleteCareer(id, this.endpoint).subscribe({
+        next: (data) => { 
+          alert('Programa eliminado exitosamente.');
+          this.getCareers();
+        },
+        error: (error) => { 
+          console.error('Error al eliminar:', error);
+          alert('Error al eliminar el programa. Por favor, intenta nuevamente.');
+        }
+      });
+    }
   }
 
   modifyProgram(program : any){

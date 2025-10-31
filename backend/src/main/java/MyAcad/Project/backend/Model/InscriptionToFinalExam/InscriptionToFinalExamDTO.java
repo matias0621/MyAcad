@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Model.InscriptionToFinalExam;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,9 +12,9 @@ import java.time.LocalDateTime;
 @Builder
 public class InscriptionToFinalExamDTO {
 
-    private LocalDateTime inscriptionDate;
+    private String inscriptionDate;
 
-    private LocalDateTime finalExamDate;
+    private String finalExamDate;
 
     private Long subjectId;
 

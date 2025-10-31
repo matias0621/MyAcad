@@ -46,12 +46,14 @@ public class InscriptionToFinalExamController {
         return ResponseEntity.ok(entity);
     }
 
+    @PutMapping("/register-student-for-exam/{id}")
+    public ResponseEntity<InscriptionToFinalExamEntity> inscriptionAtStudentToExam(@PathVariable Long id, @RequestBody Long IdStudent) {
+        return ResponseEntity.ok(inscriptionToFinalExamService.addToStudent(id, IdStudent));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         inscriptionToFinalExamService.deleteInscription(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
 }

@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Service;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamDTO;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamEntity;
 import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.InscriptionToFinalExamRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,17 @@ public class InscriptionToFinalExamService {
 
     private final InscriptionToFinalExamRepository inscriptionToFinalExamRepository;
     private final SubjectService subjectService;
+    private final StudentService studentService;
 
     public boolean createInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO) {
         SubjectsEntity subjects = subjectService.getById(inscriptionToFinalExamDTO.getSubjectId()).orElseThrow();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime examDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getFinalExamDate(), formatter);
+        LocalDateTime inscriptionDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getInscriptionDate(), formatter);
 
         InscriptionToFinalExamEntity inscriptionToFinalExamEntity = InscriptionToFinalExamEntity.builder()
-                .finalExamDate(inscriptionToFinalExamDTO.getFinalExamDate())
-                .inscriptionDate(inscriptionToFinalExamDTO.getInscriptionDate())
+                .finalExamDate(examDate)
+                .inscriptionDate(inscriptionDate)
                 .subjects(subjects)
                 .build();
 
@@ -58,12 +63,25 @@ public class InscriptionToFinalExamService {
 
     public InscriptionToFinalExamEntity updateInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO, Long id) {
         InscriptionToFinalExamEntity inscriptionToFinalExamEntity = inscriptionToFinalExamRepository.findById(id).orElseThrow();
-        inscriptionToFinalExamEntity.setFinalExamDate(inscriptionToFinalExamDTO.getFinalExamDate());
-        inscriptionToFinalExamEntity.setInscriptionDate(inscriptionToFinalExamDTO.getInscriptionDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime examDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getFinalExamDate(), formatter);
+        LocalDateTime inscriptionDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getInscriptionDate(), formatter);
+
+        inscriptionToFinalExamEntity.setFinalExamDate(examDate);
+        inscriptionToFinalExamEntity.setInscriptionDate(inscriptionDate);
         inscriptionToFinalExamEntity.setSubjects(subjectService.getById(inscriptionToFinalExamDTO.getSubjectId()).orElseThrow());
 
         return inscriptionToFinalExamRepository.save(inscriptionToFinalExamEntity);
 
+    }
+
+    public InscriptionToFinalExamEntity addToStudent(Long inscriptionId, Long studentId) {
+        Student student = studentService.getById(studentId).orElseThrow();
+        InscriptionToFinalExamEntity inscription = inscriptionToFinalExamRepository.findById(inscriptionId).orElseThrow();
+
+        inscription.getStudents().add(student);
+        inscriptionToFinalExamRepository.save(inscription);
+        return inscription;
     }
 
     public void deleteInscription(Long id) {

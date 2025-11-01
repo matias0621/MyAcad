@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CareerService } from '../../Services/CareerService/career-service';
-import Career from '../../Models/Users/Careers/Career';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({

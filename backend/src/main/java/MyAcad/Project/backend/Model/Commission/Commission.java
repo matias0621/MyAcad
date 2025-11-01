@@ -7,6 +7,7 @@ import MyAcad.Project.backend.Model.Users.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,36 +17,39 @@ import java.util.Set;
 @Getter @Setter @NoArgsConstructor @ToString
 @AllArgsConstructor
 public class Commission {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "commission_id")
     private Long id;
     private int number;
 
     @ManyToMany
     @JoinTable(
-            name = "subject_in_commission",
+            name = "subject_x_commission",
             joinColumns = @JoinColumn(name = "commission_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    private Set<SubjectsEntity> subject;
+    private List<SubjectsEntity> subjects;
     @ManyToMany
     @JoinTable(
-            name = "students_in_this_commission",
+            name = "students_in_commission",
             joinColumns = @JoinColumn(name = "commission_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<Student> students;
-    @OneToOne
-    private Teacher teachers;
-    @OneToMany
-    private List<Teacher> collaborator;
+    private String program;
     private int capacity;
     private boolean active;
 
-    @Enumerated(EnumType.STRING)
-    private ProgramType programType;
-
     public Commission(CommissionDTO dto) {
+        this.id = dto.getId();
+        this.number = dto.getNumber();
+        this.program = dto.getProgram();
+        this.capacity = dto.getCapacity();
+        this.active = dto.isActive();
+
+        this.subjects = new ArrayList<>();
+        this.students = new ArrayList<>();
     }
 }
 

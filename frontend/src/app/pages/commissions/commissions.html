@@ -1,0 +1,171 @@
+<h1 style="text-align: center;">Comisiones</h1>
+
+<section class="crud-management d-flex justify-content-center">
+    <div class="crud-management-container">
+        <div class="w-100 d-flex justify-content-evenly mb-3">
+            <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
+        </div>
+        <select [(ngModel)]="selectedProgram" (change)="filterByProgram()">
+            <option value="">Mostrar todo</option>
+            @for(program of programs; track $index){
+            <option [value]="program.name">{{ program.name }}</option>
+            }
+        </select>
+        <!-- TABLA -->
+        <table class="crud-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Id</th>
+                    <th scope="col">Número</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col">Capacidad</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="crud-table-body">
+                <!-- USERS -->
+                @for (commission of commissions; track $index) {
+                <tr class="crud-table-item">
+                    <td>{{commission.id}}</td>
+                    <td>{{commission.number}}</td>
+                    <td>{{commission.program}}</td>
+                    <td>{{commission.capacity}}</td>
+                    @if(commission.active){
+                    <td>Activa</td>
+                    }@else{
+                    <td>Inactiva</td>
+                    }
+                    <td class="crud-table-actions">
+                        <button class="modify-crud-btn" (click)="modifyCommission(commission)" data-bs-toggle="modal"
+                            data-bs-target="#modal-modify">Editar</button>
+                        <button class="delete-crud-btn" (click)="deleteCommission(commission.id)">Eliminar</button>
+                    </td>
+                </tr>
+                }@empty {
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <p style="color: red;"> Aun no hay ninguna comisión cargado.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+        <!-- Modal agregar -->
+        <div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Agregar</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- FORM AGREGAR -->
+                        <form [formGroup]="formAdd" (submit)="OnSubmit()">
+                            <fieldset>
+                                <label for="number">Número:</label>
+                                <input type="number" id="number" formControlName="number">
+                                @if (formAdd.controls['number'].invalid && formAdd.controls['number'].touched) {
+                                <p>El número es obligatorio y debe ser mayor a 0.</p>
+                                }
+                            </fieldset>
+                            <fieldset>
+                                <label for="capacity">Capacidad de estudiantes:</label>
+                                <input type="number" id="capacity" formControlName="capacity">
+                                @if (formAdd.controls['capacity'].invalid && formAdd.controls['capacity'].touched) {
+                                <p>La capacidad es obligatoria y debe ser mayor a 0.</p>
+                                }
+                            </fieldset>
+                            <fieldset>
+                                <label for="program">Carrera:</label>
+                                <select name="program" id="program" formControlName="program">
+                                    @for (program of programs; track $index) {
+                                    <option [value]="program.name">{{program.name}}</option>
+                                    }
+                                </select>
+                                @if (formAdd.controls['program'].invalid && formAdd.controls['program'].touched) {
+                                <p>La carrera es obligatoria.</p>
+                                }
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="active">Activo:</label>
+                                <input type="checkbox" id="active" formControlName="active">
+                                @if (formAdd.controls['active'].invalid && formAdd.controls['active'].touched) {
+                                <p>El estado activo es obligatorio.</p>
+                                }
+                            </fieldset>
+
+                            <div id="buttons">
+                                <button type="button" (click)="cleanAddForm()">Limpiar</button>
+                                <button type="submit" [disabled]="formAdd.invalid">Agregar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal de modificar -->
+        <div class="modal fade" id="modal-modify" tabindex="-1" aria-labelledby="modal-modify-label" style="display: none;"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Editar</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- FORM EDITAR -->
+                        <form [formGroup]="formModify" (submit)="OnSubmit()">
+                            <fieldset>
+                                <label for="number">Número:</label>
+                                <input type="number" id="number" formControlName="number">
+                                @if (formAdd.controls['number'].invalid && formAdd.controls['number'].touched) {
+                                <p>El número es obligatorio y debe ser mayor a 0.</p>
+                                }
+                            </fieldset>
+                            <fieldset>
+                                <label for="capacity">Capacidad de estudiantes:</label>
+                                <input type="number" id="capacity" formControlName="capacity">
+                                @if (formAdd.controls['capacity'].invalid && formAdd.controls['capacity'].touched) {
+                                <p>La capacidad es obligatoria y debe ser mayor a 0.</p>
+                                }
+                            </fieldset>
+                            <fieldset>
+                                <label for="program">Carrera:</label>
+                                <select name="program" id="program" formControlName="program">
+                                    @for (program of programs; track $index) {
+                                    <option [value]="program.name">{{program.name}}</option>
+                                    }
+                                </select>
+                                @if (formAdd.controls['program'].invalid && formAdd.controls['program'].touched) {
+                                <p>La carrera es obligatoria.</p>
+                                }
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="active">Activo:</label>
+                                <input type="checkbox" id="active" formControlName="active">
+                                @if (formAdd.controls['active'].invalid && formAdd.controls['active'].touched) {
+                                <p>El estado activo es obligatorio.</p>
+                                }
+                            </fieldset>
+
+                            <div id="buttons">
+                                <button type="button" (click)="cleanAddForm()">Limpiar</button>
+                                <button type="submit" [disabled]="formAdd.invalid">Agregar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

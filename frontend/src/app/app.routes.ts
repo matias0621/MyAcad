@@ -13,12 +13,13 @@ import { AuthGuard } from './Services/Auth/auth-guard';
 
 import { Exams } from './pages/exams/exams';
 import { FinalExams } from './pages/final-exams/final-exams';
+import { Commissions } from './pages/commissions/commissions';
 
 
 
 
 export const routes: Routes = [
-    {path: 'auth/login', component:Login},
+    { path: 'auth/login', component: Login },
 
     { path: '', component: Home, canActivate: [AuthGuard] },
     { path: 'students', component: Students, canActivate: [AuthGuard] },
@@ -27,9 +28,10 @@ export const routes: Routes = [
 
     { path: 'subject', component: Subjects, canActivate: [AuthGuard] },
     { path: 'subject/:id', component: Subjects, canActivate: [AuthGuard] },
+    { path: 'commissions', component: Commissions, canActivate: [AuthGuard] },
 
-    { path: 'exam', component:Exams, canActivate: [AuthGuard] },
-    { path: 'final-exam', component:FinalExams, canActivate: [AuthGuard] },
+    { path: 'exam', component: Exams, canActivate: [AuthGuard] },
+    { path: 'final-exam', component: FinalExams, canActivate: [AuthGuard] },
 
     { path: 'engineerings', component: Engineerings, canActivate: [AuthGuard] },
     { path: 'technicals', component: Technicals, canActivate: [AuthGuard] },

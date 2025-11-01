@@ -1,6 +1,8 @@
 package MyAcad.Project.backend.Model.Subjects;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
+import MyAcad.Project.backend.Model.Commission.Commission;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +25,22 @@ public class SubjectsEntity {
     private int semesters;
     private boolean subjectActive;
     private AcademicStatus academicStatus;
+
+    @ManyToMany
+    @JoinTable(
+            name = "subject_x_commission",
+            joinColumns = @JoinColumn(name = "subject_id"),
+            inverseJoinColumns = @JoinColumn(name = "commission_id")
+    )
+    private List<Commission> commissions;
+
+    @ManyToMany
+    @JoinTable(
+            name = "subject_x_teacher",
+            joinColumns = @JoinColumn(name = "subject_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Teacher> teachers;
 
     @ManyToMany
     @JoinTable(

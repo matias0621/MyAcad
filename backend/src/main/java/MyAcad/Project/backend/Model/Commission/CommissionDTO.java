@@ -1,16 +1,13 @@
 package MyAcad.Project.backend.Model.Commission;
 
-import MyAcad.Project.backend.Enum.ProgramType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotBlank;
+import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Users.Student;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -21,21 +18,14 @@ public class CommissionDTO {
     private Long id;
     private int number;
 
-    // IDs de las materias que pertenecen a la comisión
-    private Set<Long> subjectIds;
+    private List<SubjectsEntity> subjects;
 
     // IDs de los estudiantes
-    private List<Long> studentIds;
+    private List<Student> students;
 
-    // ID del profesor principal
-    private Long teacherId;
-
-    // IDs de los profesores colaboradores
-    private List<Long> collaboratorIds;
+    //Nombre de la carrera.
+    private String program;
 
     private int capacity;
     private boolean active;
-    private ProgramType programType;
-
-
 }

@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Model.FinalExam;
 
 import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Users.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,11 @@ public class FinalExamEntity {
 
     private int score;
 
-    private LocalDate examDate;
-
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private SubjectsEntity subject;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Student student;
 }

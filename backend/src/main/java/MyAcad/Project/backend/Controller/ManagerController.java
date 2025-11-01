@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Controller;
 
 import MyAcad.Project.backend.Enum.Role;
+import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Manager;
@@ -76,7 +77,7 @@ public class ManagerController {
             manager.setRole(Role.STUDENT);
             services.add(manager);
             return ResponseEntity.ok(manager);
-        }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException e) {
+        }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException | DniAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
@@ -93,7 +94,7 @@ public class ManagerController {
         try {
             services.modify(updatedUser.getId(), updatedUser);
             return ResponseEntity.ok(updatedUser);
-        }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException e){
+        }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException | DniAlreadyExistsException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

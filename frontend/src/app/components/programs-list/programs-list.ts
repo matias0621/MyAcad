@@ -29,16 +29,27 @@ export class ProgramsList implements OnInit{
 
   getCareers() {
     this.service.getCareers(this.endpoint).subscribe({
-      next: (data) => { this.programs = data },
-      error: (error) => { console.error(error) }
+      next: (data) => { 
+        this.programs = data;
+      },
+      error: (error) => {
+        console.error('Error al obtener programas:', error);
+      }
     })
   }
 
   deleteProgram(id: number) {
-    this.service.deleteCareer(id, this.endpoint).subscribe({
-      next: (data) => { this.getCareers() },
-      error: (error) => { console.error(error) }
-    })
+    if (confirm('¿Estás seguro de que deseas eliminar este programa?')) {
+      this.service.deleteCareer(id, this.endpoint).subscribe({
+        next: (data) => { 
+          alert('Programa eliminado exitosamente.');
+          this.getCareers();
+        },
+        error: (error) => { 
+          alert('Error al eliminar el programa. Por favor, intenta nuevamente.');
+        }
+      });
+    }
   }
 
   modifyProgram(program : any){
@@ -48,7 +59,7 @@ export class ProgramsList implements OnInit{
   viewDisabled(item: any) {
     if (confirm(`¿Deseas activar "${item.name}"?`)) {
       const updatedItem = { ...item, active: true };
-      this.service.updateByEndpoint(updatedItem, this.endpoint).subscribe({
+      this.service.updateCareer(updatedItem, this.endpoint).subscribe({
         next: (response) => {
           alert(`${item.name} activado/a exitosamente.`);
           this.getCareers();

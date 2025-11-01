@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Service;
 
 import MyAcad.Project.backend.Configuration.SecurityConfig;
+import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Manager;
@@ -28,8 +29,12 @@ public class ManagerService {
             throw new LegajoAlreadyExistsException();
         }else if(userLookupService.findByEmail(t.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException();
+        }else if(userLookupService.findByDni(t.getDni()).isPresent()) {
+            throw new DniAlreadyExistsException();
         }
+
         t.setPassword(SecurityConfig.passwordEncoder().encode(t.getPassword()));
+
         t = repository.save(t);
         t.setLegajo(String.valueOf(t.getId() + 900000));
 
@@ -76,6 +81,8 @@ public class ManagerService {
         old.setName(t.getName());
         old.setLastName(t.getLastName());
         old.setEmail(t.getEmail());
+        old.setLegajo(t.getLegajo());
+        old.setDni(t.getDni());
 
         // Verificar si se ingresó una contraseña nueva, si el usuario no quiso cambiarla debe dejar ese input vacío.
         if (t.getPassword() != null && !t.getPassword().isBlank()) {

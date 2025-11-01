@@ -21,4 +21,7 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
     @Query("SELECT u FROM #{#entityName} u WHERE u.email = :email")
     Optional<Manager> findByEmail(@Param("email")String email);
+
+    @Query("SELECT u FROM #{#entityName} u WHERE u.dni = :dni")
+    Optional<Manager> findByDni(@Param("dni")int dni);
 }

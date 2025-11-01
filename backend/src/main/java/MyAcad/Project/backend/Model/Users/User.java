@@ -22,6 +22,7 @@ public abstract class User {
 
     protected String name, lastName, email, password;
 
+    @Column(unique = true)
     protected int dni;
 
     @Enumerated(EnumType.STRING)
@@ -36,4 +37,6 @@ public abstract class User {
         this.password = dto.getPassword();
         this.role = dto.getRole();
     }
+
+
 }

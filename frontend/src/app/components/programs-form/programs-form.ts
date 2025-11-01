@@ -35,11 +35,20 @@ export class ProgramsForm implements OnInit {
   OnSubmit() {
     this.service.postCareer(this.formPrograms.value, this.endpoint).subscribe({
       next: (data) => {
-        console.log('Programa creado exitosamente:', data);
-        this.formPrograms.reset();
-        this.added.emit()
+        this.formPrograms.reset({ active: true });
+        this.service.getCareers(this.endpoint).subscribe({
+          next: (programs) => {
+            alert('Programa creado exitosamente.');
+            this.added.emit(programs);
+          },
+          error: (error) => {
+            console.error('Error al obtener programas:', error);
+          }
+        });
       },
-      error: (error) => { console.error(error) }
+      error: (error) => { 
+        console.error('Error al crear programa:', error);
+      }
     })
   }
 

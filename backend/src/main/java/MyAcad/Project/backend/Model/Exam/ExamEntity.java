@@ -1,7 +1,9 @@
 package MyAcad.Project.backend.Model.Exam;
 
 
+import MyAcad.Project.backend.Model.Commission.Commission;
 import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Users.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +17,7 @@ public class ExamEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "exam_id")
     private Long id;
 
     private int score;
@@ -22,5 +25,9 @@ public class ExamEntity {
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private SubjectsEntity subject;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Student student;
 
 }

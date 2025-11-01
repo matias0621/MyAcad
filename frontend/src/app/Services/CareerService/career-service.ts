@@ -24,12 +24,8 @@ export class CareerService {
     return this.http.delete<any>(`${this.API_URL}/${endpoint}/${id}`);
   }
 
-  updateCareer(career: Career) {
-    return this.http.put<any>(`${this.API_URL}/careers/${career.id}`, career);
-  }
-
-  updateByEndpoint(entity: any, endpoint: string) {
-    return this.http.put<any>(`${this.API_URL}/${endpoint}/${entity.id}`, entity);
+  updateCareer(career: Career, endpoint: string) {
+    return this.http.put<any>(`${this.API_URL}/${endpoint}/${career.id}`, career);
   }
 
 }

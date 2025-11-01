@@ -16,9 +16,14 @@ header {
 
 nav {
     height: 100%;
+    width: 100%;
     display: flex;
+    justify-content: space-between;
 }
 
+.left-navs{
+    display: flex;
+}
 /* DROPDOWNS */
 .dropdown-button {
     height: 100%;
@@ -30,17 +35,23 @@ nav {
 .dropdown-button:hover {
     background-color: var(--color-3);
 }
+#dropdown-profile{
+    margin-right: 1em;
+}
+.fa-circle-user{
+    font-size: 1.8em;
+}
 li>a {
     width: 100%;
     padding: .5em .5em;
     transition: .3s;
 }
-
-li>a:hover {
+a:hover {
     background-color: var(--color-3);
 }
 
 a {
+    cursor: pointer ;
     text-decoration: none;
     display: inline-flex;
     align-items: center;

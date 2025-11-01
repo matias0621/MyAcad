@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CareerService } from '../../Services/CareerService/career-service';
-import Career from '../../Models/Users/Careers/Career';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -43,9 +42,9 @@ export class ProgramsEditForm implements OnInit {
   OnSubmit() {
     const modifiedCareer = { id: this.careerId, ...this.formPrograms.value };
 
-    this.cService.updateCareer(modifiedCareer).subscribe({
+    this.cService.updateCareer(modifiedCareer, this.endpoint).subscribe({
       next: (data) => {
-        console.log('Programa modificado exitosamente:');
+        console.log('Programa modificado exitosamente:', data);
         this.formPrograms.reset();
         this.cService.getCareers(this.endpoint).subscribe({
           next: (data) => { this.added.emit(data) },

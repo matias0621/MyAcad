@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Controller;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamDTO;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamEntity;
 import MyAcad.Project.backend.Service.InscriptionToFinalExamService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,13 +11,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/inscription-final-exam")
+@RequiredArgsConstructor
 public class InscriptionToFinalExamController {
 
-    private InscriptionToFinalExamService inscriptionToFinalExamService;
+    private final InscriptionToFinalExamService inscriptionToFinalExamService;
 
     @GetMapping
     public ResponseEntity<List<InscriptionToFinalExamEntity>> findAll() {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptions());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<InscriptionToFinalExamEntity> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(inscriptionToFinalExamService.getInscriptionById(id));
     }
 
     @GetMapping("/date-inscription/{date}")
@@ -29,7 +36,7 @@ public class InscriptionToFinalExamController {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsByExamDate(date));
     }
 
-    @GetMapping("subjects/{id}")
+    @GetMapping("/subjects/{id}")
     public ResponseEntity<List<InscriptionToFinalExamEntity>> findBySubjectId(@PathVariable Long id) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsBySubjectId(id));
     }

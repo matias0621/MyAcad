@@ -16,6 +16,6 @@ public class InscriptionToFinalExamDTO {
 
     private String finalExamDate;
 
-    private Long subjectId;
+    private Long subjectsId;
 
 }

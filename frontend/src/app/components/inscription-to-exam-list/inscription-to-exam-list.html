@@ -1,1 +1,9 @@
-<p>inscription-to-exam-list works!</p>
+
+
+<ul>
+    @for (inscription of inscriptionService.inscriptionList; track $index) {
+        <li>
+            {{ inscription.inscriptionDate }} - {{ inscription.finalExamDate }}
+        </li>
+    }
+</ul>

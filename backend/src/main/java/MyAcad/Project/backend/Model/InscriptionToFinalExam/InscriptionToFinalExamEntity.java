@@ -18,16 +18,22 @@ public class InscriptionToFinalExamEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "inscription_to_final_exam_id")
     private Long id;
 
     private LocalDateTime inscriptionDate;
 
     private LocalDateTime finalExamDate;
 
-    @OneToOne
+    @ManyToOne
     private SubjectsEntity subjects;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+            name = "student_x_inscription",
+            joinColumns = @JoinColumn(name = "inscription_to_final_exam_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<Student> students;
 
 

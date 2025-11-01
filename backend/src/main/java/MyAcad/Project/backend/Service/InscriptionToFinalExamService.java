@@ -20,8 +20,8 @@ public class InscriptionToFinalExamService {
     private final SubjectService subjectService;
     private final StudentService studentService;
 
-    public boolean createInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO) {
-        SubjectsEntity subjects = subjectService.getById(inscriptionToFinalExamDTO.getSubjectId()).orElseThrow();
+    public void createInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO) {
+        SubjectsEntity subjects = subjectService.getById(inscriptionToFinalExamDTO.getSubjectsId()).orElseThrow();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime examDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getFinalExamDate(), formatter);
         LocalDateTime inscriptionDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getInscriptionDate(), formatter);
@@ -34,11 +34,14 @@ public class InscriptionToFinalExamService {
 
         inscriptionToFinalExamRepository.save(inscriptionToFinalExamEntity);
 
-        return true;
     }
 
     public List<InscriptionToFinalExamEntity> getAllInscriptions() {
         return inscriptionToFinalExamRepository.findAll();
+    }
+
+    public InscriptionToFinalExamEntity getInscriptionById(Long id) {
+        return inscriptionToFinalExamRepository.findById(id).orElseThrow();
     }
 
     public List<InscriptionToFinalExamEntity> getAllInscriptionsBySubjectId(Long subjectId) {
@@ -61,7 +64,7 @@ public class InscriptionToFinalExamService {
         return inscriptionToFinalExamRepository.findInscriptionToFinalExamEntitiesByFinalExamDate(exam);
     }
 
-    public InscriptionToFinalExamEntity updateInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO, Long id) {
+    public void updateInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO, Long id) {
         InscriptionToFinalExamEntity inscriptionToFinalExamEntity = inscriptionToFinalExamRepository.findById(id).orElseThrow();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime examDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getFinalExamDate(), formatter);
@@ -69,9 +72,9 @@ public class InscriptionToFinalExamService {
 
         inscriptionToFinalExamEntity.setFinalExamDate(examDate);
         inscriptionToFinalExamEntity.setInscriptionDate(inscriptionDate);
-        inscriptionToFinalExamEntity.setSubjects(subjectService.getById(inscriptionToFinalExamDTO.getSubjectId()).orElseThrow());
+        inscriptionToFinalExamEntity.setSubjects(subjectService.getById(inscriptionToFinalExamDTO.getSubjectsId()).orElseThrow());
 
-        return inscriptionToFinalExamRepository.save(inscriptionToFinalExamEntity);
+        inscriptionToFinalExamRepository.save(inscriptionToFinalExamEntity);
 
     }
 

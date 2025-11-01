@@ -1,10 +1,13 @@
 package MyAcad.Project.backend.Controller;
 
+import MyAcad.Project.backend.Configuration.UserDetailsImpl;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamDTO;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamEntity;
 import MyAcad.Project.backend.Service.InscriptionToFinalExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,8 +57,12 @@ public class InscriptionToFinalExamController {
     }
 
     @PutMapping("/register-student-for-exam/{id}")
-    public ResponseEntity<InscriptionToFinalExamEntity> inscriptionAtStudentToExam(@PathVariable Long id, @RequestBody Long IdStudent) {
-        return ResponseEntity.ok(inscriptionToFinalExamService.addToStudent(id, IdStudent));
+    public ResponseEntity<InscriptionToFinalExamEntity> inscriptionAtStudentToExam(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long studentId = userDetails.getId();
+
+        return ResponseEntity.ok(inscriptionToFinalExamService.addToStudent(id, studentId));
     }
 
     @DeleteMapping("/{id}")

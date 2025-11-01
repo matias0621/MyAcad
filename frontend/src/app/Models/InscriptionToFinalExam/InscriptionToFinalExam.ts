@@ -12,5 +12,5 @@ export interface InscriptionToFinalExam {
     inscriptionDate: string,
     finalExamDate: string,
     subjects: Subjects
-    listStudent: Student
+    students: Student[] 
 }

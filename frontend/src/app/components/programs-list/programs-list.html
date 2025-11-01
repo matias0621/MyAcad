@@ -28,8 +28,7 @@
                     <td>{{program.annualFee}}</td>
                     <td>{{program.active ? 'Sí' : 'No'}}</td>
                     <td class="crud-table-actions">
-                        <button class="modify-crud-btn" (click)="modifyProgram(program)" data-bs-toggle="modal"
-                            data-bs-target="#modal-modify-admin">Editar</button>
+                        <button class="modify-crud-btn" (click)="modifyProgram(program)">Editar</button>
                         <button class="delete-crud-btn" (click)="deleteProgram(program.id)"
                             data-id="${program.id}">Eliminar</button>
                         @if (!program.active) {

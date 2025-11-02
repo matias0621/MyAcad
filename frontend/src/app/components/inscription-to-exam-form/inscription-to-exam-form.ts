@@ -5,10 +5,11 @@ import { SubjectsService } from '../../Services/Subjects/subjects-service';
 import { PostInscriptionToFinalExam } from '../../Models/InscriptionToFinalExam/InscriptionToFinalExam';
 import { InscriptionToExamList } from '../inscription-to-exam-list/inscription-to-exam-list';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-inscription-to-exam-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './inscription-to-exam-form.html',
   styleUrl: './inscription-to-exam-form.css',
 })

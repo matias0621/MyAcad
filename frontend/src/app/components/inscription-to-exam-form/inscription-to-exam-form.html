@@ -40,7 +40,7 @@
 <ul>
     @for (inscription of inscriptionToFinalExamService.inscriptionList; track $index) {
     <li>
-        {{ inscription.inscriptionDate }} - {{ inscription.finalExamDate }} - {{ inscription.subjects.name }}
+        {{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }} - {{ inscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }} - {{ inscription.subjects.name }}
         <button (click)="updateInscription(inscription.id)" >Editar</button>
         <!-- <button (click)="deleteInscription(inscription.id)" >Eliminar</button> -->
     </li>

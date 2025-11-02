@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Service.UserLookupService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,17 +39,23 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(
                                 "/**",
+                                //USERS
                                 "/teachers/**",
                                 "/students/**",
                                 "/managers/**",
+
+                                //ACADEMIC
                                 "/careers/**",
                                 "/engineering/**",
                                 "/courses/**",
+                                "/commissions/**",
                                 "/subject/**",
                                 "/technicals/**",
+
                                 "/exams/**",
                                 "/final-exam/**",
                                 "/inscription-final-exam/**"

@@ -1,23 +1,40 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router'; // 👈 Importamos Router
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators'; // 👈 Importamos catchError
 
 @Injectable({
   providedIn: 'root'
 })
-export class JwtInterceptor implements HttpInterceptor{
+export class JwtInterceptor implements HttpInterceptor {
+
+  constructor(private router: Router) {}
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('token');
 
+    let requestToHandle = req;
+
     if (token) {
-      const cloned = req.clone({
+      requestToHandle = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
         }
       });
-      return next.handle(cloned);
     }
 
-    return next.handle(req);
+    return next.handle(requestToHandle).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 403) {
+          console.error('Token expirado o inválido. Redirigiendo a inicio de sesión.');
+          
+          localStorage.removeItem('token'); 
+          this.router.navigate(['/login']); 
+          alert("Tu sesión ha expirado")
+        }
+        return throwError(() => error); 
+      })
+    );
   }
 }

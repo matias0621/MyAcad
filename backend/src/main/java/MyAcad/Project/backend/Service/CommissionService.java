@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Service;
 
 import MyAcad.Project.backend.Model.Commission.Commission;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.CommissionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,7 @@ public class CommissionService {
     private final CommissionRepository repository;
 
     public void add(Commission c) {
-        if (repository.findCommissionByNumber(c.getNumber()).isPresent()) {
+        if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
             throw new RuntimeException("Commission number already exists");
         }
         repository.save(c);
@@ -41,6 +42,9 @@ public class CommissionService {
     public List<Commission> list() {
         return repository.findAll();
     }
+    public List<Commission> listActive() {
+        return repository.findAllActives();
+    }
 
     public void modify(Long id, Commission c) {
         Optional<Commission> optionalOld = repository.findById(id);
@@ -49,15 +53,15 @@ public class CommissionService {
         }
         Commission old = optionalOld.get();
         if (old.getNumber() != c.getNumber()) {
-            if (repository.findCommissionByNumber(c.getNumber()).isPresent()) {
+            if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
                 throw new RuntimeException("Commission number already exists");
             }
         }
 
         old.setNumber(c.getNumber());
-        old.setSubject(c.getSubject());
+        old.setSubjects(c.getSubjects());
         old.setStudents(c.getStudents());
-        old.setTeachers(c.getTeachers());
+        old.setProgram(c.getProgram());
         old.setCapacity(c.getCapacity());
         old.setActive(c.isActive());
 
@@ -66,6 +70,10 @@ public class CommissionService {
 
     public Optional<Commission> getById(Long id){
         return repository.findById(id);
+    }
+
+    public List<Commission> findByProgram(String program) {
+        return repository.findByProgram(program);
     }
 
     public Optional<Optional<Commission>> getByNumber(int number) {

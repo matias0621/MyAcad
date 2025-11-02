@@ -5,6 +5,7 @@ import MyAcad.Project.backend.Model.Commission.Commission;
 import MyAcad.Project.backend.Model.Commission.CommissionDTO;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.CourseDTO;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Service.CommissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,16 +16,31 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/commission")
+@RequestMapping("/commissions")
 @AllArgsConstructor
 public class CommissionController {
     private CommissionService services;
 
+
+    @GetMapping("/active")
+    public List<Commission> listActiveCommissions() {
+        return services.listActive();
+    }
+
+    @GetMapping()
+    public List<Commission> listCommissions() {
+        return services.list();
+    }
     //Paginacion
     @GetMapping("/paginated")
     public Page<Commission> listCommissionPaginated(@RequestParam(name = "page") int page,
                                                     @RequestParam(name = "size") int size) {
         return services.listCommissionPaginated(page, size);
+    }
+
+    @GetMapping("/program/{program}")
+    public List<Commission> getByProgram(@PathVariable String program) {
+        return services.findByProgram(program);
     }
 
     //Obtener por id
@@ -66,11 +82,6 @@ public class CommissionController {
         }catch (CommissionAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
-    }
-
-    @GetMapping()
-    public List<Commission> listCommission() {
-        return services.list();
     }
 
 }

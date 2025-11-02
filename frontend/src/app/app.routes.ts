@@ -13,6 +13,7 @@ import { AuthGuard } from './Services/Auth/auth-guard';
 
 import { Exams } from './pages/exams/exams';
 import { FinalExams } from './pages/final-exams/final-exams';
+import { Commissions } from './pages/commissions/commissions';
 import { InscriptionFinalExams } from './pages/inscription-final-exams/inscription-final-exams';
 import { InscriptionToExamFormEdit } from './components/inscription-to-exam-form-edit/inscription-to-exam-form-edit';
 import { InscriptionToExamList } from './components/inscription-to-exam-list/inscription-to-exam-list';
@@ -20,8 +21,9 @@ import { InscriptionToExamList } from './components/inscription-to-exam-list/ins
 
 
 
+
 export const routes: Routes = [
-    {path: 'auth/login', component:Login},
+    { path: 'auth/login', component: Login },
 
     { path: '', component: Home, canActivate: [AuthGuard] },
     { path: 'students', component: Students, canActivate: [AuthGuard] },
@@ -30,6 +32,7 @@ export const routes: Routes = [
 
     { path: 'subject', component: Subjects, canActivate: [AuthGuard] },
     { path: 'subject/:id', component: Subjects, canActivate: [AuthGuard] },
+    { path: 'commissions', component: Commissions, canActivate: [AuthGuard] },
 
     { path: 'exam', component:Exams, canActivate: [AuthGuard] },
     { path: 'final-exam', component:FinalExams, canActivate: [AuthGuard] },
@@ -38,6 +41,7 @@ export const routes: Routes = [
     { path: 'inscriptionToFinalExam/:id', component: InscriptionToExamFormEdit, canActivate: [AuthGuard] },
 
     { path: 'register-to-final-exam', component: InscriptionToExamList, canActivate:[AuthGuard] },
+
 
     { path: 'engineerings', component: Engineerings, canActivate: [AuthGuard] },
     { path: 'technicals', component: Technicals, canActivate: [AuthGuard] },

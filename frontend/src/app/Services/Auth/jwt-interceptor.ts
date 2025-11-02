@@ -26,11 +26,12 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(requestToHandle).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
+        if (error.status === 403) {
           console.error('Token expirado o inválido. Redirigiendo a inicio de sesión.');
           
           localStorage.removeItem('token'); 
           this.router.navigate(['/login']); 
+          alert("Tu sesión ha expirado")
         }
         return throwError(() => error); 
       })

@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Model.MateriaXAlumno;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
+import MyAcad.Project.backend.Model.Commission.Commission;
 import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
 import MyAcad.Project.backend.Model.Users.Student;
 import jakarta.persistence.*;

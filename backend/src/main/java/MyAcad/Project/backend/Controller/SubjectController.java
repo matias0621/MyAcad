@@ -63,6 +63,18 @@ public class SubjectController {
         return subjectService.modifySubject(id, updatedSubject);
     }
 
+    @PutMapping("/prerequisite/{id}")
+    public ResponseEntity<?> addPrerequisite(@PathVariable Long idSubject, @RequestBody List<Long> IdPrerequisite) {
+        subjectService.addPrerequisite(IdPrerequisite, idSubject);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/prerequisite/delete/{id}")
+    public ResponseEntity<?> deletePrerequisite(@PathVariable Long idSubject, @RequestBody Long IdPrerequisite) {
+        subjectService.deleteAPrerequisite(idSubject, IdPrerequisite);
+        return ResponseEntity.ok().build();
+    }
+
     // Eliminar materia
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubject(@PathVariable Long id) {

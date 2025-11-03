@@ -25,6 +25,10 @@ public interface CommissionRepository extends JpaRepository<Commission, Long> {
 
     Optional<Commission> findFirstByActiveTrue();
 
+    @Query("SELECT c FROM Commission c JOIN c.students s WHERE s.id = :studentId")
+    List<Commission> findCommissionsByStudentId(@Param("studentId") Long studentId);
+
+
     Optional<Object> findCommissionByNumberAndProgram(int number, String program);
 
 }

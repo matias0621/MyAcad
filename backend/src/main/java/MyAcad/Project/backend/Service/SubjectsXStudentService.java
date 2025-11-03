@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +36,16 @@ public class SubjectsXStudentService {
         return subjectsXStudentRepository.findAll();
     }
 
+    public SubjectsXStudentEntity getSubjectsXStudentById(Long id) {
+        return subjectsXStudentRepository.findById(id).orElseThrow();
+    }
+
     public List<SubjectsXStudentEntity> getAllSubjectsXStudentByStudentId(Long studentId) {
         return subjectsXStudentRepository.findByStudent_Id(studentId);
     }
 
-    public SubjectsXStudentEntity getSubjectsXStudentByStudentIdAndSubjectsId(Long studentId, Long subjectsId) {
-        return subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId, subjectsId).orElseThrow();
+    public Optional<SubjectsXStudentEntity> getSubjectsXStudentByStudentIdAndSubjectsId(Long studentId, Long subjectsId) {
+        return subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId, subjectsId);
     }
 
     public void updateSubjectsXStudent(SubjectsXStudentDTO subjectsXStudentDTO, Long SubjectXStudentId) {
@@ -59,6 +64,4 @@ public class SubjectsXStudentService {
         SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findById(SubjectXStudentId).orElseThrow();
         subjectsXStudentRepository.delete(subjectsXStudentEntity);
     }
-
-
 }

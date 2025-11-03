@@ -5,6 +5,8 @@ import MyAcad.Project.backend.Model.Commission.Commission;
 import MyAcad.Project.backend.Model.Commission.CommissionDTO;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.CourseDTO;
+import MyAcad.Project.backend.Model.RegistrationStudent.RegistrationRequest;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Service.CommissionService;
 import lombok.AllArgsConstructor;
@@ -82,6 +84,24 @@ public class CommissionController {
         }catch (CommissionAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
+    }
+
+    @PutMapping("add-subject/{id}")
+    public ResponseEntity<?> addSubjectsToSubjects(@PathVariable Long idCommission, @RequestBody List<Long> subjects){
+        services.addSubjectsToCommission(idCommission, subjects);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("add-subject/{id}")
+    public ResponseEntity<?> deleteSubjectsToSubjects(@PathVariable Long idCommission, @RequestBody Long subjectsId){
+        services.deleteSubjectsFromCommission(idCommission, subjectsId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("register-student/{id}")
+    public ResponseEntity<?> registerStudent(@PathVariable Long id, @RequestBody RegistrationRequest request){
+        services.registerToStudent(request.getStudentId(), id, request.getSubjectsId());
+        return ResponseEntity.ok().build();
     }
 
 }

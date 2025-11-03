@@ -1,14 +1,22 @@
 package MyAcad.Project.backend.Service;
 
+import MyAcad.Project.backend.Enum.AcademicStatus;
 import MyAcad.Project.backend.Model.Commission.Commission;
+import MyAcad.Project.backend.Model.MateriaXAlumno.SubjectsXStudentDTO;
+import MyAcad.Project.backend.Model.MateriaXAlumno.SubjectsXStudentEntity;
+import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.CommissionRepository;
+import MyAcad.Project.backend.Repository.StudentRepository;
+import MyAcad.Project.backend.Repository.SubjectsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.Subject;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +24,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CommissionService {
     private final CommissionRepository repository;
+    private final SubjectsRepository subjectsRepository;
+    private final StudentRepository studentRepository;
+    private final SubjectsXStudentService subjectsXStudentService;
 
     public void add(Commission c) {
         if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
@@ -79,5 +90,86 @@ public class CommissionService {
     public Optional<Optional<Commission>> getByNumber(int number) {
         return Optional.ofNullable(repository.findByNumber(number));
     }
+
+    public void addSubjectsToCommission(Long idCommission, List<Long> idSubjects){
+        Commission c = repository.findById(idCommission).get();
+        for (Long idSubject : idSubjects) {
+            SubjectsEntity s = subjectsRepository.findById(idSubject).get();
+            if (!c.getSubjects().contains(s)) {
+                c.getSubjects().add(s);
+            }
+        }
+        repository.save(c);
+    }
+
+    public void deleteSubjectsFromCommission(Long idCommission, Long idSubject){
+        Commission c = repository.findById(idCommission).get();
+        SubjectsEntity s = subjectsRepository.findById(idSubject).get();
+        c.getSubjects().remove(s);
+        repository.save(c);
+    }
+
+    public void registerToStudent(Long studentId, Long commisionId, Long subjectsId){
+        Commission commission = repository.findById(commisionId).get();
+        Student student = studentRepository.findById(studentId).get();
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).get();
+
+        if (!commission.getStudents().contains(student)){
+            commission.getStudents().add(student);
+        }
+
+        if (subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(studentId, subjectsId).isPresent()){
+            throw new RuntimeException("Subject already exists");
+        }
+
+        if (!subjectsEntity.getPrerequisites().isEmpty()){
+            for (SubjectsEntity prerequisite : subjectsEntity.getPrerequisites()) {
+                validatePrerequisite(student, prerequisite);
+            }
+        }
+
+        SubjectsXStudentDTO subjectsXStudentDTO = SubjectsXStudentDTO.builder()
+                .subjectsId(subjectsId)
+                .studentId(studentId)
+                .academicStatus(AcademicStatus.INPROGRESS)
+                .build();
+
+        subjectsXStudentService.createSubjectsXStudent(subjectsXStudentDTO);
+
+    }
+
+
+    private void validatePrerequisite(Student student, SubjectsEntity prerequisite) {
+        Optional<SubjectsXStudentEntity> opt = subjectsXStudentService
+                .getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), prerequisite.getId());
+
+        if (opt.isEmpty()) {
+            throw new RuntimeException("Subject not found");
+        }
+
+        SubjectsXStudentEntity sxStudentEntity = opt.get();
+        AcademicStatus statusStudent = sxStudentEntity.getStateStudent();
+        AcademicStatus statusRequired = prerequisite.getAcademicStatus();
+
+        switch (statusRequired) {
+            case COMPLETED -> {
+                if (!(statusStudent.equals(AcademicStatus.COMPLETED) || statusStudent.equals(AcademicStatus.APPROVED))) {
+                    throw new RuntimeException("Can't register in this subject");
+                }
+            }
+            case APPROVED -> {
+                if (!statusStudent.equals(AcademicStatus.APPROVED)) {
+                    throw new RuntimeException("Can't register in this subject");
+                }
+            }
+            default -> throw new RuntimeException("Can't register in this subject");
+        }
+    }
+
+    public List<Commission> getAllCommissionByStudent(Long studentId) {
+        return repository.findCommissionsByStudentId(studentId);
+    }
+
+
 
 }

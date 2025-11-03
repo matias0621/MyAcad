@@ -87,5 +87,32 @@ public class SubjectService {
         return ResponseEntity.ok(existingSubject);
     }
 
+    public void addPrerequisite(List<Long> subjectPrerequisiteId, Long subjectId) {
+        SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
+
+        for (int i = 0; i < subjectPrerequisiteId.size(); i++) {
+            SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(subjectPrerequisiteId.get(i)).orElseThrow();
+
+            if (subjectsPrerequisite.getPrerequisites().contains(subjects)) {
+                throw new NameMateriaAlreadyExistsException();
+            }
+
+            if (subjects.getSemesters() < subjectsPrerequisite.getSemesters()) {
+                throw new RuntimeException("you can't do prerequisite a subject of semester upper");
+            }
+
+            subjects.getPrerequisites().add(subjects);
+        }
+
+        subjectsRepository.save(subjects);
+    }
+
+    public void deleteAPrerequisite(Long subjectPrerequisiteId, Long subjectId) {
+        SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(subjectPrerequisiteId).orElseThrow();
+        SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
+
+        subjects.getPrerequisites().remove(subjects);
+        subjectsRepository.save(subjects);
+    }
 
 }

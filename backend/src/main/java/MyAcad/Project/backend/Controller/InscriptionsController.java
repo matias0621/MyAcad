@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/inscription-final-exam")
 @RequiredArgsConstructor
-public class InscriptionToFinalExamController {
+public class InscriptionsController {
 
     private final InscriptionToFinalExamService inscriptionToFinalExamService;
 

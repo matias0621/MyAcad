@@ -1,7 +1,11 @@
 package MyAcad.Project.backend.Model.Programs;
 
 import MyAcad.Project.backend.Enum.ProgramType;
+import MyAcad.Project.backend.Model.Commission.CommissionDTO;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

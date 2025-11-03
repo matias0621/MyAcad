@@ -1,7 +1,7 @@
 package MyAcad.Project.backend.Configuration;
 
 import MyAcad.Project.backend.Service.JwtService;
-import MyAcad.Project.backend.Service.Users.UserLookupService;
+import MyAcad.Project.backend.Service.UserLookupService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,8 @@
 package MyAcad.Project.backend.Model.Users;
 
 import MyAcad.Project.backend.Enum.Role;
+import MyAcad.Project.backend.Model.Commission.Commission;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

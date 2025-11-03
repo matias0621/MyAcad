@@ -4,7 +4,7 @@ import MyAcad.Project.backend.Configuration.LoginRequest;
 import MyAcad.Project.backend.Configuration.LoginResponse;
 import MyAcad.Project.backend.Configuration.UserDetailsImpl;
 import MyAcad.Project.backend.Service.JwtService;
-import MyAcad.Project.backend.Service.Users.UserLookupService;
+import MyAcad.Project.backend.Service.UserLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

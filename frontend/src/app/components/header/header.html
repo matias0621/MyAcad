@@ -46,45 +46,42 @@
             </div>
         </div>
         <div class="dropdown" id="dropdown-profile">
-            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="fa-solid fa-circle-user"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a routerLink="">Cambiar contraseña</a></li>
-                <li><a (click)="logout()">Cerrar sesión</a></li>
-            </ul>
-        </div>
+        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-circle-user"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a routerLink="">Cambiar contraseña</a></li>
+          <li><a (click)="logout()" class="logout-link"><span>Cerrar sesión</span></a></li>
+        </ul>
+      </div>
         }
         <!-- ---------------HEADER PROFESORES--------------- -->
         @else if (service.getRole() == "ROLE_TEACHER") {
         <a routerLink="">Inicio</a>
 
         <div class="dropdown" id="dropdown-profile">
-            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="fa-solid fa-circle-user"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a routerLink="">Cambiar contraseña</a></li>
-                <li><a (click)="logout()">Cerrar sesión</a></li>
-            </ul>
-        </div>
+        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-circle-user"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a routerLink="">Cambiar contraseña</a></li>
+          <li><a (click)="logout()" class="logout-link"><span>Cerrar sesión</span></a></li>
+        </ul>
+      </div>
         }
         <!-- ---------------HEADER ALUMNOS--------------- -->
         @else if (service.getRole() == "ROLE_STUDENT") {
         <a routerLink="">Inicio</a>
 
         <div class="dropdown" id="dropdown-profile">
-            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="fa-solid fa-circle-user"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a routerLink="">Cambiar contraseña</a></li>
-                <li><a (click)="logout()">Cerrar sesión</a></li>
-            </ul>
-        </div>
-        }
-    </nav>
+        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-circle-user"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a routerLink="">Cambiar contraseña</a></li>
+          <li><a (click)="logout()" class="logout-link"><span>Cerrar sesión</span></a></li>
+        </ul>
+      </div>
+    }
+  </nav>
 </header>

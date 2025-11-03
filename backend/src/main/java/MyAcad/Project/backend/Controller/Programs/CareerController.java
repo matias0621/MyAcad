@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/careers")
 @AllArgsConstructor
 public class CareerController {
-    private CareerService services;
+    private final CareerService services;
 
     @GetMapping()
     public List<Career> listCareers() {

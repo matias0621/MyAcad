@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequestMapping("/technicals")
 @AllArgsConstructor
 public class TechnicalController {
-    private TechnicalService services;
+    private final TechnicalService services;
 
     @GetMapping()
     public List<Technical> listTechnicals() {

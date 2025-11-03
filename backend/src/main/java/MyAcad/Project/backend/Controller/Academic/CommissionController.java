@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequestMapping("/commissions")
 @AllArgsConstructor
 public class CommissionController {
-    private CommissionService services;
+    private final CommissionService services;
 
 
     @GetMapping("/active")

@@ -2,9 +2,11 @@ package MyAcad.Project.backend.Service;
 
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamDTO;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamEntity;
-import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.InscriptionToFinalExamRepository;
+import MyAcad.Project.backend.Service.Academic.SubjectService;
+import MyAcad.Project.backend.Service.Users.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

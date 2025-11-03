@@ -54,6 +54,11 @@ public class SubjectController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/semester-less-than/{semester}")
+    public ResponseEntity<List<SubjectsEntity>> getSubjectsBySemester(@PathVariable Integer semester) {
+        return ResponseEntity.ok(subjectService.findBySemestersLessThan(semester));
+    }
+
     // Modificar materia
     @PutMapping("/{id}")
     public ResponseEntity<SubjectsEntity> modifySubject(

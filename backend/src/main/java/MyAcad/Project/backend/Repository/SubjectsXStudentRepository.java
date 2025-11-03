@@ -1,6 +1,6 @@
 package MyAcad.Project.backend.Repository;
 
-import MyAcad.Project.backend.Model.MateriaXAlumno.SubjectsXStudentEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

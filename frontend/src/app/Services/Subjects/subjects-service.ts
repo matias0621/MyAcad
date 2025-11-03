@@ -19,6 +19,10 @@ export class SubjectsService {
     return this.http.get<Subjects[]>(this.api_url)
   }
 
+  getAllSubjectWithSemesterLessThan(semester:number){
+    return this.http.get<Subjects[]>(`${this.api_url}/semester-less-than/${semester}`)
+  }
+
   getAllSubjectByName(name:string){
     return this.http.get<Subjects[]>(`${this.api_url}/search?name=${name}`)
   }

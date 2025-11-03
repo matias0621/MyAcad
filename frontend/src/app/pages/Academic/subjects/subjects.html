@@ -10,6 +10,14 @@
     @for (subject of subjectService.listSubject; track $index) {
     <li>
         {{subject.name}} {{subject.description}} {{ subject.subjectActive }} {{ subject.academicStatus }}
+        @if(subject.prerequisites?.length !== 0){
+            <br>
+            @for (subjectPrerequisite of subject.prerequisites; track $index) {
+                {{ subjectPrerequisite.name }} -
+                {{ subjectPrerequisite.description }}
+                <br>
+            } 
+        }
         <button (click)="redirecTo(subject.id)" >Editar</button>
         <button (click)="deleteSubject(subject.id)">Eliminar</button>
     </li>

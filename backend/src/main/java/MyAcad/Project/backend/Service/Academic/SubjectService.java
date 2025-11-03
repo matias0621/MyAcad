@@ -112,4 +112,8 @@ public class SubjectService {
         subjectsRepository.save(subjects);
     }
 
+    public List<SubjectsEntity> findBySemestersLessThan(Integer semesters) {
+        return subjectsRepository.findBySemestersLessThan(semesters);
+    }
+
 }

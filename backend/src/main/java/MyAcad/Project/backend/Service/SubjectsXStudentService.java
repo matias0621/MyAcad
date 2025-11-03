@@ -1,10 +1,12 @@
 package MyAcad.Project.backend.Service;
 
-import MyAcad.Project.backend.Model.MateriaXAlumno.SubjectsXStudentDTO;
-import MyAcad.Project.backend.Model.MateriaXAlumno.SubjectsXStudentEntity;
-import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentDTO;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
+import MyAcad.Project.backend.Service.Academic.SubjectService;
+import MyAcad.Project.backend.Service.Users.StudentService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

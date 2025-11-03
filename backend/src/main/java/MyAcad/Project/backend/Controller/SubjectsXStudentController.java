@@ -1,7 +1,7 @@
 package MyAcad.Project.backend.Controller;
 
-import MyAcad.Project.backend.Model.MateriaXAlumno.SubjectsXStudentDTO;
-import MyAcad.Project.backend.Model.MateriaXAlumno.SubjectsXStudentEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentDTO;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

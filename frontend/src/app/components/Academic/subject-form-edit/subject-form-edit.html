@@ -44,3 +44,41 @@
         <button type="submit" [disabled]="form.invalid">Agregar</button>
     </div>
 </form>
+
+<button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal">Agregar correlativas</button>
+
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modal-label" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h1 class="modal-title fs-5 titles">{{ modalText }}</h1>
+                <button data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                @for (subjects of listOfSubjects; track $index) {
+
+                <div [class.selected]="isSelected(subjects)">
+                    <label for=""> {{ subjects.name }}: </label>
+                    <div>
+                        <button 
+                        class="add-crud-btn" 
+                        (click)="addSubjects(subjects)"
+                        >
+                            Añadir a correlativas
+                        </button>
+                        <button 
+                        class="add-crud-btn" 
+                        (click)="deleteSubjectsOfPrerequisite(subjects)"
+                        >
+                            Eliminar de correlativas
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

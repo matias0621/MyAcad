@@ -2,7 +2,7 @@ package MyAcad.Project.backend.Service.Academic;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
 import MyAcad.Project.backend.Model.Academic.Commission;
-import MyAcad.Project.backend.Model.MateriaXAlumno.SubjectsXStudentDTO;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentDTO;
 import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Users.Student;
@@ -10,6 +10,7 @@ import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
+import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

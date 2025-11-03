@@ -1,89 +1,158 @@
 <header>
-    <a routerLink="">
-        <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
-    </a>
-    <nav>
-        @if (!service.getRole()) {
-        }
-        <!-- ---------------HEADER GESTORES--------------- -->
-        @else if (service.getRole() == "ROLE_MANAGER") {
-        <div class="left-navs">
-            <a routerLink="">Inicio</a>
-            <div class="dropdown">
-                <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    Usuarios
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a routerLink="students">Alumnos</a></li>
-                    <li><a routerLink="teachers">Docentes</a></li>
-                    <li><a routerLink="managers">Gestores</a></li>
-                </ul>
-            </div>
-            <div class="dropdown">
-                <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    Academico
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a routerLink="/subject">Materias</a></li>
-                    <li><a routerLink="/final-exam">Mesas de examen</a></li>
-                    <li><a routerLink="/exam">Parciales</a></li>
-                    <li><a routerLink="">Correlativas</a></li>
-                </ul>
-            </div>
-            <div class="dropdown">
-                <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    Ofertas académicas
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a routerLink="engineerings">Ingenierías</a></li>
-                    <li><a routerLink="technicals">Tecnicaturas</a></li>
-                    <li><a routerLink="courses">Cursos</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="dropdown" id="dropdown-profile">
-            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="fa-solid fa-circle-user"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a routerLink="">Cambiar contraseña</a></li>
-                <li><a (click)="logout()">Cerrar sesión</a></li>
-            </ul>
-        </div>
-        }
-        <!-- ---------------HEADER PROFESORES--------------- -->
-        @else if (service.getRole() == "ROLE_TEACHER") {
-        <a routerLink="">Inicio</a>
+  <a routerLink="">
+    <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+  </a>
 
-        <div class="dropdown" id="dropdown-profile">
-            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="fa-solid fa-circle-user"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a routerLink="">Cambiar contraseña</a></li>
-                <li><a (click)="logout()">Cerrar sesión</a></li>
-            </ul>
-        </div>
-        }
-        <!-- ---------------HEADER ALUMNOS--------------- -->
-        @else if (service.getRole() == "ROLE_STUDENT") {
-        <a routerLink="">Inicio</a>
+  <!-- solo visible en responsive -->
+  <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="isMenuOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 
-        <div class="dropdown" id="dropdown-profile">
-            <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="fa-solid fa-circle-user"></i>
+  <nav [class.open]="isMenuOpen">
+    @if (!service.getRole()) { }
+
+    <!-- ========== HEADER GESTORES ========== -->
+    @else if (service.getRole() == "ROLE_MANAGER") {
+
+      <div class="menu-wrap">
+        <div class="menu-curved left-navs menu"
+             (mouseleave)="restoreActiveIndicator()"
+             #menuHost>
+
+          <!-- Indicadores -->
+          <span class="menu-indicator" #indicator></span>
+          <span class="menu-blob" #blob></span>
+
+          <!-- INICIO -->
+          <div class="menu-item"
+               #menuItem
+               (mouseenter)="hoverTo(menuItem)"
+               [class.active]="activeSection === 'inicio'">
+            <a routerLink=""
+               (click)="activateAndSnap(menuItem,'inicio')">
+              Inicio
+            </a>
+          </div>
+
+          <!-- USUARIOS -->
+          <div class="menu-item dropdown"
+               #menuItem
+               (mouseenter)="hoverTo(menuItem)"
+               [class.active]="activeSection === 'usuarios'">
+            <button class="dropdown-button dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    (click)="activateAndSnap(menuItem,'usuarios')">
+              Usuarios
             </button>
             <ul class="dropdown-menu">
-                <li><a routerLink="">Cambiar contraseña</a></li>
-                <li><a (click)="logout()">Cerrar sesión</a></li>
+              <li><a routerLink="students">Alumnos</a></li>
+              <li><a routerLink="teachers">Docentes</a></li>
+              <li><a routerLink="managers">Gestores</a></li>
             </ul>
+          </div>
+
+          <!-- ACADEMICO -->
+          <div class="menu-item dropdown"
+               #menuItem
+               (mouseenter)="hoverTo(menuItem)"
+               [class.active]="activeSection === 'academico'">
+            <button class="dropdown-button dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    (click)="activateAndSnap(menuItem,'academico')">
+              Academico
+            </button>
+            <ul class="dropdown-menu">
+              <li><a routerLink="/subject">Materias</a></li>
+              <li><a routerLink="/final-exam">Mesas de examen</a></li>
+              <li><a routerLink="/exam">Parciales</a></li>
+              <li><a routerLink="">Correlativas</a></li>
+            </ul>
+          </div>
+
+          <!-- OFERTAS ACADÉMICAS -->
+          <div class="menu-item dropdown"
+               #menuItem
+               (mouseenter)="hoverTo(menuItem)"
+               [class.active]="activeSection === 'ofertas'">
+            <button class="dropdown-button dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    (click)="activateAndSnap(menuItem,'ofertas')">
+              Ofertas académicas
+            </button>
+            <ul class="dropdown-menu">
+              <li><a routerLink="engineerings">Ingenierías</a></li>
+              <li><a routerLink="technicals">Tecnicaturas</a></li>
+              <li><a routerLink="courses">Cursos</a></li>
+            </ul>
+          </div>
         </div>
-        }
-    </nav>
+      </div>
+
+      <div class="dropdown" id="dropdown-profile">
+        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-circle-user"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a routerLink="">Cambiar contraseña</a></li>
+          <li><a (click)="logout()">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    }
+
+    <!-- ========== HEADER PROFESORES ========== -->
+    @else if (service.getRole() == "ROLE_TEACHER") {
+      <div class="menu-wrap">
+        <div class="menu-curved left-navs menu" (mouseleave)="restoreActiveIndicator()" #menuHost>
+          <span class="menu-indicator" #indicator></span>
+          <span class="menu-blob" #blob></span>
+
+          <div class="menu-item" #menuItem (mouseenter)="hoverTo(menuItem)" [class.active]="activeSection === 'inicio'">
+            <a routerLink="" (click)="activateAndSnap(menuItem,'inicio')">Inicio</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" id="dropdown-profile">
+        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-circle-user"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a routerLink="">Cambiar contraseña</a></li>
+          <li><a (click)="logout()">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    }
+
+    <!-- ========== HEADER ALUMNOS ========== -->
+    @else if (service.getRole() == "ROLE_STUDENT") {
+      <div class="menu-wrap">
+        <div class="menu-curved left-navs menu" (mouseleave)="restoreActiveIndicator()" #menuHost>
+          <span class="menu-indicator" #indicator></span>
+          <span class="menu-blob" #blob></span>
+
+          <div class="menu-item" #menuItem (mouseenter)="hoverTo(menuItem)" [class.active]="activeSection === 'inicio'">
+            <a routerLink="" (click)="activateAndSnap(menuItem,'inicio')">Inicio</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" id="dropdown-profile">
+        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-circle-user"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a routerLink="">Cambiar contraseña</a></li>
+          <li><a (click)="logout()">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    }
+  </nav>
 </header>

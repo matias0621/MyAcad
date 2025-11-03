@@ -58,7 +58,8 @@ public class SecurityConfig {
 
                                 "/exams/**",
                                 "/final-exam/**",
-                                "/inscription-final-exam/**"
+                                "/inscription-final-exam/**",
+                                "/subject-x-student/**"
                         ).hasRole("MANAGER")
                         .anyRequest().authenticated()
                 )

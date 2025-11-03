@@ -10,6 +10,7 @@ import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Service.CommissionService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +20,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/commissions")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CommissionController {
-    private CommissionService services;
+    private final CommissionService services;
 
 
     @GetMapping("/active")
@@ -86,13 +87,13 @@ public class CommissionController {
         }
     }
 
-    @PutMapping("add-subject/{id}")
+    @PutMapping("/add-subject/{id}")
     public ResponseEntity<?> addSubjectsToSubjects(@PathVariable Long idCommission, @RequestBody List<Long> subjects){
         services.addSubjectsToCommission(idCommission, subjects);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("add-subject/{id}")
+    @PutMapping("/delete-subject/{id}")
     public ResponseEntity<?> deleteSubjectsToSubjects(@PathVariable Long idCommission, @RequestBody Long subjectsId){
         services.deleteSubjectsFromCommission(idCommission, subjectsId);
         return ResponseEntity.ok().build();

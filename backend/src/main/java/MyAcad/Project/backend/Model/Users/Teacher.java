@@ -1,7 +1,7 @@
 package MyAcad.Project.backend.Model.Users;
 
 import MyAcad.Project.backend.Enum.Role;
-import MyAcad.Project.backend.Model.Subjects.SubjectsEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;

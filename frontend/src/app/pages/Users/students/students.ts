@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserForm } from "../../../components/user-form/user-form";
-import { UserList } from "../../../components/user-list/user-list";
-import { UserEditForm } from "../../../components/user-edit-form/user-edit-form";
+import { UserList } from "../../../components/Users/user-list/user-list";
+import { UserEditForm } from "../../../components/Users/user-edit-form/user-edit-form";
+import { UserForm } from '../../../components/Users/user-form/user-form';
 
 @Component({
   selector: 'app-students',

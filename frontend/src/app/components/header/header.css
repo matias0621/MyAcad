@@ -46,7 +46,8 @@ li>a {
     padding: .5em .5em;
     transition: .3s;
 }
-a:hover {
+
+a:hover:not(.logout-link) {
     background-color: var(--color-3);
 }
 
@@ -58,4 +59,177 @@ a {
     color: var(--color-2);
     padding: 0 1em;
     height: 100%;
+}
+
+
+/* ====== ANIMACIÓN EN CERRAR SESIÓN ====== */
+::ng-deep #dropdown-profile .dropdown-menu li a.logout-link {
+  position: relative !important;
+  display: block !important;
+  overflow: visible !important;
+  padding: 0.5em 1em !important;
+  min-height: 2.5em !important;
+  width: 100% !important;
+}
+
+::ng-deep #dropdown-profile .dropdown-menu li a.logout-link:hover {
+  background-color: var(--color-3) !important;
+}
+
+::ng-deep #dropdown-profile .dropdown-menu li a.logout-link span {
+  transition: opacity 0.3s ease;
+  position: relative;
+  z-index: 0;
+}
+
+::ng-deep #dropdown-profile .dropdown-menu li a.logout-link:hover span {
+  opacity: 0 !important;
+}
+
+/* Silueta de personaje */
+::ng-deep .logout-link::before {
+  content: '🚶‍♂️';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleX(-1);
+  font-size: 1.5em;
+  opacity: 0;
+  pointer-events: none;
+  filter: brightness(0) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+::ng-deep .logout-link:hover::before {
+  animation: walkAndEnter 1.5s ease forwards;
+}
+
+/* Puerta al final */
+::ng-deep .logout-link::after {
+  content: '▮';
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.2em;
+  opacity: 0;
+  pointer-events: none;
+  color: var(--color-2);
+  font-weight: bold;
+}
+
+::ng-deep .logout-link:hover::after {
+  opacity: 1;
+  animation: doorOpen 1.5s ease forwards;
+}
+
+/* Animación completa: caminar y entrar */
+@keyframes walkAndEnter {
+  0% {
+    left: 0;
+    opacity: 0;
+    transform: translateY(-50%) scaleX(-1);
+  }
+  10% {
+    opacity: 1;
+  }
+  75% {
+    left: calc(100% - 3em);
+    opacity: 1;
+    transform: translateY(-50%) scaleX(-1);
+  }
+  100% {
+    left: calc(100% - 3em);
+    opacity: 0;
+    transform: translateY(-50%) scaleX(-1) scale(0.3);
+  }
+}
+
+/* Animación de puerta abriéndose */
+@keyframes doorOpen {
+  0%, 70% {
+    transform: translateY(-50%) scaleX(1);
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(-50%) scaleX(0.3);
+    opacity: 0.8;
+  }
+  90%, 100% {
+    transform: translateY(-50%) scaleX(0.1);
+    opacity: 0.5;
+  }
+}
+
+/* Silueta de personaje */
+.logout-link::before {
+  content: '🚶‍♂️';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleX(-1);
+  font-size: 1.5em;
+  opacity: 0;
+  pointer-events: none;
+  filter: brightness(0) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.logout-link:hover::before {
+  animation: walkAndEnter 1.5s ease forwards;
+}
+
+/* Puerta al final */
+.logout-link::after {
+  content: '▮';
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.2em;
+  opacity: 0;
+  pointer-events: none;
+  color: var(--color-2);
+  font-weight: bold;
+}
+
+.logout-link:hover::after {
+  opacity: 1;
+  animation: doorOpen 1.5s ease forwards;
+}
+
+/* Animación complet caminar y entrar */
+@keyframes walkAndEnter {
+  0% {
+    left: 0;
+    opacity: 0;
+    transform: translateY(-50%) scaleX(-1);
+  }
+  10% {
+    opacity: 1;
+  }
+  75% {
+    left: calc(100% - 3em);
+    opacity: 1;
+    transform: translateY(-50%) scaleX(-1);
+  }
+  100% {
+    left: calc(100% - 3em);
+    opacity: 0;
+    transform: translateY(-50%) scaleX(-1) scale(0.3);
+  }
+}
+
+/* Animación de puerta abriendo */
+@keyframes doorOpen {
+  0%, 70% {
+    transform: translateY(-50%) scaleX(1);
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(-50%) scaleX(0.3);
+    opacity: 0.8;
+  }
+  90%, 100% {
+    transform: translateY(-50%) scaleX(0.1);
+    opacity: 0.5;
+  }
 }

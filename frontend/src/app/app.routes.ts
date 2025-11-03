@@ -3,17 +3,17 @@ import { Students } from './pages/Users/students/students';
 import { Home } from './pages/home/home';
 import { Teachers } from './pages/Users/teachers/teachers';
 import { Managers } from './pages/Users/managers/managers';
-import { Courses } from './pages/courses/courses';
-import { Engineerings } from './pages/careers/engineerings/engineerings';
-import { Technicals } from './pages/careers/technicals/technicals';
-import { ProgramsEditForm } from './components/programs-edit-form/programs-edit-form';
-import { Subjects } from './pages/subjects/subjects';
+import { Courses } from './pages/Programs/courses/courses';
+import { Engineerings } from './pages/Programs/engineerings/engineerings';
+import { Technicals } from './pages/Programs/technicals/technicals';
+import { ProgramsEditForm } from './components/Programs/programs-edit-form/programs-edit-form';
+import { Subjects } from './pages/Academic/subjects/subjects';
 import { Login } from './pages/login/login';
 import { AuthGuard } from './Services/Auth/auth-guard';
 
-import { Exams } from './pages/exams/exams';
-import { FinalExams } from './pages/final-exams/final-exams';
-import { Commissions } from './pages/commissions/commissions';
+import { Exams } from './pages/Academic/exams/exams';
+import { FinalExams } from './pages/Academic/final-exams/final-exams';
+import { Commissions } from './pages/Academic/commissions/commissions';
 
 
 

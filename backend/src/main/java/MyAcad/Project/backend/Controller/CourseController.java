@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequestMapping("/courses")
 @AllArgsConstructor
 public class CourseController {
-    private CourseService services;
+    private final CourseService services;
 
     //Paginacion
     @GetMapping("/paginated")

@@ -40,6 +40,14 @@ export class ProgramsForm implements OnInit {
           next: (programs) => {
             alert('Programa creado exitosamente.');
             this.added.emit(programs);
+            // Cerrar el modal
+            const modalElement = document.getElementById('modal-add');
+            if (modalElement) {
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
           },
           error: (error) => {
             console.error('Error al obtener programas:', error);

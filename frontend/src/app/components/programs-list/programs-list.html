@@ -1,7 +1,12 @@
 <section class="crud-management d-flex justify-content-center">
     <div class="crud-management-container">
-        <div class="w-100 d-flex justify-content-evenly mb-3">
+        <div class="w-100 d-flex flex-column align-items-center mb-3">
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
+            <select id="select-filter" [(ngModel)]="filter" (change)="filterPrograms()">
+                <option value="">Mostrar todo</option>
+                <option value="Activos">Activos</option>
+                <option value="Inactivos">Inactivos</option>
+            </select>
         </div>
         <table class="crud-table">
             <thead>
@@ -28,7 +33,7 @@
                     <td>{{program.annualFee}}</td>
                     <td>{{program.active ? 'Sí' : 'No'}}</td>
                     <td class="crud-table-actions">
-                        <button class="modify-crud-btn" (click)="modifyProgram(program)">Editar</button>
+                        <button class="modify-crud-btn" (click)="modifyProgram(program); programEditForm.loadData(program)" data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>
                         <button class="delete-crud-btn" (click)="deleteProgram(program.id)"
                             data-id="${program.id}">Eliminar</button>
                         @if (!program.active) {
@@ -57,108 +62,32 @@
         <!-- Modal agregar programa -->
         <div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
                         <h1 class="modal-title fs-5 titles">Agregar</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
                     </div>
                     <div class="modal-body">
-                        <form class="row g-3 admin-form justify-content-center text-center" id="add-admin-form">
-                            <div class="col-md-5">
-                                <label class="form-label form" for="name-input">Nombre</label>
-                                <input type="text" class="form-control" id="name-input" placeholder="Nombre" name="name"
-                                    required>
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label" for="description-input">Descripcion</label>
-                                <input type="text" class="form-control" id="description-input" placeholder="Descripcion"
-                                    name="description" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="duration-input">Duracion</label>
-                                <input type="number" class="form-control" id="duration-input" placeholder="Duracion"
-                                    name="duration" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="monthlyFee-input">Mensualidad</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="monthlyFee-input" pattern="^\d{10}$"
-                                        name="monthlyFee" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="annualFee">Matricula</label>
-                                <input type="number" class="form-control" id="annualFee-input" placeholder="Matricula"
-                                    name="annualFee" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="active-input">Activo</label>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="active-input" 
-                                        name="active" checked>
-                                    <label class="form-check-label" for="active-input">
-                                        Habilitado
-                                    </label>
-                                </div>
-                            </div>
-                            <div
-                                class="crud-form-buttons col-12 d-flex flex-row justify-content-around align-items-center ">
-                                <button type="button" class="btn-style-1" data-bs-dismiss="modal"
-                                    aria-label="Close">Cancelar</button>
-                                <input class="btn-style-1" type="submit" value="Agregar">
-                            </div>
-                        </form>
+                        <app-programs-form [endpoint]="endpoint" (added)="programs = $event"></app-programs-form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Modal de modificar programa -->
-        <div class="modal fade" id="modal-modify-program" tabindex="-1" aria-labelledby="modal-modify-program-label"
-            style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal editar programa -->
+        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Modificar programa</h1>
+                        <h1 class="modal-title fs-5 titles">Editar</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
                     </div>
                     <div class="modal-body">
-                        <form class="row g-3 program-form justify-content-center text-center" id="modify-program-form">
-                            <div class="col-md-2">
-                                <label class="form-label" for="program-id-input">ID</label>
-                                <input type="number" class="form-control" id="program-id-input" disabled>
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label" for="program-name-input">Nombre</label>
-                                <input type="text" class="form-control" id="program-name-input" placeholder="Nombre"
-                                    name="name" required>
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label" for="program-description-input">Descripción</label>
-                                <input type="text" class="form-control" id="program-description-input" placeholder="Descripción"
-                                    name="description" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="program-duration-input">Duracion</label>
-                                <input type="number" class="form-control" id="program-duration-input" placeholder="Duracion"
-                                    name="duration" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="program-monthly-fee-input">Mensualidad</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="program-monthly-fee-input" pattern="^\d{10}$">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="program-annualFee-input">Matricula</label>
-                                <input type="number" class="form-control" id="program-annualFee-input" placeholder="Matricula"
-                                    name="annualFee" required>
-                            </div>
-                            <div
-                                class="crud-form-buttons col-8 d-flex flex-row justify-content-around align-items-center ">
-                                <button type="button" class="btn-style-1" data-bs-dismiss="modal"
-                                    aria-label="Close">Cancelar</button>
-                                <input class="btn-style-1" type="submit" value="Modificar">
-                            </div>
-                        </form>
+                        <app-programs-edit-form [endpoint]="endpoint" (added)="programs = $event" #programEditForm></app-programs-edit-form>
                     </div>
                 </div>
             </div>

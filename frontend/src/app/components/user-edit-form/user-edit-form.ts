@@ -43,7 +43,18 @@ export class UserEditForm implements OnInit {
         console.log('Usuario modificado exitosamente:');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
-          next: (data) => { this.added.emit(data) },
+          next: (data) => { 
+            alert('Usuario editado exitosamente.');
+            this.added.emit(data);
+            // Cerrar el modal
+            const modalElement = document.getElementById('modal-edit');
+            if (modalElement) {
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
+          },
           error: (error) => { console.error(error) }
         })
       },

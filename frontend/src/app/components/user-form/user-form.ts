@@ -37,7 +37,18 @@ export class UserForm implements OnInit {
         console.log('Usuario creado exitosamente');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
-          next: (data) => { this.added.emit(data) },
+          next: (data) => { 
+            alert('Usuario creado exitosamente.');
+            this.added.emit(data);
+            // Cerrar el modal
+            const modalElement = document.getElementById('modal-add');
+            if (modalElement) {
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
+          },
           error: (error) => { console.error(error) }
         })
       },

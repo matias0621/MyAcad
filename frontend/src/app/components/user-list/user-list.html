@@ -28,8 +28,8 @@
                     <td>{{user.email}}</td>
                     <td>{{user.dni}}</td>
                     <td class="crud-table-actions">
-                        <button class="modify-crud-btn" (click)="modifyUser(user)" data-bs-toggle="modal"
-                            data-bs-target="#modal-modify-admin">Editar</button>
+                        <button class="modify-crud-btn" (click)="modifyUser(user); userEditForm.loadData(user)" data-bs-toggle="modal"
+                            data-bs-target="#modal-edit">Editar</button>
                         <button class="delete-crud-btn" (click)="deleteUser(user.id)"
                             data-id="${p.id}">Eliminar</button>
                     </td>
@@ -55,118 +55,32 @@
         <!-- Modal agregar usuario -->
         <div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
                         <h1 class="modal-title fs-5 titles">Agregar</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
                     </div>
                     <div class="modal-body">
-                        <form class="row g-3 admin-form justify-content-center text-center" id="add-admin-form">
-                            <div class="col-md-5">
-                                <label class="form-label form" for="name-input">Nombre</label>
-                                <input type="text" class="form-control" id="name-input" placeholder="Nombre" name="name"
-                                    required>
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label" for="lastname-input">Apellido</label>
-                                <input type="text" class="form-control" id="lastname-input" placeholder="Apellido"
-                                    name="lastname" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="email-input">Correo electrónico</label>
-                                <input type="email" class="form-control" id="email-input" placeholder="Email"
-                                    name="email" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="phone-input">Teléfono</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="phone-input" pattern="^\d{10}$"
-                                        title="El teléfono debe tener el formato de Argentina(10 números)."
-                                        placeholder="2238452914" name="phone" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="username-input">Usuario</label>
-                                <input type="text" class="form-control" id="username-input" placeholder="Usuario"
-                                    name="username" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="password-input">Contraseña</label>
-                                <input type="password" class="form-control" id="password-input"
-                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_=+\-\.]).{8,15}$"
-                                    title="La contraseña debe tener entre 8 y 15 caracteres, al menos una letra mayúscula, una minúscula y un carácter especial (!@#$%^&*_=+-.)"
-                                    placeholder="••••••••••••" name="password" required>
-                            </div>
-                            <div
-                                class="crud-form-buttons col-12 d-flex flex-row justify-content-around align-items-center ">
-                                <button type="button" class="btn-style-1" data-bs-dismiss="modal"
-                                    aria-label="Close">Cancelar</button>
-                                <input class="btn-style-1" type="submit" value="Agregar">
-                            </div>
-                        </form>
+                        <app-user-form [endpoint]="endpoint" (added)="users = $event"></app-user-form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Modal de modificar -->
-        <div class="modal fade" id="modal-modify-admin" tabindex="-1" aria-labelledby="modal-modify-admin-label"
-            style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal editar usuario -->
+        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Modificar admin</h1>
+                        <h1 class="modal-title fs-5 titles">Editar</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
                     </div>
                     <div class="modal-body">
-                        <form class="row g-3 admin-form justify-content-center text-center" id="modify-admin-form">
-                            <div class="col-md-2">
-                                <label class="form-label" for="admin-id-input">ID</label>
-                                <input type="number" class="form-control" id="admin-id-input" disabled>
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label" for="admin-name-input">Nombre</label>
-                                <input type="text" class="form-control" id="admin-name-input" placeholder="Nombre"
-                                    name="name" required>
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label" for="admin-lastname-input">Apellido</label>
-                                <input type="text" class="form-control" id="admin-lastname-input" placeholder="Apellido"
-                                    name="lastname" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="admin-email-input">Correo electrónico</label>
-                                <input type="email" class="form-control" id="admin-email-input" placeholder="Email"
-                                    name="email" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="admin-phone-input">Teléfono</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="admin-phone-input" pattern="^\d{10}$"
-                                        title="El teléfono debe tener el formato de Argentina(10 números)."
-                                        placeholder="2238452914" name="phone" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="admin-username-input">Usuario</label>
-                                <input type="text" class="form-control" id="admin-username-input" placeholder="Usuario"
-                                    name="username" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="admin-password-input">Contraseña</label>
-                                <input type="password" class="form-control" id="admin-password-input"
-                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_=+\-\.]).{8,15}$"
-                                    title="La contraseña debe tener entre 8 y 15 caracteres, al menos una letra mayúscula, una minúscula y un carácter especial (!@#$%^&*_=+-.)"
-                                    placeholder="••••••••••••" name="password">
-                            </div>
-                            <div class="col-md-12">
-                                <p style="color: #84e98e;">Dejar la contraseña vacía si no se quiere cambiar.</p>
-                            </div>
-                            <div
-                                class="crud-form-buttons col-8 d-flex flex-row justify-content-around align-items-center ">
-                                <button type="button" class="btn-style-1" data-bs-dismiss="modal"
-                                    aria-label="Close">Cancelar</button>
-                                <input class="btn-style-1" type="submit" value="Modificar">
-                            </div>
-                        </form>
+                        <app-user-edit-form [endpoint]="endpoint" (added)="users = $event" #userEditForm></app-user-edit-form>
                     </div>
                 </div>
             </div>

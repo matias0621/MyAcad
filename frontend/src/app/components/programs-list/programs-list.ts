@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CareerService } from '../../Services/CareerService/career-service';
+import { ProgramsForm } from '../programs-form/programs-form';
+import { ProgramsEditForm } from '../programs-edit-form/programs-edit-form';
 
 @Component({
   selector: 'app-programs-list',
-  imports: [FormsModule],
+  imports: [FormsModule, ProgramsForm, ProgramsEditForm],
   templateUrl: './programs-list.html',
   styleUrl: './programs-list.css'
 })
@@ -18,6 +20,7 @@ export class ProgramsList implements OnInit{
   search: string = ''
   timeout: any;
   showDisabled = false;
+  allPrograms!: any[];
 
   constructor(
     private service: CareerService
@@ -31,6 +34,7 @@ export class ProgramsList implements OnInit{
     this.service.getCareers(this.endpoint).subscribe({
       next: (data) => { 
         this.programs = data;
+        this.allPrograms = data;
       },
       error: (error) => {
         console.error('Error al obtener programas:', error);
@@ -73,6 +77,17 @@ export class ProgramsList implements OnInit{
 
   toggleDisabledView() {
     this.showDisabled = !this.showDisabled;
+  }
+  
+  filter: string = '';
+  filterPrograms() {
+    if (this.filter === '') {
+      this.programs = this.allPrograms;
+    } else if (this.filter === 'Activos') {
+      this.programs = this.allPrograms.filter(p => p.active === true);
+    } else if (this.filter === 'Inactivos') {
+      this.programs = this.allPrograms.filter(p => p.active === false);
+    }
   }
   
 }

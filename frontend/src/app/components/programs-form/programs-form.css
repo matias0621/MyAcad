@@ -5,7 +5,8 @@ form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1em;
-    width: 40%;
+    width: 100%;
+    max-width: 720px; /* más ancho dentro del modal */
     margin: 0 auto;
     background-color: var(--color-5);
     padding: 2em;
@@ -27,7 +28,7 @@ fieldset:last-child{
     width: 50%;
 }
 input{
-    width: 90%;
+    width: 100%;
 }
 
 button {

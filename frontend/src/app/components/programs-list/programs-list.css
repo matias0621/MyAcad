@@ -1,7 +1,7 @@
 .crud-management-container{
     min-height: 90vh;
     width: 95vw;
-    margin-top: 5em;
+    margin-top: 1em; /* reducir espacio bajo el título */
 }
 .crud-search-bar{
     color: white;
@@ -34,6 +34,10 @@
     color: var(--color-5);
     background-color: var(--color-3);
     border: solid 1px var(--color-5);
+}
+#select-filter{
+    margin-top: 1em;
+    height: 2em;
 }
 /* --------TABLE-------- */
 .crud-table{

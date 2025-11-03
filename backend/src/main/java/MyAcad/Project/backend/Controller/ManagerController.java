@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequestMapping("/managers")
 @AllArgsConstructor
 public class ManagerController {
-    private ManagerService services;
+    private final ManagerService services;
 
     //GET
     //Listado

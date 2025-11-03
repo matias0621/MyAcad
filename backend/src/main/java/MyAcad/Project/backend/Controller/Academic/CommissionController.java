@@ -1,14 +1,14 @@
-package MyAcad.Project.backend.Controller;
+package MyAcad.Project.backend.Controller.Academic;
 
 import MyAcad.Project.backend.Exception.CommissionAlreadyExistsException;
-import MyAcad.Project.backend.Model.Commission.Commission;
-import MyAcad.Project.backend.Model.Commission.CommissionDTO;
+import MyAcad.Project.backend.Model.Academic.Commission;
+import MyAcad.Project.backend.Model.Academic.CommissionDTO;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.CourseDTO;
 import MyAcad.Project.backend.Model.RegistrationStudent.RegistrationRequest;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
-import MyAcad.Project.backend.Service.CommissionService;
+import MyAcad.Project.backend.Service.Academic.CommissionService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

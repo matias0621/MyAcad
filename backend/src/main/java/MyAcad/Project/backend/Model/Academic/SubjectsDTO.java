@@ -1,4 +1,4 @@
-package MyAcad.Project.backend.Model.Subjects;
+package MyAcad.Project.backend.Model.Academic;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
 import jakarta.persistence.JoinColumn;

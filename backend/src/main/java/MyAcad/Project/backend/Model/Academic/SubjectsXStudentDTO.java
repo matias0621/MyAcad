@@ -1,4 +1,4 @@
-package MyAcad.Project.backend.Model.MateriaXAlumno;
+package MyAcad.Project.backend.Model.Academic;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
 import lombok.*;

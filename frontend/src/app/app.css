@@ -1,5 +1,6 @@
 main{
     min-height: 80vh;
     background-color: var(--color-3);
-    padding: 1em 0;
+    padding: 0;
+    margin: 0;
 }

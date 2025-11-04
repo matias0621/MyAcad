@@ -1,12 +1,15 @@
 .crud-management-container{
     min-height: 90vh;
-    width: 95vw;
+    width: fit-content;
+    max-width: 95vw;
     margin-top: 0.5em;
 }
 .crud-search-bar{
     color: white;
     padding-left: 1em;
-    width: 100%;
+    width: auto;
+    max-width: 500px;
+    min-width: 300px;
     height: 2.5em;
     margin-top: 1em;
     border-radius: 10px;
@@ -21,6 +24,45 @@
 .crud-search-bar::placeholder{
     opacity: .6;
     color: var(--color-3);
+}
+
+/* Detalle del usuario */
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0.5rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.8rem;
+    background-color: var(--color-3);
+    border-radius: 8px;
+    border-left: 4px solid var(--color-5);
+}
+
+.detail-item strong {
+    color: var(--color-5);
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.detail-item span {
+    color: var(--color-2);
+    font-size: 0.8rem;
+}
+
+.status-active {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: #c90000;
+    font-weight: 600;
 }
 .add-crud-btn{
     border: none;

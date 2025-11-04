@@ -13,11 +13,6 @@
                 <tr class="text-center">
                     <th scope="col">Id</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Duracion</th>
-                    <th scope="col">Mensualidad</th>
-                    <th scope="col">Matricula</th>
-                    <th scope="col">Activo</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -27,12 +22,8 @@
                 <tr class="crud-table-item">
                     <td>{{program.id}}</td>
                     <td>{{program.name}}</td>
-                    <td>{{program.description}}</td>
-                    <td>{{program.durationMonths}}</td>
-                    <td>{{program.monthlyFee}}</td>
-                    <td>{{program.annualFee}}</td>
-                    <td>{{program.active ? 'Sí' : 'No'}}</td>
                     <td class="crud-table-actions">
+                        <button class="detail-crud-btn" (click)="selectedProgram = program" data-bs-toggle="modal" data-bs-target="#modal-detail">Ver detalle</button>
                         <button class="modify-crud-btn" (click)="modifyProgram(program); programEditForm.loadData(program)" data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>
                         @if (program.active) {
                             <button class="delete-crud-btn" (click)="deleteProgram(program.id)"
@@ -45,7 +36,7 @@
                 </tr>
                 }@empty {
                 <tr>
-                    <td colspan="7" class="text-center">
+                    <td colspan="3" class="text-center">
                         <p style="color: red;"> Aun no hay ningun prorgrama cargado.</p>
                     </td>
                 </tr>
@@ -90,6 +81,57 @@
                     </div>
                     <div class="modal-body">
                         <app-programs-edit-form [endpoint]="endpoint" (added)="programs = $event" #programEditForm></app-programs-edit-form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal ver detalle -->
+        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label" style="display: none;"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Detalle</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close" id="button-detail">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @if (selectedProgram) {
+                            <div class="detail-container">
+                                <div class="detail-item">
+                                    <strong>ID:</strong>
+                                    <span>{{selectedProgram.id}}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Nombre:</strong>
+                                    <span>{{selectedProgram.name}}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Descripción:</strong>
+                                    <span>{{selectedProgram.description}}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Duración (meses):</strong>
+                                    <span>{{selectedProgram.durationMonths}}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Mensualidad:</strong>
+                                    <span>${{selectedProgram.monthlyFee}}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Matrícula:</strong>
+                                    <span>${{selectedProgram.annualFee}}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Estado:</strong>
+                                    <span [class]="selectedProgram.active ? 'status-active' : 'status-inactive'">
+                                        {{selectedProgram.active ? 'Activo' : 'Inactivo'}}
+                                    </span>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

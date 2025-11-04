@@ -4,11 +4,11 @@ p{
 form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.2em;
+    gap: 1em;
     width: 100%;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 2.5em;
+    padding: 1.5em;
     border-radius: 10px;
     color: var(--color-1);
     background-color: var(--color-5);
@@ -41,7 +41,6 @@ button {
 button:hover{
     background-color: var(--color-4);
     color: var(--color-3);
-    /* outline: solid 1px var(--color-1); */
 }
 #buttons{
     grid-column: 1 / 3;

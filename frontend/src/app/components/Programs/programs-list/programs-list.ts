@@ -21,6 +21,7 @@ export class ProgramsList implements OnInit{
   timeout: any;
   showDisabled = false;
   allPrograms!: any[];
+  selectedProgram: any = null;
 
   constructor(
     private service: CareerService

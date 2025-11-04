@@ -21,6 +21,7 @@ export class UserList implements OnInit {
   users !: any[]
   search: string = '';
   timeout: any;
+  selectedUser: any = null;
 
   constructor(
     private service: UserService

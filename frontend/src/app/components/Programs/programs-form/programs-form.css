@@ -47,3 +47,28 @@ button:hover{
     display: flex;
     justify-content: center;
 }
+
+/* Responsive form */
+@media (max-width: 576px){
+    form{
+        grid-template-columns: 1fr;
+        max-width: 95vw;
+        padding: 1em;
+    }
+    fieldset{
+        align-items: stretch;
+    }
+    input{
+        width: 100%;
+    }
+    #buttons{
+        grid-column: 1 / 2;
+        flex-direction: column;
+        align-items: stretch;
+        gap: .5em;
+    }
+    #buttons > button{
+        width: 100%;
+        height: 2.4em;
+    }
+}

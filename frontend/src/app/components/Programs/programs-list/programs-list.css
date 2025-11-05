@@ -89,7 +89,7 @@
     margin-bottom: 1em;
     background-color: var(--color-4);
     border-radius: 15px;
-    overflow: hidden;
+    overflow: visible;
 }
 .crud-table-body{
     min-height: calc(4.6 * 5);
@@ -127,7 +127,7 @@
     box-shadow: 0 0 5px 1px var(--light-title-color-1);
 }
 .crud-table-item{
-    max-height: 1.8em;
+    max-height: none;
     max-width: fit-content;
 }
 .crud-table-item > *:not(:last-child){
@@ -158,4 +158,17 @@
 .crud-table-image{
     height: 3.7em;
     object-fit: cover;
+}
+
+/* Mobile: ancho completo para el selector */
+@media (max-width: 576px){
+    #select-filter{
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+    .add-crud-btn{
+        width: 100%;
+        margin-top: .5em;
+    }
 }

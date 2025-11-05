@@ -85,7 +85,7 @@
     margin-bottom: 1em;
     background-color: var(--color-4);
     border-radius: 15px;
-    overflow: hidden;
+    overflow: visible;
 }
 .crud-table-body{
     min-height: calc(4.6 * 5);
@@ -123,7 +123,7 @@
     box-shadow: 0 0 5px 1px var(--light-title-color-1);
 }
 .crud-table-item{
-    max-height: 1.8em;
+    max-height: none;
     max-width: fit-content;
 }
 .crud-table-item > *:not(:last-child){
@@ -154,4 +154,21 @@
 .crud-table-image{
     height: 3.7em;
     object-fit: cover;
+}
+
+/* Mobile: ocultar Legajo y apilar acciones */
+@media (max-width: 576px){
+    /* Oculta columna Legajo (2da columna) solo en User List */
+    .crud-table-item td:nth-child(2){
+        display: none;
+    }
+    .crud-search-bar{
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+    .add-crud-btn{
+        width: 100%;
+        margin-top: .5em;
+    }
 }

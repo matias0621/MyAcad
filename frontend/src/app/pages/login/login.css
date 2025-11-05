@@ -117,12 +117,16 @@
     font-size: 0.95rem;
     background: rgba(255, 255, 255, 0.12);
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    border-radius: 12px !important;
     color: white;
     outline: none;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
+
 
 .login-input::placeholder {
     color: transparent;
@@ -200,7 +204,7 @@
     font-size: 1.05rem;
     font-weight: 600;
     color: white;
-    background: linear-gradient(135deg, var(--color-1), var(--color-2));
+    background: linear-gradient(135deg, #3D5B69, #273a43);
     border: none;
     border-radius: 12px;
     cursor: pointer;

@@ -18,12 +18,12 @@ nav {
     height: 100%;
     width: 100%;
     display: flex;
-  justify-content: space-between;
-  align-items: center; 
+    justify-content: space-between;
 }
 
 .left-navs{
     display: flex;
+    height: 100%;
 }
 
 /* ====== Hamburguesa ====== */
@@ -86,6 +86,13 @@ nav {
     border-radius: 10px;
     padding: 0 .8em !important;
     margin: .15rem 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .left-navs .dropdown{
+    height: auto;
+    display: block;
   }
 
   /* Dropdowns dentro del panel que ocupen el flujo */
@@ -126,12 +133,20 @@ nav {
 }
 
 /* DROPDOWNS */
+.dropdown {
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+}
+
 .dropdown-button {
     height: 100%;
     padding: 0 .5em !important;
     background-color: var(--color-1);
     border: none;
     transition: .2s;
+    display: flex;
+    align-items: center;
 }
 .dropdown-button:hover {
     background-color: var(--color-3);

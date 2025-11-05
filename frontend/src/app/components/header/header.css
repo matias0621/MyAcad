@@ -23,14 +23,130 @@ nav {
 
 .left-navs{
     display: flex;
+    height: 100%;
 }
+
+/* ====== Hamburguesa ====== */
+.hamburger{
+  display: none;
+  width: 44px;
+  height: 44px;
+  margin-left: .5rem;
+  border: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  transition: background-color .2s ease;
+}
+.hamburger:hover,
+.hamburger:focus-visible{
+  background: var(--color-3);
+  outline: none;
+}
+.hamburger .bar{
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: var(--color-2);
+  border-radius: 2px;
+}
+
+/* Panel lateral mvil */
+@media (max-width: 992px){
+  .hamburger{ display: inline-flex; }
+  .left-navs{
+    position: fixed;
+    top: 5em; 
+    left: 0;
+    height: calc(100vh - 5em);
+    width: 80vw;
+    max-width: 320px;
+    background: var(--color-1);
+    box-shadow: 2px 0 16px rgba(0,0,0,.2);
+    padding: 0.75rem;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    flex-direction: column;
+    gap: .25rem;
+    transform: translateX(-105%);
+    transition: transform .25s ease;
+    z-index: 1000;
+  }
+  nav.menu-open .left-navs{
+    transform: translateX(0);
+  }
+  .left-navs a,
+  .left-navs .dropdown-button{
+    height: 2.6em;
+    border-radius: 10px;
+    padding: 0 .8em !important;
+    margin: .15rem 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .left-navs .dropdown{
+    height: auto;
+    display: block;
+  }
+
+  /* Dropdowns dentro del panel que ocupen el flujo */
+  .left-navs .dropdown-menu{
+    position: static !important;
+    float: none;
+    transform: none !important;
+    display: none;
+    background: var(--color-3);
+    border-radius: 10px;
+    margin: .25rem 0;
+    padding: .25rem 0;
+    z-index: 1100;
+  }
+  
+  .left-navs .dropdown-menu.show{
+      display: block;
+  }
+  .left-navs .dropdown-menu li > a{
+    width: 100%;
+    display: block;
+  }
+}
+
+/* Overlay cuando el panel est abierto */
+.mobile-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: 900;
+}
+.mobile-overlay.show{
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* DROPDOWNS */
+.dropdown {
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+}
+
 .dropdown-button {
     height: 100%;
     padding: 0 .5em !important;
     background-color: var(--color-1);
     border: none;
     transition: .2s;
+    display: flex;
+    align-items: center;
 }
 .dropdown-button:hover {
     background-color: var(--color-3);
@@ -62,7 +178,7 @@ a {
 }
 
 
-/* ====== ANIMACIÓN EN CERRAR SESIÓN ====== */
+/* ====== ANIMACIÓN EN CERRAR SESION ====== */
 ::ng-deep #dropdown-profile .dropdown-menu li a.logout-link {
   position: relative !important;
   display: block !important;
@@ -218,7 +334,7 @@ a {
   }
 }
 
-/* Animación de puerta abriendo */
+/* Animacion de puerta abriendo */
 @keyframes doorOpen {
   0%, 70% {
     transform: translateY(-50%) scaleX(1);

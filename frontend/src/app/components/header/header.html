@@ -2,11 +2,18 @@
     <a routerLink="">
         <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
     </a>
-    <nav>
+  <nav [class.menu-open]="isMenuOpen">
         @if (!service.getRole()) {
         }
         <!-- ---------------HEADER GESTORES--------------- -->
         @else if (service.getRole() == "ROLE_MANAGER") {
+    <!-- Botón hamburguesa-->
+    <button class="hamburger" type="button" aria-label="Abrir menú" [attr.aria-expanded]="isMenuOpen"
+      (click)="toggleMenu()">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
         <div class="left-navs">
             <a routerLink="">Inicio</a>
             <div class="dropdown">
@@ -98,4 +105,6 @@
       </div>
     }
   </nav>
+  <!-- Overlay para cerrar el menú en mobile -->
+  <div class="mobile-overlay" [class.show]="isMenuOpen" (click)="closeMenu()"></div>
 </header>

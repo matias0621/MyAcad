@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UserService } from '../../../Services/Users/user-service';
 import { FormsModule } from '@angular/forms';
+import { UserForm } from '../user-form/user-form';
+import { UserEditForm } from '../user-edit-form/user-edit-form';
 
 @Component({
   selector: 'app-user-list',
-  imports: [FormsModule],
+  imports: [FormsModule, UserForm, UserEditForm],
   templateUrl: './user-list.html',
   styleUrl: './user-list.css'
 })
@@ -14,9 +16,12 @@ export class UserList implements OnInit {
   @Output()
   user = new EventEmitter<any>;
 
+  @ViewChild(UserEditForm) userEditForm!: UserEditForm;
+
   users !: any[]
   search: string = '';
   timeout: any;
+  selectedUser: any = null;
 
   constructor(
     private service: UserService

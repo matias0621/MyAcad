@@ -57,7 +57,9 @@ export class UserEditForm implements OnInit {
     const mappedData = {
       name: userData.name,
       lastName: userData.lastName,
-      email: userData.email
+      email: userData.email,
+      //Cargamos dni en caso de que tenga que ser modificado por estar mal cargado.
+      dni: userData.dni
     }
 
     this.form.patchValue(mappedData)

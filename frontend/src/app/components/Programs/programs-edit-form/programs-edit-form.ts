@@ -47,7 +47,18 @@ export class ProgramsEditForm implements OnInit {
         console.log('Programa modificado exitosamente:', data);
         this.formPrograms.reset();
         this.cService.getCareers(this.endpoint).subscribe({
-          next: (data) => { this.added.emit(data) },
+          next: (data) => {
+            alert('Programa editado exitosamente.');
+            this.added.emit(data);
+            // Cerrar el modal que se abre
+            const modalElement = document.getElementById('modal-edit');
+            if (modalElement) {
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
+          },
           error: (error) => { console.error(error) }
         })
       },

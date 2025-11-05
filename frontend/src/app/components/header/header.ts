@@ -10,11 +10,20 @@ import { AuthService } from '../../Services/Auth/auth-service';
 })
 export class Header {
   token = localStorage.getItem('token');
+  public isMenuOpen = false;
 
   constructor(
     public service : AuthService
   ){}
   logout(){
     this.service.logout();
+  }
+
+  toggleMenu(){
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(){
+    this.isMenuOpen = false;
   }
 }

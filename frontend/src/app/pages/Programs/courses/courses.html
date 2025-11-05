@@ -1,4 +1,2 @@
 <h1 style="text-align: center;">Cursos</h1>
-<app-programs-form endpoint="courses" (added)="programsList.programs = $event"></app-programs-form>
-<app-programs-edit-form endpoint="courses" (added)="programsList.programs = $event" #programEditForm></app-programs-edit-form>
-<app-programs-list endpoint="courses" (program)="programEditForm.loadData($event)" #programsList></app-programs-list>
+<app-programs-list endpoint="courses"></app-programs-list>

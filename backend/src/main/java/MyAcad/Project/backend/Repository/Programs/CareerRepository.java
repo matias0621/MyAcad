@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface CareerRepository extends JpaRepository<Career, Long> {
     @Query("SELECT c FROM #{#entityName} c WHERE c.name = :name")
-    Career findByName(String name);
+    Optional<Career> findByName(String name);
 
     List<Career> findByNameContainingIgnoreCase(String name);
 

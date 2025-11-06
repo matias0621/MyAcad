@@ -75,7 +75,7 @@ public class CareerService {
     }
 
     public Optional<Career> getByName(String name) {
-        return Optional.ofNullable(repository.findByName(name));
+        return repository.findByName(name);
     }
 
 }

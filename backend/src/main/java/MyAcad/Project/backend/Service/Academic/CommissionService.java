@@ -5,9 +5,16 @@ import MyAcad.Project.backend.Model.Academic.Commission;
 import MyAcad.Project.backend.Model.Academic.SubjectsXStudentDTO;
 import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import MyAcad.Project.backend.Model.Programs.Career;
+import MyAcad.Project.backend.Model.Programs.Course;
+import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.Programs.Technical;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
+import MyAcad.Project.backend.Repository.Programs.CareerRepository;
+import MyAcad.Project.backend.Repository.Programs.CourseRepository;
+import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
@@ -28,6 +35,9 @@ public class CommissionService {
     private final SubjectsRepository subjectsRepository;
     private final StudentRepository studentRepository;
     private final SubjectsXStudentService subjectsXStudentService;
+    private final CareerRepository careerRepository;
+    private final TechnicalRepository technicalRepository;
+    private final CourseRepository courseRepository;
 
     public void add(Commission c) {
         if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
@@ -110,16 +120,21 @@ public class CommissionService {
         repository.save(c);
     }
 
-    public void registerToStudent(Long studentId, Long commisionId, Long subjectsId){
-        Commission commission = repository.findById(commisionId).get();
-        Student student = studentRepository.findById(studentId).get();
-        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).get();
+    public void registerStudentbyManager(String legajo, Long commissionId, Long subjectsId){
+        Student s = studentRepository.findByLegajo(legajo).orElseThrow();
+        Commission commission = repository.findById(commissionId).orElseThrow();
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
+        registerToStudent(s, commission, subjectsEntity);
+    }
+
+    public void registerToStudent(Student student, Commission commission, SubjectsEntity subjectsEntity){
+
 
         if (!commission.getStudents().contains(student)){
             commission.getStudents().add(student);
         }
 
-        if (subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(studentId, subjectsId).isPresent()){
+        if (subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), subjectsEntity.getId()).isPresent()){
             throw new RuntimeException("Subject already exists");
         }
 
@@ -130,15 +145,29 @@ public class CommissionService {
         }
 
         SubjectsXStudentDTO subjectsXStudentDTO = SubjectsXStudentDTO.builder()
-                .subjectsId(subjectsId)
-                .studentId(studentId)
+                .subjectsId(subjectsEntity.getId())
+                .studentId(student.getId())
                 .academicStatus(AcademicStatus.INPROGRESS)
                 .build();
 
+        registerStudentToProgram(student, commission.getProgram());
         subjectsXStudentService.createSubjectsXStudent(subjectsXStudentDTO);
+
 
     }
 
+    public void registerStudentToProgram(Student student, String programName){
+        Program program = findProgramByName(programName);
+
+        program.getStudents().add(student);
+        if (program instanceof Career){
+            careerRepository.save((Career) program);
+        } else if (program instanceof Technical) {
+            technicalRepository.save((Technical) program);
+        } else if (program instanceof Course) {
+            courseRepository.save((Course) program);
+        }
+    }
 
     private void validatePrerequisite(Student student, SubjectsEntity prerequisite) {
         Optional<SubjectsXStudentEntity> opt = subjectsXStudentService
@@ -171,6 +200,11 @@ public class CommissionService {
         return repository.findCommissionsByStudentId(studentId);
     }
 
-
-
+    public Program findProgramByName(String name) {
+        return  careerRepository.findByName(name)
+                .map(p -> (Program) p)
+                .or(() -> courseRepository.findByName(name).map(p -> (Program) p))
+                .or(() -> technicalRepository.findByName(name).map(p -> (Program) p))
+                .orElseThrow(() -> new RuntimeException("Program not found"));
+    }
 }

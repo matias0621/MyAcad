@@ -71,4 +71,6 @@ public class CareerController {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
+
+
 }

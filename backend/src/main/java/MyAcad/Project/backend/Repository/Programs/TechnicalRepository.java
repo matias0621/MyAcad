@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface TechnicalRepository extends JpaRepository<Technical, Long> {
     @Query("SELECT c FROM #{#entityName} c WHERE c.name = :name")
-    Career findByName(String name);
+    Optional<Career> findByName(String name);
 
     List<Technical> findByNameContainingIgnoreCase(String name);
 

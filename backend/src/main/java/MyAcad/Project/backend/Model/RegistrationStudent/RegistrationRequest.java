@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RegistrationRequest {
-    private Long studentId;
+    private String studentLegajo;
     private Long subjectsId;
 }

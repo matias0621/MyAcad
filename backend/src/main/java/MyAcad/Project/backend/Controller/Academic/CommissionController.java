@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Controller.Academic;
 
+import MyAcad.Project.backend.Configuration.UserDetailsImpl;
 import MyAcad.Project.backend.Exception.CommissionAlreadyExistsException;
 import MyAcad.Project.backend.Model.Academic.Commission;
 import MyAcad.Project.backend.Model.Academic.CommissionDTO;
@@ -13,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -99,9 +102,9 @@ public class CommissionController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("register-student/{id}")
+    @PutMapping("register-student-by-manager/{id}")
     public ResponseEntity<?> registerStudent(@PathVariable Long id, @RequestBody RegistrationRequest request){
-        services.registerToStudent(request.getStudentId(), id, request.getSubjectsId());
+        services.registerStudentbyManager(request.getStudentLegajo(), id, request.getSubjectsId());
         return ResponseEntity.ok().build();
     }
 

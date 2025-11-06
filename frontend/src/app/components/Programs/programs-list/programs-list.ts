@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ProgramsForm } from '../programs-form/programs-form';
 import { ProgramsEditForm } from '../programs-edit-form/programs-edit-form';
 import { CareerService } from '../../../Services/CareerService/career-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-programs-list',
@@ -24,7 +25,8 @@ export class ProgramsList implements OnInit{
   selectedProgram: any = null;
 
   constructor(
-    private service: CareerService
+    private service: CareerService,
+    private router:Router
   ) { }
 
   ngOnInit(): void {
@@ -89,6 +91,11 @@ export class ProgramsList implements OnInit{
     } else if (this.filter === 'Inactivos') {
       this.programs = this.allPrograms.filter(p => p.active === false);
     }
+  }
+
+  registerToStudent(nameProgram:string){
+    this.service.setCareerSelected(nameProgram)
+    this.router.navigate(['register-student-to-commission'])
   }
   
 }

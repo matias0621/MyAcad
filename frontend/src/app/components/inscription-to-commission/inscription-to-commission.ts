@@ -7,7 +7,8 @@ import Course from '../../Models/Users/Careers/Course';
 import Commission from '../../Models/Commission/commission';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import Subjects from '../../Models/Subjects/Subjects';
-import { RegistrationStudent } from '../../Models/Users/Student';
+import { RegistrationStudentOrTeacher } from '../../Models/Users/Student';
+import { NotificationService } from '../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-inscription-to-commission',
@@ -24,6 +25,7 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
   sub!:Subjects
 
   constructor(public careerService:CareerService, 
+    private notificationService:NotificationService,
     public commisionService:CommissionService){
       this.legajo = new FormControl("", Validators.required)
       this.form = new FormGroup({
@@ -55,17 +57,34 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
 
   addStudentToCommision(){
 
-    const request:RegistrationStudent = {
-      studentLegajo: this.legajo.value,
+    const request:RegistrationStudentOrTeacher = {
+      legajo: this.legajo.value,
       subjectsId: this.sub.id
     }
 
     this.commisionService.registerStudentToCommissionByManager(this.com.id, request).subscribe({
       next: (res) => {
-        alert("Se registro el alumno correctamente")
+        this.notificationService.success("Se registro el alumno correctamente")
       },
       error: (err) => {
-        alert("Hubo un error")
+        this.notificationService.error("Hubo un error",true)
+        console.log(err)
+      }
+    })
+  }
+  addTeacherToCommision(){
+
+    const request:RegistrationStudentOrTeacher = {
+      legajo: this.legajo.value,
+      subjectsId: this.sub.id
+    }
+
+    this.commisionService.registerTeacherToCommissionByManager(this.com.id, request).subscribe({
+      next: (res) => {
+        this.notificationService.success("Se registro el profesor correctamente")
+      },
+      error: (err) => {
+        this.notificationService.error("Hubo un error",true)
         console.log(err)
       }
     })

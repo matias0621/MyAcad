@@ -17,6 +17,7 @@ import MyAcad.Project.backend.Repository.Programs.CourseRepository;
 import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
+import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,7 @@ public class CommissionService {
     private final CareerRepository careerRepository;
     private final TechnicalRepository technicalRepository;
     private final CourseRepository courseRepository;
+    private final TeacherRepository teacherRepository;
 
     public void add(Commission c) {
         if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
@@ -188,6 +190,30 @@ public class CommissionService {
         }
     }
 
+    public void registerTeacherToProgram(String legajo, Long commissionId, Long subjectsId){
+        Commission commission = repository.findById(commissionId).orElseThrow();
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
+        Teacher teacher = teacherRepository.findByLegajo(legajo).orElseThrow();
+        // Asignamos un profesor a la carrera
+        Program program = findProgramByName(commission.getProgram());
+        program.getTeachers().add(teacher);
+        // Asignamos las comisiones y las materias a un profesor
+        teacher.getCommissions().add(commission);
+        teacher.getSubjects().add(subjectsEntity);
+        // Si el teacher no esta en la comision lo agregamos
+        if (!commission.getTeachers().contains(teacher)) commission.getTeachers().add(teacher);
+
+        // Seteamos y guardamos la carrera
+        switch (program) {
+            case Career career -> careerRepository.save(career);
+            case Technical technical -> technicalRepository.save(technical);
+            case Course course -> courseRepository.save(course);
+            default -> throw new RuntimeException("No existe esa materia");
+        }
+        teacherRepository.save(teacher);
+        repository.save(commission);
+    }
+
     private void validatePrerequisite(Student student, SubjectsEntity prerequisite) {
         Optional<SubjectsXStudentEntity> opt = subjectsXStudentService
                 .getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), prerequisite.getId());
@@ -226,4 +252,6 @@ public class CommissionService {
                 .or(() -> technicalRepository.findByName(name).map(p -> (Program) p))
                 .orElseThrow(() -> new RuntimeException("Program not found"));
     }
+
+    
 }

@@ -105,7 +105,13 @@ public class CommissionController {
 
     @PutMapping("/register-student-by-manager/{id}")
     public ResponseEntity<?> registerStudent(@PathVariable Long id, @RequestBody RegistrationRequest request){
-        services.registerStudentbyManager(request.getStudentLegajo(), id, request.getSubjectsId());
+        services.registerStudentbyManager(request.getLegajo(), id, request.getSubjectsId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/register-teacher-by-manager/{id}")
+    public ResponseEntity<?> registerTeacher(@PathVariable Long id, @RequestBody RegistrationRequest request){
+        services.registerTeacherToProgram(request.getLegajo(), id, request.getSubjectsId());
         return ResponseEntity.ok().build();
     }
 

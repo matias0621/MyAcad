@@ -8,7 +8,7 @@ export default interface Student {
     password: string;
 }
 
-export interface RegistrationStudent {
-    studentLegajo: string,
+export interface RegistrationStudentOrTeacher {
+    legajo: string,
     subjectsId: number
 }

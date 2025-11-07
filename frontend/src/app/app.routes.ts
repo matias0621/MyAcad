@@ -18,7 +18,7 @@ import { InscriptionFinalExams } from './pages/inscription-final-exams/inscripti
 import { InscriptionToExamFormEdit } from './components/inscription-to-exam-form-edit/inscription-to-exam-form-edit';
 import { InscriptionToExamList } from './components/inscription-to-exam-list/inscription-to-exam-list';
 import { InscriptionCommision } from './pages/inscription-commision/inscription-commision';
-import { SubjectsPage } from './pages/subjects-page/subjects-page';
+import { SubjectsPage } from './pages/Academic/subjects-page/subjects-page';
 
 
 

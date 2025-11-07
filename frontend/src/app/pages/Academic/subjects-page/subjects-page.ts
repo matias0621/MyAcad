@@ -1,11 +1,12 @@
+import { NotificationService } from './../../../Services/notification/notification.service';
 import { Component } from '@angular/core';
-import Commission from '../../Models/Commission/commission';
-import Subjects from '../../Models/Subjects/Subjects';
+import Commission from '../../../Models/Commission/commission';
+import Subjects from '../../../Models/Subjects/Subjects';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SubjectsService } from '../../Services/Subjects/subjects-service';
-import { CommissionService } from '../../Services/Commission/commission-service';
-import { SubjectForm } from '../../components/Academic/subject-form/subject-form';
-import { SubjectFormEdit } from '../../components/Academic/subject-form-edit/subject-form-edit';
+import { SubjectsService } from '../../../Services/Subjects/subjects-service';
+import { CommissionService } from '../../../Services/Commission/commission-service';
+import { SubjectForm } from '../../../components/Academic/subject-form/subject-form';
+import { SubjectFormEdit } from '../../../components/Academic/subject-form-edit/subject-form-edit';
 
 @Component({
   selector: 'app-subjects-page',
@@ -23,14 +24,15 @@ export class SubjectsPage {
     public subjectService: SubjectsService,
     private router: Router,
     public commissionService:CommissionService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private notificationService:NotificationService
   ) {
     this.id = this.activatedRoute.snapshot.params['id']
   }
 
   ngOnInit(): void {
     this.getAllSubject();
-    this.getAllCommission();
+    //this.getAllCommission();
   }
 
   getAllSubject() {
@@ -59,11 +61,11 @@ export class SubjectsPage {
   deleteSubject(id: number) {
     this.subjectService.deleteSubject(id.toString()).subscribe({
       next: (res) => {
-        alert('Se elimino correctamente');
+        this.notificationService.success('Se eliminó correctamente');
         this.getAllSubject();
       },
       error: (err) => {
-        alert('No se pudo eliminar la materia');
+        this.notificationService.error('No se pudo eliminar la materia', true);
         console.log(err)
       },
     });
@@ -80,10 +82,10 @@ export class SubjectsPage {
   addToCommission(idCommission:number){
     this.commissionService.addSubjectsToCommission(idCommission, this.subjects.id).subscribe({
       next: (res) => {
-        alert("Se añadio la materia a la comision y carrera")
+        this.notificationService.success("Se añadio la materia a la comision y carrera")
       },
       error: (err) => {
-        alert("Hubo un error")
+        this.notificationService.error("Hubo un error", true)
         console.log(err)
       }
     })

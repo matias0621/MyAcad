@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import Commission from '../../Models/Commission/commission';
-import { RegistrationStudent } from '../../Models/Users/Student';
+import { RegistrationStudentOrTeacher } from '../../Models/Users/Student';
 
 
 @Injectable({
@@ -33,8 +33,11 @@ export class CommissionService {
     return this.http.put(`${this.API_URL}/add-subject/${idCommission}`, idSubjects)
   }
 
-  registerStudentToCommissionByManager(idCommision:number, requestStudent:RegistrationStudent){
+  registerStudentToCommissionByManager(idCommision:number, requestStudent:RegistrationStudentOrTeacher){
     return this.http.put(`${this.API_URL}/register-student-by-manager/${idCommision}`,requestStudent)
+  }
+  registerTeacherToCommissionByManager(idCommision:number, requestTeacher:RegistrationStudentOrTeacher){
+    return this.http.put(`${this.API_URL}/register-teacher-by-manager/${idCommision}`, requestTeacher)
   }
 
   deleteCommission(id: number) {

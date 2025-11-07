@@ -2,7 +2,7 @@ import { Component, NgModule } from '@angular/core';
 import Commission from '../../../Models/Commission/commission';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommissionService } from '../../../Services/Commission/commission-service';
-import { CareerService } from '../../../Services/CareerService/career-service';
+import { ProgramService } from '../../../Services/program-service';
 
 @Component({
   selector: 'app-commissions',
@@ -23,7 +23,7 @@ export class Commissions {
   constructor(
     private fb: FormBuilder,
     private service: CommissionService,
-    private pService: CareerService
+    private pService: ProgramService
   ) { }
 
   ngOnInit(): void {
@@ -55,33 +55,12 @@ export class Commissions {
 
   //OBTENER CARRERAS
   getPrograms() {
-    //Cargamos las tecnicaturas al array de carrras
-    this.pService.getCareers("technicals").subscribe({
+    this.pService.getPrograms().subscribe({
       next: (data) => {
-        data.forEach(element => {
-          this.programs.push(element)
-        })
+        this.programs = data;
       },
       error: (error) => { console.error(error) }
-    })
-    //Cargamos las ingenierias al array de carrras
-    this.pService.getCareers("careers").subscribe({
-      next: (data) => {
-        data.forEach(element => {
-          this.programs.push(element)
-        })
-      },
-      error: (error) => { console.error(error) }
-    })
-    //Cargamos los cursos al array de carrras
-    this.pService.getCareers("courses").subscribe({
-      next: (data) => {
-        data.forEach(element => {
-          this.programs.push(element)
-        })
-      },
-      error: (error) => { console.error(error) }
-    })
+    }) 
   }
 
   OnSubmit() {
@@ -111,18 +90,6 @@ export class Commissions {
       })
     }
   }
-
-  getProgramById() {
-    this.pService.getCareers("courses").subscribe({
-      next: (data) => {
-        data.forEach(element => {
-          this.programs.push(element)
-        })
-      },
-      error: (error) => { console.error(error) }
-    })
-  }
-
   // Eliminar comision
   deleteCommission(id: number) {
     this.service.deleteCommission(id).subscribe({

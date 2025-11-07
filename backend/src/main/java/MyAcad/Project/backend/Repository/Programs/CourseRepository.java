@@ -18,4 +18,11 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByActiveTrue(@Param("active") boolean active);
 
     Optional<Course> findCourseByName(String name);
+
+    //Buscar cursos por estudiante o profesor
+    @Query("SELECT c FROM Course c JOIN c.students s WHERE s.id = :studentId")
+    List<Course> findByStudent(@Param("studentId") Long studentId);
+
+    @Query("SELECT c FROM Course c JOIN c.teachers t WHERE t.id = :teacherId")
+    List<Course> findByTeacher(@Param("teacherId") Long teacherId);
 }

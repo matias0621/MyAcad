@@ -38,7 +38,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(
+                                "/auth/**"
+                        ).permitAll()
                         .requestMatchers(
                                 "/**",
                                 //USERS
@@ -47,6 +49,7 @@ public class SecurityConfig {
                                 "/managers/**",
 
                                 //ACADEMIC
+                                "/programs/**",
                                 "/careers/**",
                                 "/engineering/**",
                                 "/courses/**",
@@ -57,6 +60,12 @@ public class SecurityConfig {
                                 "/exams/**",
                                 "/final-exam/**"
                         ).hasRole("MANAGER")
+                        .requestMatchers(
+                                "/programs/teacher/"
+                        ).hasRole("TEACHER")
+                        .requestMatchers(
+                                "/programs/student/"
+                        ).hasRole("STUDENT")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(service))

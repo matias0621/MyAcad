@@ -18,4 +18,11 @@ public interface CareerRepository extends JpaRepository<Career, Long> {
     Optional<Career> findByActiveTrue(@Param("active") boolean active);
 
     Optional<Object> findCareerByName(String name);
+
+    //Buscar ingenieria por estudiante o profesor
+    @Query("SELECT c FROM Career c JOIN c.students s WHERE s.id = :studentId")
+    List<Career> findByStudent(@Param("studentId") Long studentId);
+
+    @Query("SELECT c FROM Career c JOIN c.teachers t WHERE t.id = :teacherId")
+    List<Career> findByTeacher(@Param("teacherId") Long teacherId);
 }

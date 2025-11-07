@@ -1,1 +1,76 @@
-<p>home works!</p>
+@if(!programs){
+<!-- Seccion de usuarios -->
+<h2>Usuarios</h2>
+<ul id="card-container">
+    <li>
+        <a routerLink="managers" class="card">
+            <img src="/Media/office.jpg" alt="">
+            <div class="card-content">
+                <h5>Gestores</h5>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a routerLink="teachers" class="card">
+            <img src="/Media/books.jpg" alt="">
+            <div class="card-content">
+                <h5>Profesores</h5>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a routerLink="students" class="card">
+            <img src="/Media/student.jpg" alt="">
+            <div class="card-content">
+                <h5>Alumnos</h5>
+            </div>
+        </a>
+    </li>
+</ul>
+
+<!-- Seccion de académico -->
+<h2>Académico</h2>
+<ul id="card-container">
+    <li>
+        <a routerLink="subject" class="card">
+            <img src="/Media/subjects.jpg" alt="">
+            <div class="card-content">
+                <h5>Materias</h5>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a routerLink="final-exam" class="card">
+            <img src="/Media/final-exam.jpg" alt="">
+            <div class="card-content">
+                <h5>Mesas de examen</h5>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a routerLink="exam" class="card">
+            <img src="/Media/exam.jpg" alt="">
+            <div class="card-content">
+                <h5>Parciales</h5>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a routerLink="" class="card">
+            <img src="/Media/connections.jpg" alt="">
+            <div class="card-content">
+                <h5>Correlativas</h5>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a routerLink="commissions" class="card">
+            <img src="/Media/commission.jpg" alt="">
+            <div class="card-content">
+                <h5>Comisiones</h5>
+            </div>
+        </a>
+    </li>
+</ul>
+
+}

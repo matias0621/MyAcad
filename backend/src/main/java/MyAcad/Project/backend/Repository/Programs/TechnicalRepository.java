@@ -16,7 +16,14 @@ public interface TechnicalRepository extends JpaRepository<Technical, Long> {
     List<Technical> findByNameContainingIgnoreCase(String name);
 
     @Query("SELECT c FROM #{#entityName} c WHERE c.active = true")
-    Optional<Career> findByActiveTrue(@Param("active") boolean active);
+    Optional<Technical> findByActiveTrue(@Param("active") boolean active);
 
-    Optional<Object> findTechnicalByName(String name);
+    Optional<Technical> findTechnicalByName(String name);
+
+    //Buscar tecnicatura por estudiante o profesor
+    @Query("SELECT c FROM Technical c JOIN c.students s WHERE s.id = :studentId")
+    List<Technical> findByStudent(@Param("studentId") Long studentId);
+
+    @Query("SELECT c FROM Technical c JOIN c.teachers t WHERE t.id = :teacherId")
+    List<Technical> findByTeacher(@Param("teacherId") Long teacherId);
 }

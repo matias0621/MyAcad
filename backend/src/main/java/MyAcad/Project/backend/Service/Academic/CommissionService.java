@@ -102,16 +102,36 @@ public class CommissionService {
         return Optional.ofNullable(repository.findByNumber(number));
     }
 
-    public void addSubjectsToCommission(Long idCommission, List<Long> idSubjects){
-        Commission c = repository.findById(idCommission).get();
-        for (Long idSubject : idSubjects) {
-            SubjectsEntity s = subjectsRepository.findById(idSubject).get();
-            if (!c.getSubjects().contains(s)) {
-                c.getSubjects().add(s);
-            }
+    public void addSubjectToCommission(Long idCommission, Long idSubject) {
+        Commission c = repository.findById(idCommission)
+                .orElseThrow(() -> new RuntimeException("No se encontró la comisión con id: " + idCommission));
+
+        Program program = findProgramByName(c.getProgram());
+
+        SubjectsEntity s = subjectsRepository.findById(idSubject)
+                .orElseThrow(() -> new RuntimeException("No se encontró la materia con id: " + idSubject));
+
+        // Evitar duplicados en la comisión
+        if (!c.getSubjects().contains(s)) {
+            c.getSubjects().add(s);
         }
+
+        // Evitar duplicados en el programa
+        if (!program.getSubjects().contains(s)) {
+            program.getSubjects().add(s);
+        }
+
+        // Guardar según el tipo de programa
+        switch (program) {
+            case Career career -> careerRepository.save(career);
+            case Technical technical -> technicalRepository.save(technical);
+            case Course course -> courseRepository.save(course);
+            default -> throw new RuntimeException("No existe ese programa");
+        }
+
         repository.save(c);
     }
+
 
     public void deleteSubjectsFromCommission(Long idCommission, Long idSubject){
         Commission c = repository.findById(idCommission).get();
@@ -160,12 +180,11 @@ public class CommissionService {
         Program program = findProgramByName(programName);
 
         program.getStudents().add(student);
-        if (program instanceof Career){
-            careerRepository.save((Career) program);
-        } else if (program instanceof Technical) {
-            technicalRepository.save((Technical) program);
-        } else if (program instanceof Course) {
-            courseRepository.save((Course) program);
+        switch (program) {
+            case Career career -> careerRepository.save(career);
+            case Technical technical -> technicalRepository.save(technical);
+            case Course course -> courseRepository.save(course);
+            default -> throw new RuntimeException("No existe esa materia");
         }
     }
 

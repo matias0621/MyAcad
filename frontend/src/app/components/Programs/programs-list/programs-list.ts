@@ -1,9 +1,12 @@
+import { Subject } from 'rxjs';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProgramsForm } from '../programs-form/programs-form';
 import { ProgramsEditForm } from '../programs-edit-form/programs-edit-form';
 import { CareerService } from '../../../Services/CareerService/career-service';
 import { Router } from '@angular/router';
+import { SubjectsService } from '../../../Services/Subjects/subjects-service';
+import Subjects from '../../../Models/Subjects/Subjects';
 
 @Component({
   selector: 'app-programs-list',
@@ -23,14 +26,17 @@ export class ProgramsList implements OnInit{
   showDisabled = false;
   allPrograms!: any[];
   selectedProgram: any = null;
+  careerName:string | null = null
 
   constructor(
     private service: CareerService,
+    public subjectsService: SubjectsService,
     private router:Router
   ) { }
 
   ngOnInit(): void {
     this.getCareers();
+    this.getSubjects();
   }
 
   getCareers() {
@@ -43,6 +49,43 @@ export class ProgramsList implements OnInit{
         console.error('Error al obtener programas:', error);
       }
     })
+  }
+
+  getSubjects(){
+    this.subjectsService.getAllSubject().subscribe({
+      next: (res) => {
+        this.subjectsService.listSubject = [...res]
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
+
+  addSubjectsToCareer(subjects:Subjects){
+    if (this.careerName == null){
+      alert("Seleccione una materia")
+      return
+    }
+
+    const name = this.careerName
+
+    this.subjectsService.addSubjectToCareer(name, subjects).subscribe({
+      next: (res) => {
+        alert("Se añadio la materia correctamente")
+      },
+      error: (err) => {
+        alert("Hubo un problema al eliminar la materia")
+      }
+    })
+  }
+
+  saveNameCareer(name:string){
+    this.careerName = name
+  }
+
+  deleteNameCareer(){
+    this.careerName = null
   }
 
   deleteProgram(id: number) {

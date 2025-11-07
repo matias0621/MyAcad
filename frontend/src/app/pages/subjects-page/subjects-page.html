@@ -1,0 +1,52 @@
+@if (id) {
+<h1 style="text-align: center;">Editar Materias</h1>
+<app-subject-form-edit></app-subject-form-edit>
+}
+@else {
+<h1 style="text-align: center;">Materias</h1>
+<app-subject-form (added)="getAllSubject()"></app-subject-form>
+
+<ul>
+    @for (subject of subjectService.listSubject; track $index) {
+    <li>
+        {{subject.name}} {{subject.description}} {{ subject.subjectActive }} {{ subject.academicStatus }}
+        @if(subject.prerequisites?.length !== 0){
+        <br>
+        @for (subjectPrerequisite of subject.prerequisites; track $index) {
+        {{ subjectPrerequisite.name }} -
+        {{ subjectPrerequisite.description }}
+        <br>
+        }
+        }
+        <button (click)="redirecTo(subject.id)">Editar</button>
+        <button (click)="deleteSubject(subject.id)">Eliminar</button>
+        <button data-bs-toggle="modal" data-bs-target="#modal-add" (click)="setSubjects(subject)" > Asignar Materia a comision </button>
+    </li>
+    }@empty {
+    <li>
+        <p style="color: red;"> Aun no hay ninguna materia cargada.</p>
+    </li>
+    }
+</ul>
+}
+
+<!-- Modal agregar materia a comision -->
+<div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h1 class="modal-title fs-5 titles">Agregar</h1>
+                <button data-bs-dismiss="modal" aria-label="Close" id="button2">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                @for (com of listCommission; track $index) {
+                    {{ com.program }} - {{ com.number }}
+                    <button (click)="addToCommission(com.id)" >Añadir a comision</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

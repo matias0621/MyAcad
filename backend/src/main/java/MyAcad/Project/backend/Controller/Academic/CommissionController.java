@@ -13,6 +13,7 @@ import MyAcad.Project.backend.Service.Academic.CommissionService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,19 +91,19 @@ public class CommissionController {
         }
     }
 
-    @PutMapping("/add-subject/{id}")
-    public ResponseEntity<?> addSubjectsToSubjects(@PathVariable Long idCommission, @RequestBody List<Long> subjects){
-        services.addSubjectsToCommission(idCommission, subjects);
+    @PutMapping(value = "/add-subject/{id}")
+    public ResponseEntity<?> addSubjectsToSubjects(@PathVariable Long id, @RequestBody Long subjects){
+        services.addSubjectToCommission(id, subjects);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/delete-subject/{id}")
-    public ResponseEntity<?> deleteSubjectsToSubjects(@PathVariable Long idCommission, @RequestBody Long subjectsId){
-        services.deleteSubjectsFromCommission(idCommission, subjectsId);
+    @PutMapping(value = "/delete-subject/{id}")
+    public ResponseEntity<?> deleteSubjectsToSubjects(@PathVariable Long id, @RequestBody Long subjectsId){
+        services.deleteSubjectsFromCommission(id, subjectsId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("register-student-by-manager/{id}")
+    @PutMapping("/register-student-by-manager/{id}")
     public ResponseEntity<?> registerStudent(@PathVariable Long id, @RequestBody RegistrationRequest request){
         services.registerStudentbyManager(request.getStudentLegajo(), id, request.getSubjectsId());
         return ResponseEntity.ok().build();

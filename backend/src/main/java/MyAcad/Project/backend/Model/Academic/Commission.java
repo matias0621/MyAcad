@@ -1,6 +1,9 @@
 package MyAcad.Project.backend.Model.Academic;
 
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.Teacher;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +28,18 @@ public class Commission {
             joinColumns = @JoinColumn(name = "commission_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
+    @JsonManagedReference("subject-commissions")
     private List<SubjectsEntity> subjects;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "teacher_x_commission",
+            joinColumns = @JoinColumn(name = "commission_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonBackReference("teacher-commissions")
+    private List<Teacher> teachers;
+    
     @ManyToMany
     @JoinTable(
             name = "students_in_commission",
@@ -45,6 +59,7 @@ public class Commission {
         this.active = dto.isActive();
 
         this.subjects = new ArrayList<>();
+        this.teachers = new ArrayList<>();
         this.students = new ArrayList<>();
     }
 }

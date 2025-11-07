@@ -6,6 +6,7 @@ import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Service.Academic.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,15 +69,27 @@ public class SubjectController {
         return subjectService.modifySubject(id, updatedSubject);
     }
 
-    @PutMapping("/prerequisite/{id}")
-    public ResponseEntity<?> addPrerequisite(@PathVariable Long idSubject, @RequestBody List<Long> IdPrerequisite) {
-        subjectService.addPrerequisite(IdPrerequisite, idSubject);
+    @PutMapping(value = "/prerequisite/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addPrerequisite(@PathVariable Long id, @RequestBody List<Long> IdPrerequisite) {
+        subjectService.addPrerequisite(IdPrerequisite, id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/prerequisite/delete/{id}")
+    @PutMapping(value = "/prerequisite/delete/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deletePrerequisite(@PathVariable Long idSubject, @RequestBody Long IdPrerequisite) {
         subjectService.deleteAPrerequisite(idSubject, IdPrerequisite);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/add-subject-to-career/{nameCareer}")
+    public ResponseEntity<?> addSubjectsToCareer(@PathVariable String nameCareer, @RequestBody SubjectsEntity subjects) {
+        subjectService.addSubjectsToCareer(nameCareer, subjects);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/delete-subject-to-career/{nameCareer}")
+    public ResponseEntity<?> deleteSubjectsToCareer(@PathVariable String nameCareer, @RequestBody SubjectsEntity subjects) {
+        subjectService.deleteSubjectsToCareer(nameCareer, subjects);
         return ResponseEntity.ok().build();
     }
 

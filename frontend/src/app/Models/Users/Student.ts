@@ -9,6 +9,6 @@ export default interface Student {
 }
 
 export interface RegistrationStudent {
-    legajo: string,
+    studentLegajo: string,
     subjectsId: number
 }

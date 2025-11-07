@@ -39,6 +39,14 @@ export class SubjectsService {
     return this.http.put(`${this.api_url}/${subject.id}`, subject)
   }
 
+  addSubjectToCareer(nameCareer:string, subjects:Subjects){
+    return this.http.put(`${this.api_url}/add-subject-to-career/${nameCareer}`, subjects)
+  }
+
+  deleteSubjectToCareer(nameCareer:string, subjects:Subjects){
+    return this.http.put(`${this.api_url}/delete-subject-to-career/${nameCareer}`, subjects)
+  }
+
   deleteSubject(id:string){
     return this.http.delete(`${this.api_url}/${id}`)
   }

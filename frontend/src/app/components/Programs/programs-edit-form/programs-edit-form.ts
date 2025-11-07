@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CareerService } from '../../../Services/CareerService/career-service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-programs-edit-form',
@@ -22,7 +23,8 @@ export class ProgramsEditForm implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private cService: CareerService
+    private cService: CareerService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -48,7 +50,7 @@ export class ProgramsEditForm implements OnInit {
         this.formPrograms.reset();
         this.cService.getCareers(this.endpoint).subscribe({
           next: (data) => {
-            alert('Programa editado exitosamente.');
+            this.notificationService.success('Programa editado exitosamente');
             this.added.emit(data);
             // Cerrar el modal que se abre
             const modalElement = document.getElementById('modal-edit');

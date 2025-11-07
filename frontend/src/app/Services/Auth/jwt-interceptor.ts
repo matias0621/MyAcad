@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router'; // 👈 Importamos Router
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators'; // 👈 Importamos catchError
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JwtInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private notificationService: NotificationService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('token');
@@ -31,7 +32,7 @@ export class JwtInterceptor implements HttpInterceptor {
           
           localStorage.removeItem('token'); 
           this.router.navigate(['/auth/login']); 
-          alert("Tu sesión ha expirado")
+          this.notificationService.warning("Tu sesión ha expirado", true);
         }
         return throwError(() => error); 
       })

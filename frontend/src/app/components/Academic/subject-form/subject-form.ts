@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
 import Subjects from '../../../Models/Subjects/Subjects';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-subject-form',
@@ -23,7 +24,7 @@ export class SubjectForm {
 
   
 
-  constructor(public subjectService:SubjectsService){
+  constructor(public subjectService:SubjectsService, private notificationService: NotificationService){
     this.name = new FormControl("", [Validators.required, Validators.maxLength(30)])
     this.description = new FormControl("", [Validators.required, Validators.maxLength(300)])
     this.semesters = new FormControl("", [Validators.required, Validators.maxLength(50)])
@@ -43,7 +44,7 @@ export class SubjectForm {
   OnSubmit(){
 
     if (this.form.invalid){
-      alert("Complete todos los campos de la materia para subirla")
+      this.notificationService.warning("Complete todos los campos de la materia para subirla", true);
       return
     }
 
@@ -53,12 +54,12 @@ export class SubjectForm {
     this.subjectService.postSubject(this.form.value).subscribe({
       next: (res) => {
         console.log
-        alert("Se subio correctamente la nueva materia")
+        this.notificationService.success("Se subió correctamente la nueva materia");
         this.added.emit()
         console.log(res)
       },
       error: (err) => {
-        alert("Algo salio mal")
+        this.notificationService.error("Algo salió mal", true);
         console.log(err)
       }
     })

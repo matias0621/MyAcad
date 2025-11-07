@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ProgramsForm } from '../programs-form/programs-form';
 import { ProgramsEditForm } from '../programs-edit-form/programs-edit-form';
 import { CareerService } from '../../../Services/CareerService/career-service';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-programs-list',
@@ -24,7 +25,8 @@ export class ProgramsList implements OnInit{
   selectedProgram: any = null;
 
   constructor(
-    private service: CareerService
+    private service: CareerService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -44,17 +46,24 @@ export class ProgramsList implements OnInit{
   }
 
   deleteProgram(id: number) {
-    if (confirm('¿Estás seguro de que deseas eliminar este programa?')) {
-      this.service.deleteCareer(id, this.endpoint).subscribe({
-        next: (data) => { 
-          alert('Programa eliminado exitosamente.');
-          this.getCareers();
-        },
-        error: (error) => { 
-          alert('Error al eliminar el programa. Por favor, intenta nuevamente.');
-        }
-      });
-    }
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar este programa?',
+      'Confirmar eliminación',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.deleteCareer(id, this.endpoint).subscribe({
+          next: (data) => { 
+            this.notificationService.success('Programa eliminado exitosamente');
+            this.getCareers();
+          },
+          error: (error) => { 
+            this.notificationService.error('Error al eliminar el programa. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
   }
 
   modifyProgram(program : any){
@@ -62,18 +71,25 @@ export class ProgramsList implements OnInit{
   }
 
   viewDisabled(item: any) {
-    if (confirm(`¿Deseas activar "${item.name}"?`)) {
-      const updatedItem = { ...item, active: true };
-      this.service.updateCareer(updatedItem, this.endpoint).subscribe({
-        next: (response) => {
-          alert(`${item.name} activado/a exitosamente.`);
-          this.getCareers();
-        },
-        error: (error) => {
-          alert('Error al activar. Por favor, intenta nuevamente.');
-        }
-      });
-    }
+    this.notificationService.confirm(
+      `¿Deseas activar "${item.name}"?`,
+      'Confirmar activación',
+      'Activar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        const updatedItem = { ...item, active: true };
+        this.service.updateCareer(updatedItem, this.endpoint).subscribe({
+          next: (response) => {
+            this.notificationService.success(`${item.name} activado/a exitosamente`);
+            this.getCareers();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
   }
 
   toggleDisabledView() {

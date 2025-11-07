@@ -1,0 +1,32 @@
+@if (alert) {
+  <div class="modal-overlay" (click)="alert.type === 'confirm' ? cancel() : close()">
+    <div class="alert-dialog alert-{{ alert.type }}" (click)="$event.stopPropagation()">
+      <div class="alert-icon">
+        @if (alert.type === 'error') { ✕ }
+        @if (alert.type === 'warning') { ⚠ }
+        @if (alert.type === 'confirm') { ? }
+      </div>
+      <div class="alert-content">
+        <h3>
+          @if (alert.type === 'error') { Error }
+          @if (alert.type === 'warning') { Atención }
+          @if (alert.type === 'confirm') { {{ alert.title || '¿Estás seguro?' }} }
+        </h3>
+        <p>{{ alert.message }}</p>
+      </div>
+      
+      @if (alert.type === 'confirm') {
+        <div class="alert-buttons">
+          <button class="alert-button alert-button-cancel" (click)="cancel()">
+            {{ alert.cancelText || 'Cancelar' }}
+          </button>
+          <button class="alert-button alert-button-accept" (click)="accept()">
+            {{ alert.confirmText || 'Aceptar' }}
+          </button>
+        </div>
+      } @else {
+        <button class="alert-button" (click)="close()">Aceptar</button>
+      }
+    </div>
+  </div>
+}

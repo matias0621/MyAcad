@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../Services/Users/user-service';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 
 @Component({
@@ -20,7 +21,8 @@ export class UserForm implements OnInit {
 
   constructor(
     private service: UserService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -35,14 +37,17 @@ export class UserForm implements OnInit {
   OnSubmit() {
     this.service.postUser(this.form.value, this.endpoint).subscribe({
       next: (data) => {
-        console.log('Usuario creado exitosamente');
+        this.notificationService.success('Usuario creado exitosamente');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
           next: (data) => { this.added.emit(data) },
           error: (error) => { console.error(error) }
         })
       },
-      error: (error) => { console.error(error) }
+      error: (error) => { 
+        this.notificationService.error('Error al crear el usuario', true);
+        console.error(error);
+      }
     })
   }
 

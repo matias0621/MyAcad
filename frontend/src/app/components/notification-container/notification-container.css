@@ -1,0 +1,135 @@
+.notifications-wrapper {
+  position: fixed;
+  top: 6em;
+  right: 1.5em;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  pointer-events: none;
+}
+
+.notification-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1em 1.25em;
+  min-width: 300px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  pointer-events: all;
+  animation: slideInRight 0.3s ease;
+  border-left: 4px solid;
+  transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification-icon {
+  font-size: 1.5em;
+  font-weight: bold;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-content {
+  flex: 1;
+  color: var(--color-2);
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.notification-close {
+  background: transparent;
+  border: none;
+  font-size: 1.2em;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.notification-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+/* Tipos de notificación */
+.notification-success {
+  border-left-color: #28a745;
+}
+
+.notification-success .notification-icon {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #28a745;
+}
+
+.notification-error {
+  border-left-color: #c90000;
+}
+
+.notification-error .notification-icon {
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+  color: #c90000;
+}
+
+.notification-warning {
+  border-left-color: #ffa500;
+}
+
+.notification-warning .notification-icon {
+  background: linear-gradient(135deg, #fff8e1, #ffe082);
+  color: #ffa500;
+}
+
+.notification-info {
+  border-left-color: #007bff;
+}
+
+.notification-info .notification-icon {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #007bff;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .notifications-wrapper {
+    top: 5em;
+    right: 0.75em;
+    left: 0.75em;
+  }
+
+  .notification-item {
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+  }
+}

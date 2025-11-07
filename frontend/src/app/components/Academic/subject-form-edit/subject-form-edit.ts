@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Subjects from '../../../Models/Subjects/Subjects';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-subject-form-edit',
@@ -19,7 +20,12 @@ export class SubjectFormEdit implements OnInit {
   subjectActive!:FormControl
   id!:string
 
-  constructor(public subjectService:SubjectsService, private activatedRouter:ActivatedRoute, private router:Router){
+  constructor(
+    public subjectService:SubjectsService, 
+    private activatedRouter:ActivatedRoute, 
+    private router:Router,
+    private notificationService: NotificationService
+  ){
     this.name = new FormControl("", [Validators.required, Validators.maxLength(30)])
     this.description = new FormControl("", [Validators.required, Validators.maxLength(300)])
     this.semesters = new FormControl("", [Validators.required, Validators.min(1), Validators.maxLength(50)])
@@ -53,7 +59,7 @@ export class SubjectFormEdit implements OnInit {
   OnSubmit(){
 
     if (this.form.invalid){
-      alert("Complete todos los campos de la materia para subirla")
+      this.notificationService.warning("Complete todos los campos de la materia para subirla", true);
       return
     }
 
@@ -68,12 +74,12 @@ export class SubjectFormEdit implements OnInit {
     this.subjectService.putSubject(subjectUpdate).subscribe({
       next: (res) => {
         console.log
-        alert("Se subio correctamente la nueva materia")
+        this.notificationService.success("Se subió correctamente la materia");
         this.router.navigate([""])
         console.log(res)
       },
       error: (err) => {
-        alert("Algo salio mal")
+        this.notificationService.error("Algo salió mal", true);
         console.log(err)
       }
     })

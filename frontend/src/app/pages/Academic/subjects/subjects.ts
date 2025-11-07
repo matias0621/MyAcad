@@ -4,6 +4,7 @@ import { SubjectForm } from '../../../components/Academic/subject-form/subject-f
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SubjectFormEdit } from '../../../components/Academic/subject-form-edit/subject-form-edit';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-subjects',
@@ -18,7 +19,8 @@ export class Subjects implements OnInit {
   constructor(
     public subjectService: SubjectsService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private notificationService: NotificationService
   ) {
     this.id = this.activatedRoute.snapshot.params['id']
   }
@@ -41,11 +43,11 @@ export class Subjects implements OnInit {
   deleteSubject(id: number) {
     this.subjectService.deleteSubject(id.toString()).subscribe({
       next: (res) => {
-        alert('Se elimino correctamente');
+        this.notificationService.success('Se eliminó correctamente');
         this.getAllSubject();
       },
       error: (err) => {
-        alert('No se pudo eliminar la materia');
+        this.notificationService.error('No se pudo eliminar la materia', true);
       },
     });
   }

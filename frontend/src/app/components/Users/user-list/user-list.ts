@@ -3,6 +3,7 @@ import { UserService } from '../../../Services/Users/user-service';
 import { FormsModule } from '@angular/forms';
 import { UserForm } from '../user-form/user-form';
 import { UserEditForm } from '../user-edit-form/user-edit-form';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-user-list',
@@ -24,7 +25,8 @@ export class UserList implements OnInit {
   selectedUser: any = null;
 
   constructor(
-    private service: UserService
+    private service: UserService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -70,10 +72,25 @@ export class UserList implements OnInit {
   }
 
   deleteUser(id: number) {
-    this.service.deleteUser(id, this.endpoint).subscribe({
-      next: (data) => { this.getUsers() },
-      error: (error) => { console.error(error) }
-    })
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar este usuario?',
+      'Confirmar eliminación',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.deleteUser(id, this.endpoint).subscribe({
+          next: (data) => { 
+            this.notificationService.success('Usuario eliminado exitosamente');
+            this.getUsers();
+          },
+          error: (error) => { 
+            this.notificationService.error('Error al eliminar el usuario. Por favor, intenta nuevamente', true);
+            console.error(error);
+          }
+        });
+      }
+    });
   }
 
   modifyUser(user : any){

@@ -51,13 +51,14 @@ export class ExamList implements OnInit {
     this.exam.emit(exam);
   }
 
-  onExamSuccess(event: any) {
+  onExamSuccess(modalId:  string) {
     this.getExams();
 
-    const modalElement = document.getElementById('modal-edit');
-    const modal = bootstrap.Modal.getInstance(modalElement);
-
-    modal.hide();
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      modalInstance?.hide();
+    }
   }
 
 }

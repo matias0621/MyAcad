@@ -55,7 +55,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <app-exam-form [endpoint]="endpoint" (added)="onExamSuccess($event)"></app-exam-form>
+                        <app-exam-form [endpoint]="endpoint" (added)="onExamSuccess('modal-add')"></app-exam-form>
                     </div>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <app-exam-form-edit [endpoint]="endpoint" (added)="onExamSuccess($event)" #examEditForm></app-exam-form-edit>
+                        <app-exam-form-edit [endpoint]="endpoint" (added)="onExamSuccess('modal-edit')" #examEditForm></app-exam-form-edit>
                     </div>
                 </div>
             </div>

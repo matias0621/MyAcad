@@ -140,13 +140,13 @@ export class UserList implements OnInit {
     });
   }
 
-  onUserSuccess(event: any) {
+  onUserSuccess(modalId: string) {
     this.getUsers();
-
-    const modalElement = document.getElementById('modal-edit');
-    const modal = bootstrap.Modal.getInstance(modalElement);
-
-    modal.hide();
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      modalInstance?.hide();
+    }
   }
 
   modifyUser(user: any) {

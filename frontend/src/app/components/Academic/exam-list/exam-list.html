@@ -1,14 +1,114 @@
+<section class="crud-management d-flex justify-content-center">
+    <div class="crud-management-container">
+        <div class="w-100 d-flex flex-column align-items-center mb-3">
+            <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
+        </div>
+        <table class="crud-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Materia</th>
+                    <th scope="col">Nota</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="crud-table-body">
+                <!-- USERS -->
+                @for (exam of exams; track $index) {
+                <tr class="crud-table-item">
+                    <td>{{exam.subject.name}}</td>
+                    <td>{{exam.score}}</td>
+                    <td class="crud-table-actions">
+                        <button class="detail-crud-btn" (click)="selectedExam = exam" data-bs-toggle="modal"
+                            data-bs-target="#modal-detail">Detalles</button>
+                        <button class="delete-crud-btn" (click)="deleteExam(exam.id)">Eliminar</button>
+                        <button class="modify-crud-btn" (click)="modifyExam(exam); examEditForm.loadData(exam)"
+                            data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>
+                    </td>
+                </tr>
+                }@empty {
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <p style="color: red;"> Aun no hay ningun parcial cargado.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+                <!-- Paginación -->
+                <tr>
+                    <td colspan="7">
+                        <ul class="pagination-container">
+                        </ul>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <!-- Modal agregar usuario -->
+        <div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Agregar</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <app-exam-form [endpoint]="endpoint" (added)="onExamSuccess($event)"></app-exam-form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal editar usuario -->
+        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" style="display: none;"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Editar</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <app-exam-form-edit [endpoint]="endpoint" (added)="onExamSuccess($event)" #examEditForm></app-exam-form-edit>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<ul>
-    @for (exam of exams; track $index) {
-        <li>
-            {{exam.score}} {{exam.subject.name}} 
-            <button (click)="modifyExam(exam)">Editar</button>
-            <button (click)="deleteExam(exam.id)">Eliminar</button>
-        </li>
-    }@empty {
-        <li>
-            <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
-        </li>
-    }
-</ul>
+        <!-- Modal ver detalle -->
+        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Detalle del Usuario</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @if (selectedExam) {
+                        <div class="detail-container">
+                            <div class="detail-item">
+                                <strong>ID:</strong>
+                                <span>{{selectedExam.id}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Materia:</strong>
+                                <span>{{selectedExam.subject}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Nota:</strong>
+                                <span>{{selectedExam.score}}</span>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

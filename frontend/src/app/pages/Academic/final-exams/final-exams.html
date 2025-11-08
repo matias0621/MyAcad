@@ -1,5 +1,2 @@
-<h1 style="text-align: center;">Mesa de examenes</h1>
-
-<app-exam-form endpoint="final-exam" (added)="examList.exams = $event" #examForm></app-exam-form>
-<app-exam-form-edit endpoint="final-exam" (added)="examList.exams = $event" #examEditForm></app-exam-form-edit>
-<app-exam-list endpoint="final-exam" (exam)="examEditForm.loadData($event)" #examList></app-exam-list>
+<h1 style="text-align: center;">Examenes finales</h1>
+<app-exam-list endpoint="final-exam"></app-exam-list>

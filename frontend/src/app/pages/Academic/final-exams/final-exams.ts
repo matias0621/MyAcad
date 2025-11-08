@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { ExamList } from '../../../components/Academic/exam-list/exam-list';
-import { ExamForm } from '../../../components/Academic/exam-form/exam-form';
-import { ExamFormEdit } from '../../../components/Academic/exam-form-edit/exam-form-edit';
 
 @Component({
   selector: 'app-final-exams',
-  imports: [ExamList, ExamForm, ExamFormEdit],
+  imports: [ExamList],
   templateUrl: './final-exams.html',
   styleUrl: './final-exams.css'
 })

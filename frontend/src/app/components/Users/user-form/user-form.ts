@@ -15,7 +15,7 @@ export class UserForm implements OnInit {
   endpoint: string = "";
 
   @Output()
-  added = new EventEmitter<any[]>;
+  added = new EventEmitter<any>;
 
   form !: FormGroup;
 
@@ -41,7 +41,7 @@ export class UserForm implements OnInit {
         this.notificationService.success('Usuario creado exitosamente');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
-          next: (data) => { this.added.emit(data) },
+          next: (data) => { this.added.emit(true) },
           error: (error) => { console.error(error) }
         })
       },

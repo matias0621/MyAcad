@@ -14,7 +14,7 @@ export class UserEditForm implements OnInit {
   endpoint: string = "";
 
   @Output()
-  added = new EventEmitter<any[]>;
+  added = new EventEmitter<any>;
 
   userId !: number
   form !: FormGroup;
@@ -45,7 +45,7 @@ export class UserEditForm implements OnInit {
         this.notificationService.success('Usuario modificado exitosamente');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
-          next: (data) => { this.added.emit(data) },
+          next: (data) => { this.added.emit(true) },
           error: (error) => { console.error(error) }
         })
       },

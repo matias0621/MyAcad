@@ -19,7 +19,7 @@ export class ExamForm {
 
   @Output()
   // Este output puede recibir tanto examenes finales como examenes normales
-  added = new EventEmitter<Exam[] | ExamFinal[]>; 
+  added = new EventEmitter<any>; 
 
   form !: FormGroup;
 
@@ -62,14 +62,16 @@ export class ExamForm {
 
     this.service.postExam(this.endpoint , examLoad).subscribe({
       next: (data) => {
-        console.log('Examen creado exitosamente:');
+        this.notificationService.success('Parcial agregado exitosamente');
         this.form.reset();
         this.service.getAllExams(this.endpoint).subscribe({
-          next: (data) => { this.added.emit(data) },
+          next: (data) => { this.added.emit(true) },
           error: (error) => { console.error(error) }
         })
       },
-      error: (error) => { console.error(error) }
+      error: (error) => { 
+        this.notificationService.error('Error al agregar el parcial', true);
+        console.error(error) }
     })
   }
 

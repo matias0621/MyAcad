@@ -5,6 +5,8 @@ import { UserForm } from '../user-form/user-form';
 import { UserEditForm } from '../user-edit-form/user-edit-form';
 import { NotificationService } from '../../../Services/notification/notification.service';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-user-list',
   imports: [FormsModule, UserForm, UserEditForm],
@@ -80,11 +82,11 @@ export class UserList implements OnInit {
     ).then((confirmed) => {
       if (confirmed) {
         this.service.deleteUser(id, this.endpoint).subscribe({
-          next: (data) => { 
+          next: (data) => {
             this.notificationService.success('Usuario eliminado exitosamente');
             this.getUsers();
           },
-          error: (error) => { 
+          error: (error) => {
             this.notificationService.error('Error al eliminar el usuario. Por favor, intenta nuevamente', true);
             console.error(error);
           }
@@ -93,7 +95,7 @@ export class UserList implements OnInit {
     });
   }
 
-  
+
   // BAJA DEFINITIVA
   definitiveDeleteUser(id: number) {
     this.notificationService.confirm(
@@ -104,11 +106,11 @@ export class UserList implements OnInit {
     ).then((confirmed) => {
       if (confirmed) {
         this.service.definitiveDeleteUser(id, this.endpoint).subscribe({
-          next: (data) => { 
+          next: (data) => {
             this.notificationService.success('Usuario eliminado exitosamente');
             this.getUsers();
           },
-          error: (error) => { 
+          error: (error) => {
             this.notificationService.error('Error al eliminar el usuario. Por favor, intenta nuevamente', true);
           }
         });
@@ -117,30 +119,37 @@ export class UserList implements OnInit {
   }
 
   viewDisabled(user: any) {
-      this.notificationService.confirm(
-        `¿Deseas activar "${user.name}"?`,
-        'Confirmar activación',
-        'Activar',
-        'Cancelar'
-      ).then((confirmed) => {
-        if (confirmed) {
-          const updatedItem = { ...user, active: true };
-          this.service.putUser(updatedItem, this.endpoint).subscribe({
-            next: (response) => {
-              console.log(updatedItem);
-              this.notificationService.success(`${user.name} activado/a exitosamente`);
-              this.getUsers();
-            },
-            error: (error) => {
-              this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);
-            }
-          });
-        }
-      });
-    }
-  
+    this.notificationService.confirm(
+      `¿Deseas activar "${user.name}"?`,
+      'Confirmar activación',
+      'Activar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        const updatedItem = { ...user, active: true };
+        this.service.putUser(updatedItem, this.endpoint).subscribe({
+          next: (response) => {
+            this.notificationService.success(`${user.name} activado/a exitosamente`);
+            this.getUsers();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
+  }
 
-  modifyUser(user : any){
+  onUserSuccess(event: any) {
+    this.getUsers();
+
+    const modalElement = document.getElementById('modal-edit');
+    const modal = bootstrap.Modal.getInstance(modalElement);
+
+    modal.hide();
+  }
+
+  modifyUser(user: any) {
     this.user.emit(user);
   }
 }

@@ -8,9 +8,11 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Id</th>
                     <th scope="col">Legajo</th>
                     <th scope="col">Nombre</th>
+                    <th scope="col" class="responsive-hide-2">Apellido</th>
+                    <th scope="col" class="responsive-hide">DNI</th>
+                    <th scope="col" class="responsive-hide">Email</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -18,11 +20,13 @@
                 <!-- USERS -->
                 @for (user of users; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{user.id}}</td>
                     <td>{{user.legajo}}</td>
                     <td>{{user.name}}</td>
+                    <td class="responsive-hide-2">{{user.lastName}}</td>
+                    <td class="responsive-hide">{{user.dni}}</td>
+                    <td class="responsive-hide">{{user.email}}</td>
                     <td class="crud-table-actions">
-                        <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal" data-bs-target="#modal-detail">Ver detalle</button>
+                        <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal" data-bs-target="#modal-detail">Detalles</button>
                         <button class="modify-crud-btn" (click)="modifyUser(user); userEditForm.loadData(user)" data-bs-toggle="modal"
                             data-bs-target="#modal-edit">Editar</button>
                         <button class="delete-crud-btn" (click)="deleteUser(user.id)"
@@ -31,7 +35,7 @@
                 </tr>
                 }@empty {
                 <tr>
-                    <td colspan="4" class="text-center">
+                    <td colspan="6" class="text-center">
                         <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
                     </td>
                 </tr>

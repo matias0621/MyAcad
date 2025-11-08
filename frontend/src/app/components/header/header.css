@@ -183,7 +183,7 @@ a {
   position: relative !important;
   display: block !important;
   overflow: visible !important;
-  padding: 0.5em 1em !important;
+  /* padding: 0.5em 1em !important; */
   min-height: 2.5em !important;
   width: 100% !important;
 }

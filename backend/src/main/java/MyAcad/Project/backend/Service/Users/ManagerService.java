@@ -71,16 +71,10 @@ public class ManagerService {
             if (userLookupService.findByEmail(t.getEmail()).isPresent()) {
                 throw new EmailAlreadyExistsException();
             }
-        }else if (old.getLegajo() != t.getLegajo()) {
-            //Verificar si el legajo nuevo ya se encuentra en uso
-            if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
-                throw new LegajoAlreadyExistsException();
-            }
         }
         old.setName(t.getName());
         old.setLastName(t.getLastName());
         old.setEmail(t.getEmail());
-        old.setLegajo(t.getLegajo());
         old.setDni(t.getDni());
 
         // Verificar si se ingresó una contraseña nueva, si el usuario no quiso cambiarla debe dejar ese input vacío.

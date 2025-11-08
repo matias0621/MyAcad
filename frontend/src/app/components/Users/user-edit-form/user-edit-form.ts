@@ -50,7 +50,7 @@ export class UserEditForm implements OnInit {
         })
       },
       error: (error) => { 
-        this.notificationService.error('Error al modificar el usuario', true);
+        this.notificationService.error(error.error, true);
         console.error(error);
       }
     })

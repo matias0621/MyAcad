@@ -69,7 +69,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <app-user-form [endpoint]="endpoint" (added)="onUserSuccess($event)"></app-user-form>
+                        <app-user-form [endpoint]="endpoint" (added)="users = $event"></app-user-form>
                     </div>
                 </div>
             </div>

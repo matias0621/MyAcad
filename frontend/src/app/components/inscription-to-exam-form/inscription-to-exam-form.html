@@ -29,21 +29,3 @@
     }
 
 </ul>
-
-
-@if (inscriptionToFinalExamService.inscriptionList.length === 0) {
-<li>
-    <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
-</li>
-}
-@else {
-<ul>
-    @for (inscription of inscriptionToFinalExamService.inscriptionList; track $index) {
-    <li>
-        {{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }} - {{ inscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }} - {{ inscription.subjects.name }}
-        <button (click)="updateInscription(inscription.id)" >Editar</button>
-        <!-- <button (click)="deleteInscription(inscription.id)" >Eliminar</button> -->
-    </li>
-    }
-</ul>
-}

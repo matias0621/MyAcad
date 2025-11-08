@@ -80,7 +80,7 @@ export class Commissions {
           this.getCommissions();
         },
         error: (error) => {
-          this.notificationService.error('Error al modificar comisión');
+          this.notificationService.error(error.error, true);
           console.error(error)
         }
       })
@@ -93,7 +93,7 @@ export class Commissions {
           this.getCommissions();
         },
         error: (error) => {
-          this.notificationService.error('Error al agregar comisión');
+          this.notificationService.error(error.error, true);
           console.error(error)
         }
       })
@@ -102,13 +102,24 @@ export class Commissions {
 
   // Eliminar comision
   deleteCommission(id: number) {
-    this.service.deleteCommission(id).subscribe({
-      next: (data) => {
-        console.log('Comision eliminada exitosamente');
-        this.getCommissions();
-      },
-      error: (error) => { console.error(error) }
-    })
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar esta comisión?',
+      'Confirmar eliminación',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.deleteCommission(id).subscribe({
+          next: (data) => {
+            this.notificationService.success('Comisión eliminada exitosamente');
+            this.getCommissions();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al eliminar la comisión. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
   }
 
   // BAJA DEFINITIVA

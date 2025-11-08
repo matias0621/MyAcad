@@ -46,7 +46,7 @@ export class UserForm implements OnInit {
         })
       },
       error: (error) => { 
-        this.notificationService.error('Error al crear el usuario', true);
+        this.notificationService.error(error.error, true);
         console.error(error);
       }
     })

@@ -70,7 +70,7 @@ export class ExamForm {
         })
       },
       error: (error) => { 
-        this.notificationService.error('Error al agregar el parcial', true);
+        this.notificationService.error(error.error, true);
         console.error(error) }
     })
   }

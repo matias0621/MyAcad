@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InscriptionToFinalExamService } from '../../Services/InscriptionToFinalExam/inscription-to-final-exam-service';
 import { SubjectsService } from '../../Services/Subjects/subjects-service';
 import { PostInscriptionToFinalExam } from '../../Models/InscriptionToFinalExam/InscriptionToFinalExam';
+import { NotificationService } from '../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-inscription-to-exam-form-edit',
@@ -16,12 +17,13 @@ export class InscriptionToExamFormEdit {
   inscriptionDate!: FormControl;
   finalExamDate!: FormControl;
   subjectId: number | null = null;
-  idInscription!:string
+  idInscription!: string
 
   constructor(
     public inscriptionToFinalExamService: InscriptionToFinalExamService,
     public subjectsServices: SubjectsService,
-    public activatedRoute:ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    private notificationService:  NotificationService
   ) {
     this.inscriptionDate = new FormControl('', [Validators.required]);
     this.finalExamDate = new FormControl('', [Validators.required]);
@@ -30,12 +32,14 @@ export class InscriptionToExamFormEdit {
 
     this.form = new FormGroup({
       inscriptionDate: this.inscriptionDate,
-      finalExamDate: this.finalExamDate,
+      finalExamDate: this.finalExamDate
     });
   }
 
   ngOnInit(): void {
-    this.getInscription();
+    if (this.idInscription) {
+      this.getInscription();
+    }
     this.getSubjects();
   }
 
@@ -52,7 +56,7 @@ export class InscriptionToExamFormEdit {
         this.subjectId = res.subjects.id
       },
       error: (err) => {
-        console.log(err);
+        console.error(err);
       },
     });
   }
@@ -63,7 +67,7 @@ export class InscriptionToExamFormEdit {
         this.subjectsServices.listSubject = [...res];
       },
       error: (err) => {
-        console.log(err);
+        console.error(err);
       },
     });
   }
@@ -90,18 +94,15 @@ export class InscriptionToExamFormEdit {
       subjectsId: this.subjectId,
     };
 
-    console.log(inscription);
-
-    this.inscriptionToFinalExamService.putInscriptionToFinal(inscription,parseInt(this.idInscription)).subscribe({
+    this.inscriptionToFinalExamService.putInscriptionToFinal(inscription, parseInt(this.idInscription)).subscribe({
       next: (res) => {
-        alert('Se edito la inscripcion');
+        this.notificationService.success("Inscripción editada exitosamente.");
         this.getInscription()
-        console.log(res);
         this.form.reset();
       },
       error: (err) => {
-        alert('Hubo un error al cargar');
-        console.log(err);
+        this.notificationService.error(err.error, true);
+        console.error(err);
       },
     });
   }

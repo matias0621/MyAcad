@@ -214,7 +214,9 @@ export class SubjectsPage {
           this.subjectId = 0;
           this.getAllSubject();
         },
-        error: (error) => { console.error(error) }
+        error: (error) => { 
+          this.notificationService.error(error.error, true);
+          console.error(error) }
       })
     } else {
       this.subjectService.postSubject(this.form.value).subscribe({
@@ -224,7 +226,9 @@ export class SubjectsPage {
           this.subjectId = 0;
           this.getAllSubject();
         },
-        error: (error) => { console.error(error) }
+        error: (error) => { 
+          this.notificationService.error(error.error, true);
+          console.error(error) }
       })
     }
   }

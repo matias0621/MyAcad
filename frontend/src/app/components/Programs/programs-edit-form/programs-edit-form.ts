@@ -64,7 +64,10 @@ export class ProgramsEditForm implements OnInit {
           error: (error) => { console.error(error) }
         })
       },
-      error: (error) => { console.error(error) }
+      error: (error) => {
+        this.notificationService.error(error.error, true);
+        console.error(error)
+      }
     })
   }
 

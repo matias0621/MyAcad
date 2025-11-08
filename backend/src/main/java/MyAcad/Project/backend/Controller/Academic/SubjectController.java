@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Controller.Academic;
 
+import MyAcad.Project.backend.Model.Academic.CommissionResponse;
 import MyAcad.Project.backend.Model.Academic.SubjectsDTO;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 
@@ -61,6 +62,11 @@ public class SubjectController {
         return ResponseEntity.ok(subjectService.findBySemestersLessThan(semester));
     }
 
+    @GetMapping("/program/{program}")
+    public ResponseEntity<List<SubjectsResponse>> getByProgram(@PathVariable String program) {
+        return ResponseEntity.ok(subjectService.findByProgram(program));
+    }
+
     // Modificar materia
     @PutMapping("/{id}")
     public ResponseEntity<SubjectsEntity> modifySubject(
@@ -94,10 +100,15 @@ public class SubjectController {
         return ResponseEntity.ok().build();
     }
 
-    // Eliminar materia
+    // Baja lógica materia
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubject(@PathVariable Long id) {
         return subjectService.deleteSubject(id);
     }
 
+    // Baja definitiva materia
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteSubject(@PathVariable Long id) {
+        return subjectService.definitiveDeleteSubject(id);
+    }
 }

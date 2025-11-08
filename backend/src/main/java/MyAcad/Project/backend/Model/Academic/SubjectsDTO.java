@@ -34,6 +34,8 @@ public class SubjectsDTO {
     private AcademicStatus academicStatus;
 
     private List<SubjectsEntity> prerequisites;
+    //Nombre de la carrera.
+    private String program;
 
     public boolean getSubjectActive() {
         return subjectActive;

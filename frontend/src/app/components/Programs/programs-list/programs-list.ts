@@ -129,7 +129,7 @@ export class ProgramsList implements OnInit{
         this.service.updateCareer(updatedItem, this.endpoint).subscribe({
           next: (response) => {
             this.notificationService.success(`${item.name} activado/a exitosamente`);
-            this.getCareers();
+            this.getCareers();  
           },
           error: (error) => {
             this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);

@@ -1,5 +1,4 @@
 <form [formGroup]="form" (submit)="OnSubmit()" id="add-form">
-    <h3>Editar</h3>
     <fieldset>
         <label for="name">Nombre:</label>
         <input type="text" id="name" name="name" formControlName="name">
@@ -40,7 +39,7 @@
         }
     </fieldset>
 
-    <div id="buttons">
+    <div class="form-buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>
         <button type="submit" [disabled]="form.invalid">Editar</button>
     </div>

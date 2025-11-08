@@ -31,12 +31,13 @@ public interface SubjectsMapper {
 
     // Entity → Response con prerequisitos
     @Mapping(target = "prerequisites", qualifiedByName = "mapPrerequisites")
+    @Mapping(target = "program", source = "program")
     SubjectsResponse toResponseWithPrerequisites(SubjectsEntity entity);
 
     @Named("mapPrerequisites")
     default List<SubjectsResponse> mapPrerequisites(List<SubjectsEntity> prerequisites) {
         if (prerequisites == null || prerequisites.isEmpty()) return List.of();
-        // ⚠️ Usamos el mapeo básico para evitar recursión infinita
+        // Usamos el mapeo básico para evitar recursión infinita
         return prerequisites.stream()
                 .map(this::toResponse)
                 .toList();

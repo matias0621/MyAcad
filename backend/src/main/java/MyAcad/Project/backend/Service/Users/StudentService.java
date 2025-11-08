@@ -53,13 +53,23 @@ public class StudentService {
     }
 
     public ResponseEntity<Void> delete(Long id){
-        if (!repository.existsById(id)) {
+        Optional<Student> optionalStudent = repository.findById(id);
+        if (optionalStudent.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        repository.deleteById(id);
+        Student student = optionalStudent.get();
+        student.setActive(false);
+        repository.save(student);
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Void> definitiveDeleteStudent(Long studentId) {
+        if (!repository.existsById(studentId)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(studentId);
+        return ResponseEntity.ok().build();
+    }
     public List<Student> list() {
         return repository.findAll();
     }
@@ -72,17 +82,12 @@ public class StudentService {
             if (userLookupService.findByEmail(t.getEmail()).isPresent()) {
                 throw new EmailAlreadyExistsException();
             }
-        }else if (old.getLegajo() != t.getLegajo()) {
-            //Verificar si el legajo nuevo ya se encuentra en uso
-            if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
-                throw new LegajoAlreadyExistsException();
-            }
         }
         old.setName(t.getName());
         old.setLastName(t.getLastName());
         old.setEmail(t.getEmail());
-        old.setLegajo(t.getLegajo());
         old.setDni(t.getDni());
+        old.setActive(t.isActive());
 
         // Verificar si se ingresó una contraseña nueva, si el usuario no quiso cambiarla debe dejar ese input vacío.
         if (t.getPassword() != null && !t.getPassword().isBlank()) {

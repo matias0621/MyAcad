@@ -6,6 +6,7 @@ import { PostInscriptionToFinalExam } from '../../Models/InscriptionToFinalExam/
 import { InscriptionToExamList } from '../inscription-to-exam-list/inscription-to-exam-list';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-inscription-to-exam-form',
@@ -22,7 +23,8 @@ export class InscriptionToExamForm implements OnInit {
   constructor(
     public inscriptionToFinalExamService: InscriptionToFinalExamService,
     public subjectsServices: SubjectsService,
-    public router:Router
+    public router:Router,
+    private notificationService : NotificationService
   ) {
     this.inscriptionDate = new FormControl('', [Validators.required]);
     this.finalExamDate = new FormControl('', [Validators.required]);
@@ -67,7 +69,7 @@ export class InscriptionToExamForm implements OnInit {
 
   OnSubmit() {
     if (this.subjectId === null) {
-      alert('Añada de que materia es el examen');
+      this.notificationService.error('Debe seleccionar una materia antes de inscribirse al examen.', true);
       return;
     }
 
@@ -91,19 +93,15 @@ export class InscriptionToExamForm implements OnInit {
 
     this.inscriptionToFinalExamService.postInscriptionToFinal(inscription).subscribe({
       next: (res) => {
-        alert('Se añadi la inscripcion');
+        this.notificationService.success('Inscripcion al examen final realizada con exito');
         this.getInscription();
         console.log(res);
         this.form.reset();
       },
       error: (err) => {
-        alert('Hubo un error al cargar');
+        this.notificationService.error(err.error, true);
         console.log(err);
       },
     });
-  }
-
-  updateInscription(id:number){
-    this.router.navigate(["/inscriptionToFinalExam/", id])
   }
 }

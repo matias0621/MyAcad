@@ -57,6 +57,7 @@ export class ProgramsForm implements OnInit {
         });
       },
       error: (error) => {
+        this.notificationService.error(error.error, true);
         console.error('Error al crear programa:', error);
       }
     })

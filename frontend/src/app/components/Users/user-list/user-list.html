@@ -8,9 +8,11 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Id</th>
                     <th scope="col">Legajo</th>
                     <th scope="col">Nombre</th>
+                    <th scope="col" class="responsive-hide-2">Apellido</th>
+                    <th scope="col" class="responsive-hide">DNI</th>
+                    <th scope="col" class="responsive-hide">Email</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -18,20 +20,28 @@
                 <!-- USERS -->
                 @for (user of users; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{user.id}}</td>
                     <td>{{user.legajo}}</td>
                     <td>{{user.name}}</td>
+                    <td class="responsive-hide-2">{{user.lastName}}</td>
+                    <td class="responsive-hide">{{user.dni}}</td>
+                    <td class="responsive-hide">{{user.email}}</td>
                     <td class="crud-table-actions">
-                        <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal" data-bs-target="#modal-detail">Ver detalle</button>
-                        <button class="modify-crud-btn" (click)="modifyUser(user); userEditForm.loadData(user)" data-bs-toggle="modal"
-                            data-bs-target="#modal-edit">Editar</button>
-                        <button class="delete-crud-btn" (click)="deleteUser(user.id)"
-                            data-id="${p.id}">Eliminar</button>
+                        <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal"
+                            data-bs-target="#modal-detail">Detalles</button>
+                        @if (user.active) {
+                        <button class="delete-crud-btn" (click)="deleteUser(user.id)">Eliminar</button>
+                        }
+                        @if (!user.active) {
+                        <button class="activate-crud-btn" (click)="viewDisabled(user)">Activar</button>
+                        <button class="delete-crud-btn" (click)="definitiveDeleteUser(user.id)">Eliminar</button>
+                        }
+                        <button class="modify-crud-btn" (click)="modifyUser(user); userEditForm.loadData(user)"
+                            data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>
                     </td>
                 </tr>
                 }@empty {
                 <tr>
-                    <td colspan="4" class="text-center">
+                    <td colspan="6" class="text-center">
                         <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
                     </td>
                 </tr>
@@ -59,13 +69,14 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <app-user-form [endpoint]="endpoint" (added)="users = $event"></app-user-form>
+                        <app-user-form [endpoint]="endpoint" (added)="onUserSuccess('modal-add')"></app-user-form>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Modal editar usuario -->
-        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" style="display: none;" aria-hidden="true">
+        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" style="display: none;"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
@@ -75,15 +86,16 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <app-user-edit-form [endpoint]="endpoint" (added)="users = $event" #userEditForm></app-user-edit-form>
+                        <app-user-edit-form [endpoint]="endpoint" (added)="onUserSuccess('modal-edit')"
+                            #userEditForm></app-user-edit-form>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Modal ver detalle -->
-        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label" style="display: none;"
-            aria-hidden="true">
+        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
@@ -94,32 +106,32 @@
                     </div>
                     <div class="modal-body">
                         @if (selectedUser) {
-                            <div class="detail-container">
-                                <div class="detail-item">
-                                    <strong>ID:</strong>
-                                    <span>{{selectedUser.id}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Legajo:</strong>
-                                    <span>{{selectedUser.legajo}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Nombre:</strong>
-                                    <span>{{selectedUser.name}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Apellido:</strong>
-                                    <span>{{selectedUser.lastName}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Email:</strong>
-                                    <span>{{selectedUser.email}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>DNI:</strong>
-                                    <span>{{selectedUser.dni}}</span>
-                                </div>
+                        <div class="detail-container">
+                            <div class="detail-item">
+                                <strong>ID:</strong>
+                                <span>{{selectedUser.id}}</span>
                             </div>
+                            <div class="detail-item">
+                                <strong>Legajo:</strong>
+                                <span>{{selectedUser.legajo}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Nombre:</strong>
+                                <span>{{selectedUser.name}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Apellido:</strong>
+                                <span>{{selectedUser.lastName}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Email:</strong>
+                                <span>{{selectedUser.email}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>DNI:</strong>
+                                <span>{{selectedUser.dni}}</span>
+                            </div>
+                        </div>
                         }
                     </div>
                 </div>

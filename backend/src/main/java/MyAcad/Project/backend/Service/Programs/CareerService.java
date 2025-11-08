@@ -48,6 +48,14 @@ public class CareerService {
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Void> definitiveDeleteCareer(Long id) {
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+    
     public List<CareerResponse> list() {
         return careerMapper.toResponseList(repository.findAll());
     }

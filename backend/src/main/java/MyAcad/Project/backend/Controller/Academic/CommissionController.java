@@ -91,6 +91,11 @@ public class CommissionController {
         return services.delete(id);
     }
 
+    // Baja definitiva
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteCommission(@PathVariable Long id) {
+        return services.definitiveDeleteCommission(id);
+    }
     //PUT
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCommission(@PathVariable Long id, @RequestBody CommissionDTO dto){

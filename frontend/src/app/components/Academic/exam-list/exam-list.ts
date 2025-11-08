@@ -1,12 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UserService } from '../../../Services/Users/user-service';
 import { ExamFinal } from '../../../Models/Final-Exam/FinalExam';
 import { Exam } from '../../../Models/Exam/Exam';
 import { ExamsService } from '../../../Services/Exams/exams-service';
+import Program from '../../../Models/Program/Program';
+import { ExamForm } from '../exam-form/exam-form';
+import { ExamFormEdit } from '../exam-form-edit/exam-form-edit';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-exam-list',
-  imports: [],
+  imports: [ExamForm, ExamFormEdit],
   templateUrl: './exam-list.html',
   styleUrl: './exam-list.css'
 })
@@ -16,8 +19,10 @@ export class ExamList implements OnInit {
   @Output()
   exam = new EventEmitter<Exam | ExamFinal>;
 
+  programs: Program[] = [];
   exams !: Exam[] | ExamFinal[]
   timeout: any;
+  selectedExam ?: Exam;
 
   constructor(
     private service: ExamsService
@@ -34,6 +39,7 @@ export class ExamList implements OnInit {
     })
   }
 
+
   deleteExam(id: number) {
     this.service.deleteExam(this.endpoint, id).subscribe({
       next: (data) => { this.getExams() },
@@ -41,7 +47,18 @@ export class ExamList implements OnInit {
     })
   }
 
-  modifyExam(exam : ExamFinal | Exam){
+  modifyExam(exam: ExamFinal | Exam) {
     this.exam.emit(exam);
   }
+
+  onExamSuccess(modalId:  string) {
+    this.getExams();
+
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      modalInstance?.hide();
+    }
+  }
+
 }

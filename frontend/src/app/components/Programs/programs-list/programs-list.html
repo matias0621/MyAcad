@@ -11,8 +11,10 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Id</th>
                     <th scope="col">Nombre</th>
+                    <th scope="col">Cuota</th>
+                    <th scope="col" class="responsive-hide">Matrícula</th>
+                    <th scope="col" class="responsive-hide">Duración(meses)</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -20,25 +22,26 @@
                 <!-- PROGRAMS -->
                 @for (program of programs; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{program.id}}</td>
                     <td>{{program.name}}</td>
+                    <td>${{program.monthlyFee}}</td>
+                    <td class="responsive-hide">${{program.annualFee}}</td>
+                    <td class="responsive-hide">{{program.durationMonths}}</td>
                     <td class="crud-table-actions">
                         <button class="detail-crud-btn" (click)="selectedProgram = program" data-bs-toggle="modal" data-bs-target="#modal-detail">Ver detalle</button>
                         <button class="modify-crud-btn" (click)="modifyProgram(program); programEditForm.loadData(program)" data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>
                         <button class="detail-crud-btn" (click)="registerToStudent(program.name)">Inscribir</button>
                         @if (program.active) {
-                            <button class="delete-crud-btn" (click)="deleteProgram(program.id)"
-                                data-id="${program.id}">Eliminar</button>
+                        <button class="delete-crud-btn" (click)="deleteProgram(program.id)"
+                            data-id="${program.id}">Eliminar</button>
                         }
                         @if (!program.active) {
-                            <button class="activate-crud-btn" (click)="viewDisabled(program)">Activar</button>
+                        <button class="activate-crud-btn" (click)="viewDisabled(program)">Activar</button>
                         }
-
                     </td>
                 </tr>
                 }@empty {
                 <tr>
-                    <td colspan="3" class="text-center">
+                    <td colspan="5" class="text-center">
                         <p style="color: red;"> Aun no hay ningun prorgrama cargado.</p>
                     </td>
                 </tr>
@@ -71,30 +74,9 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal agregar materias -->
-        <div class="modal fade" id="modal-subjects" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Agregar</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close" id="button2">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @for (subjects of subjectsService.listSubject; track $index) {
-                            <p> {{ subjects.name }} </p>
-                            <button (click)="addSubjectsToCareer(subjects)" > Agregar </button>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Modal editar programa -->
-        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" style="display: none;" aria-hidden="true">
+        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" style="display: none;"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
@@ -104,15 +86,16 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <app-programs-edit-form [endpoint]="endpoint" (added)="programs = $event" #programEditForm></app-programs-edit-form>
+                        <app-programs-edit-form [endpoint]="endpoint" (added)="programs = $event"
+                            #programEditForm></app-programs-edit-form>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Modal ver detalle -->
-        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label" style="display: none;"
-            aria-hidden="true">
+        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
@@ -123,38 +106,38 @@
                     </div>
                     <div class="modal-body">
                         @if (selectedProgram) {
-                            <div class="detail-container">
-                                <div class="detail-item">
-                                    <strong>ID:</strong>
-                                    <span>{{selectedProgram.id}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Nombre:</strong>
-                                    <span>{{selectedProgram.name}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Descripción:</strong>
-                                    <span>{{selectedProgram.description}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Duración (meses):</strong>
-                                    <span>{{selectedProgram.durationMonths}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Mensualidad:</strong>
-                                    <span>${{selectedProgram.monthlyFee}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Matrícula:</strong>
-                                    <span>${{selectedProgram.annualFee}}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Estado:</strong>
-                                    <span [class]="selectedProgram.active ? 'status-active' : 'status-inactive'">
-                                        {{selectedProgram.active ? 'Activo' : 'Inactivo'}}
-                                    </span>
-                                </div>
+                        <div class="detail-container">
+                            <div class="detail-item">
+                                <strong>ID:</strong>
+                                <span>{{selectedProgram.id}}</span>
                             </div>
+                            <div class="detail-item">
+                                <strong>Nombre:</strong>
+                                <span>{{selectedProgram.name}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Descripción:</strong>
+                                <span>{{selectedProgram.description}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Duración (meses):</strong>
+                                <span>{{selectedProgram.durationMonths}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Mensualidad:</strong>
+                                <span>${{selectedProgram.monthlyFee}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Matrícula:</strong>
+                                <span>${{selectedProgram.annualFee}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Estado:</strong>
+                                <span [class]="selectedProgram.active ? 'status-active' : 'status-inactive'">
+                                    {{selectedProgram.active ? 'Activo' : 'Inactivo'}}
+                                </span>
+                            </div>
+                        </div>
                         }
                     </div>
                 </div>

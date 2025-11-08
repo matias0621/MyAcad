@@ -15,7 +15,7 @@ export class UserForm implements OnInit {
   endpoint: string = "";
 
   @Output()
-  added = new EventEmitter<any[]>;
+  added = new EventEmitter<any>;
 
   form !: FormGroup;
 
@@ -27,25 +27,26 @@ export class UserForm implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
-      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(/^[a-zA-Z]+$/)]],
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30), Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+(?: [A-Za-zÁÉÍÓÚáéíóúñÑ]+)*$/)]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+(?: [A-Za-zÁÉÍÓÚáéíóúñÑ]+)*$/)]],
       dni: ['', [Validators.required, Validators.min(1000000), Validators.max(999999999), Validators.pattern(/^[0-9]+$/)]],
       email: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]]
     })
   }
 
   OnSubmit() {
-    this.service.postUser(this.form.value, this.endpoint).subscribe({
+    const user = {...this.form.value, active: true};
+    this.service.postUser(user, this.endpoint).subscribe({
       next: (data) => {
         this.notificationService.success('Usuario creado exitosamente');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
-          next: (data) => { this.added.emit(data) },
+          next: (data) => { this.added.emit(true) },
           error: (error) => { console.error(error) }
         })
       },
       error: (error) => { 
-        this.notificationService.error('Error al crear el usuario', true);
+        this.notificationService.error(error.error, true);
         console.error(error);
       }
     })

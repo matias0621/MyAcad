@@ -43,6 +43,7 @@ public class SubjectService {
                 .prerequisites(subject.getPrerequisites())
                 .subjectActive(subject.getSubjectActive())
                 .academicStatus(subject.getAcademicStatus())
+                .program(subject.getProgram())
                 .build();
 
 
@@ -63,6 +64,9 @@ public class SubjectService {
     public List<SubjectsEntity> getByNameIgnoringCase(String name) {
         return subjectsRepository.findByNameContainingIgnoreCase(name);
     }
+    public List<SubjectsResponse> findByProgram(String program) {
+        return subjectsMapper.toResponseList(subjectsRepository.findByProgram(program));
+    }
 
     public ResponseEntity<Void> deleteSubject(Long subjectId) {
         if (!subjectsRepository.existsById(subjectId)) {
@@ -72,6 +76,14 @@ public class SubjectService {
         subject.setSubjectActive(false);
         subjectsRepository.save(subject);
         return ResponseEntity.noContent().build();
+    }
+
+    public ResponseEntity<Void> definitiveDeleteSubject(Long subjectId) {
+        if (!subjectsRepository.existsById(subjectId)) {
+            return ResponseEntity.notFound().build();
+        }
+        subjectsRepository.deleteById(subjectId);
+        return ResponseEntity.ok().build();
     }
 
     public Optional<SubjectsEntity> getById(Long subjectId) {
@@ -95,7 +107,10 @@ public class SubjectService {
         existingSubject.setName(updatedSubject.getName());
         existingSubject.setDescription(updatedSubject.getDescription());
         existingSubject.setSemesters(updatedSubject.getSemesters());
+        existingSubject.setAcademicStatus(updatedSubject.getAcademicStatus());
+        existingSubject.setProgram(updatedSubject.getProgram());
         existingSubject.setPrerequisites(updatedSubject.getPrerequisites());
+        existingSubject.setSubjectActive(updatedSubject.isSubjectActive());
 
         subjectsRepository.save(existingSubject);
         return ResponseEntity.ok(existingSubject);

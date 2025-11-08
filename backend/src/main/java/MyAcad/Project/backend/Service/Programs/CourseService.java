@@ -42,6 +42,14 @@ public class CourseService {
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Void> definitiveDeleteCourse(Long id) {
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
     public List<CourseResponse> list() {
         return courseMapper.toResponseList(repository.findAll());
     }

@@ -2,6 +2,7 @@ package MyAcad.Project.backend.Service;
 
 import MyAcad.Project.backend.Configuration.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -60,7 +61,11 @@ public class JwtService {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (Exception e) {
+        }catch (ExpiredJwtException e){
+            System.out.println("Expired token: " + e.getMessage());
+            return null;
+        }
+        catch (Exception e) {
             System.out.println("Invalid token: " + e.getMessage());
             return null;
         }

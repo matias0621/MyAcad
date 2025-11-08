@@ -31,7 +31,12 @@ export class SubjectsService {
     return this.http.get<Subjects>(`${this.api_url}/${id}`)
   }
 
+  getByProgram(program: string) {
+      return this.http.get<Subjects[]>(`${this.api_url}/program/${program}`);
+    }
+
   postSubject(subject:Subjects){
+    subject.subjectActive = true;
     return this.http.post(this.api_url, subject)
   }
 
@@ -47,8 +52,12 @@ export class SubjectsService {
     return this.http.put(`${this.api_url}/delete-subject-to-career/${nameCareer}`, subjects)
   }
 
-  deleteSubject(id:string){
+  deleteSubject(id:number){
     return this.http.delete(`${this.api_url}/${id}`)
+  }
+
+  definitiveDeleteSubject(id:number){
+    return this.http.delete(`${this.api_url}/delete/${id}`)
   }
 
 }

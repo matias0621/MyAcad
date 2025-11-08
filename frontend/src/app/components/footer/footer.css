@@ -19,6 +19,7 @@ section{
 #contact-list, #social-media-list{
     display: flex;
     gap: .5em;
+    justify-content: center;
 }
 .contact-item{
     padding: .5em;

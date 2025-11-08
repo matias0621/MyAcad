@@ -51,5 +51,7 @@ public class SubjectsEntity {
             inverseJoinColumns = @JoinColumn(name = "prerequisite_id")
     )
     private List<SubjectsEntity> prerequisites;
+    //Nombre de la carrera.
+    private String program;
 
 }

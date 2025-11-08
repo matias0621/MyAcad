@@ -55,6 +55,11 @@ public class CourseController {
         return services.delete(id);
     }
 
+    // Baja definitiva
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteCourse(@PathVariable Long id) {
+        return services.definitiveDeleteCourse(id);
+    }
     //PUT
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody CourseDTO dto){

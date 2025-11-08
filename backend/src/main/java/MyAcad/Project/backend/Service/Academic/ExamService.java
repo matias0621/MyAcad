@@ -48,6 +48,13 @@ public class ExamService {
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Void> definitiveDeleteExam(Long examId) {
+        if (!examRepository.existsById(examId)) {
+            return ResponseEntity.notFound().build();
+        }
+        examRepository.deleteById(examId);
+        return ResponseEntity.ok().build();
+    }
     public ExamEntity getExamById(Long id){
         return examRepository.findById(id).orElseThrow();
     }

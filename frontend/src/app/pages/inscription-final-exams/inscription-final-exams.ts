@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { InscriptionToExamForm } from '../../components/inscription-to-exam-form/inscription-to-exam-form';
+import { InscriptionToExamList } from "../../components/inscription-to-exam-list/inscription-to-exam-list";
 
 @Component({
   selector: 'app-inscription-final-exams',
-  imports: [InscriptionToExamForm],
+  imports: [InscriptionToExamList],
   templateUrl: './inscription-final-exams.html',
   styleUrl: './inscription-final-exams.css'
 })

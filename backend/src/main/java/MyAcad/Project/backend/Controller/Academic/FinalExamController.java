@@ -41,10 +41,17 @@ public class FinalExamController {
         return ResponseEntity.ok(updatedExam);
     }
 
+    //Baja lógica
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFinalExam(@PathVariable Long id) {
         finalExamService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Baja definitiva
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteFinalExam(@PathVariable Long id) {
+        return finalExamService.definitiveDeleteFinalExam(id);
     }
     
     @GetMapping("/search")

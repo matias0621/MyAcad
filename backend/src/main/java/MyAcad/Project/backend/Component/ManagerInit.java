@@ -20,7 +20,8 @@ public class ManagerInit {
                     "1",
                     1,
                     "manager1@gmail.com",
-                    "123"
+                    "123",
+                    true
             );
             Manager manager = new Manager(dto);
             managerService.add(manager);

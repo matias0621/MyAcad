@@ -28,6 +28,8 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     protected Role role;
 
+    protected boolean active;
+
     public User(UserDTO dto) {
         this.id = dto.getId();
         this.name = dto.getName();
@@ -36,6 +38,7 @@ public abstract class User {
         this.email = dto.getEmail();
         this.password = dto.getPassword();
         this.role = dto.getRole();
+        this.active = dto.isActive();
     }
 
 

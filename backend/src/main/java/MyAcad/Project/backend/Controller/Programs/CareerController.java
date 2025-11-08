@@ -61,6 +61,11 @@ public class CareerController {
         return services.delete(id);
     }
 
+    // Baja definitiva
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteCareer(@PathVariable Long id) {
+        return services.definitiveDeleteCareer(id);
+    }
     //PUT
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCareer(@PathVariable Long id, @RequestBody CareerDTO dto){

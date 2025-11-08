@@ -1,4 +1,5 @@
-import Subjects from "../Subjects/Subjects";
+import Subjects from "../Subjects/Subjects"
+
 
 export interface ExamFinal {
     id: number,

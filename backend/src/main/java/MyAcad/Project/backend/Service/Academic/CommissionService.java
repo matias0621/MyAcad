@@ -62,6 +62,14 @@ public class CommissionService {
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Void> definitiveDeleteCommission(Long id) {
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
     public List<CommissionResponse> list() {
         return commissionMapper.toResponseList(repository.findAll());
     }

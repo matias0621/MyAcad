@@ -46,6 +46,13 @@ public class TechnicalService {
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Void> definitiveDeleteTechnical(Long id) {
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
     public List<TechnicalResponse> list() {
         return mapper.toResponseList(repository.findAll());
     }

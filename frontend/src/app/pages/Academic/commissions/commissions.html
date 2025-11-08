@@ -41,9 +41,15 @@
                     <td>Inactiva</td>
                     }
                     <td class="crud-table-actions">
+                        @if (commission.active) {
+                        <button class="delete-crud-btn" (click)="deleteCommission(commission.id)">Eliminar</button>
+                        }
+                        @if (!commission.active) {
+                        <button class="activate-crud-btn" (click)="viewDisabled(commission)">Activar</button>
+                        <button class="delete-crud-btn" (click)="definitiveDeleteCommission(commission.id)">Eliminar</button>
+                        }
                         <button class="modify-crud-btn" (click)="modifyCommission(commission)" data-bs-toggle="modal"
                             data-bs-target="#modal">Editar</button>
-                        <button class="delete-crud-btn" (click)="deleteCommission(commission.id)">Eliminar</button>
                     </td>
                 </tr>
                 }@empty {
@@ -93,14 +99,6 @@
                                 </select>
                                 @if (form.controls['program'].invalid && form.controls['program'].touched) {
                                 <p>La carrera es obligatoria.</p>
-                                }
-                            </fieldset>
-
-                            <fieldset>
-                                <label for="active">Activo:</label>
-                                <input type="checkbox" id="active" formControlName="active">
-                                @if (form.controls['active'].invalid && form.controls['active'].touched) {
-                                <p>El estado activo es obligatorio.</p>
                                 }
                             </fieldset>
 

@@ -61,7 +61,7 @@ nav {
   .hamburger{ display: inline-flex; }
   .left-navs{
     position: fixed;
-    top: 5em; 
+    top: 5em;
     left: 0;
     height: calc(100vh - 5em);
     width: 80vw;
@@ -89,7 +89,7 @@ nav {
     display: flex;
     align-items: center;
   }
-  
+
   .left-navs .dropdown{
     height: auto;
     display: block;
@@ -107,7 +107,7 @@ nav {
     padding: .25rem 0;
     z-index: 1100;
   }
-  
+
   .left-navs .dropdown-menu.show{
       display: block;
   }

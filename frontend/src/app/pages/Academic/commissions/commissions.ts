@@ -3,6 +3,8 @@ import Commission from '../../../Models/Commission/commission';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommissionService } from '../../../Services/Commission/commission-service';
 import { ProgramService } from '../../../Services/program-service';
+import Program from '../../../Models/Program/Program';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-commissions',
@@ -11,7 +13,7 @@ import { ProgramService } from '../../../Services/program-service';
   styleUrl: './commissions.css'
 })
 export class Commissions {
-  programs: any[] = [];
+  programs: Program[] = [];
   commissions !: Commission[];
   allCommissions!: Commission[];
   form!: FormGroup;
@@ -23,7 +25,8 @@ export class Commissions {
   constructor(
     private fb: FormBuilder,
     private service: CommissionService,
-    private pService: ProgramService
+    private pService: ProgramService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -34,7 +37,6 @@ export class Commissions {
       number: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
       capacity: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
       program: ['', [Validators.required]],
-      active: [true],
       // envia las listas vacias para que no de error, en las listas se cargan materias y alumnos desde otras interfaces
       subjectIds: [[]],
       studentIds: [[]]
@@ -43,7 +45,7 @@ export class Commissions {
 
   getCommissions() {
     this.service.getCommissions().subscribe({
-      next: (data) => { 
+      next: (data) => {
         // Guarda las comisiones filtradas
         this.commissions = data;
         // Guarda todas las comisiones
@@ -60,46 +62,88 @@ export class Commissions {
         this.programs = data;
       },
       error: (error) => { console.error(error) }
-    }) 
+    })
   }
 
   OnSubmit() {
     if (this.commissionId != 0) {
       const commissionJson = {
         id: this.commissionId,
+        active: true,
         ...this.form.value
       }
       this.service.putCommission(commissionJson).subscribe({
         next: (data) => {
-          console.log('Comision editada exitosamente');
+          this.notificationService.success('Comision modificada exitosamente');
           this.form.reset();
           this.commissionId = 0;
           this.getCommissions();
         },
-        error: (error) => { console.error(error) }
+        error: (error) => {
+          this.notificationService.error(error.error, true);
+          console.error(error)
+        }
       })
     } else {
       this.service.postCommission(this.form.value).subscribe({
         next: (data) => {
-          console.log('Comision agregada exitosamente');
+          this.notificationService.success('Comision agregada exitosamente');
           this.form.reset();
           this.commissionId = 0;
           this.getCommissions();
         },
-        error: (error) => { console.error(error) }
+        error: (error) => {
+          this.notificationService.error(error.error, true);
+          console.error(error)
+        }
       })
     }
   }
+
   // Eliminar comision
   deleteCommission(id: number) {
-    this.service.deleteCommission(id).subscribe({
-      next: (data) => {
-        console.log('Comision eliminada exitosamente');
-        this.getCommissions();
-      },
-      error: (error) => { console.error(error) }
-    })
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar esta comisión?',
+      'Confirmar eliminación',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.deleteCommission(id).subscribe({
+          next: (data) => {
+            this.notificationService.success('Comisión eliminada exitosamente');
+            this.getCommissions();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al eliminar la comisión. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
   }
+
+  // BAJA DEFINITIVA
+  definitiveDeleteCommission(id: number) {
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar permanentemente esta comisión?',
+      'Confirmar eliminación definitiva',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.definitiveDeleteCommission(id).subscribe({
+          next: (data) => {
+            this.notificationService.success('Comisión eliminada exitosamente');
+            this.getCommissions();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al eliminar la comisión. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
+  }
+
   addCommission() {
     this.modalText = "Agregar"
     this.commissionId = 0;
@@ -131,7 +175,27 @@ export class Commissions {
     }
   }
 
-
+  viewDisabled(commission: Commission) {
+    this.notificationService.confirm(
+      `¿Deseas activar la comisión ${commission.number} de ${commission.program}?`,
+      'Confirmar activación',
+      'Activar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        const updatedItem = { ...commission, active: true };
+        this.service.putCommission(updatedItem).subscribe({
+          next: (response) => {
+            this.notificationService.success(`Comisión ${commission.number} de ${commission.program} activada exitosamente`);
+            this.getCommissions();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
+  }
 
   cleanForm() {
     this.form.reset();

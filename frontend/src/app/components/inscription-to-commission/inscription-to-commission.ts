@@ -9,6 +9,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import Subjects from '../../Models/Subjects/Subjects';
 import { RegistrationStudentOrTeacher } from '../../Models/Users/Student';
 import { NotificationService } from '../../Services/notification/notification.service';
+import { AuthService } from '../../Services/Auth/auth-service';
 
 @Component({
   selector: 'app-inscription-to-commission',
@@ -26,6 +27,7 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
 
   constructor(public careerService:CareerService, 
     private notificationService:NotificationService,
+    public auth:AuthService,
     public commisionService:CommissionService){
       this.legajo = new FormControl("", Validators.required)
       this.form = new FormGroup({
@@ -35,6 +37,7 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCommisionByNameProgram()
+    console.log(this.auth.getRole())
   }
 
   ngOnDestroy(): void {
@@ -85,6 +88,18 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.notificationService.error("Hubo un error",true)
+        console.log(err)
+      }
+    })
+  }
+
+  registerStudent(commissionId:number, subjectsId:number){
+    this.commisionService.regiterByStudent(commissionId, subjectsId).subscribe({
+      next: (res) => {
+        this.notificationService.success("Te registraste correctamente")
+      },
+      error: (err) => {
+        this.notificationService.error("Hubo un error", true)
         console.log(err)
       }
     })

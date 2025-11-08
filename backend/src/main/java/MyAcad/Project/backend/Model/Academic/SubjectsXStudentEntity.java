@@ -18,12 +18,15 @@ public class SubjectsXStudentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "subject_id", nullable = false)
     private SubjectsEntity subjects;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "state_student", nullable = false)
     private AcademicStatus stateStudent;
 }

@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Service.Programs.ProgramService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class ProgramController {
     public List<Program> findPrograms() {
         return programService.findPrograms();
     }
+
 
     @GetMapping("/student/{studentId}")
     public ResponseEntity<List<Program>> findByStudent(@PathVariable Long studentId) {

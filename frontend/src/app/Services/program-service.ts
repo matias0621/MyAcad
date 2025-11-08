@@ -16,10 +16,10 @@ export class ProgramService {
   }
 
   getProgramsByStudent(studentId: number) {
-    return this.http.get<Program[]>(`${this.API_URL}/student/${studentId} `);
+    return this.http.get<Program[]>(`${this.API_URL}/student/${studentId}`);
   }
 
   getProgramsByTeacher(teacherId: number) {
-    return this.http.get<Program[]>(`${this.API_URL}/teacher/${teacherId} `);
+    return this.http.get<Program[]>(`${this.API_URL}/teacher/${teacherId}`);
   }
 }

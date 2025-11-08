@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.Subject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +67,41 @@ public class CommissionService {
         return commissionMapper.toResponseList(repository.findAll());
     }
 
+    public List<CommissionResponse> listForStudentInfo(String programName, Long studentId) {
+        List<Commission> list = repository.findStudentCommissionsByProgram(studentId, programName);
+
+        // Creamos una nueva lista para almacenar copias filtradas
+        List<Commission> filteredList = new ArrayList<>();
+
+        for (Commission c : list) {
+            // Filtrar materias en las que el estudiante está anotado
+            List<SubjectsEntity> filteredSubjects = c.getSubjects().stream()
+                    .filter(subj -> subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(studentId, subj.getId()).isPresent())
+                    .toList();
+            c.setSubjects(filteredSubjects);
+
+            Commission filteredCommission = getCommission(c, filteredSubjects);
+
+            filteredList.add(filteredCommission);
+        }
+
+        return commissionMapper.toResponseList(filteredList);
+
+
+    }
+
+    private static Commission getCommission(Commission c, List<SubjectsEntity> filteredSubjects) {
+        Commission filteredCommission = new Commission();
+        filteredCommission.setId(c.getId());
+        filteredCommission.setNumber(c.getNumber());
+        filteredCommission.setProgram(c.getProgram());
+        filteredCommission.setCapacity(c.getCapacity());
+        filteredCommission.setActive(c.isActive());
+        filteredCommission.setSubjects(filteredSubjects);
+        filteredCommission.setTeachers(c.getTeachers());
+        filteredCommission.setStudents(List.of()); // opcional, para no mandar todos los alumnos
+        return filteredCommission;
+    }
 
 
     public CommissionResponse toResponse(Commission entity) {
@@ -156,6 +192,13 @@ public class CommissionService {
 
     public void registerStudentbyManager(String legajo, Long commissionId, Long subjectsId){
         Student s = studentRepository.findByLegajo(legajo).orElseThrow();
+        Commission commission = repository.findById(commissionId).orElseThrow();
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
+        registerToStudent(s, commission, subjectsEntity);
+    }
+
+    public void registerStudentByToken(Long studentId, Long commissionId, Long subjectsId){
+        Student s = studentRepository.findById(studentId).orElseThrow();
         Commission commission = repository.findById(commissionId).orElseThrow();
         SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
         registerToStudent(s, commission, subjectsEntity);

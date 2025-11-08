@@ -25,6 +25,14 @@ public class SubjectsXStudentService {
         SubjectsEntity subjects = subjectService.getById(subjectsXStudentDTO.getSubjectsId()).orElseThrow();
         Student student = studentService.getById(subjectsXStudentDTO.getStudentId()).orElseThrow();
 
+        // Verificar si ya está inscripto
+        Optional<SubjectsXStudentEntity> existingRelation =
+                subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(student.getId(), subjects.getId());
+
+        if (existingRelation.isPresent()) {
+            throw new RuntimeException("El alumno ya está anotado en esta materia");
+        }
+
         SubjectsXStudentEntity subjectsXStudentEntity = SubjectsXStudentEntity.builder()
                 .student(student)
                 .subjects(subjects)

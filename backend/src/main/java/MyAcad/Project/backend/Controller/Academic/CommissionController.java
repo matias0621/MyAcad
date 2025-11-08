@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,13 @@ public class CommissionController {
     @GetMapping("/program/{program}")
     public List<CommissionResponse> getByProgram(@PathVariable String program) {
         return services.findByProgram(program);
+    }
+
+    @GetMapping("/program/info-student/{program}")
+    public List<CommissionResponse> getByProgramInfoStudent(@PathVariable String program) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        return services.listForStudentInfo(program, userDetails.getId());
     }
 
     //Obtener por id
@@ -116,6 +124,15 @@ public class CommissionController {
     @PutMapping("/register-teacher-by-manager/{id}")
     public ResponseEntity<?> registerTeacher(@PathVariable Long id, @RequestBody RegistrationRequest request){
         services.registerTeacherToProgram(request.getLegajo(), id, request.getSubjectsId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasAnyRole('STUDENT')")
+    @PutMapping("register-commision-to-student/{id}")
+    public ResponseEntity<?> registerCommissionToStudent(@PathVariable Long id, @RequestBody Long subjectsId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl user = (UserDetailsImpl) auth.getPrincipal();
+        services.registerStudentByToken(user.getId(), id, subjectsId);
         return ResponseEntity.ok().build();
     }
 

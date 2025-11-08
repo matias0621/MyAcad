@@ -21,6 +21,10 @@ export class CommissionService {
     return this.http.get<CommissionResponse[]>(`${this.API_URL}/response`)
   }
 
+  getCommissionByStudentInfo(programName:string){
+    return this.http.get<Commission[]>(`${this.API_URL}/program/info-student/${programName}`)
+  }
+
   getByProgram(program: string) {
     return this.http.get<Commission[]>(`${this.API_URL}/program/${program}`);
   }
@@ -42,6 +46,10 @@ export class CommissionService {
   }
   registerTeacherToCommissionByManager(idCommision:number, requestTeacher:RegistrationStudentOrTeacher){
     return this.http.put(`${this.API_URL}/register-teacher-by-manager/${idCommision}`, requestTeacher)
+  }
+
+  regiterByStudent(commissionId:number, subjectsId:number){
+    return this.http.put(`${this.API_URL}/register-commision-to-student/${commissionId}`, subjectsId)
   }
 
   deleteCommission(id: number) {

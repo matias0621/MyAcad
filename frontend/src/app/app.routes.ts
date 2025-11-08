@@ -19,6 +19,7 @@ import { InscriptionToExamFormEdit } from './components/inscription-to-exam-form
 import { InscriptionToExamList } from './components/inscription-to-exam-list/inscription-to-exam-list';
 import { InscriptionCommision } from './pages/inscription-commision/inscription-commision';
 import { SubjectsPage } from './pages/Academic/subjects-page/subjects-page';
+import { CommissionStudentView } from './components/StudentView/commission-student-view/commission-student-view';
 
 
 
@@ -40,6 +41,8 @@ export const routes: Routes = [
 
     { path: 'inscriptionToFinalExam', component: InscriptionFinalExams, canActivate: [AuthGuard] },
     { path: 'inscriptionToFinalExam/:id', component: InscriptionToExamFormEdit, canActivate: [AuthGuard] },
+
+    { path: 'commissionForProgramName/:name', component: CommissionStudentView, canActivate: [AuthGuard] },
 
     { path: 'register-to-final-exam', component: InscriptionToExamList, canActivate:[AuthGuard] },
 

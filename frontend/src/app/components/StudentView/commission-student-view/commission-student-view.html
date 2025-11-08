@@ -1,0 +1,8 @@
+
+
+@for (com of commissionList; track $index) {
+    {{ com.number }}
+    @for(s of com.subjects; track $index){
+        {{ s.name }}
+    }
+}

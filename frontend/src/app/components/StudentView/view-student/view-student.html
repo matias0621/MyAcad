@@ -1,0 +1,14 @@
+<h2>Bienvenida/o {{studentName}} </h2>
+<ul id="card-container">
+    @for (program of listOfProgram; track $index) {
+    <li>
+        <a  [routerLink]="['/commissionForProgramName', program.name]" class="card">
+            <img src="/Media/office.jpg" alt="">
+            <div class="card-content">
+                <h5> {{ program.name }} </h5>
+            </div>
+        </a>
+    </li>
+    }
+
+</ul>

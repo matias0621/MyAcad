@@ -42,6 +42,15 @@ public class SecurityConfig {
                                 "/auth/**",
                                 "/auth/changePassword"
                         ).permitAll()
+                        // Specific patterns must come before general patterns
+                        .requestMatchers(
+                                "/programs/student/**",
+                                "/commissions/program/**",
+                                "/program/info-student/"
+                        ).hasRole("STUDENT")
+                        .requestMatchers(
+                                "/programs/teacher/**"
+                        ).hasRole("TEACHER")
                         .requestMatchers(
                                 "/**",
                                 //USERS
@@ -63,12 +72,6 @@ public class SecurityConfig {
                                 "/inscription-final-exam/**",
                                 "/subject-x-student/**"
                         ).hasRole("MANAGER")
-                        .requestMatchers(
-                                "/programs/teacher/"
-                        ).hasRole("TEACHER")
-                        .requestMatchers(
-                                "/programs/student/"
-                        ).hasRole("STUDENT")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(service))

@@ -3,10 +3,11 @@ import { AuthService } from '../../Services/Auth/auth-service';
 import { ProgramService } from '../../Services/program-service';
 import Program from '../../Models/Program/Program';
 import { RouterLink } from '@angular/router';
+import { ViewStudent } from '../../components/StudentView/view-student/view-student';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, ViewStudent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -15,7 +16,7 @@ export class Home implements OnInit {
   token  !: any;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private service: ProgramService
   ) { }
 

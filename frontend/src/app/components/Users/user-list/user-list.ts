@@ -93,6 +93,53 @@ export class UserList implements OnInit {
     });
   }
 
+  
+  // BAJA DEFINITIVA
+  definitiveDeleteUser(id: number) {
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar permanentemente este usuario?',
+      'Confirmar eliminación definitiva',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.definitiveDeleteUser(id, this.endpoint).subscribe({
+          next: (data) => { 
+            this.notificationService.success('Usuario eliminado exitosamente');
+            this.getUsers();
+          },
+          error: (error) => { 
+            this.notificationService.error('Error al eliminar el usuario. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
+  }
+
+  viewDisabled(user: any) {
+      this.notificationService.confirm(
+        `¿Deseas activar "${user.name}"?`,
+        'Confirmar activación',
+        'Activar',
+        'Cancelar'
+      ).then((confirmed) => {
+        if (confirmed) {
+          const updatedItem = { ...user, active: true };
+          this.service.putUser(updatedItem, this.endpoint).subscribe({
+            next: (response) => {
+              console.log(updatedItem);
+              this.notificationService.success(`${user.name} activado/a exitosamente`);
+              this.getUsers();
+            },
+            error: (error) => {
+              this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);
+            }
+          });
+        }
+      });
+    }
+  
+
   modifyUser(user : any){
     this.user.emit(user);
   }

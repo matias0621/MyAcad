@@ -1,51 +1,139 @@
-@if (id) {
-<h1 style="text-align: center;">Editar Materias</h1>
-<app-subject-form-edit></app-subject-form-edit>
-}
-@else {
 <h1 style="text-align: center;">Materias</h1>
-<app-subject-form (added)="getAllSubject()"></app-subject-form>
 
-<ul>
-    @for (subject of subjectService.listSubject; track $index) {
-    <li>
-        {{subject.name}} {{subject.description}}
-        @if(subject.prerequisites?.length !== 0){
-        <br>
-        @for (subjectPrerequisite of subject.prerequisites; track $index) {
-        {{ subjectPrerequisite.name }} 
-        <br>
-        }
-        }
-        <button (click)="redirecTo(subject.id)">Editar</button>
-        <button (click)="deleteSubject(subject.id)">Eliminar</button>
-        <button data-bs-toggle="modal" data-bs-target="#modal-add" (click)="setSubjects(subject)" > Asignar Materia a comision </button>
-    </li>
-    }@empty {
-    <li>
-        <p style="color: red;"> Aun no hay ninguna materia cargada.</p>
-    </li>
-    }
-</ul>
-}
-
-<!-- Modal agregar materia a comision -->
-<div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h1 class="modal-title fs-5 titles">Agregar</h1>
-                <button data-bs-dismiss="modal" aria-label="Close" id="button2">
-                    <i class="fa-solid fa-x"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                @for (com of listCommission; track $index) {
-                    {{ com.program }} - {{ com.number }}
-                    <button (click)="addToCommission(com.id)" >Añadir a comision</button>
+<section class="crud-management d-flex justify-content-center">
+    <div class="crud-management-container">
+        <div class="w-100 d-flex flex-column align-items-center mb-3">
+            <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal"
+                (click)="addSubject()">Agregar</button>
+            <select class="select-filter" [(ngModel)]="filter" (change)="filterSubjects()">
+                <option value="">Mostrar todo</option>
+                <option value="Activas">Activas</option>
+                <option value="Inactivas">Inactivas</option>
+                @for(program of programs; track $index){
+                <option [value]="program.name">{{ program.name }}</option>
                 }
+            </select>
+        </div>
+
+        <!-- TABLA -->
+        <table class="crud-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Nombre</th>
+                    <th scope="col" class="responsive-hide-2">Cuatrimestre</th>
+                    <th scope="col" class="responsive-hide">Correlativas</th>
+                    <th scope="col">Carrera/Curso</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="crud-table-body">
+                <!-- USERS -->
+                @for (subject of subjects; track $index) {
+                <tr class="crud-table-item">
+                    <td>{{subject.name}}</td>
+                    <td class="responsive-hide-2">{{subject.semesters}}</td>
+                    @if (subject.prerequisites!.length > 0) {
+                    <td class="responsive-hide">{{subject.prerequisites}}</td>
+                    }@else{
+                    <td class="responsive-hide">Sin correlativas</td>
+                    }
+                    <td>{{subject.program}}</td>
+                    <td class="crud-table-actions">
+                        @if (subject.subjectActive) {
+                        <button class="delete-crud-btn" (click)="deleteSubject(subject.id)">Eliminar</button>
+                        }
+                        @if (!subject.subjectActive) {
+                        <button class="activate-crud-btn" (click)="viewDisabled(subject)">Activar</button>
+                        <button class="delete-crud-btn" (click)="definitiveDeleteSubject(subject.id)">Eliminar</button>
+                        }
+                        <button class="modify-crud-btn" (click)="modifySubject(subject)" data-bs-toggle="modal"
+                            data-bs-target="#modal">Editar</button>
+                    </td>
+                </tr>
+                }@empty {
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <p style="color: red;"> Aun no hay ninguna materia cargada.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+
+        <!-- MODAL -->
+        <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modal-label" style="display: none;"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">{{ modalText }}</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form [formGroup]="form" (submit)="OnSubmit()">
+
+                            @if (form.invalid && form.touched) {
+                            <div class="error-global">
+                                <p>Por favor, completá correctamente todos los campos antes de continuar.</p>
+                            </div>
+                            }
+
+                            <fieldset>
+                                <label for="name">Nombre de la materia:</label>
+                                <input type="text" id="name" name="name" formControlName="name">
+                                @if (form.controls['name'].invalid && form.controls['name'].touched) {
+                                <p>El nombre debe tener entre 3 y 30 caracteres, solo letras.</p>
+                                }
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="description">Descripcion:</label>
+                                <input type="text" id="description" name="description" formControlName="description">
+                                @if (form.controls['description'].invalid && form.controls['description'].touched) {
+                                <p>El apellido debe tener entre 2 y 30 caracteres, solo letras.</p>
+                                }
+                            </fieldset>
+
+                            <!-- <fieldset>
+                                <select formControlName="academicStatus" name="academicStatus" id="academicStatus">
+                                    <option value="">Necesidad para correlativas</option>
+                                    <option value="COMPLETED">Aprobar</option>
+                                    <option value="APPROVED">Promocionar</option>
+                                </select>
+                            </fieldset> -->
+
+                            <fieldset>
+                                <label for="semesters">Semestre:</label>
+                                <input type="number" id="semesters" name="semesters" formControlName="semesters">
+                                @if (form.controls['semesters'].invalid && form.controls['semesters'].touched) {
+                                <p>El email debe tener entre 3 y 100 caracteres.</p>
+                                }
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="program">Carrera/Curso:</label>
+                                <select class="select-filter" id="program" formControlName="program">
+                                    @for(program of programs; track $index){
+                                    <option [value]="program.name">{{ program.name }}</option>
+                                    }
+                                </select>
+                                @if (form.controls['program'].invalid && form.controls['program'].touched) {
+                                <p>Es obligatorio asignar la materia a una carrera o curso.</p>
+                                }
+                            </fieldset>
+
+                            <div class="form-buttons">
+                                <button type="button" (click)="cleanForm()">Limpiar</button>
+                                <button type="submit" [disabled]="form.invalid" data-bs-dismiss="modal" aria-label="Close">Agregar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>

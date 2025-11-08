@@ -43,9 +43,15 @@ public class ExamController {
         return ResponseEntity.ok(exam);
     }
 
+    //Baja lógica
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteExam(@PathVariable int id) {
         return examService.deleteExam((long)id);
     }
 
+    // Baja definitiva
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteExam(@PathVariable Long id) {
+        return examService.definitiveDeleteExam(id);
+    }
 }

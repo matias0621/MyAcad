@@ -56,13 +56,23 @@ public class TeacherService {
     }
 
     public ResponseEntity<Void> delete(Long id){
-        if (!repository.existsById(id)) {
+        Optional<Teacher> optionalTeacher = repository.findById(id);
+        if (optionalTeacher.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        repository.deleteById(id);
+        Teacher teacher = optionalTeacher.get();
+        teacher.setActive(false);
+        repository.save(teacher);
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Void> definitiveDeleteTeacher(Long teacherId) {
+        if (!repository.existsById(teacherId)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(teacherId);
+        return ResponseEntity.ok().build();
+    }
     public List<TeacherResponse> list() {
         return mapper.toResponseList(repository.findAll());
     }
@@ -80,6 +90,7 @@ public class TeacherService {
         old.setLastName(t.getLastName());
         old.setEmail(t.getEmail());
         old.setDni(t.getDni());
+        old.setActive(t.isActive());
 
         // Verificar si se ingresó una contraseña nueva, si el usuario no quiso cambiarla debe dejar ese input vacío.
         if (t.getPassword() != null && !t.getPassword().isBlank()) {

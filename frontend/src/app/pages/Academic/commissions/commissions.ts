@@ -3,6 +3,7 @@ import Commission from '../../../Models/Commission/commission';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommissionService } from '../../../Services/Commission/commission-service';
 import { ProgramService } from '../../../Services/program-service';
+import Program from '../../../Models/Program/Program';
 
 @Component({
   selector: 'app-commissions',
@@ -11,7 +12,7 @@ import { ProgramService } from '../../../Services/program-service';
   styleUrl: './commissions.css'
 })
 export class Commissions {
-  programs: any[] = [];
+  programs: Program[] = [];
   commissions !: Commission[];
   allCommissions!: Commission[];
   form!: FormGroup;
@@ -34,7 +35,6 @@ export class Commissions {
       number: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
       capacity: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
       program: ['', [Validators.required]],
-      active: [true],
       // envia las listas vacias para que no de error, en las listas se cargan materias y alumnos desde otras interfaces
       subjectIds: [[]],
       studentIds: [[]]
@@ -67,6 +67,7 @@ export class Commissions {
     if (this.commissionId != 0) {
       const commissionJson = {
         id: this.commissionId,
+        active: true,
         ...this.form.value
       }
       this.service.putCommission(commissionJson).subscribe({

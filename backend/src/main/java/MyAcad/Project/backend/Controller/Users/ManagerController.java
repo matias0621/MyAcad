@@ -21,6 +21,7 @@ import java.util.Optional;
 public class ManagerController {
     private final ManagerService services;
 
+
     //GET
     //Listado
     @GetMapping()
@@ -87,6 +88,11 @@ public class ManagerController {
         return services.delete(id);
     }
 
+    // Baja definitiva
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteManager(@PathVariable Long id) {
+        return services.definitiveDeleteManager(id);
+    }
     //PUT
     @PutMapping
     public ResponseEntity<?> updateManager(@RequestBody Manager updatedUser) {

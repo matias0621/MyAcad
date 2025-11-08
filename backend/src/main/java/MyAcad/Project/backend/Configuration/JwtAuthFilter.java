@@ -43,7 +43,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        String legajo = jwtService.extractLegajo(token);
+        String legajo;
+        try {
+            legajo = jwtService.extractLegajo(token);
+        } catch (Exception e) {
+            System.out.println("TOKEN INVALIDO O EXPIRADO");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //Devuelve 401
+            return;
+        }
+        if (legajo == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //Devuelve 401
+            return;
+        }
 
         if (legajo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 

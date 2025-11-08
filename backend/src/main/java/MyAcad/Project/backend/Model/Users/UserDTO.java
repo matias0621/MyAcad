@@ -51,11 +51,14 @@ public class UserDTO {
     @Enumerated(EnumType.STRING)
     protected Role role;
 
-    public UserDTO(String name, String lastName, int dni, String email, String password) {
+    protected boolean active;
+
+    public UserDTO(String name, String lastName, int dni, String email, String password, boolean active) {
         this.name = name;
         this.lastName = lastName;
         this.dni = dni;
         this.email = email;
         this.password = password;
+        this.active = active;
     }
 }

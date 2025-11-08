@@ -130,6 +130,7 @@ input[type=number] {
     height: auto;
     min-height: 2.3em;
     width: fit-content;
+    margin: auto;
     transition: background-color 0.2s ease;
 }
 
@@ -203,6 +204,7 @@ input[type=number] {
 }
 
 .crud-table-actions>* {
+    margin: 0 .2em !important;
     color: white;
     height: 2em;
     padding: 0 .5em;
@@ -453,16 +455,12 @@ fieldset {
 
     .crud-table-actions {
         padding: .5em 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: .2em;
-        justify-content: center;
-        align-items: center;
     }
 
     .crud-table-actions>* {
         width: clamp(40px, 80%, 100%);
-        margin: 0 !important;
+        height: 2.5em;
+        margin: .2em auto !important;
     }
 
     /* Modales más adaptables en tablets/móvil */

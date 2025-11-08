@@ -96,14 +96,6 @@
                                 }
                             </fieldset>
 
-                            <fieldset>
-                                <label for="active">Activo:</label>
-                                <input type="checkbox" id="active" formControlName="active">
-                                @if (form.controls['active'].invalid && form.controls['active'].touched) {
-                                <p>El estado activo es obligatorio.</p>
-                                }
-                            </fieldset>
-
                             <div id="buttons">
                                 <button type="button" (click)="cleanForm()">Limpiar</button>
                                 <button type="submit" [disabled]="form.invalid" data-bs-dismiss="modal"

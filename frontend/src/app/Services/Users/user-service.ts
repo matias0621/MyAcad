@@ -33,4 +33,8 @@ export class UserService {
   deleteUser(id: number, endpoint: string) {
     return this.http.delete<any>(`${this.API_URL}/${endpoint}/${id}`);
   }
+
+  definitiveDeleteUser(id: number, endpoint: string) {
+    return this.http.delete<any>(`${this.API_URL}/${endpoint}/delete/${id}`);
+  }
 }

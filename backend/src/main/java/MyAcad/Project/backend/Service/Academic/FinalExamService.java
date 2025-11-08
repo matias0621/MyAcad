@@ -6,6 +6,7 @@ import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Repository.Academic.FinalExamRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,6 +60,14 @@ public class FinalExamService {
             throw new EntityNotFoundException("Final exam not found with id: " + id);
         }
         finalExamRepository.deleteById(id);
+    }
+
+    public ResponseEntity<Void> definitiveDeleteFinalExam(Long id) {
+        if (!finalExamRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        finalExamRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     public List<FinalExamEntity> findByScore(int score) {

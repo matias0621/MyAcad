@@ -35,7 +35,8 @@ export class UserForm implements OnInit {
   }
 
   OnSubmit() {
-    this.service.postUser(this.form.value, this.endpoint).subscribe({
+    const user = {...this.form.value, active: true};
+    this.service.postUser(user, this.endpoint).subscribe({
       next: (data) => {
         this.notificationService.success('Usuario creado exitosamente');
         this.form.reset();

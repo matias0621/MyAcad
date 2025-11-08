@@ -87,6 +87,12 @@ public class StudentController {
         return services.delete(id);
     }
 
+
+    // Baja definitiva
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteStudent(@PathVariable Long id) {
+        return services.definitiveDeleteStudent(id);
+    }
     //PUT
     @PutMapping
     public ResponseEntity<?> updateStudent(@RequestBody Student updatedUser) {

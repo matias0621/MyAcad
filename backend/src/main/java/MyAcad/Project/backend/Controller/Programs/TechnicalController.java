@@ -60,6 +60,11 @@ public class TechnicalController {
         return services.delete(id);
     }
 
+    // Baja definitiva
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> definitiveDeleteTechnical(@PathVariable Long id) {
+        return services.definitiveDeleteTechnical(id);
+    }
     //PUT
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTechnical(@PathVariable Long id, @RequestBody TechnicalDTO dto){

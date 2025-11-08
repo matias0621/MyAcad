@@ -19,6 +19,10 @@ export class SubjectsService {
     return this.http.get<Subjects[]>(this.api_url)
   }
 
+  getAllSubjectWithSemesterLessThan(semester:number){
+    return this.http.get<Subjects[]>(`${this.api_url}/semester-less-than/${semester}`)
+  }
+
   getAllSubjectByName(name:string){
     return this.http.get<Subjects[]>(`${this.api_url}/search?name=${name}`)
   }
@@ -33,6 +37,14 @@ export class SubjectsService {
 
   putSubject(subject:Subjects){
     return this.http.put(`${this.api_url}/${subject.id}`, subject)
+  }
+
+  addSubjectToCareer(nameCareer:string, subjects:Subjects){
+    return this.http.put(`${this.api_url}/add-subject-to-career/${nameCareer}`, subjects)
+  }
+
+  deleteSubjectToCareer(nameCareer:string, subjects:Subjects){
+    return this.http.put(`${this.api_url}/delete-subject-to-career/${nameCareer}`, subjects)
   }
 
   deleteSubject(id:string){

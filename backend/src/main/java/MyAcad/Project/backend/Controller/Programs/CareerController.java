@@ -5,6 +5,7 @@ import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Career;
 import MyAcad.Project.backend.Model.Programs.CareerDTO;
+import MyAcad.Project.backend.Model.Programs.CareerResponse;
 import MyAcad.Project.backend.Service.Programs.CareerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,7 @@ public class CareerController {
     private final CareerService services;
 
     @GetMapping()
-    public List<Career> listCareers() {
+    public List<CareerResponse> listCareers() {
         return services.list();
     }
     //Paginacion
@@ -34,7 +35,7 @@ public class CareerController {
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Career> career = services.getById(id);
+        Optional<CareerResponse> career = services.getById(id);
         if (career.isPresent()) {
             return ResponseEntity.ok(career.get());
         }else{
@@ -71,4 +72,6 @@ public class CareerController {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
+
+
 }

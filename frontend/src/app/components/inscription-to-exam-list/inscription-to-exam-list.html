@@ -1,0 +1,21 @@
+
+
+<ul>
+    @for (inscription of inscriptionService.inscriptionList; track $index) {
+        <li>
+            {{ inscription.inscriptionDate }} - {{ inscription.finalExamDate }} - {{ inscription.subjects.name }}
+
+            <button (click)="addStudent(inscription.id)"> registrarse </button>
+
+            @if(inscription.students && inscription.students.length > 0){
+                @for (student of inscription.students; track $index) {
+                    <p> {{ student.name }} </p>
+                    <p> {{ student.legajo }} </p>
+                }
+            }
+            @else {
+                <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
+            }
+        </li>
+    }
+</ul>

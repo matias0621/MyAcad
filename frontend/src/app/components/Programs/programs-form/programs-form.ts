@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CareerService } from '../../../Services/CareerService/career-service';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-programs-form',
@@ -18,7 +19,8 @@ export class ProgramsForm implements OnInit {
 
   constructor(
     private service: CareerService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -38,7 +40,7 @@ export class ProgramsForm implements OnInit {
         this.formPrograms.reset({ active: true });
         this.service.getCareers(this.endpoint).subscribe({
           next: (programs) => {
-            alert('Programa creado exitosamente.');
+            this.notificationService.success('Programa creado exitosamente');
             this.added.emit(programs);
             // Cerrar el modal que se abre
             const modalElement = document.getElementById('modal-add');

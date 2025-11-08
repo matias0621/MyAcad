@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import Commission from '../../Models/Commission/commission';
+import Commission, { CommissionResponse } from '../../Models/Commission/commission';
+import { RegistrationStudentOrTeacher } from '../../Models/Users/Student';
 
 
 @Injectable({
@@ -16,6 +17,10 @@ export class CommissionService {
     return this.http.get<Commission[]>(this.API_URL);
   }
 
+  getCommissionResponse(){
+    return this.http.get<CommissionResponse[]>(`${this.API_URL}/response`)
+  }
+
   getByProgram(program: string) {
     return this.http.get<Commission[]>(`${this.API_URL}/program/${program}`);
   }
@@ -26,6 +31,17 @@ export class CommissionService {
 
   putCommission(Commission: Commission) {
     return this.http.put<Commission>(`${this.API_URL}/${Commission.id}`, Commission);
+  }
+
+  addSubjectsToCommission(idCommission:number, idSubjects:number){
+    return this.http.put(`${this.API_URL}/add-subject/${idCommission}`, idSubjects)
+  }
+
+  registerStudentToCommissionByManager(idCommision:number, requestStudent:RegistrationStudentOrTeacher){
+    return this.http.put(`${this.API_URL}/register-student-by-manager/${idCommision}`,requestStudent)
+  }
+  registerTeacherToCommissionByManager(idCommision:number, requestTeacher:RegistrationStudentOrTeacher){
+    return this.http.put(`${this.API_URL}/register-teacher-by-manager/${idCommision}`, requestTeacher)
   }
 
   deleteCommission(id: number) {

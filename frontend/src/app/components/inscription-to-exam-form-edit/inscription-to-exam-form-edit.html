@@ -1,0 +1,47 @@
+<form [formGroup]="form" (submit)="OnSubmit()">
+    <fieldset>
+        <label> Fecha de la inscripcion </label>
+        <input type="datetime-local" formControlName="inscriptionDate">
+    </fieldset>
+
+    <fieldset>
+        <label>Fecha del examen</label>
+        <input type="datetime-local" formControlName="finalExamDate">
+    </fieldset>
+
+
+    <button [disabled]="form.invalid">Enviar</button>
+</form>
+
+<ul>
+    @if (subjectsServices.listSubject.length === 0) {
+    <li>
+        <p style="color: red;"> Aun no hay ninguna materia cargada.</p>
+    </li>
+    }
+    @else {
+    @for (subjects of subjectsServices.listSubject; track $index) {
+    <li>
+        {{ subjects.name }}
+        <button (click)="addToSubject(subjects.id)">Añadir</button>
+    </li>
+    }
+    }
+
+</ul>
+
+
+@if (inscriptionToFinalExamService.inscriptionList.length === 0) {
+<li>
+    <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
+</li>
+}
+@else {
+<ul>
+    @for (inscription of inscriptionToFinalExamService.inscriptionList; track $index) {
+    <li>
+        {{ inscription.inscriptionDate }} - {{ inscription.finalExamDate }} - {{ inscription.subjects.name }}
+    </li>
+    }
+</ul>
+}

@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Controller.Programs;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Technical;
 import MyAcad.Project.backend.Model.Programs.TechnicalDTO;
+import MyAcad.Project.backend.Model.Programs.TechnicalResponse;
 import MyAcad.Project.backend.Service.Programs.TechnicalService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public class TechnicalController {
     private final TechnicalService services;
 
     @GetMapping()
-    public List<Technical> listTechnicals() {
+    public List<TechnicalResponse> listTechnicals() {
         return services.list();
     }
 
@@ -33,7 +34,7 @@ public class TechnicalController {
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Technical> technical = services.getById(id);
+        Optional<TechnicalResponse> technical = services.getById(id);
         if (technical.isPresent()) {
             return ResponseEntity.ok(technical.get());
         }else{

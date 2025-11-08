@@ -1,0 +1,52 @@
+@for (commission of listCommission; track $index) {
+<p> {{commission.number}} - {{ commission.program }} </p>
+
+@for (s of commission.subjects; track $index) {
+    <p> {{ s.name }} </p>
+    <button class="modify-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add-student" (click)="setCommissionAndSubject(commission,s)" >Añadir Alumno</button>
+    <button class="modify-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add-teacher" (click)="setCommissionAndSubject(commission,s)" >Añadir profesor</button>
+}
+}
+
+<!-- Modal agregar un alumno -->
+<div class="modal fade" id="modal-add-student" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h1 class="modal-title fs-5 titles">Agregar alumno</h1>
+                <button data-bs-dismiss="modal" aria-label="Close" id="button2">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form">
+                    <label for="">Legajo:</label>
+                    <input type="text" formControlName="legajo">
+                    <button (click)="addStudentToCommision()" [disabled]="form.invalid" > Añadir </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal agregar un profesor -->
+<div class="modal fade" id="modal-add-teacher" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h1 class="modal-title fs-5 titles">Agregar profesor</h1>
+                <button data-bs-dismiss="modal" aria-label="Close" id="button2">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form">
+                    <label for="">Legajo:</label>
+                    <input type="text" formControlName="legajo">
+                    <button (click)="addTeacherToCommision()" [disabled]="form.invalid" > Añadir </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

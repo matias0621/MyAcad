@@ -58,7 +58,9 @@ public class SecurityConfig {
                                 "/technicals/**",
 
                                 "/exams/**",
-                                "/final-exam/**"
+                                "/final-exam/**",
+                                "/inscription-final-exam/**",
+                                "/subject-x-student/**"
                         ).hasRole("MANAGER")
                         .requestMatchers(
                                 "/programs/teacher/"

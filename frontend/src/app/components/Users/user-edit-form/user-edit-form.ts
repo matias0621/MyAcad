@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../Services/Users/user-service';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-user-edit-form',
@@ -20,7 +21,8 @@ export class UserEditForm implements OnInit {
 
   constructor(
     private service: UserService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notificationService: NotificationService
   ) { }
 
 
@@ -40,14 +42,17 @@ export class UserEditForm implements OnInit {
     
     this.service.putUser(modifiedUser, this.endpoint).subscribe({
       next: (data) => {
-        console.log('Usuario modificado exitosamente:');
+        this.notificationService.success('Usuario modificado exitosamente');
         this.form.reset();
         this.service.getUsers(this.endpoint).subscribe({
           next: (data) => { this.added.emit(data) },
           error: (error) => { console.error(error) }
         })
       },
-      error: (error) => { console.error(error) }
+      error: (error) => { 
+        this.notificationService.error('Error al modificar el usuario', true);
+        console.error(error);
+      }
     })
   }
 

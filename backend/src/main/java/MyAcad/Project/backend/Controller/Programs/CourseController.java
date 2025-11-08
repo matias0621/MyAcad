@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Controller.Programs;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.CourseDTO;
+import MyAcad.Project.backend.Model.Programs.CourseResponse;
 import MyAcad.Project.backend.Service.Programs.CourseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class CourseController {
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Course> course = services.getById(id);
+        Optional<CourseResponse> course = services.getById(id);
         if (course.isPresent()) {
             return ResponseEntity.ok(course.get());
         }else{
@@ -67,7 +68,7 @@ public class CourseController {
     }
 
     @GetMapping()
-    public List<Course> listCourses() {
+    public List<CourseResponse> listCourses() {
         return services.list();
     }
 

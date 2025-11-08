@@ -6,6 +6,7 @@ import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherDTO;
+import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import MyAcad.Project.backend.Service.Users.TeacherService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,7 @@ public class TeacherController {
     //GET
     //Listado
     @GetMapping()
-    public List<Teacher> listTeachers() {
+    public List<TeacherResponse> listTeachers() {
         return services.list();
     }
 
@@ -38,7 +39,7 @@ public class TeacherController {
 
     //Obtener por legajo
     @GetMapping("/legajo/{legajo}")
-    public List<Teacher> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {
+    public List<TeacherResponse> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {
         if (legajo == null || legajo.isEmpty()) {
             return listTeachers();
         } else {
@@ -48,7 +49,7 @@ public class TeacherController {
 
     //Obtener por nombre
     @GetMapping("/name/{name}")
-    public List<Teacher> getByName(@PathVariable(name = "name", required = false) String name) {
+    public List<TeacherResponse> getByName(@PathVariable(name = "name", required = false) String name) {
         if (name == null || name.isEmpty()) {
             return listTeachers();
         } else {
@@ -59,7 +60,7 @@ public class TeacherController {
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Teacher> teacher = services.getById(id);
+        Optional<TeacherResponse> teacher = services.getById(id);
         if (teacher.isPresent()) {
             return ResponseEntity.ok(teacher.get());
         }else{

@@ -1,7 +1,9 @@
 package MyAcad.Project.backend.Service.Programs;
 
 import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
+import MyAcad.Project.backend.Mapper.TechnicalMapper;
 import MyAcad.Project.backend.Model.Programs.Technical;
+import MyAcad.Project.backend.Model.Programs.TechnicalResponse;
 import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TechnicalService {
     private final TechnicalRepository repository;
+    private final TechnicalMapper mapper;
 
     public void add(Technical c) {
         if (repository.findTechnicalByName(c.getName()).isPresent()) {
@@ -28,8 +31,8 @@ public class TechnicalService {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Technical> getByNameIgnoringCase(String name) {
-        return repository.findByNameContainingIgnoreCase(name);
+    public List<TechnicalResponse> getByNameIgnoringCase(String name) {
+        return mapper.toResponseList(repository.findByNameContainingIgnoreCase(name));
     }
 
     public ResponseEntity<Void> delete(Long id) {
@@ -43,8 +46,8 @@ public class TechnicalService {
         return ResponseEntity.noContent().build();
     }
 
-    public List<Technical> list() {
-        return repository.findAll();
+    public List<TechnicalResponse> list() {
+        return mapper.toResponseList(repository.findAll());
     }
 
     public void modify(Long id, Technical c) {
@@ -68,8 +71,8 @@ public class TechnicalService {
         repository.save(old);
     }
 
-    public Optional<Technical> getById(Long id){
-        return repository.findById(id);
+    public Optional<TechnicalResponse> getById(Long id){
+        return repository.findById(id).map(mapper::toResponse);
     }
 
 

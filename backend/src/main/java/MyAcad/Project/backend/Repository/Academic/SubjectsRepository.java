@@ -15,6 +15,8 @@ public interface SubjectsRepository extends JpaRepository<SubjectsEntity, Long> 
     @Query("SELECT u FROM #{#entityName} u WHERE u.name = :name")
     Optional<SubjectsEntity> findByName(@Param("name") String name);
 
+    List<SubjectsEntity> findBySemestersLessThan(int semester);
+
     List<SubjectsEntity> findByNameContainingIgnoreCase(String name);
 
     Page<SubjectsEntity> findBySubjectActiveTrue(Pageable pageable);

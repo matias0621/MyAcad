@@ -1,7 +1,10 @@
 package MyAcad.Project.backend.Model.Users;
 
 import MyAcad.Project.backend.Enum.Role;
+import MyAcad.Project.backend.Model.Academic.Commission;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -26,6 +29,14 @@ public class Teacher extends User{
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private List<SubjectsEntity> subjects;
+
+    @ManyToMany
+    @JoinTable(
+            name = "teacher_x_commission",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "commission_id")
+    )
+    private List<Commission> commissions;
 
     public Teacher(TeacherDTO dto) {
         super(dto);

@@ -1,4 +1,5 @@
-import { Subjects } from "../../pages/Academic/subjects/subjects"
+
+import Subjects from "../Subjects/Subjects"
 import Student from "../Users/Student"
 
 export default interface Commission {
@@ -9,4 +10,10 @@ export default interface Commission {
     program : String
     capacity: number
     active: boolean
+}
+
+export interface CommissionResponse{
+    id:number,
+    number: number,
+    program: string
 }

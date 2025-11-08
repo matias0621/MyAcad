@@ -2,6 +2,9 @@ package MyAcad.Project.backend.Model.Academic;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
 import MyAcad.Project.backend.Model.Users.Teacher;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 

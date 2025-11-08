@@ -1,8 +1,14 @@
+import { Subject } from 'rxjs';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProgramsForm } from '../programs-form/programs-form';
 import { ProgramsEditForm } from '../programs-edit-form/programs-edit-form';
 import { CareerService } from '../../../Services/CareerService/career-service';
+import { NotificationService } from '../../../Services/notification/notification.service';
+import { Router } from '@angular/router';
+import { SubjectsService } from '../../../Services/Subjects/subjects-service';
+import Subjects from '../../../Models/Subjects/Subjects';
+
 
 @Component({
   selector: 'app-programs-list',
@@ -22,13 +28,19 @@ export class ProgramsList implements OnInit{
   showDisabled = false;
   allPrograms!: any[];
   selectedProgram: any = null;
+  careerName:string | null = null
 
   constructor(
-    private service: CareerService
+    private service: CareerService,
+    public subjectsService: SubjectsService,
+    private router:Router,
+    private notificationService: NotificationService
+
   ) { }
 
   ngOnInit(): void {
     this.getCareers();
+    this.getSubjects();
   }
 
   getCareers() {
@@ -43,18 +55,62 @@ export class ProgramsList implements OnInit{
     })
   }
 
-  deleteProgram(id: number) {
-    if (confirm('¿Estás seguro de que deseas eliminar este programa?')) {
-      this.service.deleteCareer(id, this.endpoint).subscribe({
-        next: (data) => { 
-          alert('Programa eliminado exitosamente.');
-          this.getCareers();
-        },
-        error: (error) => { 
-          alert('Error al eliminar el programa. Por favor, intenta nuevamente.');
-        }
-      });
+  getSubjects(){
+    this.subjectsService.getAllSubject().subscribe({
+      next: (res) => {
+        this.subjectsService.listSubject = [...res]
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
+
+  addSubjectsToCareer(subjects:Subjects){
+    if (this.careerName == null){
+      alert("Seleccione una materia")
+      return
     }
+
+    const name = this.careerName
+
+    this.subjectsService.addSubjectToCareer(name, subjects).subscribe({
+      next: (res) => {
+        alert("Se añadio la materia correctamente")
+      },
+      error: (err) => {
+        alert("Hubo un problema al eliminar la materia")
+      }
+    })
+  }
+
+  saveNameCareer(name:string){
+    this.careerName = name
+  }
+
+  deleteNameCareer(){
+    this.careerName = null
+  }
+
+  deleteProgram(id: number) {
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar este programa?',
+      'Confirmar eliminación',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.deleteCareer(id, this.endpoint).subscribe({
+          next: (data) => { 
+            this.notificationService.success('Programa eliminado exitosamente');
+            this.getCareers();
+          },
+          error: (error) => { 
+            this.notificationService.error('Error al eliminar el programa. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
   }
 
   modifyProgram(program : any){
@@ -62,18 +118,25 @@ export class ProgramsList implements OnInit{
   }
 
   viewDisabled(item: any) {
-    if (confirm(`¿Deseas activar "${item.name}"?`)) {
-      const updatedItem = { ...item, active: true };
-      this.service.updateCareer(updatedItem, this.endpoint).subscribe({
-        next: (response) => {
-          alert(`${item.name} activado/a exitosamente.`);
-          this.getCareers();
-        },
-        error: (error) => {
-          alert('Error al activar. Por favor, intenta nuevamente.');
-        }
-      });
-    }
+    this.notificationService.confirm(
+      `¿Deseas activar "${item.name}"?`,
+      'Confirmar activación',
+      'Activar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        const updatedItem = { ...item, active: true };
+        this.service.updateCareer(updatedItem, this.endpoint).subscribe({
+          next: (response) => {
+            this.notificationService.success(`${item.name} activado/a exitosamente`);
+            this.getCareers();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
   }
 
   toggleDisabledView() {
@@ -89,6 +152,11 @@ export class ProgramsList implements OnInit{
     } else if (this.filter === 'Inactivos') {
       this.programs = this.allPrograms.filter(p => p.active === false);
     }
+  }
+
+  registerToStudent(nameProgram:string){
+    this.service.setCareerSelected(nameProgram)
+    this.router.navigate(['register-student-to-commission'])
   }
   
 }

@@ -2,7 +2,9 @@ package MyAcad.Project.backend.Service.Programs;
 
 
 import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
+import MyAcad.Project.backend.Mapper.CareerMapper;
 import MyAcad.Project.backend.Model.Programs.Career;
+import MyAcad.Project.backend.Model.Programs.CareerResponse;
 import MyAcad.Project.backend.Repository.Programs.CareerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CareerService {
     private final CareerRepository repository;
+    private final CareerMapper careerMapper;
 
     public void add(Career c) {
         if (repository.findCareerByName(c.getName()).isPresent()) {
@@ -45,8 +48,8 @@ public class CareerService {
         return ResponseEntity.noContent().build();
     }
 
-    public List<Career> list() {
-        return repository.findAll();
+    public List<CareerResponse> list() {
+        return careerMapper.toResponseList(repository.findAll());
     }
 
     public void modify(Long id, Career c) {
@@ -70,12 +73,13 @@ public class CareerService {
         repository.save(old);
     }
 
-    public Optional<Career> getById(Long id){
-        return repository.findById(id);
+    public Optional<CareerResponse> getById(Long id){
+        return repository.findById(id)
+                .map(careerMapper::toResponse);
     }
 
-    public Optional<Career> getByName(String name) {
-        return Optional.ofNullable(repository.findByName(name));
+    public Optional<CareerResponse> getByName(String name) {
+        return repository.findByName(name).map(careerMapper::toResponse);
     }
 
 }

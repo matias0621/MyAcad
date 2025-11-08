@@ -5,6 +5,7 @@ import { Exam, PostExam } from '../../../Models/Exam/Exam';
 import { ExamFinal, PostExamFinal } from '../../../Models/Final-Exam/FinalExam';
 import { ExamsService } from '../../../Services/Exams/exams-service';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-exam-form',
@@ -28,7 +29,8 @@ export class ExamForm {
   constructor(
     private service: ExamsService,
     public subjectsService: SubjectsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -49,7 +51,7 @@ export class ExamForm {
   OnSubmit() {
 
     if (this.idSubjects == null){
-      alert("Un examen debe tener una materia asignada")
+      this.notificationService.warning("Un examen debe tener una materia asignada", true);
       return
     }
 
@@ -73,7 +75,7 @@ export class ExamForm {
 
   addSubjectsToExam(id:number){
     this.idSubjects = id
-    alert("Se añadio esta materia al examen")
+    this.notificationService.info("Se añadió esta materia al examen");
   }
 
   cleanForm() {

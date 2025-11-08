@@ -1,0 +1,18 @@
+<div class="notifications-wrapper">
+  @for (notification of notifications$ | async; track notification.id) {
+    <div class="notification-item notification-{{ notification.type }}">
+      <div class="notification-icon">
+        @if (notification.type === 'success') { ✓ }
+        @if (notification.type === 'error') { ✕ }
+        @if (notification.type === 'warning') { ⚠ }
+        @if (notification.type === 'info') { ℹ }
+      </div>
+      <div class="notification-content">
+        {{ notification.message }}
+      </div>
+      <button class="notification-close" (click)="close(notification.id)" title="Cerrar">
+        ×
+      </button>
+    </div>
+  }
+</div>

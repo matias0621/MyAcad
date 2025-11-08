@@ -1,5 +1,9 @@
 package MyAcad.Project.backend.Model.Academic;
 
+import MyAcad.Project.backend.Enum.AcademicStatus;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,6 +29,9 @@ public class SubjectsDTO {
 
     @NotNull
     private Boolean subjectActive;
+
+    @NotNull
+    private AcademicStatus academicStatus;
 
     private List<SubjectsEntity> prerequisites;
 

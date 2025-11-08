@@ -1,13 +1,29 @@
 package MyAcad.Project.backend.Service.Academic;
 
-import MyAcad.Project.backend.Model.Academic.Commission;
+import MyAcad.Project.backend.Enum.AcademicStatus;
+import MyAcad.Project.backend.Mapper.CommissionMapper;
+import MyAcad.Project.backend.Model.Academic.*;
+import MyAcad.Project.backend.Model.Programs.Career;
+import MyAcad.Project.backend.Model.Programs.Course;
+import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.Programs.Technical;
+import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
+import MyAcad.Project.backend.Repository.Programs.CareerRepository;
+import MyAcad.Project.backend.Repository.Programs.CourseRepository;
+import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
+import MyAcad.Project.backend.Repository.Users.StudentRepository;
+import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
+import MyAcad.Project.backend.Repository.Users.TeacherRepository;
+import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.Subject;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +31,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CommissionService {
     private final CommissionRepository repository;
+    private final CommissionMapper commissionMapper;
+    private final SubjectsRepository subjectsRepository;
+    private final StudentRepository studentRepository;
+    private final SubjectsXStudentService subjectsXStudentService;
+    private final CareerRepository careerRepository;
+    private final TechnicalRepository technicalRepository;
+    private final CourseRepository courseRepository;
+    private final TeacherRepository teacherRepository;
 
     public void add(Commission c) {
         if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
@@ -38,11 +62,24 @@ public class CommissionService {
         return ResponseEntity.noContent().build();
     }
 
-    public List<Commission> list() {
-        return repository.findAll();
+    public List<CommissionResponse> list() {
+        return commissionMapper.toResponseList(repository.findAll());
     }
-    public List<Commission> listActive() {
-        return repository.findAllActives();
+
+
+
+    public CommissionResponse toResponse(Commission entity) {
+        if (entity == null) return null;
+
+        return CommissionResponse.builder()
+                .id(entity.getId())
+                .number(entity.getNumber())
+                .program(entity.getProgram())
+                .build();
+    }
+
+    public List<CommissionResponse> listActive() {
+        return commissionMapper.toResponseList(repository.findAllActives());
     }
 
     public void modify(Long id, Commission c) {
@@ -67,16 +104,166 @@ public class CommissionService {
         repository.save(old);
     }
 
-    public Optional<Commission> getById(Long id){
-        return repository.findById(id);
+    public Optional<CommissionResponse> getById(Long id){
+        return repository.findById(id).map(commissionMapper::toResponse);
     }
 
-    public List<Commission> findByProgram(String program) {
-        return repository.findByProgram(program);
+    public List<CommissionResponse> findByProgram(String program) {
+        return commissionMapper.toResponseList(repository.findByProgram(program));
     }
 
     public Optional<Optional<Commission>> getByNumber(int number) {
         return Optional.ofNullable(repository.findByNumber(number));
     }
 
+    public void addSubjectToCommission(Long idCommission, Long idSubject) {
+        Commission c = repository.findById(idCommission)
+                .orElseThrow(() -> new RuntimeException("No se encontró la comisión con id: " + idCommission));
+
+        Program program = findProgramByName(c.getProgram());
+
+        SubjectsEntity s = subjectsRepository.findById(idSubject)
+                .orElseThrow(() -> new RuntimeException("No se encontró la materia con id: " + idSubject));
+
+        // Evitar duplicados en la comisión
+        if (!c.getSubjects().contains(s)) {
+            c.getSubjects().add(s);
+        }
+
+        // Evitar duplicados en el programa
+        if (!program.getSubjects().contains(s)) {
+            program.getSubjects().add(s);
+        }
+
+        // Guardar según el tipo de programa
+        switch (program) {
+            case Career career -> careerRepository.save(career);
+            case Technical technical -> technicalRepository.save(technical);
+            case Course course -> courseRepository.save(course);
+            default -> throw new RuntimeException("No existe ese programa");
+        }
+
+        repository.save(c);
+    }
+
+
+    public void deleteSubjectsFromCommission(Long idCommission, Long idSubject){
+        Commission c = repository.findById(idCommission).get();
+        SubjectsEntity s = subjectsRepository.findById(idSubject).get();
+        c.getSubjects().remove(s);
+        repository.save(c);
+    }
+
+    public void registerStudentbyManager(String legajo, Long commissionId, Long subjectsId){
+        Student s = studentRepository.findByLegajo(legajo).orElseThrow();
+        Commission commission = repository.findById(commissionId).orElseThrow();
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
+        registerToStudent(s, commission, subjectsEntity);
+    }
+
+    public void registerToStudent(Student student, Commission commission, SubjectsEntity subjectsEntity){
+
+
+        if (!commission.getStudents().contains(student)){
+            commission.getStudents().add(student);
+        }
+
+        if (subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), subjectsEntity.getId()).isPresent()){
+            throw new RuntimeException("Subject already exists");
+        }
+
+        if (!subjectsEntity.getPrerequisites().isEmpty()){
+            for (SubjectsEntity prerequisite : subjectsEntity.getPrerequisites()) {
+                validatePrerequisite(student, prerequisite);
+            }
+        }
+
+        SubjectsXStudentDTO subjectsXStudentDTO = SubjectsXStudentDTO.builder()
+                .subjectsId(subjectsEntity.getId())
+                .studentId(student.getId())
+                .academicStatus(AcademicStatus.INPROGRESS)
+                .build();
+
+        registerStudentToProgram(student, commission.getProgram());
+        subjectsXStudentService.createSubjectsXStudent(subjectsXStudentDTO);
+
+
+    }
+
+    public void registerStudentToProgram(Student student, String programName){
+        Program program = findProgramByName(programName);
+
+        program.getStudents().add(student);
+        switch (program) {
+            case Career career -> careerRepository.save(career);
+            case Technical technical -> technicalRepository.save(technical);
+            case Course course -> courseRepository.save(course);
+            default -> throw new RuntimeException("No existe esa materia");
+        }
+    }
+
+    public void registerTeacherToProgram(String legajo, Long commissionId, Long subjectsId){
+        Commission commission = repository.findById(commissionId).orElseThrow();
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
+        Teacher teacher = teacherRepository.findByLegajo(legajo).orElseThrow();
+        // Asignamos un profesor a la carrera
+        Program program = findProgramByName(commission.getProgram());
+        program.getTeachers().add(teacher);
+        // Asignamos las comisiones y las materias a un profesor
+        teacher.getCommissions().add(commission);
+        teacher.getSubjects().add(subjectsEntity);
+        // Si el teacher no esta en la comision lo agregamos
+        if (!commission.getTeachers().contains(teacher)) commission.getTeachers().add(teacher);
+
+        // Seteamos y guardamos la carrera
+        switch (program) {
+            case Career career -> careerRepository.save(career);
+            case Technical technical -> technicalRepository.save(technical);
+            case Course course -> courseRepository.save(course);
+            default -> throw new RuntimeException("No existe esa materia");
+        }
+        teacherRepository.save(teacher);
+        repository.save(commission);
+    }
+
+    private void validatePrerequisite(Student student, SubjectsEntity prerequisite) {
+        Optional<SubjectsXStudentEntity> opt = subjectsXStudentService
+                .getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), prerequisite.getId());
+
+        if (opt.isEmpty()) {
+            throw new RuntimeException("Subject not found");
+        }
+
+        SubjectsXStudentEntity sxStudentEntity = opt.get();
+        AcademicStatus statusStudent = sxStudentEntity.getStateStudent();
+        AcademicStatus statusRequired = prerequisite.getAcademicStatus();
+
+        switch (statusRequired) {
+            case COMPLETED -> {
+                if (!(statusStudent.equals(AcademicStatus.COMPLETED) || statusStudent.equals(AcademicStatus.APPROVED))) {
+                    throw new RuntimeException("Can't register in this subject");
+                }
+            }
+            case APPROVED -> {
+                if (!statusStudent.equals(AcademicStatus.APPROVED)) {
+                    throw new RuntimeException("Can't register in this subject");
+                }
+            }
+            default -> throw new RuntimeException("Can't register in this subject");
+        }
+    }
+
+    public List<Commission> getAllCommissionByStudent(Long studentId) {
+        return repository.findCommissionsByStudentId(studentId);
+    }
+
+    public Program findProgramByName(String name) {
+        return  careerRepository.findByName(name)
+                .map(p -> (Program) p)
+                .or(() -> courseRepository.findByName(name).map(p -> (Program) p))
+                .or(() -> technicalRepository.findByName(name).map(p -> (Program) p))
+                .orElseThrow(() -> new RuntimeException("Program not found"));
+    }
+
+    
 }

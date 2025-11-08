@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Services/Auth/auth-service';
+import { NotificationService } from '../../Services/notification/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class Login {
   constructor(
     private fb: FormBuilder, 
     private authService: AuthService, 
-    private router: Router) {
+    private router: Router,
+    private notificationService: NotificationService) {
     this.loginForm = this.fb.group({
       legajo: ['', Validators.required],
       password: ['', Validators.required]
@@ -23,7 +25,10 @@ export class Login {
   }
 
   login() {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      this.notificationService.warning('Completa ambos campos para iniciar sesión');
+      return;
+    }
 
     this.authService.login(this.loginForm.value).subscribe({
       next: (res: any) => {
@@ -31,7 +36,8 @@ export class Login {
         this.router.navigate(['/']);
       },
       error: (err) => {
-        console.error(err)
+        console.error(err);
+        this.notificationService.error('Usuario o contraseña incorrectos', true);
       }
     });
   }

@@ -44,4 +44,8 @@ export class AuthService {
     localStorage.removeItem('token');
     this.router.navigate(['/auth/login']);
   }
+
+  changePassword(data: { currentPassword: string; newPassword: string }) {
+    return this.http.post(`${this.apiUrl}/changePassword`, data);
+  }
 }

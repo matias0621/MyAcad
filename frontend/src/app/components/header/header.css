@@ -179,31 +179,52 @@ a {
 
 
 /* ====== ANIMACIÓN EN CERRAR SESION ====== */
-::ng-deep #dropdown-profile .dropdown-menu li a.logout-link {
-  position: relative !important;
-  display: block !important;
-  overflow: visible !important;
-  padding: 0.5em 1em !important;
-  min-height: 2.5em !important;
-  width: 100% !important;
+#dropdown-profile .dropdown-menu li a.logout-link {
+  position: relative;
+  display: block;
+  overflow: visible;
+  padding: 0.5em 1em;
+  min-height: 2.5em;
+  width: 100%;
 }
 
-::ng-deep #dropdown-profile .dropdown-menu li a.logout-link:hover {
-  background-color: var(--color-3) !important;
+#dropdown-profile .dropdown-menu li a.logout-link:hover {
+  background-color: var(--color-3);
 }
 
-::ng-deep #dropdown-profile .dropdown-menu li a.logout-link span {
+/* ====== BOTÓN CAMBIAR CONTRASEÑA ====== */
+#dropdown-profile .dropdown-menu li button.dropdown-item {
+  position: relative;
+  display: block;
+  overflow: visible;
+  padding: 0.5em 1em;
+  min-height: 2.5em;
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+#dropdown-profile .dropdown-menu li button.dropdown-item:hover {
+  background-color: var(--color-3);
+}
+
+#dropdown-profile .dropdown-menu li a.logout-link span {
   transition: opacity 0.3s ease;
   position: relative;
   z-index: 0;
 }
 
-::ng-deep #dropdown-profile .dropdown-menu li a.logout-link:hover span {
-  opacity: 0 !important;
+#dropdown-profile .dropdown-menu li a.logout-link:hover span {
+  opacity: 0;
 }
 
 /* Silueta de personaje */
-::ng-deep .logout-link::before {
+.logout-link::before {
   content: '🚶‍♂️';
   position: absolute;
   left: 0;
@@ -310,42 +331,4 @@ a {
 .logout-link:hover::after {
   opacity: 1;
   animation: doorOpen 1.5s ease forwards;
-}
-
-/* Animación complet caminar y entrar */
-@keyframes walkAndEnter {
-  0% {
-    left: 0;
-    opacity: 0;
-    transform: translateY(-50%) scaleX(-1);
-  }
-  10% {
-    opacity: 1;
-  }
-  75% {
-    left: calc(100% - 3em);
-    opacity: 1;
-    transform: translateY(-50%) scaleX(-1);
-  }
-  100% {
-    left: calc(100% - 3em);
-    opacity: 0;
-    transform: translateY(-50%) scaleX(-1) scale(0.3);
-  }
-}
-
-/* Animacion de puerta abriendo */
-@keyframes doorOpen {
-  0%, 70% {
-    transform: translateY(-50%) scaleX(1);
-    opacity: 1;
-  }
-  85% {
-    transform: translateY(-50%) scaleX(0.3);
-    opacity: 0.8;
-  }
-  90%, 100% {
-    transform: translateY(-50%) scaleX(0.1);
-    opacity: 0.5;
-  }
 }

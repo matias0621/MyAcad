@@ -6,10 +6,12 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { NotificationContainerComponent } from './components/notification-container/notification-container';
 import { AlertDialogComponent } from './components/alert-dialog/alert-dialog';
+import { ChangePasswordDialogComponent } from './components/change-password-dialog/change-password-dialog';
+import { DialogStateService } from './Services/ui/dialog-state.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, CommonModule, NotificationContainerComponent, AlertDialogComponent],
+  imports: [RouterOutlet, Header, Footer, CommonModule, NotificationContainerComponent, AlertDialogComponent, ChangePasswordDialogComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -18,7 +20,7 @@ export class App {
   showHeader = true;
   showFooter = true;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public dialogState: DialogStateService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {

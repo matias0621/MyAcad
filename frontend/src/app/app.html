@@ -11,3 +11,4 @@
 
 <app-notification-container></app-notification-container>
 <app-alert-dialog></app-alert-dialog>
+<app-change-password-dialog [open]="(dialogState.open$ | async) ?? false" (closed)="dialogState.closeChangePassword()"></app-change-password-dialog>

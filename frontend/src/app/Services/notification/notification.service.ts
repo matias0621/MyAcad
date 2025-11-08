@@ -45,7 +45,7 @@ export class NotificationService {
     this.modalSubject.next(null);
   }
 
-  // Modal de confirmación (reemplaza confirm())
+  // Modal de confirmación
   confirm(message: string, title = '¿Estás seguro?', confirmText = 'Sí', cancelText = 'No'): Promise<boolean> {
     return new Promise((resolve) => {
       this.confirmResolve = resolve;

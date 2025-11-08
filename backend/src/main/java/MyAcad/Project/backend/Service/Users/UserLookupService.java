@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class UserLookupService implements UserDetailsService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final ManagerRepository managerRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public Optional<? extends User> findById(Long id, Role role) {
@@ -68,6 +70,36 @@ public class UserLookupService implements UserDetailsService {
         User u = findByLegajo(legajo)
                 .orElseThrow(() -> new UsernameNotFoundException("Legajo no encontrado"));
         return new UserDetailsImpl(u);
+    }
+
+    public void changePassword(String legajo, String currentPassword, String newPassword) {
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) loadUserByUsername(legajo);
+
+        if (!passwordEncoder.matches(currentPassword, userDetails.getPassword())) {
+            throw new RuntimeException("La contraseña actual es incorrecta");
+        }
+
+        String role = userDetails.getRole();
+
+        if (role.equals("STUDENT")) {
+            var student = studentRepository.findByLegajo(legajo)
+                    .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
+            student.setPassword(passwordEncoder.encode(newPassword));
+            studentRepository.save(student);
+
+        } else if (role.equals("TEACHER")) {
+            var teacher = teacherRepository.findByLegajo(legajo)
+                    .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+            teacher.setPassword(passwordEncoder.encode(newPassword));
+            teacherRepository.save(teacher);
+
+        } else if (role.equals("MANAGER")) {
+            var manager = managerRepository.findByLegajo(legajo)
+                    .orElseThrow(() -> new RuntimeException("Gestor no encontrado"));
+            manager.setPassword(passwordEncoder.encode(newPassword));
+            managerRepository.save(manager);
+        }
     }
 
 

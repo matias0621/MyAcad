@@ -1,6 +1,6 @@
 import { NotificationService } from './../../../Services/notification/notification.service';
 import { Component } from '@angular/core';
-import Commission from '../../../Models/Commission/commission';
+import Commission, { CommissionResponse } from '../../../Models/Commission/commission';
 import Subjects from '../../../Models/Subjects/Subjects';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
@@ -32,7 +32,7 @@ export class SubjectsPage {
 
   ngOnInit(): void {
     this.getAllSubject();
-    //this.getAllCommission();
+    this.getAllCommission();
   }
 
   getAllSubject() {
@@ -51,6 +51,7 @@ export class SubjectsPage {
     this.commissionService.getCommissions().subscribe({
       next: (res) => {
         this.listCommission = res
+        console.log(res)
       },
       error: (err) => {
         console.log(err)

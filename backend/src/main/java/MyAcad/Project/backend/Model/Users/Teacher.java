@@ -28,7 +28,6 @@ public class Teacher extends User{
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    @JsonBackReference("subject-teachers")
     private List<SubjectsEntity> subjects;
 
     @ManyToMany
@@ -37,7 +36,6 @@ public class Teacher extends User{
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "commission_id")
     )
-    @JsonManagedReference("teacher-commissions")
     private List<Commission> commissions;
 
     public Teacher(TeacherDTO dto) {

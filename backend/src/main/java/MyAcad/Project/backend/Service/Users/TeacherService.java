@@ -4,7 +4,9 @@ import MyAcad.Project.backend.Configuration.SecurityConfig;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
+import MyAcad.Project.backend.Mapper.TeacherMapper;
 import MyAcad.Project.backend.Model.Users.Teacher;
+import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TeacherService {
     private final TeacherRepository repository;
+    private final TeacherMapper mapper;
     private final UserLookupService userLookupService;
     private PasswordEncoder passwordEncoder;
 
@@ -43,12 +46,13 @@ public class TeacherService {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Teacher> getByLegajoContaining(String legajo) {
-        return repository.findByLegajoContaining(legajo);
+    public List<TeacherResponse> getByLegajoContaining(String legajo) {
+        return mapper.toResponseList(repository.findByLegajoContaining(legajo));
     }
 
-    public List<Teacher> getByFullName(String fullName) {
-        return repository.findByFullName(fullName);
+    public List<TeacherResponse> getByFullName(String fullName) {
+
+        return mapper.toResponseList(repository.findByFullName(fullName));
     }
 
     public ResponseEntity<Void> delete(Long id){
@@ -59,8 +63,8 @@ public class TeacherService {
         return ResponseEntity.noContent().build();
     }
 
-    public List<Teacher> list() {
-        return repository.findAll();
+    public List<TeacherResponse> list() {
+        return mapper.toResponseList(repository.findAll());
     }
 
     public void modify (Long id, Teacher t){
@@ -91,15 +95,15 @@ public class TeacherService {
         repository.save(old);
     }
 
-    public Optional<Teacher> getById(Long id){
-        return repository.findById(id);
+    public Optional<TeacherResponse> getById(Long id){
+        return repository.findById(id).map(mapper::toResponse);
     }
 
-    public Optional<Teacher> getByLegajo(String legajo) {
-        return repository.findByLegajo(legajo);
+    public Optional<TeacherResponse> getByLegajo(String legajo) {
+        return repository.findByLegajo(legajo).map(mapper::toResponse);
     }
 
-    public Optional<Teacher> getByEmail(String email){
-        return repository.findByEmail(email);
+    public Optional<TeacherResponse> getByEmail(String email){
+        return repository.findByEmail(email).map(mapper::toResponse);
     }
 }

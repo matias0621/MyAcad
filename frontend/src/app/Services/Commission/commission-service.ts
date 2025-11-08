@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import Commission from '../../Models/Commission/commission';
+import Commission, { CommissionResponse } from '../../Models/Commission/commission';
 import { RegistrationStudentOrTeacher } from '../../Models/Users/Student';
 
 
@@ -15,6 +15,10 @@ export class CommissionService {
 
   getCommissions() {
     return this.http.get<Commission[]>(this.API_URL);
+  }
+
+  getCommissionResponse(){
+    return this.http.get<CommissionResponse[]>(`${this.API_URL}/response`)
   }
 
   getByProgram(program: string) {

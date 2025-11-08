@@ -11,3 +11,9 @@ export default interface Commission {
     capacity: number
     active: boolean
 }
+
+export interface CommissionResponse{
+    id:number,
+    number: number,
+    program: string
+}

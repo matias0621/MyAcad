@@ -9,12 +9,11 @@
 <ul>
     @for (subject of subjectService.listSubject; track $index) {
     <li>
-        {{subject.name}} {{subject.description}} {{ subject.subjectActive }} {{ subject.academicStatus }}
+        {{subject.name}} {{subject.description}}
         @if(subject.prerequisites?.length !== 0){
         <br>
         @for (subjectPrerequisite of subject.prerequisites; track $index) {
-        {{ subjectPrerequisite.name }} -
-        {{ subjectPrerequisite.description }}
+        {{ subjectPrerequisite.name }} 
         <br>
         }
         }

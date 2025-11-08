@@ -1,7 +1,9 @@
 package MyAcad.Project.backend.Service.Programs;
 
 import MyAcad.Project.backend.Exception.CourseAlreadyExistsException;
+import MyAcad.Project.backend.Mapper.CourseMapper;
 import MyAcad.Project.backend.Model.Programs.Course;
+import MyAcad.Project.backend.Model.Programs.CourseResponse;
 import MyAcad.Project.backend.Repository.Programs.CourseRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CourseService {
     private final CourseRepository repository;
+    private final CourseMapper courseMapper;
 
     public void add(Course c){
         if(repository.findCourseByName(c.getName()).isPresent()){
@@ -24,8 +27,8 @@ public class CourseService {
         repository.save(c);
     }
 
-    public List<Course> getByNameIgnoringCase(String name) {
-        return repository.findByNameContainingIgnoreCase(name);
+    public List<CourseResponse> getByNameIgnoringCase(String name) {
+        return courseMapper.toResponseList(repository.findByNameContainingIgnoreCase(name));
     }
 
     public ResponseEntity<Void> delete(Long id) {
@@ -39,8 +42,8 @@ public class CourseService {
         return ResponseEntity.noContent().build();
     }
 
-    public List<Course> list() {
-        return repository.findAll();
+    public List<CourseResponse> list() {
+        return courseMapper.toResponseList(repository.findAll());
     }
     public void modify(Long id, Course c) {
         Optional<Course> optionalOld = repository.findById(id);
@@ -63,8 +66,9 @@ public class CourseService {
         repository.save(old);
     }
 
-    public Optional<Course> getById(Long id){
-        return repository.findById(id);
+    public Optional<CourseResponse> getById(Long id){
+
+        return repository.findById(id).map(courseMapper::toResponse);
     }
 
     public Page<Course> listCoursesPaginated(int page, int size) {

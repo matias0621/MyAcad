@@ -1,10 +1,8 @@
 package MyAcad.Project.backend.Service.Academic;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
-import MyAcad.Project.backend.Model.Academic.Commission;
-import MyAcad.Project.backend.Model.Academic.SubjectsXStudentDTO;
-import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
-import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import MyAcad.Project.backend.Mapper.CommissionMapper;
+import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Programs.Career;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.Program;
@@ -33,6 +31,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CommissionService {
     private final CommissionRepository repository;
+    private final CommissionMapper commissionMapper;
     private final SubjectsRepository subjectsRepository;
     private final StudentRepository studentRepository;
     private final SubjectsXStudentService subjectsXStudentService;
@@ -63,11 +62,24 @@ public class CommissionService {
         return ResponseEntity.noContent().build();
     }
 
-    public List<Commission> list() {
-        return repository.findAll();
+    public List<CommissionResponse> list() {
+        return commissionMapper.toResponseList(repository.findAll());
     }
-    public List<Commission> listActive() {
-        return repository.findAllActives();
+
+
+
+    public CommissionResponse toResponse(Commission entity) {
+        if (entity == null) return null;
+
+        return CommissionResponse.builder()
+                .id(entity.getId())
+                .number(entity.getNumber())
+                .program(entity.getProgram())
+                .build();
+    }
+
+    public List<CommissionResponse> listActive() {
+        return commissionMapper.toResponseList(repository.findAllActives());
     }
 
     public void modify(Long id, Commission c) {
@@ -92,12 +104,12 @@ public class CommissionService {
         repository.save(old);
     }
 
-    public Optional<Commission> getById(Long id){
-        return repository.findById(id);
+    public Optional<CommissionResponse> getById(Long id){
+        return repository.findById(id).map(commissionMapper::toResponse);
     }
 
-    public List<Commission> findByProgram(String program) {
-        return repository.findByProgram(program);
+    public List<CommissionResponse> findByProgram(String program) {
+        return commissionMapper.toResponseList(repository.findByProgram(program));
     }
 
     public Optional<Optional<Commission>> getByNumber(int number) {

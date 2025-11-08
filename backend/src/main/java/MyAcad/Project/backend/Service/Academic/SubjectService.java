@@ -1,8 +1,10 @@
 package MyAcad.Project.backend.Service.Academic;
 
 import MyAcad.Project.backend.Exception.NameMateriaAlreadyExistsException;
+import MyAcad.Project.backend.Mapper.SubjectsMapper;
 import MyAcad.Project.backend.Model.Academic.SubjectsDTO;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsResponse;
 import MyAcad.Project.backend.Model.Programs.Career;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.Program;
@@ -24,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubjectService {
     private final SubjectsRepository subjectsRepository;
+    private final SubjectsMapper subjectsMapper;
     private final CareerRepository careerRepository;
     private final TechnicalRepository technicalRepository;
     private final CourseRepository courseRepository;
@@ -42,11 +45,15 @@ public class SubjectService {
                 .academicStatus(subject.getAcademicStatus())
                 .build();
 
+
         subjectsRepository.save(s);
     }
 
-    public List<SubjectsEntity> getAllSubjects() {
-        return subjectsRepository.findAll();
+    public List<SubjectsResponse> getAllSubjects() {
+        return subjectsRepository.findAll()
+                .stream()
+                .map(subjectsMapper::toResponseWithPrerequisites)
+                .toList();
     }
 
     public Page<SubjectsEntity> listSubject(int page, int size) {
@@ -122,8 +129,8 @@ public class SubjectService {
         subjectsRepository.save(subjects);
     }
 
-    public List<SubjectsEntity> findBySemestersLessThan(Integer semesters) {
-        return subjectsRepository.findBySemestersLessThan(semesters);
+    public List<SubjectsResponse> findBySemestersLessThan(Integer semesters) {
+        return subjectsMapper.toResponseList(subjectsRepository.findBySemestersLessThan(semesters));
     }
 
     public Program findProgramByName(String name) {

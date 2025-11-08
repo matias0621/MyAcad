@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Controller.Academic;
 import MyAcad.Project.backend.Model.Academic.SubjectsDTO;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 
+import MyAcad.Project.backend.Model.Academic.SubjectsResponse;
 import MyAcad.Project.backend.Service.Academic.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,7 @@ public class SubjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SubjectsEntity>> getAllSubject(){
+    public ResponseEntity<List<SubjectsResponse>> getAllSubject(){
         return  ResponseEntity.ok(subjectService.getAllSubjects());
     }
 
@@ -56,7 +57,7 @@ public class SubjectController {
     }
 
     @GetMapping("/semester-less-than/{semester}")
-    public ResponseEntity<List<SubjectsEntity>> getSubjectsBySemester(@PathVariable Integer semester) {
+    public ResponseEntity<List<SubjectsResponse>> getSubjectsBySemester(@PathVariable Integer semester) {
         return ResponseEntity.ok(subjectService.findBySemestersLessThan(semester));
     }
 

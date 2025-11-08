@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Enum.ProgramType;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -55,6 +56,7 @@ public abstract class Program {
             joinColumns = @JoinColumn(name = "program_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonIgnore
     private Set<Teacher> teachers;
 
     @ManyToMany
@@ -62,7 +64,7 @@ public abstract class Program {
             joinColumns = @JoinColumn(name = "program_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    @JsonManagedReference("program-subjects")
+    @JsonIgnore
     private Set<SubjectsEntity> subjects;
 
 }

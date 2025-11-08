@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Configuration.UserDetailsImpl;
 import MyAcad.Project.backend.Exception.CommissionAlreadyExistsException;
 import MyAcad.Project.backend.Model.Academic.Commission;
 import MyAcad.Project.backend.Model.Academic.CommissionDTO;
+import MyAcad.Project.backend.Model.Academic.CommissionResponse;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.CourseDTO;
 import MyAcad.Project.backend.Model.RegistrationStudent.RegistrationRequest;
@@ -30,14 +31,17 @@ public class CommissionController {
 
 
     @GetMapping("/active")
-    public List<Commission> listActiveCommissions() {
+    public List<CommissionResponse> listActiveCommissions() {
         return services.listActive();
     }
 
     @GetMapping()
-    public List<Commission> listCommissions() {
+    public List<CommissionResponse> listCommissions() {
         return services.list();
     }
+
+
+
     //Paginacion
     @GetMapping("/paginated")
     public Page<Commission> listCommissionPaginated(@RequestParam(name = "page") int page,
@@ -46,14 +50,14 @@ public class CommissionController {
     }
 
     @GetMapping("/program/{program}")
-    public List<Commission> getByProgram(@PathVariable String program) {
+    public List<CommissionResponse> getByProgram(@PathVariable String program) {
         return services.findByProgram(program);
     }
 
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Commission> c = services.getById(id);
+        Optional<CommissionResponse> c = services.getById(id);
         if (c.isPresent()) {
             return ResponseEntity.ok(c.get());
         }else{

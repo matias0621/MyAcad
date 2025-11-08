@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Model.Academic;
 import MyAcad.Project.backend.Enum.AcademicStatus;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,7 +34,6 @@ public class SubjectsEntity {
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "commission_id")
     )
-    @JsonBackReference("subject-commissions")
     private List<Commission> commissions;
 
     @ManyToMany
@@ -42,7 +42,6 @@ public class SubjectsEntity {
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonManagedReference("subject-teachers")
     private List<Teacher> teachers;
 
     @ManyToMany

@@ -1,0 +1,157 @@
+h2 {
+    padding-top: 1.5em;
+    font-size: 1.8em;
+    text-align: center;
+    color: var(--color-5);
+    font-weight: 600;
+    margin-bottom: 1em;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4em 2em;
+    color: var(--color-3);
+    font-size: 1.2em;
+}
+
+.empty-state p {
+    background: var(--color-1);
+    padding: 2em;
+    border-radius: 8px;
+    border: 2px dashed var(--color-3);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.fallback-banner {
+    background: #fff4d6;
+    color: #8a6d00;
+    border: 1px solid #e2c66a;
+    padding: 0.8em 1.2em;
+    border-radius: 8px;
+    max-width: 1200px;
+    margin: 0.5em auto 1em auto;
+    font-size: 0.9em;
+}
+
+.fallback-note {
+    margin-top: 1em;
+    font-size: 0.85em;
+    color: #a17c00;
+}
+
+.commission-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1em;
+    margin: 1em auto;
+    max-width: 900px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.commission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--color-4);
+    padding-bottom: 0.8em;
+    margin-bottom: 0.8em;
+}
+
+.commission-header h3 {
+    margin: 0;
+    color: var(--color-5);
+    font-size: 1.2em;
+}
+
+.commission-header .title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.commission-header .meta {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.badge {
+    background: #eef1ff;
+    color: var(--color-5);
+    padding: 0.2em 0.5em;
+    border-radius: 8px;
+    font-size: 0.8em;
+    border: 1px solid var(--color-4);
+}
+
+.capacity {
+    background: var(--color-4);
+    color: white;
+    padding: 0.3em 0.8em;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 0.85em;
+}
+
+.toggle-btn {
+    background: var(--color-5);
+    color: #fff;
+    border: none;
+    padding: 0.5em 0.8em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.05s ease, opacity 0.2s ease;
+    font-size: 0.9em;
+}
+
+.toggle-btn:hover {
+    opacity: 0.9;
+}
+
+.toggle-btn:active {
+    transform: scale(0.98);
+}
+
+.students-section h4 {
+    color: var(--color-5);
+    margin-bottom: 0.8em;
+    font-size: 1em;
+}
+
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.students-table thead {
+    background: var(--color-5);
+    color: white;
+}
+
+.students-table th,
+.students-table td {
+    padding: 0.6em;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.students-table tbody tr:hover {
+    background: #f5f5f5;
+}
+
+.no-students {
+    text-align: center;
+    color: var(--color-3);
+    padding: 1em;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+p {
+    text-align: center;
+    padding: 2em;
+    color: var(--color-3);
+}

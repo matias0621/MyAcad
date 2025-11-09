@@ -1,0 +1,156 @@
+.grades-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2em;
+}
+
+h2 {
+    text-align: center;
+    color: var(--color-5);
+    font-size: 2.2em;
+    margin-bottom: 2em;
+}
+
+.loading {
+    text-align: center;
+    padding: 2em;
+    color: var(--color-3);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4em 2em;
+    color: var(--color-3);
+    font-size: 1.2em;
+}
+
+.empty-state p {
+    background: var(--color-1);
+    padding: 2em;
+    border-radius: 8px;
+    border: 2px dashed var(--color-3);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.table-container {
+    background: white;
+    border-radius: 12px;
+    padding: 2em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.grades-table thead {
+    background: var(--color-5);
+    color: white;
+}
+
+.grades-table th {
+    padding: 1em;
+    text-align: left;
+    font-weight: 600;
+}
+
+.grades-table td {
+    padding: 1em;
+    border-bottom: 1px solid #ddd;
+}
+
+.grades-table tbody tr:hover {
+    background: #f5f5f5;
+}
+
+.badge {
+    padding: 0.4em 0.8em;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge.partial {
+    background: #3498db;
+    color: white;
+}
+
+.badge.final {
+    background: #9b59b6;
+    color: white;
+}
+
+.badge.makeup {
+    background: #e67e22;
+    color: white;
+}
+
+.score {
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: 0.4em 0.8em;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.score.approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.score.failed {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.score-input {
+    width: 80px;
+    padding: 0.5em;
+    border: 2px solid var(--color-4);
+    border-radius: 8px;
+    font-size: 1em;
+    text-align: center;
+}
+
+.btn-edit,
+.btn-save,
+.btn-cancel {
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 0.5em;
+    transition: all 0.3s;
+}
+
+.btn-edit {
+    background: var(--color-4);
+    color: white;
+}
+
+.btn-edit:hover {
+    background: var(--color-5);
+}
+
+.btn-save {
+    background: #28a745;
+    color: white;
+}
+
+.btn-save:hover {
+    background: #218838;
+}
+
+.btn-cancel {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #5a6268;
+}

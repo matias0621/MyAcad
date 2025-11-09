@@ -28,6 +28,14 @@ export class ExamsService {
     return this.http.get<Exams[]>(`${this.url_api}/student/${studentId}`)
   }
 
+  getExamsByTeacher(teacherId: number) {
+    return this.http.get<Exams[]>(`${this.url_api}/teacher/${teacherId}`)
+  }
+
+  updateExamScore(examId: number, score: number) {
+    return this.http.put(`${this.url_api}/${examId}/score`, { score })
+  }
+
   postExam(exam: ExamsPost) {
     return this.http.post(`${this.url_api}`, exam);
   }

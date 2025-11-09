@@ -108,4 +108,8 @@
         <app-view-student></app-view-student>
     }
 
+    @if (authService.getRole() === 'ROLE_TEACHER') {
+        <app-teacher-view></app-teacher-view>
+    }
+
 }

@@ -28,10 +28,10 @@
                     <td class="crud-table-actions">
                         <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal"
                             data-bs-target="#modal-detail">Detalles</button>
-                        @if (user.active) {
+                        @if (user.active || user.enabled || user.isActive || user.status === 'ACTIVE') {
                         <button class="delete-crud-btn" (click)="deleteUser(user.id)">Eliminar</button>
                         }
-                        @if (!user.active) {
+                        @if (!(user.active || user.enabled || user.isActive || user.status === 'ACTIVE')) {
                         <button class="activate-crud-btn" (click)="viewDisabled(user)">Activar</button>
                         <button class="delete-crud-btn" (click)="definitiveDeleteUser(user.id)">Eliminar</button>
                         }

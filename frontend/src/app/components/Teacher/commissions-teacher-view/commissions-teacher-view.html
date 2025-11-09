@@ -1,0 +1,57 @@
+<h2>Mis Comisiones</h2>
+
+@if (loading) {
+  <p>Cargando comisiones...</p>
+} @else if (commissionList.length === 0) {
+  <div class="empty-state">
+    <p>No tienes comisiones asignadas en este programa</p>
+  </div>
+} @else {
+  @for (commission of commissionList; track $index) {
+    <div class="commission-card">
+      <div class="commission-header">
+        <div class="title">
+          <h3>Comisión {{ commission.number }}</h3>
+          <div class="meta">
+            <span class="badge">ID: {{ commission.id }}</span>
+            @if (commission.program) { <span class="badge">Programa: {{ commission.program }}</span> }
+            <span class="capacity">{{ commission.students.length }} / {{ commission.capacity }} alumnos</span>
+          </div>
+        </div>
+        <button class="toggle-btn" (click)="toggleStudents(commission.id)">
+          {{ isExpanded(commission.id) ? 'Ocultar lista de alumnos' : 'Ver lista de alumnos' }}
+        </button>
+      </div>
+
+      @if (isExpanded(commission.id)) {
+        @if (commission.students.length > 0) {
+          <div class="students-section">
+            <h4>Alumnos inscriptos</h4>
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th>Legajo</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (student of commission.students; track $index) {
+                  <tr>
+                    <td>{{ student.legajo }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.lastName }}</td>
+                    <td>{{ student.email }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="no-students">No hay alumnos inscriptos en esta comisión</p>
+        }
+      }
+    </div>
+  }
+}

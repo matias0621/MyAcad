@@ -19,6 +19,7 @@ public interface CommissionMapper {
     CommissionDTO toDTO(Commission commission);
 
     @Mapping(source = "subjects", target = "subjects")
+    @Mapping(source = "students", target = "students")
     CommissionResponse toResponse(Commission commission);
     List<CommissionResponse> toResponseList(List<Commission> commissions);
 }

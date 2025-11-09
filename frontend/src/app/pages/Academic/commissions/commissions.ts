@@ -59,6 +59,7 @@ export class Commissions {
       next: (data) => {
         // Guarda las comisiones filtradas
         this.commissions = data;
+        console.log(this.commissions)
         // Guarda todas las comisiones
         this.allCommissions = data;
       },

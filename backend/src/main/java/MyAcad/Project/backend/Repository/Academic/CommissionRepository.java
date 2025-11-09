@@ -34,6 +34,8 @@ public interface CommissionRepository extends JpaRepository<Commission, Long> {
     List<Commission> findStudentCommissionsByProgram(@Param("studentId") Long studentId,
                                                      @Param("program") String program);
 
+
+
     Optional<Object> findCommissionByNumberAndProgram(int number, String program);
 
 }

@@ -25,6 +25,10 @@ export class CommissionService {
     return this.http.get<Commission[]>(`${this.API_URL}/program/info-student/${programName}`)
   }
 
+  getCommissionNotEnrolled(program:string){
+    return this.http.get<Commission[]>(`${this.API_URL}/program/not-enrolled/${program}`)
+  }
+
   getByProgram(program: string) {
     return this.http.get<Commission[]>(`${this.API_URL}/program/${program}`);
   }

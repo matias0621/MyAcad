@@ -62,6 +62,13 @@ public class CommissionController {
         return services.listForStudentInfo(program, userDetails.getId());
     }
 
+    @GetMapping("/program/not-enrolled/{program}")
+    public List<CommissionResponse> getByProgramNotEnrolled(@PathVariable String program) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+        return services.listSubjectsNotEnrolled(program, userDetails.getId());
+    }
+
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
@@ -132,8 +139,7 @@ public class CommissionController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('STUDENT')")
-    @PutMapping("register-commision-to-student/{id}")
+    @PutMapping("/register-commision-to-student/{id}")
     public ResponseEntity<?> registerCommissionToStudent(@PathVariable Long id, @RequestBody Long subjectsId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl user = (UserDetailsImpl) auth.getPrincipal();

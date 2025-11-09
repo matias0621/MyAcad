@@ -47,7 +47,9 @@ public class SecurityConfig {
                                 "/programs/student/**",
                                 "/commissions/program/**",
                                 "/program/info-student/",
-                                "/exams/student/**"
+                                "/exams/student/**",
+                                "/program/not-enrolled/**",
+                                "/commissions/register-commision-to-student/**"
                         ).hasAnyRole("STUDENT","MANAGER")
                         .requestMatchers(
                                 "/programs/teacher/**"

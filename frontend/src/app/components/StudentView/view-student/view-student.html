@@ -2,7 +2,7 @@
 <ul id="card-container">
     @for (program of listOfProgram; track $index) {
     <li>
-        <a  [routerLink]="['/commissionForProgramName', program.name]" class="card">
+        <a [routerLink]="['/commissionForProgramName', program.name]" class="card">
             <img src="/Media/office.jpg" alt="">
             <div class="card-content">
                 <h5> {{ program.name }} </h5>
@@ -11,4 +11,21 @@
     </li>
     }
 
+
+
+</ul>
+
+<h2> Inscripciones </h2>
+
+<ul id="card-container">
+    @for (program of listOfProgram; track $index) {
+    <li>
+        <a [routerLink]="['/student-register-commission/', program.name]" class="card">
+            <img src="/Media/office.jpg" alt="">
+            <div class="card-content">
+                <h5> Inscripcion a comisiones </h5>
+            </div>
+        </a>
+    </li>
+    }
 </ul>

@@ -1,0 +1,12 @@
+
+<ul>
+    @for (com of listCommission; track $index) {
+        <li>
+            {{ com.number }} - {{ com.program }}
+            @for(s of com.subjects; track $index){
+                {{ s.name }}
+                <button (click)="registerStudent(com.id, s.id)" >Inscribirse</button>
+            }
+        </li>
+    }
+</ul>

@@ -94,8 +94,30 @@ public class CommissionService {
         }
 
         return commissionMapper.toResponseList(filteredList);
+    }
 
+    public List<CommissionResponse> listSubjectsNotEnrolled(String programName, Long studentId) {
+        List<Commission> list = repository.findByProgram(programName); // <-- todas, no sólo las que estudia
 
+        List<Commission> filteredList = new ArrayList<>();
+
+        for (Commission c : list) {
+            List<SubjectsEntity> filteredSubjects = c.getSubjects().stream()
+                    .filter(subj -> {
+                        // usar existsBy para eficiencia (implementalo en SubjectsXStudentRepository)
+                        return subjectsXStudentService
+                                .getSubjectsXStudentByStudentIdAndSubjectsId(studentId, subj.getId())
+                                .isEmpty();
+                    })
+                    .toList();
+
+            if (!filteredSubjects.isEmpty()) {
+                Commission filteredCommission = getCommission(c, filteredSubjects);
+                filteredList.add(filteredCommission);
+            }
+        }
+
+        return commissionMapper.toResponseList(filteredList);
     }
 
     private static Commission getCommission(Commission c, List<SubjectsEntity> filteredSubjects) {

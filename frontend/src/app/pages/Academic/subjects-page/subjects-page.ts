@@ -23,7 +23,7 @@ export class SubjectsPage {
   programs: Program[] = [];
   subjects!: Subjects[];
   allSubjects !: Subjects[];
-  subject !: Subjects;
+  listPrerequisite: Subjects[] = []
 
   constructor(
     private fb: FormBuilder,
@@ -59,6 +59,48 @@ export class SubjectsPage {
       },
     });
   }
+
+  prerequisite(subjects:Subjects){
+    this.subjectId = subjects.id
+
+    this.getAllBySemestraLessThanAndProgram(subjects.program, subjects.semesters)
+  }
+
+  getAllBySemestraLessThanAndProgram(program:string, semester:number){
+    this.subjectService.getAllSubjectWithSemesterLessThanAndProgram(semester,program).subscribe({
+      next: (res) => {
+        this.listPrerequisite = res
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
+
+  addPrerequisite(subjectPrerequisiteId:number){
+    this.subjectService.addPrerequisite(this.subjectId, subjectPrerequisiteId).subscribe({
+      next: (res) => {
+        this.notificationService.success("Se agrego la correlativa")
+        this.getAllSubject()
+      },
+      error: (err) => {
+        this.notificationService.error("Hubo un error, intente denuevo mas tarde", false)
+      }
+    })
+  }
+
+  deletePrerequisite(subjectPrerequisiteId:number){
+    this.subjectService.deletePrerequiste(this.subjectId, subjectPrerequisiteId).subscribe({
+      next: (res) => {
+        this.notificationService.success("Se elimino la correlativa")
+        this.getAllSubject()
+      },
+      error: (err) => {
+        this.notificationService.error("Hubo un error, intente denuevo mas tarde", false)
+      }
+    })
+  }
+
 
   getAllCommission() {
     this.commissionService.getCommissions().subscribe({

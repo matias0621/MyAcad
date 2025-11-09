@@ -33,7 +33,11 @@
                     <td>{{subject.name}}</td>
                     <td class="responsive-hide-2">{{subject.semesters}}</td>
                     @if (subject.prerequisites!.length > 0) {
-                    <td class="responsive-hide">{{subject.prerequisites}}</td>
+                    <td class="responsive-hide">
+                        @for (s of subject.prerequisites; track $index) {
+                            {{ s.name }}
+                        }
+                    </td>
                     }@else{
                     <td class="responsive-hide">Sin correlativas</td>
                     }
@@ -48,6 +52,8 @@
                         }
                         <button class="modify-crud-btn" (click)="modifySubject(subject)" data-bs-toggle="modal"
                             data-bs-target="#modal">Editar</button>
+                        <button class="modify-crud-btn" (click)="prerequisite(subject)" data-bs-toggle="modal"
+                            data-bs-target="#modal-prerequisite">Añadir correlativa</button>
                     </td>
                 </tr>
                 }@empty {
@@ -131,6 +137,30 @@
                                 <button type="submit" [disabled]="form.invalid" data-bs-dismiss="modal" aria-label="Close">Agregar</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL de correlativas -->
+        <div class="modal fade" id="modal-prerequisite" tabindex="-1" aria-labelledby="modal-label" style="display: none;"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Correlativas</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @for (sub of listPrerequisite; track $index) {
+                            <div>
+                                {{ sub.name }}
+                                <button class="modify-crud-btn" (click)="addPrerequisite(sub.id)" > Añadir </button>
+                                <button class="delete-crud-btn" (click)="deletePrerequisite(sub.id)" > Eliminar </button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

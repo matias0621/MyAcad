@@ -23,4 +23,6 @@ public interface SubjectsRepository extends JpaRepository<SubjectsEntity, Long> 
 
     Page<SubjectsEntity> findBySubjectActiveTrue(Pageable pageable);
 
+    List<SubjectsEntity> findByProgramAndSemestersLessThan(String program, int semester);
+
 }

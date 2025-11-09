@@ -4,60 +4,69 @@ import { Injectable } from '@angular/core';
 import Subjects from '../../Models/Subjects/Subjects';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SubjectsService {
-  
-  readonly api_url = "http://localhost:8080/subject"
+  readonly api_url = 'http://localhost:8080/subject';
 
-  listSubject:Subjects[] = []
+  listSubject: Subjects[] = [];
 
-  constructor(private http:HttpClient){}
+  constructor(private http: HttpClient) {}
 
-
-  getAllSubject(){
-    return this.http.get<Subjects[]>(this.api_url)
+  getAllSubject() {
+    return this.http.get<Subjects[]>(this.api_url);
   }
 
-  getAllSubjectWithSemesterLessThan(semester:number){
-    return this.http.get<Subjects[]>(`${this.api_url}/semester-less-than/${semester}`)
+  getAllSubjectWithSemesterLessThan(semester: number) {
+    return this.http.get<Subjects[]>(`${this.api_url}/semester-less-than/${semester}`);
   }
 
-  getAllSubjectByName(name:string){
-    return this.http.get<Subjects[]>(`${this.api_url}/search?name=${name}`)
+  getAllSubjectWithSemesterLessThanAndProgram(semester:number, program:string){
+    return this.http.get<Subjects[]>(`${this.api_url}/semester-less-than-and-program/${program}/${semester}`, )
   }
 
-  getSubjectById(id:string){
-    return this.http.get<Subjects>(`${this.api_url}/${id}`)
+  getAllSubjectByName(name: string) {
+    return this.http.get<Subjects[]>(`${this.api_url}/search?name=${name}`);
+  }
+
+  getSubjectById(id: string) {
+    return this.http.get<Subjects>(`${this.api_url}/${id}`);
   }
 
   getByProgram(program: string) {
-      return this.http.get<Subjects[]>(`${this.api_url}/program/${program}`);
-    }
+    return this.http.get<Subjects[]>(`${this.api_url}/program/${program}`);
+  }
 
-  postSubject(subject:Subjects){
+  postSubject(subject: Subjects) {
     subject.subjectActive = true;
-    return this.http.post(this.api_url, subject)
+    return this.http.post(this.api_url, subject);
   }
 
-  putSubject(subject:Subjects){
-    return this.http.put(`${this.api_url}/${subject.id}`, subject)
+  putSubject(subject: Subjects) {
+    return this.http.put(`${this.api_url}/${subject.id}`, subject);
   }
 
-  addSubjectToCareer(nameCareer:string, subjects:Subjects){
-    return this.http.put(`${this.api_url}/add-subject-to-career/${nameCareer}`, subjects)
+  addPrerequisite(subjectsId: number, subjectPrerequisiteId: number) {
+    return this.http.put(`${this.api_url}/prerequisite/${subjectsId}`, subjectPrerequisiteId);
   }
 
-  deleteSubjectToCareer(nameCareer:string, subjects:Subjects){
-    return this.http.put(`${this.api_url}/delete-subject-to-career/${nameCareer}`, subjects)
+  addSubjectToCareer(nameCareer: string, subjects: Subjects) {
+    return this.http.put(`${this.api_url}/add-subject-to-career/${nameCareer}`, subjects);
   }
 
-  deleteSubject(id:number){
-    return this.http.delete(`${this.api_url}/${id}`)
+  deletePrerequiste(subjectsId:number, prerequisteId:number){
+    return this.http.put(`${this.api_url}/prerequisite/delete/${subjectsId}`, prerequisteId)
   }
 
-  definitiveDeleteSubject(id:number){
-    return this.http.delete(`${this.api_url}/delete/${id}`)
+  deleteSubjectToCareer(nameCareer: string, subjects: Subjects) {
+    return this.http.put(`${this.api_url}/delete-subject-to-career/${nameCareer}`, subjects);
   }
 
+  deleteSubject(id: number) {
+    return this.http.delete(`${this.api_url}/${id}`);
+  }
+
+  definitiveDeleteSubject(id: number) {
+    return this.http.delete(`${this.api_url}/delete/${id}`);
+  }
 }

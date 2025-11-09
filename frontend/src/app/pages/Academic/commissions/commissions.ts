@@ -118,7 +118,11 @@ export class Commissions {
         },
       });
     } else {
-      this.service.postCommission(this.form.value).subscribe({
+      const commissionJson = {
+        active: true,
+        ...this.form.value,
+      };
+      this.service.postCommission(commissionJson).subscribe({
         next: (data) => {
           this.notificationService.success('Comision agregada exitosamente');
           this.form.reset();

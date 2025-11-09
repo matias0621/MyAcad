@@ -26,6 +26,7 @@ public class TeacherController {
     //Listado
     @GetMapping()
     public List<TeacherResponse> listTeachers() {
+        System.out.println("Listado de profesores" +  services.list().toString());
         return services.list();
     }
 

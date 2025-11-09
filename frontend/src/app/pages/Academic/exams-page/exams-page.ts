@@ -18,6 +18,7 @@ export class ExamsPage implements OnInit {
   score!: FormControl;
   legajo!: FormControl;
   examType!: FormControl;
+  selectedExam ?: Exams;
 
   idSubjects!: number 
   examId!:number

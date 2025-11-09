@@ -28,6 +28,10 @@ export class CareerService {
     return this.http.delete<Course | Technical | Career>(`${this.API_URL}/${endpoint}/${id}`);
   }
 
+  definitiveDeleteCareer(id: number, endpoint: string) {
+    return this.http.delete<Course | Technical | Career>(`${this.API_URL}/delete/${endpoint}/${id}`);
+  }
+
   updateCareer(career: Career, endpoint: string) {
     return this.http.put<Course | Technical | Career>(`${this.API_URL}/${endpoint}/${career.id}`, career);
   }

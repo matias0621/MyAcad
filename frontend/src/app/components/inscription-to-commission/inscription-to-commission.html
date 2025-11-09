@@ -21,7 +21,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form [formGroup]="form">
+                    <form class="modal-form" [formGroup]="form">
                         <label for="">Legajo:</label>
                         <input type="text" formControlName="legajo">
                         <button (click)="addStudentToCommision()" [disabled]="form.invalid" > Añadir </button>
@@ -42,7 +42,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form [formGroup]="form">
+                    <form class="modal-form" [formGroup]="form">
                         <label for="">Legajo:</label>
                         <input type="text" formControlName="legajo">
                         <button (click)="addTeacherToCommision()" [disabled]="form.invalid" > Añadir </button>

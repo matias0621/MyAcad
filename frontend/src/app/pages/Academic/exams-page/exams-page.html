@@ -1,3 +1,5 @@
+<h1 style="text-align: center;">Exámenes</h1>
+
 <section class="crud-management d-flex justify-content-center">
     <div class="crud-management-container">
         <div class="w-100 d-flex flex-column align-items-center mb-3">
@@ -8,11 +10,10 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Id</th>
-                    <th scope="col">Nota</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Materia</th>
-                    <th scope="col">Tipo de examen</th>
+                    <th scope="col" class="responsive-hide">Nota</th>
+                    <th scope="col" class="responsive-hide">Tipo de examen</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -20,22 +21,22 @@
                 <!-- USERS -->
                 @for (exams of listExams; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{exams.id}}</td>
-                    <td>{{exams.score}}</td>
                     <td>{{exams.student.name}}</td>
                     <td>{{exams.subject.name}}</td>
-
+                    <td class="responsive-hide">{{exams.score}}</td>
                     @if(exams.examType === "EXAM"){
-                        <td>Parcial</td>
+                    <td class="responsive-hide">Parcial</td>
                     }
                     @else if (exams.examType === "FINAL_EXAM") {
-                        <td>Final</td>
+                    <td class="responsive-hide">Final</td>
                     }
                     @else if (exams.examType === "MAKEUP_EXAM") {
-                        <td>Recuperatorio</td>
+                    <td class="responsive-hide">Recuperatorio</td>
                     }
 
                     <td class="crud-table-actions">
+                        <button class="detail-crud-btn" (click)="selectedExam = exams" data-bs-toggle="modal"
+                            data-bs-target="#modal-detail">Detalles</button>
                         <button class="delete-crud-btn" (click)="deleteExam(exams.id)">Eliminar</button>
 
                         <button class="modify-crud-btn" (click)="modifyExam(exams)" data-bs-toggle="modal"
@@ -54,5 +55,41 @@
             <tfoot>
             </tfoot>
         </table>
+        <!-- Modal ver detalle -->
+        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Detalle del exámen</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @if (selectedExam) {
+                        <div class="detail-container">
+                            <div class="detail-item">
+                                <strong>ID:</strong>
+                                <span>{{selectedExam.id}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Alumno:</strong>
+                                <span>{{selectedExam.student}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Materia:</strong>
+                                <span>{{selectedExam.subject}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Nota:</strong>
+                                <span>{{selectedExam.score}}</span>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

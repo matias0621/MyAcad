@@ -38,7 +38,9 @@ export class UserEditForm implements OnInit {
 
 
   OnSubmit() {
-    const modifiedUser = { id: this.userId, ...this.form.value }
+    const modifiedUser = { id: this.userId,
+      active: true,
+      ...this.form.value }
     
     this.service.putUser(modifiedUser, this.endpoint).subscribe({
       next: (data) => {

@@ -68,7 +68,9 @@ export class UserList implements OnInit {
 
   getUsers() {
     this.service.getUsers(this.endpoint).subscribe({
-      next: (data) => { this.users = data },
+      next: (data) => { 
+        console.log(data)
+        this.users = data },
       error: (error) => { console.error(error) }
     })
   }

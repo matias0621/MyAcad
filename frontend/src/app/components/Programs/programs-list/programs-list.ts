@@ -113,6 +113,27 @@ export class ProgramsList implements OnInit{
     });
   }
 
+  definitiveDeleteProgram(id: number) {
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar permanentemente este programa?',
+      'Confirmar eliminación permanente',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.deleteCareer(id, this.endpoint).subscribe({
+          next: (data) => { 
+            this.notificationService.success('Programa eliminado exitosamente');
+            this.getCareers();
+          },
+          error: (error) => { 
+            this.notificationService.error('Error al eliminar el programa permanentemente. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
+  }
+
   modifyProgram(program : any){
     this.program.emit(program);
   }

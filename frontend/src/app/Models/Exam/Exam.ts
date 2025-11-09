@@ -1,13 +1,18 @@
 import Subjects from "../Subjects/Subjects"
+import Student from "../Users/Student"
 
 
-export interface Exam {
+export interface Exams {
     id: number,
     score: number,
-    subject: Subjects
+    examType: string,
+    subject: Subjects,
+    student: Student
 }
 
-export interface PostExam{
+export interface ExamsPost {
     score: number,
-    subjectId: number
+    examType: string,
+    subjectId: number,
+    legajoStudent: string
 }

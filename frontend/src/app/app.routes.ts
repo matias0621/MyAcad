@@ -11,8 +11,7 @@ import { ProgramsEditForm } from './components/Programs/programs-edit-form/progr
 import { Login } from './pages/login/login';
 import { AuthGuard } from './Services/Auth/auth-guard';
 
-import { Exams } from './pages/Academic/exams/exams';
-import { FinalExams } from './pages/Academic/final-exams/final-exams';
+
 import { Commissions } from './pages/Academic/commissions/commissions';
 import { InscriptionFinalExams } from './pages/inscription-final-exams/inscription-final-exams';
 import { InscriptionToExamFormEdit } from './components/inscription-to-exam-form-edit/inscription-to-exam-form-edit';
@@ -20,6 +19,10 @@ import { InscriptionToExamList } from './components/inscription-to-exam-list/ins
 import { InscriptionCommision } from './pages/inscription-commision/inscription-commision';
 import { SubjectsPage } from './pages/Academic/subjects-page/subjects-page';
 import { CommissionStudentView } from './components/StudentView/commission-student-view/commission-student-view';
+import { ExamsPage } from './pages/Academic/exams-page/exams-page';
+import { ExamsFormEdit } from './components/Academic/exams-form-edit/exams-form-edit';
+import { ExamsForm } from './components/Academic/exams-form/exams-form';
+
 
 
 
@@ -36,8 +39,11 @@ export const routes: Routes = [
     { path: 'subject/:id', component: SubjectsPage, canActivate: [AuthGuard] },
     { path: 'commissions', component: Commissions, canActivate: [AuthGuard] },
 
-    { path: 'exam', component:Exams, canActivate: [AuthGuard] },
-    { path: 'final-exam', component:FinalExams, canActivate: [AuthGuard] },
+
+    { path: 'exams', component:ExamsPage, canActivate: [AuthGuard] },
+    { path: 'create-exam', component:ExamsForm, canActivate: [AuthGuard] },
+    { path: 'exams/:id', component:ExamsFormEdit, canActivate: [AuthGuard] },
+
 
     { path: 'inscriptionToFinalExam', component: InscriptionFinalExams, canActivate: [AuthGuard] },
     { path: 'inscriptionToFinalExam/:id', component: InscriptionToExamFormEdit, canActivate: [AuthGuard] },

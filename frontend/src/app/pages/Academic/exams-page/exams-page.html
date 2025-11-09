@@ -1,0 +1,58 @@
+<section class="crud-management d-flex justify-content-center">
+    <div class="crud-management-container">
+        <div class="w-100 d-flex flex-column align-items-center mb-3">
+            <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal"
+                (click)="addExam()">Agregar</button>
+        </div>
+        <!-- TABLA -->
+        <table class="crud-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Id</th>
+                    <th scope="col">Nota</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Materia</th>
+                    <th scope="col">Tipo de examen</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="crud-table-body">
+                <!-- USERS -->
+                @for (exams of listExams; track $index) {
+                <tr class="crud-table-item">
+                    <td>{{exams.id}}</td>
+                    <td>{{exams.score}}</td>
+                    <td>{{exams.student.name}}</td>
+                    <td>{{exams.subject.name}}</td>
+
+                    @if(exams.examType === "EXAM"){
+                        <td>Parcial</td>
+                    }
+                    @else if (exams.examType === "FINAL_EXAM") {
+                        <td>Final</td>
+                    }
+                    @else if (exams.examType === "MAKEUP_EXAM") {
+                        <td>Recuperatorio</td>
+                    }
+
+                    <td class="crud-table-actions">
+                        <button class="delete-crud-btn" (click)="deleteExam(exams.id)">Eliminar</button>
+
+                        <button class="modify-crud-btn" (click)="modifyExam(exams)" data-bs-toggle="modal"
+                            data-bs-target="#modal">Editar</button>
+
+                    </td>
+                </tr>
+                }@empty {
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <p style="color: red;"> Aun no hay ninguna comisión cargado.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </div>
+</section>

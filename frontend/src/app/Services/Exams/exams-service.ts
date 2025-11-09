@@ -1,39 +1,43 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Exam, PostExam } from '../../Models/Exam/Exam';
-import { ExamFinal, PostExamFinal } from '../../Models/Final-Exam/FinalExam';
+import { Exams, ExamsPost } from '../../Models/Exam/Exam';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExamsService {
-  readonly url_api = "http://localhost:8080"
+  readonly url_api = "http://localhost:8080/exams"
 
 
   constructor(private http:HttpClient){}
 
-  getAllExams(endpoint:string){
-    return this.http.get<Exam[] | ExamFinal[]>(`${this.url_api}/${endpoint}`)
+  getAllExams() {
+    return this.http.get<Exams[]>(`${this.url_api}`);
   }
 
-  getExamById(endpoint:string, id:number){
-    return this.http.get<Exam | ExamFinal>(`${this.url_api}/${endpoint}/${id}`)
+  getExamById(id: number) {
+    return this.http.get<Exams>(`${this.url_api}/${id}`);
   }
 
-  getExamsBySubjects(endpoint:string, subjectsId:number){
-    return this.http.get<Exam[] | ExamFinal[]>(`${this.url_api}/${endpoint}/subjects/${subjectsId}`)
+  getExamsBySubjects(subjectsId: number) {
+    return this.http.get<Exams[]>(`${this.url_api}/subjects/${subjectsId}`);
   }
 
-  postExam(endpoint:string, exam:PostExam | PostExamFinal){
-    return this.http.post(`${this.url_api}/${endpoint}`, exam)
+  getExamsByStudents(studentId:number){
+    return this.http.get<Exams[]>(`${this.url_api}/student/${studentId}`)
   }
 
-  putExam(endpoint:string, exam:PostExam | PostExamFinal, id:number){
-    return this.http.put(`${this.url_api}/${endpoint}/${id}`, exam)
+  postExam(exam: ExamsPost) {
+    return this.http.post(`${this.url_api}`, exam);
   }
 
-  deleteExam(endpoint:string, examId:number){
-    return this.http.delete(`${this.url_api}/${endpoint}/${examId}`)
+  putExam(id: number, exam: ExamsPost) {
+    return this.http.put(`${this.url_api}/${id}`, exam);
+  }
+
+  deleteExam(examId: number) {
+    return this.http.delete(`${this.url_api}/${examId}`);
   }
 
 }

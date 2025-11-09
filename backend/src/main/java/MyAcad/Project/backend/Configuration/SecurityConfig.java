@@ -46,8 +46,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/programs/student/**",
                                 "/commissions/program/**",
-                                "/program/info-student/"
-                        ).hasRole("STUDENT")
+                                "/program/info-student/",
+                                "/exams/student/**"
+                        ).hasAnyRole("STUDENT","MANAGER")
                         .requestMatchers(
                                 "/programs/teacher/**"
                         ).hasRole("TEACHER")
@@ -68,7 +69,6 @@ public class SecurityConfig {
                                 "/technicals/**",
 
                                 "/exams/**",
-                                "/final-exam/**",
                                 "/inscription-final-exam/**",
                                 "/subject-x-student/**"
                         ).hasRole("MANAGER")

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/inscription-final-exam")
+@RequestMapping("/inscriptions")
 @RequiredArgsConstructor
 public class InscriptionsController {
 

@@ -29,7 +29,7 @@
                     <td class="crud-table-actions">
                         <button class="detail-crud-btn" (click)="selectedProgram = program" data-bs-toggle="modal" data-bs-target="#modal-detail">Ver detalle</button>
                         <button class="modify-crud-btn" (click)="modifyProgram(program); programEditForm.loadData(program)" data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>
-                        <button class="detail-crud-btn" (click)="registerToStudent(program.name)">Inscribir</button>
+                        <button class="modify-crud-btn" (click)="registerToStudent(program.name)">Inscribir</button>
                         @if (program.active) {
                         <button class="delete-crud-btn" (click)="deleteProgram(program.id)"
                             data-id="${program.id}">Eliminar</button>

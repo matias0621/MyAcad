@@ -40,5 +40,11 @@ button {
     justify-content: center;
 }
 
+.selected {
+  border: 2px solid blue; /* o el color que prefieras */
+  padding: 5px;
+  border-radius: 4px;
+  background-color: #f0f8ff; /* opcional, para que destaque más */
+}
 
 /* MODAL */

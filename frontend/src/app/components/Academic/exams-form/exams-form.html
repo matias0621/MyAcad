@@ -8,10 +8,28 @@
         }
     </fieldset>
 
+    <fieldset>
+        <label for="">Legajo del alumno:</label>
+        <input type="text" id="legajo" name="legajo" formControlName="legajo">
+    </fieldset>
+
+    <fieldset>
+        <label for="">Tipo de examen</label>
+        <select name="examType" id="examType" formControlName="examType">
+            
+            <option value="EXAM">Parcial</option> 
+            <option value="FINAL_EXAM">Final</option>
+            <option value="MAKEUP_EXAM">Recuperatorio</option>
+            
+        </select>
+    </fieldset>
+
     <div id="buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>
         <button type="submit" [disabled]="form.invalid">Crear</button>
     </div>
+
+    
 </form>
 
 <div>

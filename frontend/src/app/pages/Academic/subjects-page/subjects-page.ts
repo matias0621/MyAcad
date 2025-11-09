@@ -162,17 +162,7 @@ export class SubjectsPage {
     this.form.reset();
   }
 
-  addToCommission(idCommission: number) {
-    this.commissionService.addSubjectsToCommission(idCommission, this.subject.id).subscribe({
-      next: (res) => {
-        this.notificationService.success("Se añadio la materia a la comision y carrera")
-      },
-      error: (err) => {
-        this.notificationService.error("Hubo un error", true)
-        console.log(err)
-      }
-    })
-  }
+
 
   filterSubjects() {
     if (this.filter === '') {

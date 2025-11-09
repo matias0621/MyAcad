@@ -29,6 +29,10 @@ export class CommissionService {
     return this.http.get<Commission[]>(`${this.API_URL}/program/${program}`);
   }
 
+  getById(id:number){
+    return this.http.get<Commission>(`${this.API_URL}/${id}`)
+  }
+
   postCommission(commission: Commission) {
     return this.http.post<Commission>(this.API_URL, commission);
   }

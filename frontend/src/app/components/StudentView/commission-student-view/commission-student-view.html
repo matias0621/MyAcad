@@ -1,8 +1,87 @@
+<section class="crud-management d-flex justify-content-center">
 
 
-@for (com of commissionList; track $index) {
-    {{ com.number }}
-    @for(s of com.subjects; track $index){
-        {{ s.name }}
-    }
-}
+    <div class="crud-management-container">
+        <h1 style="text-align: center;">Info alumno</h1>
+
+        <table class="crud-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Id</th>
+                    <th scope="col">Numero</th>
+                    <th scope="col">Capacidad</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col">Materias</th>
+                </tr>
+            </thead>
+            <tbody class="crud-table-body">
+                <!-- USERS -->
+                @for (com of commissionList; track $index) {
+                <tr class="crud-table-item">
+                    <td>{{com.id}}</td>
+                    <td>{{com.number}}</td>
+                    <td>{{com.capacity}}</td>
+                    <td>{{com.program}}</td>
+                    <td>
+                        @for (s of com.subjects; track $index) {
+                        {{ s.name }}
+                        }
+                    </td>
+
+                </tr>
+                }@empty {
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <p style="color: red;"> Aun no hay ninguna comisión cargado.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+
+        <h1 style="text-align: center;">Examenes</h1>
+        <!-- TABLA -->
+        <table class="crud-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Id</th>
+                    <th scope="col">Nota</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Materia</th>
+                    <th scope="col">Tipo de examen</th>
+                </tr>
+            </thead>
+            <tbody class="crud-table-body">
+                <!-- USERS -->
+                @for (exams of listExams; track $index) {
+                <tr class="crud-table-item">
+                    <td>{{exams.id}}</td>
+                    <td>{{exams.score}}</td>
+                    <td>{{exams.student.name}}</td>
+                    <td>{{exams.subject.name}}</td>
+
+                    @if(exams.examType === "EXAM"){
+                    <td>Parcial</td>
+                    }
+                    @else if (exams.examType === "FINAL_EXAM") {
+                    <td>Final</td>
+                    }
+                    @else if (exams.examType === "MAKEUP_EXAM") {
+                    <td>Recuperatorio</td>
+                    }
+                </tr>
+                }@empty {
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <p style="color: red;"> Aun no hay ninguna comisión cargado.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </div>
+</section>

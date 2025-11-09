@@ -338,5 +338,11 @@ public class CommissionService {
                 .orElseThrow(() -> new RuntimeException("Program not found"));
     }
 
-    
+
+    public List<CommissionResponse> findByTeacherId(Long teacherId) {
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        List<Commission> commissions = teacher.getCommissions();
+        return commissionMapper.toResponseList(commissions);
+    }
 }

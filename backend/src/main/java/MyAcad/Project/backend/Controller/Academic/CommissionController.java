@@ -147,5 +147,10 @@ public class CommissionController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/teacher/{teacherId}")
+    public ResponseEntity<List<CommissionResponse>> getByTeacherId(@PathVariable Long teacherId) {
+        return ResponseEntity.ok(services.findByTeacherId(teacherId));
+    }
+
 }
 

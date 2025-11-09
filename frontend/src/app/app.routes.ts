@@ -23,7 +23,9 @@ import { ExamsPage } from './pages/Academic/exams-page/exams-page';
 import { ExamsFormEdit } from './components/Academic/exams-form-edit/exams-form-edit';
 import { ExamsForm } from './components/Academic/exams-form/exams-form';
 import { StudentRegisterCommission } from './components/StudentView/student-register-commission/student-register-commission';
-
+import { CommissionsTeacherView } from './components/Teacher/commissions-teacher-view/commissions-teacher-view';
+import { TeacherExamsView } from './components/Teacher/teacher-exams-view/teacher-exams-view';
+import { TeacherGradesView } from './components/Teacher/teacher-grades-view/teacher-grades-view';
 
 
 
@@ -60,6 +62,11 @@ export const routes: Routes = [
     { path: 'engineerings', component: Engineerings, canActivate: [AuthGuard] },
     { path: 'technicals', component: Technicals, canActivate: [AuthGuard] },
     { path: 'courses', component: Courses, canActivate: [AuthGuard] },
-    { path: 'programs-edit-form/:id', component: ProgramsEditForm, canActivate: [AuthGuard] }
+    { path: 'programs-edit-form/:id', component: ProgramsEditForm, canActivate: [AuthGuard] },
+
+    // Rutas Teacher
+    { path: 'teacher/program/:programId/commissions', component: CommissionsTeacherView, canActivate: [AuthGuard] },
+    { path: 'teacher/exams', component: TeacherExamsView, canActivate: [AuthGuard] },
+    { path: 'teacher/grades', component: TeacherGradesView, canActivate: [AuthGuard] }
 
 ];

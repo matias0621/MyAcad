@@ -52,7 +52,9 @@ public class SecurityConfig {
                                 "/commissions/register-commision-to-student/**"
                         ).hasAnyRole("STUDENT","MANAGER")
                         .requestMatchers(
-                                "/programs/teacher/**"
+                                "/programs/teacher/**",
+                                "/commissions/teacher/**",
+                                "/exams/createFinalExam/**"
                         ).hasRole("TEACHER")
                         .requestMatchers(
                                 "/**",

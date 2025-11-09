@@ -1,0 +1,58 @@
+<div class="teacher-exams-container">
+  <h2>Crear Examen</h2>
+  
+  <div class="form-container">
+    <form class="exam-form" [formGroup]="form" (submit)="OnSubmit()">
+      <fieldset>
+        <label for="legajo">Legajo del alumno:</label>
+        <input type="text" id="legajo" name="legajo" formControlName="legajo" placeholder="Ej: 12345">
+        @if (form.controls['legajo'].invalid && form.controls['legajo'].touched) {
+          <p class="error-message">El legajo es requerido</p>
+        }
+      </fieldset>
+
+      <fieldset>
+        <label for="score">Nota (1-10):</label>
+        <input type="number" id="score" name="score" formControlName="score" min="1" max="10" placeholder="Ej: 8">
+        @if (form.controls['score'].invalid && form.controls['score'].touched) {
+          <p class="error-message">La nota debe ser un número entre 1 y 10</p>
+        }
+      </fieldset>
+
+      <fieldset>
+        <label for="examType">Tipo de examen:</label>
+        <select name="examType" id="examType" formControlName="examType">
+          <option value="">Seleccione un tipo</option>
+          <option value="EXAM">Parcial</option> 
+          <option value="FINAL_EXAM">Final</option>
+          <option value="MAKEUP_EXAM">Recuperatorio</option>
+        </select>
+        @if (form.controls['examType'].invalid && form.controls['examType'].touched) {
+          <p class="error-message">Debe seleccionar un tipo de examen</p>
+        }
+      </fieldset>
+
+      @if (idSubjects) {
+        <div class="selected-subject">
+          <span>✓ Materia asignada</span>
+        </div>
+      }
+
+      <div class="form-buttons">
+        <button type="button" class="btn-secondary" (click)="cleanForm()">Limpiar</button>
+        <button type="submit" class="btn-primary" [disabled]="form.invalid || !idSubjects">Crear Examen</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="subjects-container">
+    <h3>Seleccione una materia</h3>
+    <div class="subjects-grid">
+      @for (subjects of subjectsService.listSubject; track $index) {
+        <div class="subject-card" [class.selected]="idSubjects === subjects.id" (click)="addSubjectsToExam(subjects.id)">
+          <p>{{ subjects.name }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

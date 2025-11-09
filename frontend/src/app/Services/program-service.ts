@@ -22,4 +22,8 @@ export class ProgramService {
   getProgramsByTeacher(teacherId: number) {
     return this.http.get<Program[]>(`${this.API_URL}/teacher/${teacherId}`);
   }
+
+  getById(programId: number) {
+    return this.http.get<Program>(`${this.API_URL}/${programId}`);
+  }
 }

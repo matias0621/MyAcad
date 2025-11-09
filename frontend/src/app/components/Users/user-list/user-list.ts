@@ -38,6 +38,18 @@ export class UserList implements OnInit {
     this.getUsers();
   }
 
+  private normalizeUsersArray(arr: any[]): any[] {
+    return (arr || []).map(u => {
+      const hasActive = u?.active !== undefined && u?.active !== null;
+      const normalizedActive = hasActive
+        ? u.active
+        : (u?.enabled !== undefined ? u.enabled
+          : (u?.isActive !== undefined ? u.isActive
+            : (u?.status === 'ACTIVE' || u?.state === 'ACTIVE')));
+      return { ...u, active: normalizedActive };
+    });
+  }
+
   onSearch() {
     if (this.timeout) {
       clearTimeout(this.timeout);
@@ -55,13 +67,13 @@ export class UserList implements OnInit {
       //Si tiene solo números busca por legajo, si tiene letras busca por nombre completo
       if (/^[0-9]+$/.test(value)) {
         this.service.getByLegajo(value, this.endpoint).subscribe({
-          next: (data) => this.users = data,
+          next: (data) => this.users = this.normalizeUsersArray(data),
           error: (err) => console.error(err)
         });
         return;
       } else if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
         this.service.getByName(value, this.endpoint).subscribe({
-          next: (data) => { this.users = data },
+          next: (data) => { this.users = this.normalizeUsersArray(data) },
           error: (err) => console.error(err)
         });
         return;
@@ -73,7 +85,7 @@ export class UserList implements OnInit {
     this.service.getUsersPaginated(this.endpoint, page, size).subscribe({
       next: (data) => {
         console.log(data)
-        this.users = data.content;
+        this.users = this.normalizeUsersArray(data.content);
         this.totalPages = data.totalPages;
         this.currentPage = data.number;
 

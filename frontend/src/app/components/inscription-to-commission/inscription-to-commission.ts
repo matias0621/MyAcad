@@ -64,6 +64,11 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
       legajo: this.legajo.value,
       subjectsId: this.sub.id
     }
+    if (this.form.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.commisionService.registerStudentToCommissionByManager(this.com.id, request).subscribe({
       next: (res) => {
@@ -82,6 +87,12 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
       subjectsId: this.sub.id
     }
 
+    if (this.form.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
+    }
+    
     this.commisionService.registerTeacherToCommissionByManager(this.com.id, request).subscribe({
       next: (res) => {
         this.notificationService.success("Se registro el profesor correctamente")

@@ -73,6 +73,12 @@ export class InscriptionToExamForm implements OnInit {
       return;
     }
 
+    if (this.form.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
+    }
+    
     const formatDate = (dateStr: string) => {
       const date = new Date(dateStr);
       const dd = String(date.getDate()).padStart(2, '0');

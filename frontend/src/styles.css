@@ -260,6 +260,8 @@ input[type=number] {
 }
 
 .detail-item span {
+    word-wrap: break-word;
+    word-break: break-word;
     color: var(--color-2);
     font-size: 0.8rem;
 }
@@ -336,11 +338,13 @@ input[type=number] {
 fieldset>input {
     width: 90%;
 }
-.modal-form{
+
+.modal-form {
     background-color: var(--color-5);
     max-width: 600px;
     padding: 1.5em;
 }
+
 form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -384,6 +388,34 @@ fieldset {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* ----PAGINACION----- */
+.pagination-container {
+    padding: 1em 0;
+    margin: 0;
+    background-color: var(--background-color-1);
+}
+
+.pagination-container > * {
+    border: none;
+    color: var(--color-3);
+    background-color: var(--color-5);
+    border-radius: 15px;
+    height: 2.5em;
+    min-width: 150px;
+    padding: 0 1.5em;
+    transition: .4s;
+}
+.pagination-container > *:hover {
+    color: var(--color-5);
+    background-color: var(--color-3);
+    border: solid 1px var(--color-5);
+}
+
+.page-item:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 /* Responsive Table */

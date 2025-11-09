@@ -38,6 +38,12 @@ export class UserEditForm implements OnInit {
 
 
   OnSubmit() {
+    if (this.form.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
+    }
+    
     const modifiedUser = { id: this.userId,
       active: true,
       ...this.form.value }

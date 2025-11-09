@@ -46,7 +46,7 @@ export class ChangePasswordDialogComponent {
   submit() {
     if (this.submitting) return;
     if (this.form.invalid) {
-      this.notify.warning('Revisa los campos requeridos');
+      this.notify.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
       this.form.markAllAsTouched();
       return;
     }

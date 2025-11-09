@@ -93,6 +93,12 @@ export class Commissions {
   }
 
   OnSubmit() {
+    if (this.form.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
+    }
+    
     if (this.commissionId != 0) {
       const commissionJson = {
         id: this.commissionId,

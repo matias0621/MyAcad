@@ -229,10 +229,10 @@ export class SubjectsPage {
   OnSubmit() {
 
     if (this.form.invalid) {
-      this.notificationService.warning("Complete todos los campos de la materia para subirla", true);
-      return
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
     }
-
 
      if (this.subjectId != 0) {
       const subjectJson = {

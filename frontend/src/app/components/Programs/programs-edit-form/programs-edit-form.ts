@@ -32,7 +32,7 @@ export class ProgramsEditForm implements OnInit {
 
     this.formPrograms = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(60)]],
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
+      description: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
       durationMonths: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       monthlyFee: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       annualFee: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
@@ -42,6 +42,13 @@ export class ProgramsEditForm implements OnInit {
   }
 
   OnSubmit() {
+
+    if (this.formPrograms.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.formPrograms.markAllAsTouched();
+      return;
+    }
+
     const modifiedCareer = { id: this.careerId, ...this.formPrograms.value };
 
     this.cService.updateCareer(modifiedCareer, this.endpoint).subscribe({

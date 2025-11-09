@@ -35,6 +35,12 @@ export class UserForm implements OnInit {
   }
 
   OnSubmit() {
+    if (this.form.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
+    }
+
     const user = {...this.form.value, active: true};
     this.service.postUser(user, this.endpoint).subscribe({
       next: (data) => {

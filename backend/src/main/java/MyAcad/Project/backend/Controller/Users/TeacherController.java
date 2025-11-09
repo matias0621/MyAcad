@@ -31,7 +31,7 @@ public class TeacherController {
 
     //Paginación
     @GetMapping("/paginated")
-    public Page<Teacher> listTeacherPaginated(@RequestParam(name = "page") int page,
+    public Page<TeacherResponse> listTeacherPaginated(@RequestParam(name = "page") int page,
                                               @RequestParam(name = "size") int size) {
         return services.listTeachersPaginated(page, size);
     }
@@ -75,7 +75,7 @@ public class TeacherController {
             Teacher teacher = new Teacher(dto);
             //Por defecto se le asigna el dni como contraseña a un usuario nuevo, luego lo cambia el mismo en su cuenta
             teacher.setPassword(String.valueOf(dto.getDni()));
-            teacher.setRole(Role.STUDENT);
+            teacher.setRole(Role.TEACHER);
             services.add(teacher);
             return ResponseEntity.ok(teacher);
         }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException | DniAlreadyExistsException e) {

@@ -49,11 +49,14 @@
             </tbody>
             <tfoot>
                 <!-- Paginación -->
-                <tr>
-                    <td colspan="7">
-                        <ul class="pagination-container">
-                        </ul>
-                    </td>
+                <tr class="pagination-container">
+                        <button (click)="getUsers(currentPage - 1)" [disabled]="currentPage === 0">
+                            Anterior
+                        </button>
+
+                        <button (click)="getUsers(currentPage + 1)" [disabled]="currentPage === totalPages - 1">
+                            Siguiente
+                        </button>
                 </tr>
             </tfoot>
         </table>

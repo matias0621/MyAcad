@@ -25,6 +25,9 @@ export class UserList implements OnInit {
   search: string = '';
   timeout: any;
   selectedUser: any = null;
+  // Paginación
+  totalPages: number = 0;
+  currentPage: number = 0;
 
   constructor(
     private service: UserService,
@@ -66,11 +69,15 @@ export class UserList implements OnInit {
     }, 500)
   }
 
-  getUsers() {
-    this.service.getUsers(this.endpoint).subscribe({
-      next: (data) => { 
+  getUsers(page: number = 0, size: number = 10 ) {
+    this.service.getUsersPaginated(this.endpoint, page, size).subscribe({
+      next: (data) => {
         console.log(data)
-        this.users = data },
+        this.users = data.content;
+        this.totalPages = data.totalPages;
+        this.currentPage = data.number;
+
+      },
       error: (error) => { console.error(error) }
     })
   }

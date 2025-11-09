@@ -20,20 +20,20 @@ import { AuthService } from '../../Services/Auth/auth-service';
 export class InscriptionToCommission implements OnInit, OnDestroy {
 
   listCommission: Commission[] = []
-  form!:FormGroup
-  legajo!:FormControl
-  com!:Commission
-  sub!:Subjects
+  form!: FormGroup
+  legajo!: FormControl
+  com!: Commission
+  sub!: Subjects
 
-  constructor(public careerService:CareerService, 
-    private notificationService:NotificationService,
-    public auth:AuthService,
-    public commisionService:CommissionService){
-      this.legajo = new FormControl("", Validators.required)
-      this.form = new FormGroup({
-        legajo:this.legajo
-      })
-    }
+  constructor(public careerService: CareerService,
+    private notificationService: NotificationService,
+    public auth: AuthService,
+    public commisionService: CommissionService) {
+    this.legajo = new FormControl("", Validators.required)
+    this.form = new FormGroup({
+      legajo: this.legajo
+    })
+  }
 
   ngOnInit(): void {
     this.getCommisionByNameProgram()
@@ -44,9 +44,9 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
     this.careerService.setCareerSelected(null)
   }
 
-  getCommisionByNameProgram(){
-    
-    const program:string = this.careerService.getCareerSelected() ?? "career"; 
+  getCommisionByNameProgram() {
+
+    const program: string = this.careerService.getCareerSelected() ?? "career";
 
     this.commisionService.getByProgram(program).subscribe({
       next: (res) => {
@@ -58,9 +58,9 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
     })
   }
 
-  addStudentToCommision(){
+  addStudentToCommision() {
 
-    const request:RegistrationStudentOrTeacher = {
+    const request: RegistrationStudentOrTeacher = {
       legajo: this.legajo.value,
       subjectsId: this.sub.id
     }
@@ -70,14 +70,14 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
         this.notificationService.success("Se registro el alumno correctamente")
       },
       error: (err) => {
-        this.notificationService.error("Hubo un error",true)
+        this.notificationService.error("El alumno no existe o ya está anotado a esta materia.", true)
         console.log(err)
       }
     })
   }
-  addTeacherToCommision(){
+  addTeacherToCommision() {
 
-    const request:RegistrationStudentOrTeacher = {
+    const request: RegistrationStudentOrTeacher = {
       legajo: this.legajo.value,
       subjectsId: this.sub.id
     }
@@ -87,13 +87,13 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
         this.notificationService.success("Se registro el profesor correctamente")
       },
       error: (err) => {
-        this.notificationService.error("Hubo un error",true)
+        this.notificationService.error("Hubo un error", true)
         console.log(err)
       }
     })
   }
 
-  registerStudent(commissionId:number, subjectsId:number){
+  registerStudent(commissionId: number, subjectsId: number) {
     this.commisionService.regiterByStudent(commissionId, subjectsId).subscribe({
       next: (res) => {
         this.notificationService.success("Te registraste correctamente")
@@ -105,8 +105,8 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
     })
   }
 
-  setCommissionAndSubject(com:Commission, s:Subjects){
-     this.com = com
-     this.sub = s
+  setCommissionAndSubject(com: Commission, s: Subjects) {
+    this.com = com
+    this.sub = s
   }
 }

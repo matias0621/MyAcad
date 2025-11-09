@@ -2,15 +2,12 @@
 
 
     <div class="crud-management-container">
-        <h1 style="text-align: center;">Info alumno</h1>
+        <h1 style="text-align: center;">{{programName}}</h1>
 
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Id</th>
-                    <th scope="col">Numero</th>
-                    <th scope="col">Capacidad</th>
-                    <th scope="col">Carrera</th>
+                    <th scope="col">Comisión</th>
                     <th scope="col">Materias</th>
                 </tr>
             </thead>
@@ -18,13 +15,10 @@
                 <!-- USERS -->
                 @for (com of commissionList; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{com.id}}</td>
                     <td>{{com.number}}</td>
-                    <td>{{com.capacity}}</td>
-                    <td>{{com.program}}</td>
                     <td>
-                        @for (s of com.subjects; track $index) {
-                        {{ s.name }}
+                        @for (s of com.subjects; track $index; let last = $last) {
+                        {{ s.name }}{{ !last ? ', ' : '' }}
                         }
                     </td>
 

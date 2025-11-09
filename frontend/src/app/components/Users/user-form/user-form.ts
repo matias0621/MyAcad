@@ -30,7 +30,7 @@ export class UserForm implements OnInit {
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30), Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+(?: [A-Za-zÁÉÍÓÚáéíóúñÑ]+)*$/)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+(?: [A-Za-zÁÉÍÓÚáéíóúñÑ]+)*$/)]],
       dni: ['', [Validators.required, Validators.min(1000000), Validators.max(999999999), Validators.pattern(/^[0-9]+$/)]],
-      email: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]]
+      email: ['', [Validators.email ,Validators.required, Validators.minLength(3), Validators.maxLength(100)]]
     })
   }
 

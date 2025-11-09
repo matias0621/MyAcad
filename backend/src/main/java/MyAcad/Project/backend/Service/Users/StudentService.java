@@ -92,7 +92,6 @@ public class StudentService {
         // Verificar si se ingresó una contraseña nueva, si el usuario no quiso cambiarla debe dejar ese input vacío.
         if (t.getPassword() != null && !t.getPassword().isBlank()) {
             String encoded = passwordEncoder.encode(t.getPassword());
-            System.out.println(t.getPassword());
             old.setPassword(encoded);
         }
         repository.save(old);

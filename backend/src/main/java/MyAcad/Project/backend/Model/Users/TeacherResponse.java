@@ -19,6 +19,7 @@ public class TeacherResponse {
     private String lastName;
     private String email;
     private int dni;
+    private boolean active;
 
     private List<SubjectsResponse> subjects;
     private List<CommissionResponse> commissions;

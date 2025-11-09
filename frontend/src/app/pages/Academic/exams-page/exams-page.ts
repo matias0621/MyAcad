@@ -55,7 +55,7 @@ export class ExamsPage implements OnInit {
 
   ngOnInit(): void {
     this.getAllExam();
-    this.getAllCarrer()
+    this.getAllCarrer();
 
     // Cuando cambia la carrera seleccionada:
     this.careerName.valueChanges.subscribe((careerName: string) => {
@@ -104,11 +104,11 @@ export class ExamsPage implements OnInit {
   }
 
   modifyExam(exam: Exams) {
-    this.score.setValue(exam.score)
-    this.legajo.setValue(exam.student.legajo)
-    this.examType.setValue(exam.examType)
-    this.careerName.setValue(exam.subject.program)
-    this.subjects.setValue(exam.subject.id)
+    this.score.setValue(exam.score);
+    this.legajo.setValue(exam.student.legajo);
+    this.examType.setValue(exam.examType);
+    this.careerName.setValue(exam.subject.program);
+    this.subjects.setValue(exam.subject.id);
   }
 
   deleteExam(examId: number) {
@@ -146,10 +146,7 @@ export class ExamsPage implements OnInit {
     this.form.reset();
   }
 
-  
-
   postExam() {
-
     if (this.form.invalid) {
       this.notificationService.warning(
         'Formulario inválido. Por favor, complete todos los campos correctamente.'
@@ -168,7 +165,7 @@ export class ExamsPage implements OnInit {
     this.examsService.postExam(examLoad).subscribe({
       next: (data) => {
         this.notificationService.success('Examen cdxagregado exitosamente');
-        this.getAllExam()
+        this.getAllExam();
         this.form.reset();
       },
       error: (error) => {

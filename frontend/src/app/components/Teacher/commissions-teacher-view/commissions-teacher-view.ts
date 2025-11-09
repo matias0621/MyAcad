@@ -6,12 +6,16 @@ import Commission from '../../../Models/Commission/commission';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import Student from '../../../Models/Users/Student';
+import { ExamsService } from '../../../Services/Exams/exams-service';
+import { Exams, ExamsPost } from '../../../Models/Exam/Exam';
+import { NotificationService } from '../../../Services/notification/notification.service';
 
 interface ExamGrade {
   id?: number
   type: 'EXAM' | 'FINAL_EXAM' | 'MAKEUP_EXAM'
   score: number
   date?: string
+  subjectId?: number
 }
 
 @Component({
@@ -29,15 +33,18 @@ export class CommissionsTeacherView implements OnInit {
   // Modal de notas
   showGradesModal = false
   selectedStudent: Student | null = null
+  selectedCommission: Commission | null = null
   studentGrades: ExamGrade[] = []
-  newGrade: ExamGrade = { type: 'EXAM', score: 0 }
+  newGrade: ExamGrade = { type: 'EXAM', score: 0, subjectId: 0 }
   editingGradeId: number | null = null
-  gradesStore = new Map<number, ExamGrade[]>()
+  loadingGrades = false
 
   constructor(
     private commissionService: CommissionService,
     private activatedRoute: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private examsService: ExamsService,
+    private notificationService: NotificationService
   ) {
     this.programId = Number(this.activatedRoute.snapshot.params['programId'])
   }
@@ -55,7 +62,11 @@ export class CommissionsTeacherView implements OnInit {
 
     this.commissionService.getCommissionsByProgramAndTeacher(this.programId, token.id).subscribe({
       next: (res) => {
-        this.commissionList = (res as any[]).map((c: any) => this.normalizeCommission(c))
+        const normalized = (res as any[]).map((c: any) => this.normalizeCommission(c))
+        // Eliminar duplicados por ID
+        this.commissionList = normalized.filter((commission, index, self) =>
+          index === self.findIndex((c) => c.id === commission.id)
+        )
         this.loading = false
       },
       error: (err) => {
@@ -91,77 +102,140 @@ export class CommissionsTeacherView implements OnInit {
   }
 
   // Gestión de modal de notas
-  openGradesModal(student: Student) {
+  openGradesModal(student: Student, commission: Commission) {
     this.selectedStudent = student
+    this.selectedCommission = commission
     this.loadStudentGrades(student.id)
     this.showGradesModal = true
   }
 
   closeGradesModal() {
-
-    if (this.selectedStudent) {
-      this.gradesStore.set(this.selectedStudent.id, [...this.studentGrades])
-    }
-    
     this.showGradesModal = false
     this.selectedStudent = null
+    this.selectedCommission = null
     this.studentGrades = []
-    this.newGrade = { type: 'EXAM', score: 0 }
+    this.newGrade = { type: 'EXAM', score: 0, subjectId: 0 }
     this.editingGradeId = null
   }
 
   loadStudentGrades(studentId: number) {
-    // Cargar notas guardadas del alumno o array vacío si no tiene
-    this.studentGrades = this.gradesStore.get(studentId) || []
-    
+    this.loadingGrades = true
+    this.examsService.getExamsByStudents(studentId).subscribe({
+      next: (exams: Exams[]) => {
+        this.studentGrades = exams.map(exam => ({
+          id: exam.id,
+          type: exam.examType as 'EXAM' | 'FINAL_EXAM' | 'MAKEUP_EXAM',
+          score: exam.score,
+          subjectId: exam.subject?.id,
+          date: undefined
+        }))
+        this.loadingGrades = false
+      },
+      error: (err) => {
+        console.error('Error loading grades:', err)
+        this.studentGrades = []
+        this.loadingGrades = false
+      }
+    })
   }
 
   addGrade() {
     if (this.newGrade.score < 0 || this.newGrade.score > 10) {
-      alert('La nota debe estar entre 0 y 10')
+      this.notificationService.showToast('La nota debe estar entre 0 y 10', 'error')
+      return
+    }
+
+    if (!this.selectedStudent) {
+      this.notificationService.showToast('No hay estudiante seleccionado', 'error')
+      return
+    }
+
+    if (!this.newGrade.subjectId) {
+      this.notificationService.showToast('Debe seleccionar una materia', 'error')
       return
     }
 
     if (this.editingGradeId) {
       // Editar nota existente
-      const index = this.studentGrades.findIndex(g => g.id === this.editingGradeId)
-      if (index !== -1) {
-        this.studentGrades[index] = { ...this.newGrade, id: this.editingGradeId }
+      const examData: ExamsPost = {
+        score: this.newGrade.score,
+        examType: this.newGrade.type,
+        subjectId: Number(this.newGrade.subjectId),
+        legajoStudent: this.selectedStudent.legajo
       }
-      this.editingGradeId = null
+
+      this.examsService.putExam(this.editingGradeId, examData).subscribe({
+        next: () => {
+          this.notificationService.showToast('Nota actualizada exitosamente', 'success')
+          this.loadStudentGrades(this.selectedStudent!.id)
+          this.newGrade = { type: 'EXAM', score: 0, subjectId: 0 }
+          this.editingGradeId = null
+        },
+        error: (err) => {
+          console.error('Error updating grade:', err)
+          this.notificationService.showToast('Error al actualizar la nota', 'error')
+        }
+      })
     } else {
       // Agregar nueva nota
-      const newId = this.studentGrades.length > 0 
-        ? Math.max(...this.studentGrades.map(g => g.id || 0)) + 1 
-        : 1
-      this.studentGrades.push({ ...this.newGrade, id: newId, date: new Date().toISOString() })
-    }
+      const examData: ExamsPost = {
+        score: this.newGrade.score,
+        examType: this.newGrade.type,
+        subjectId: Number(this.newGrade.subjectId),
+        legajoStudent: this.selectedStudent.legajo
+      }
 
-    // Guardar automáticamente en el store después de agregar/editar
-    if (this.selectedStudent) {
-      this.gradesStore.set(this.selectedStudent.id, [...this.studentGrades])
+      this.examsService.postExam(examData).subscribe({
+        next: () => {
+          this.notificationService.showToast('Nota agregada exitosamente', 'success')
+          this.loadStudentGrades(this.selectedStudent!.id)
+          this.newGrade = { type: 'EXAM', score: 0, subjectId: 0 }
+        },
+        error: (err) => {
+          console.error('Error adding grade:', err)
+          console.error('Exam data sent:', examData)
+          console.error('Error details:', err.error)
+          this.notificationService.showToast(`Error al agregar la nota: ${err.error?.message || 'Sin permisos'}`, 'error')
+        }
+      })
     }
-    this.newGrade = { type: 'EXAM', score: 0 }
   }
 
   editGrade(grade: ExamGrade) {
-    this.newGrade = { ...grade }
+    this.newGrade = { 
+      type: grade.type, 
+      score: grade.score,
+      subjectId: grade.subjectId || 0
+    }
     this.editingGradeId = grade.id || null
   }
 
   deleteGrade(gradeId: number) {
-    if (confirm('¿Estás segura de eliminar esta nota?')) {
-      this.studentGrades = this.studentGrades.filter(g => g.id !== gradeId)
-      
-      // Actualizar el store después de eliminar
-      if (this.selectedStudent) {
-        this.gradesStore.set(this.selectedStudent.id, [...this.studentGrades])
+    this.notificationService.confirm(
+      '¿Estás segura de eliminar esta nota?',
+      '⚠️ Eliminar Nota',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.examsService.deleteExam(gradeId).subscribe({
+          next: () => {
+            this.notificationService.showToast('Nota eliminada exitosamente', 'success')
+            if (this.selectedStudent) {
+              this.loadStudentGrades(this.selectedStudent.id)
+            }
+          },
+          error: (err) => {
+            console.error('Error deleting grade:', err)
+            this.notificationService.showToast('Error al eliminar la nota', 'error')
+          }
+        })
       }
-    }
+    })
   }
 
   cancelEdit() {
-    this.newGrade = { type: 'EXAM', score: 0 }
+    this.newGrade = { type: 'EXAM', score: 0, subjectId: 0 }
     this.editingGradeId = null
   }
 
@@ -172,6 +246,12 @@ export class CommissionsTeacherView implements OnInit {
       'MAKEUP_EXAM': 'Recuperatorio'
     }
     return labels[type] || type
+  }
+
+  getSubjectName(subjectId?: number): string {
+    if (!subjectId || !this.selectedCommission) return '-'
+    const subject = this.selectedCommission.subjects.find(s => s.id === subjectId)
+    return subject ? subject.name : '-'
   }
 }
 

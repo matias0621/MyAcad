@@ -50,12 +50,7 @@ public class SecurityConfig {
                                 "/exams/student/**",
                                 "/program/not-enrolled/**",
                                 "/commissions/register-commision-to-student/**"
-                        ).hasAnyRole("STUDENT","MANAGER")
-                        .requestMatchers(
-                                "/programs/teacher/**",
-                                "/commissions/teacher/**",
-                                "/exams/createFinalExam/**"
-                        ).hasRole("TEACHER")
+                        ).hasAnyRole("STUDENT", "TEACHER", "MANAGER")
                         .requestMatchers(
                                 "/**",
                                 //USERS
@@ -75,7 +70,7 @@ public class SecurityConfig {
                                 "/exams/**",
                                 "/inscription-final-exam/**",
                                 "/subject-x-student/**"
-                        ).hasRole("MANAGER")
+                        ).hasAnyRole("MANAGER", "TEACHER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(service))

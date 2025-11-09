@@ -42,9 +42,6 @@ export const routes: Routes = [
 
 
     { path: 'exams', component:ExamsPage, canActivate: [AuthGuard] },
-    { path: 'create-exam', component:ExamsForm, canActivate: [AuthGuard] },
-    { path: 'exams/:id', component:ExamsFormEdit, canActivate: [AuthGuard] },
-
 
     { path: 'inscriptionToFinalExam', component: InscriptionFinalExams, canActivate: [AuthGuard] },
     { path: 'inscriptionToFinalExam/:id', component: InscriptionToExamFormEdit, canActivate: [AuthGuard] },

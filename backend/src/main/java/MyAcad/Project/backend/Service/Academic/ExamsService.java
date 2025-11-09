@@ -63,8 +63,12 @@ public class ExamsService {
         SubjectsEntity subject = subjectService.getById((long) dto.getSubjectId())
                 .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubjectId()));
 
+        Student student = studentService.getByLegajo(dto.getLegajoStudent()).orElseThrow();
+
         existingExam.setScore(dto.getScore());
         existingExam.setSubject(subject);
+        existingExam.setExamType(dto.getExamType());
+        existingExam.setStudent(student);
 
         examsRepository.save(existingExam);
     }

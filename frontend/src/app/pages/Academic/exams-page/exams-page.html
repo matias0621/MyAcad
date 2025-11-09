@@ -1,8 +1,9 @@
 <section class="crud-management d-flex justify-content-center">
     <div class="crud-management-container">
         <div class="w-100 d-flex flex-column align-items-center mb-3">
-            <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal"
-                (click)="addExam()">Agregar</button>
+            <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-create-exam">
+                Agregar
+            </button>
         </div>
         <!-- TABLA -->
         <table class="crud-table">
@@ -39,7 +40,7 @@
                         <button class="delete-crud-btn" (click)="deleteExam(exams.id)">Eliminar</button>
 
                         <button class="modify-crud-btn" (click)="modifyExam(exams)" data-bs-toggle="modal"
-                            data-bs-target="#modal">Editar</button>
+                            data-bs-target="#modal-editar-exam">Editar</button>
 
                     </td>
                 </tr>
@@ -54,5 +55,171 @@
             <tfoot>
             </tfoot>
         </table>
+        <!-- Modal ver detalle -->
+        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Detalle del exámen</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @if (selectedExam) {
+                        <div class="detail-container">
+                            <div class="detail-item">
+                                <strong>ID:</strong>
+                                <span>{{selectedExam.id}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Alumno:</strong>
+                                <span>{{selectedExam.student}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Materia:</strong>
+                                <span>{{selectedExam.subject}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Nota:</strong>
+                                <span>{{selectedExam.score}}</span>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de crear examen -->
+        <div class="modal fade" id="modal-create-exam" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Crear examen</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="modal-form" [formGroup]="form" (submit)="postExam()" id="add-form">
+                            <fieldset>
+                                <label for="score">Nota:</label>
+                                <input type="number" id="score" name="score" formControlName="score">
+                                @if (form.controls['score'].invalid && form.controls['score'].touched) {
+                                <p>El Nota debe ser un numero entre 1 y 100</p>
+                                }
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="">Legajo del alumno:</label>
+                                <input type="text" id="legajo" name="legajo" formControlName="legajo">
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="">Carrera</label>
+                                <select name="" id="" formControlName="careerName">
+                                    @for (career of listCareer; track $index) {
+                                        <option [value]="career.name">{{ career.name }}</option>
+                                    }
+                                </select>
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="">Materia</label>
+                                <select name="" id="" formControlName="subjects">
+                                    @for (subjects of listSubjects; track $index) {
+                                        <option [value]="subjects.id"> {{ subjects.name }} </option>
+                                    }
+                                </select>
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="">Tipo de examen</label>
+                                <select name="examType" id="examType" formControlName="examType">
+
+                                    <option value="EXAM">Parcial</option>
+                                    <option value="FINAL_EXAM">Final</option>
+                                    <option value="MAKEUP_EXAM">Recuperatorio</option>
+
+                                </select>
+                            </fieldset>
+
+                            <div id="buttons">
+                                <button type="button" (click)="cleanForm()">Limpiar</button>
+                                <button type="submit" [disabled]="form.invalid">Crear</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de editar examen -->
+        <div class="modal fade" id="modal-editar-exam" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Editar examen</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="modal-form" [formGroup]="form" (submit)="putExam()" id="add-form">
+                            <fieldset>
+                                <label for="score">Nota:</label>
+                                <input type="number" id="score" name="score" formControlName="score">
+                                @if (form.controls['score'].invalid && form.controls['score'].touched) {
+                                <p>El Nota debe ser un numero entre 1 y 100</p>
+                                }
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="">Legajo del alumno:</label>
+                                <input type="text" id="legajo" name="legajo" formControlName="legajo">
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="">Carrera</label>
+                                <select name="" id="" formControlName="careerName">
+                                    @for (career of listCareer; track $index) {
+                                        <option [value]="career.name">{{ career.name }}</option>
+                                    }
+                                </select>
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="">Materia</label>
+                                <select name="" id="" formControlName="subjects">
+                                    @for (subjects of listSubjects; track $index) {
+                                        <option [value]="subjects.id"> {{ subjects.name }} </option>
+                                    }
+                                </select>
+                            </fieldset>
+
+                            <fieldset>
+                                <label for="">Tipo de examen</label>
+                                <select name="examType" id="examType" formControlName="examType">
+
+                                    <option value="EXAM">Parcial</option>
+                                    <option value="FINAL_EXAM">Final</option>
+                                    <option value="MAKEUP_EXAM">Recuperatorio</option>
+
+                                </select>
+                            </fieldset>
+
+                            <div id="buttons">
+                                <button type="button" (click)="cleanForm()">Limpiar</button>
+                                <button type="submit" [disabled]="form.invalid">Crear</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

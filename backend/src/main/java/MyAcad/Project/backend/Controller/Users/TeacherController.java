@@ -4,7 +4,6 @@ import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
-import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherDTO;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
@@ -36,12 +35,6 @@ public class TeacherController {
     public Page<TeacherResponse> listTeacherPaginated(@RequestParam(name = "page") int page,
                                               @RequestParam(name = "size") int size) {
         return services.listTeachersPaginated(page, size);
-    }
-
-    //Obtener por comisión
-    @GetMapping("/commission/{commissionId}")
-    public List<TeacherResponse> getByCommission(@PathVariable Long commissionId) {
-        return services.getByCommission(commissionId);
     }
 
 

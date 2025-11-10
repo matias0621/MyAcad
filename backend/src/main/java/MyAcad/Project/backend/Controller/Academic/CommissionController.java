@@ -45,7 +45,7 @@ public class CommissionController {
 
     //Paginacion
     @GetMapping("/paginated")
-    public Page<CommissionResponse> listCommissionPaginated(@RequestParam(name = "page") int page,
+    public Page<Commission> listCommissionPaginated(@RequestParam(name = "page") int page,
                                                     @RequestParam(name = "size") int size) {
         return services.listCommissionPaginated(page, size);
     }

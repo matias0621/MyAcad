@@ -45,6 +45,7 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
   }
 
   getCommisionByNameProgram() {
+
     const program: string = this.careerService.getCareerSelected() ?? "career";
 
     this.commisionService.getByProgram(program).subscribe({

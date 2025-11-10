@@ -10,14 +10,10 @@ export class ExamsService {
   readonly url_api = "http://localhost:8080/exams"
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http:HttpClient){}
 
   getAllExams() {
     return this.http.get<Exams[]>(`${this.url_api}`);
-  }
-
-  getExamsPaginated(page: number, size: number) {
-    return this.http.get<any>(`${this.url_api}/paginated?page=${page}&size=${size}`);
   }
 
   getExamById(id: number) {
@@ -28,7 +24,7 @@ export class ExamsService {
     return this.http.get<Exams[]>(`${this.url_api}/subjects/${subjectsId}`);
   }
 
-  getExamsByStudents(studentId: number) {
+  getExamsByStudents(studentId:number){
     return this.http.get<Exams[]>(`${this.url_api}/student/${studentId}`)
   }
 

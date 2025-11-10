@@ -44,12 +44,6 @@ public class StudentService {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Student> getByCommission(Long commissionId) {
-        List<Long> studentIds = repository.findStudentsByCommissionId(commissionId);
-        return repository.findByIdIn(studentIds);
-    }
-
-
     public List<Student> getByLegajoContaining(String legajo) {
         return repository.findByLegajoContaining(legajo);
     }

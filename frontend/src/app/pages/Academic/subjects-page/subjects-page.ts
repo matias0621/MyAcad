@@ -24,10 +24,6 @@ export class SubjectsPage {
   subjects!: Subjects[];
   allSubjects !: Subjects[];
   listPrerequisite: Subjects[] = []
-  selectedSubject ?: Subjects;
-  // Paginación
-  totalPages: number = 0;
-  currentPage: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -52,13 +48,11 @@ export class SubjectsPage {
     });
   }
 
-  getAllSubject(page: number = 0, size: number = 10) {
-    this.subjectService.getAllSubjectPaginated(page, size).subscribe({
+  getAllSubject() {
+    this.subjectService.getAllSubject().subscribe({
       next: (res) => {
-        this.subjects = res.content;
-        this.allSubjects = res.content;
-        this.totalPages = res.totalPages;
-        this.currentPage = res.number;
+        this.subjects = res;
+        this.allSubjects = res;
       },
       error: (err) => {
         console.log(err);
@@ -66,15 +60,14 @@ export class SubjectsPage {
     });
   }
 
-
-  prerequisite(subjects: Subjects) {
+  prerequisite(subjects:Subjects){
     this.subjectId = subjects.id
 
     this.getAllBySemestraLessThanAndProgram(subjects.program, subjects.semesters)
   }
 
-  getAllBySemestraLessThanAndProgram(program: string, semester: number) {
-    this.subjectService.getAllSubjectWithSemesterLessThanAndProgram(semester, program).subscribe({
+  getAllBySemestraLessThanAndProgram(program:string, semester:number){
+    this.subjectService.getAllSubjectWithSemesterLessThanAndProgram(semester,program).subscribe({
       next: (res) => {
         this.listPrerequisite = res
       },
@@ -84,7 +77,7 @@ export class SubjectsPage {
     })
   }
 
-  addPrerequisite(subjectPrerequisiteId: number) {
+  addPrerequisite(subjectPrerequisiteId:number){
     this.subjectService.addPrerequisite(this.subjectId, subjectPrerequisiteId).subscribe({
       next: (res) => {
         this.notificationService.success("Se agrego la correlativa")
@@ -96,7 +89,7 @@ export class SubjectsPage {
     })
   }
 
-  deletePrerequisite(subjectPrerequisiteId: number) {
+  deletePrerequisite(subjectPrerequisiteId:number){
     this.subjectService.deletePrerequiste(this.subjectId, subjectPrerequisiteId).subscribe({
       next: (res) => {
         this.notificationService.success("Se elimino la correlativa")
@@ -140,11 +133,11 @@ export class SubjectsPage {
     ).then((confirmed) => {
       if (confirmed) {
         this.subjectService.deleteSubject(id).subscribe({
-          next: (data) => {
+          next: (data) => { 
             this.notificationService.success('Materia eliminada exitosamente');
             this.getAllSubject();
           },
-          error: (error) => {
+          error: (error) => { 
             this.notificationService.error('Error al eliminar la materia. Por favor, intenta nuevamente', true);
           }
         });
@@ -162,11 +155,11 @@ export class SubjectsPage {
     ).then((confirmed) => {
       if (confirmed) {
         this.subjectService.definitiveDeleteSubject(id).subscribe({
-          next: (data) => {
+          next: (data) => { 
             this.notificationService.success('Materia eliminada exitosamente');
             this.getAllSubject();
           },
-          error: (error) => {
+          error: (error) => { 
             this.notificationService.error('Error al eliminar la materia. Por favor, intenta nuevamente', true);
           }
         });
@@ -174,7 +167,7 @@ export class SubjectsPage {
     });
   }
 
-  viewDisabled(subject: Subjects) {
+   viewDisabled(subject: Subjects) {
     this.notificationService.confirm(
       `¿Deseas activar "${subject.name}"?`,
       'Confirmar activación',
@@ -241,7 +234,7 @@ export class SubjectsPage {
       return;
     }
 
-    if (this.subjectId != 0) {
+     if (this.subjectId != 0) {
       const subjectJson = {
         id: this.subjectId,
         ...this.form.value
@@ -253,10 +246,9 @@ export class SubjectsPage {
           this.subjectId = 0;
           this.getAllSubject();
         },
-        error: (error) => {
+        error: (error) => { 
           this.notificationService.error(error.error, true);
-          console.error(error)
-        }
+          console.error(error) }
       })
     } else {
       this.subjectService.postSubject(this.form.value).subscribe({
@@ -266,10 +258,9 @@ export class SubjectsPage {
           this.subjectId = 0;
           this.getAllSubject();
         },
-        error: (error) => {
+        error: (error) => { 
           this.notificationService.error(error.error, true);
-          console.error(error)
-        }
+          console.error(error) }
       })
     }
   }

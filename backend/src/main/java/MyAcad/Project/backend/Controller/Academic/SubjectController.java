@@ -30,7 +30,7 @@ public class SubjectController {
     }
 
     // Listar materias con paginación
-    @GetMapping("/paginated")
+    @GetMapping("/pagined")
     public Page<SubjectsEntity> listSubjects(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size

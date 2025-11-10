@@ -49,17 +49,14 @@
             </tbody>
             <tfoot>
                 <!-- Paginación -->
-                <tr>
-                    <td class="pagination-container" colspan="7">
+                <tr class="pagination-container">
                         <button (click)="getUsers(currentPage - 1)" [disabled]="currentPage === 0">
                             Anterior
                         </button>
 
-                        <button (click)="getUsers(currentPage + 1)"
-                            [disabled]="currentPage === totalPages - 1 || currentPage === totalPages    ">
+                        <button (click)="getUsers(currentPage + 1)" [disabled]="currentPage === totalPages - 1">
                             Siguiente
                         </button>
-                    </td>
                 </tr>
             </tfoot>
         </table>
@@ -135,7 +132,7 @@
                             </div>
                             <div class="detail-item">
                                 <strong>DNI:</strong>
-                                <span>{{selectedUser.dni | number:'1.0-0'}}</span>
+                                <span>{{selectedUser.dni}}</span>
                             </div>
                         </div>
                         }

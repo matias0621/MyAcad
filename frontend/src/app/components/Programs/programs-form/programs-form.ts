@@ -30,7 +30,7 @@ export class ProgramsForm implements OnInit {
       durationMonths: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100), Validators.pattern(/^[0-9]+$/)]],
       monthlyFee: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30), Validators.pattern(/^[0-9]+$/)]],
       annualFee: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30), Validators.pattern(/^[0-9]+$/)]],
-      active: [true]
+      active: [true, [Validators.required]]
     })
   }
 

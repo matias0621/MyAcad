@@ -19,9 +19,11 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
+                    <th scope="col">Id</th>
                     <th scope="col">Número</th>
                     <th scope="col">Carrera</th>
-                    <th scope="col" class="responsive-hide-2">Capacidad</th>
+                    <th scope="col">Capacidad</th>
+                    <th scope="col">Estado</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -29,12 +31,16 @@
                 <!-- USERS -->
                 @for (commission of commissions; track $index) {
                 <tr class="crud-table-item">
+                    <td>{{commission.id}}</td>
                     <td>{{commission.number}}</td>
                     <td>{{commission.program}}</td>
-                    <td class="responsive-hide-2">{{commission.capacity}}</td>
+                    <td>{{commission.capacity}}</td>
+                    @if(commission.active){
+                    <td>Activa</td>
+                    }@else{
+                    <td>Inactiva</td>
+                    }
                     <td class="crud-table-actions">
-                        <button class="detail-crud-btn-2" (click)="selectedCommission = commission"
-                            data-bs-toggle="modal" data-bs-target="#modal-detail">Detalles</button>
                         @if (commission.active) {
                         <button class="delete-crud-btn" (click)="deleteCommission(commission.id)">Eliminar</button>
                         }
@@ -45,8 +51,8 @@
                         }
                         <button class="modify-crud-btn" (click)="modifyCommission(commission)" data-bs-toggle="modal"
                             data-bs-target="#modal">Editar</button>
-                        <button class="modify-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add-subjects"
-                            (click)="setCommisionId(commission.id)">
+                        <button class="modify-crud-btn" data-bs-toggle="modal"
+                            data-bs-target="#modal-add-subjects" (click)="setCommisionId(commission.id)">
                             Asignar materia
                         </button>
                     </td>
@@ -60,19 +66,6 @@
                 }
             </tbody>
             <tfoot>
-                <!-- Paginación -->
-                <tr>
-                    <td class="pagination-container" colspan="7">
-                        <button (click)="getCommissions(currentPage - 1)" [disabled]="currentPage === 0">
-                            Anterior
-                        </button>
-
-                        <button (click)="getCommissions(currentPage + 1)"
-                            [disabled]="currentPage === totalPages - 1 || currentPage === totalPages">
-                            Siguiente
-                        </button>
-                    </td>
-                </tr>
             </tfoot>
         </table>
         <!-- Modal agregar -->
@@ -138,98 +131,10 @@
                     </div>
                     <div class="modal-body">
                         @for (s of subjectsList; track $index) {
-                        <div [class.selected]="selectedSubjectsIds.includes(s.id)">
-                            <p> {{ s.name }} </p>
-                            <button (click)="addToCommission(s.id)">Añadir</button>
-                        </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal ver detalle -->
-        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
-            style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Detalle del Usuario</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @if (selectedCommission) {
-                        <div class="detail-container">
-                            <div class="detail-item">
-                                <strong>ID:</strong>
-                                <span>{{selectedCommission.id}}</span>
+                            <div [class.selected]="selectedSubjectsIds.includes(s.id)" >
+                                <p> {{ s.name }} </p>
+                                <button (click)="addToCommission(s.id)" >Añadir</button>
                             </div>
-                            <div class="detail-item">
-                                <strong>Comisión:</strong>
-                                <span>{{selectedCommission.number}}</span>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Carrera/Curso:</strong>
-                                <span>{{selectedCommission.program}}</span>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Cuatrimestre:</strong>
-                                <span>{{selectedCommission.capacity}}</span>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Materias</strong>
-                                <span>
-                                    @if (!selectedCommission.subjects || selectedCommission.subjects.length === 0) {
-                                    Aún no hay materias en esta comisión.
-                                    } @else {
-                                    @for (s of selectedCommission.subjects; track $index) {
-                                    {{ s.name }}{{ !$last ? ', ' : '' }}
-                                    }
-                                    }
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Alumnos</strong>
-                                <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-detail-users"
-                                    (click)="getStudents(selectedCommission.id)">Ver alumnos</button>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Profesores</strong>
-                                <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-detail-users"
-                                    (click)="getTeachers(selectedCommission.id)">Ver profesores</button>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal ver alumnos -->
-        <div class="modal fade" id="modal-detail-users" tabindex="-1" aria-labelledby="modal-detail-students-label"
-            style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">{{detailText}}</h1>
-                        <button data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modal-detail"
-                            aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @if (selectedCommission) {
-                        <div class="detail-container">
-                            <div class="detail-item">
-                                @for (student of selectedStudents; track $index) {
-                                <span>{{student.legajo}} - {{student.name}} - {{student.lastName}}</span>
-                                }@empty {
-                                <span>Aún no hay {{detailText2}} en esta comisión.</span>
-                                }
-                            </div>
-                        </div>
                         }
                     </div>
                 </div>

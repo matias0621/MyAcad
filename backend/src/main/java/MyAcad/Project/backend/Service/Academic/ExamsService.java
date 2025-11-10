@@ -6,15 +6,10 @@ import MyAcad.Project.backend.Model.Academic.ExamsEntity;
 import MyAcad.Project.backend.Model.Academic.ExamsResponse;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Users.Student;
-import MyAcad.Project.backend.Model.Users.Teacher;
-import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -43,20 +38,6 @@ public class ExamsService {
                 .build();
 
         examsRepository.save(exam);
-    }
-
-    public Page<ExamsResponse> listExamsPaginated(int page, int size) {
-        Page<ExamsEntity> examsPage = examsRepository.findAll(PageRequest.of(page, size));
-        List<ExamsResponse> responseList = examsPage.getContent()
-                .stream()
-                .map(examsMapper::toExamsResponse)
-                .toList();
-
-        return new PageImpl<>(
-                responseList,
-                examsPage.getPageable(),
-                examsPage.getTotalElements()
-        );
     }
 
     public List<ExamsResponse> findAll() {

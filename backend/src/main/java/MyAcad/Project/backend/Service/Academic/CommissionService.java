@@ -19,7 +19,6 @@ import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,18 +48,8 @@ public class CommissionService {
         repository.save(c);
     }
 
-    public Page<CommissionResponse> listCommissionPaginated(int page, int size) {
-        Page<Commission> commissionPage = repository.findAll(PageRequest.of(page, size));
-        List<CommissionResponse> responseList = commissionPage.getContent()
-                .stream()
-                .map(commissionMapper::toResponse)
-                .toList();
-
-        return new PageImpl<>(
-                responseList,
-                commissionPage.getPageable(),
-                commissionPage.getTotalElements()
-        );
+    public Page<Commission> listCommissionPaginated(int page, int size) {
+        return repository.findAll(PageRequest.of(page, size));
     }
 
     public ResponseEntity<Void> delete(Long id) {
@@ -197,7 +186,6 @@ public class CommissionService {
         Commission c = repository.findById(idCommission)
                 .orElseThrow(() -> new RuntimeException("No se encontró la comisión con id: " + idCommission));
 
-
         Program program = findProgramByName(c.getProgram());
 
         SubjectsEntity s = subjectsRepository.findById(idSubject)
@@ -220,8 +208,6 @@ public class CommissionService {
             case Course course -> courseRepository.save(course);
             default -> throw new RuntimeException("No existe ese programa");
         }
-
-        System.out.println("Comisión editada" + c);
 
         repository.save(c);
     }

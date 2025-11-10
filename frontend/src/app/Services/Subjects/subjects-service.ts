@@ -17,10 +17,6 @@ export class SubjectsService {
     return this.http.get<Subjects[]>(this.api_url);
   }
 
-  getAllSubjectPaginated(page: number, size: number) {
-    return this.http.get<any>(`${this.api_url}/paginated?page=${page}&size=${size}`);
-  }
-
   getAllSubjectWithSemesterLessThan(semester: number) {
     return this.http.get<Subjects[]>(`${this.api_url}/semester-less-than/${semester}`);
   }

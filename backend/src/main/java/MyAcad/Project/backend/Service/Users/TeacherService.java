@@ -5,7 +5,6 @@ import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Mapper.TeacherMapper;
-import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
@@ -57,12 +56,6 @@ public class TeacherService {
                 teacherPage.getTotalElements()
         );
     }
-
-    public List<TeacherResponse> getByCommission(Long commissionId) {
-        List<Long> studentIds = repository.findTeachersByCommissionId(commissionId);
-        return mapper.toResponseList(repository.findByIdIn(studentIds));
-    }
-
 
     public List<TeacherResponse> getByLegajoContaining(String legajo) {
         return mapper.toResponseList(repository.findByLegajoContaining(legajo));

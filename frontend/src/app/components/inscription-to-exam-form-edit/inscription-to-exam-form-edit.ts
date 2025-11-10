@@ -5,11 +5,10 @@ import { InscriptionToFinalExamService } from '../../Services/InscriptionToFinal
 import { SubjectsService } from '../../Services/Subjects/subjects-service';
 import { InscriptionToFinalExam, PostInscriptionToFinalExam } from '../../Models/InscriptionToFinalExam/InscriptionToFinalExam';
 import { NotificationService } from '../../Services/notification/notification.service';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-inscription-to-exam-form-edit',
-  imports: [ReactiveFormsModule, DatePipe],
+  imports: [ReactiveFormsModule],
   templateUrl: './inscription-to-exam-form-edit.html',
   styleUrl: './inscription-to-exam-form-edit.css'
 })

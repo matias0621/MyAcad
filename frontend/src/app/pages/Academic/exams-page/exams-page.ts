@@ -5,9 +5,11 @@ import { ExamsService } from '../../../Services/Exams/exams-service';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CareerService } from '../../../Services/CareerService/career-service';
 import { ProgramService } from '../../../Services/program-service';
 import Program from '../../../Models/Program/Program';
 import Subjects from '../../../Models/Subjects/Subjects';
+
 
 @Component({
   selector: 'app-exams-page',
@@ -27,9 +29,8 @@ export class ExamsPage implements OnInit {
   subjects!: FormControl;
   selectedExam?: Exams;
 
-  idSubjects!: number;
-  examId!: number;
-
+  idSubjects!: number 
+  examId!:number
   // Paginación
   totalPages: number = 0;
   currentPage: number = 0;
@@ -80,6 +81,7 @@ export class ExamsPage implements OnInit {
       },
     });
   }
+
 
   getAllExam(page: number = 0, size: number = 10) {
     this.examsService.getExamsPaginated(page, size).subscribe({
@@ -148,7 +150,6 @@ export class ExamsPage implements OnInit {
   cleanForm() {
     this.form.reset();
   }
-
   postExam() {
     if (this.form.invalid) {
       this.notificationService.warning(

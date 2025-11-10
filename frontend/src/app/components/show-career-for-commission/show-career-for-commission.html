@@ -1,0 +1,36 @@
+<section class="crud-management d-flex justify-content-center">
+    <div class="crud-management-container">
+        <div class="w-100 d-flex flex-column align-items-center mb-3">
+            <h1 style="text-align: center;">Carreras</h1>
+
+        </div>
+        <table class="crud-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Legajo</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col" class="responsive-hide-2">opciones</th>
+
+                </tr>
+            </thead>
+            <tbody class="crud-table-body">
+                <!-- USERS -->
+                @for (program of listProgram; track $index) {
+                <tr class="crud-table-item">
+                    <td>{{program.id}}</td>
+                    <td>{{program.name}}</td>
+                    <td class="responsive-hide-2">
+                        <button class="exam-add-btn" data-bs-toggle="modal"
+                            data-bs-target="#modal-add-student" (click)="setName(program.name)">Inscribir</button>
+                </tr>
+                }@empty {
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <p style="color: red;"> Aun no hay ninguna carrera cargada.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

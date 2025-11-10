@@ -85,13 +85,16 @@
                         @if (selectedExam) {
                         <div class="detail-container">
                             <div class="detail-item">
+                                <strong>ID:</strong>
+                                <span>{{selectedExam.id}}</span>
+                            </div>
+                            <div class="detail-item">
                                 <strong>Alumno:</strong>
-                                <span>{{selectedExam.student.legajo}} | {{selectedExam.student.name}}
-                                    {{selectedExam.student.lastName}}</span>
+                                <span>{{selectedExam.student}}</span>
                             </div>
                             <div class="detail-item">
                                 <strong>Materia:</strong>
-                                <span>{{selectedExam.subject.program}} | {{selectedExam.subject.name}}</span>
+                                <span>{{selectedExam.subject}}</span>
                             </div>
                             <div class="detail-item">
                                 <strong>Nota:</strong>
@@ -133,7 +136,7 @@
                                 <label for="">Carrera</label>
                                 <select name="" id="" formControlName="careerName">
                                     @for (career of listCareer; track $index) {
-                                    <option [value]="career.name">{{ career.name }}</option>
+                                        <option [value]="career.name">{{ career.name }}</option>
                                     }
                                 </select>
                             </fieldset>
@@ -142,7 +145,7 @@
                                 <label for="">Materia</label>
                                 <select name="" id="" formControlName="subjects">
                                     @for (subjects of listSubjects; track $index) {
-                                    <option [value]="subjects.id"> {{ subjects.name }} </option>
+                                        <option [value]="subjects.id"> {{ subjects.name }} </option>
                                     }
                                 </select>
                             </fieldset>
@@ -197,7 +200,7 @@
                                 <label for="">Carrera</label>
                                 <select name="" id="" formControlName="careerName">
                                     @for (career of listCareer; track $index) {
-                                    <option [value]="career.name">{{ career.name }}</option>
+                                        <option [value]="career.name">{{ career.name }}</option>
                                     }
                                 </select>
                             </fieldset>
@@ -206,7 +209,7 @@
                                 <label for="">Materia</label>
                                 <select name="" id="" formControlName="subjects">
                                     @for (subjects of listSubjects; track $index) {
-                                    <option [value]="subjects.id"> {{ subjects.name }} </option>
+                                        <option [value]="subjects.id"> {{ subjects.name }} </option>
                                     }
                                 </select>
                             </fieldset>

@@ -1,7 +1,7 @@
 export default interface Program{
     id : number
-    name: String
-    description : String
+    name: string
+    description : string
     durationMonths : number
     monthlyFee : number
     annualFee : number

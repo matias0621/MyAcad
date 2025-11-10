@@ -28,6 +28,13 @@ import { TeacherExamsView } from './components/Teacher/teacher-exams-view/teache
 import { TeacherGradesView } from './components/Teacher/teacher-grades-view/teacher-grades-view';
 import { SubjectsTeacherView } from './components/Teacher/subjects-teacher-view/subjects-teacher-view';
 
+import { ShowCareerForRegister } from './components/show-career-for-register/show-career-for-register';
+import { SelectTypeRegisterPage } from './pages/select-type-register-page/select-type-register-page';
+import { ShowCareerForCommission } from './components/show-career-for-commission/show-career-for-commission';
+import { RegisterStudentCareer } from './components/register-student-career/register-student-career';
+
+
+
 
 
 
@@ -45,9 +52,6 @@ export const routes: Routes = [
 
 
     { path: 'exams', component:ExamsPage, canActivate: [AuthGuard] },
-    { path: 'create-exam', component:ExamsForm, canActivate: [AuthGuard] },
-    { path: 'exams/:id', component:ExamsFormEdit, canActivate: [AuthGuard] },
-
 
     { path: 'inscriptionToFinalExam', component: InscriptionFinalExams, canActivate: [AuthGuard] },
     { path: 'inscriptionToFinalExam/:id', component: InscriptionToExamFormEdit, canActivate: [AuthGuard] },
@@ -58,7 +62,13 @@ export const routes: Routes = [
 
     { path: 'register-to-final-exam', component: InscriptionToExamList, canActivate:[AuthGuard] },
 
-    { path: 'register-student-to-commission', component:InscriptionCommision },
+    { path: 'register-student-to-commission/:name', component:InscriptionCommision, canActivate:[AuthGuard] },
+
+    { path: 'select-type-register', component:SelectTypeRegisterPage, canActivate:[AuthGuard] },
+
+    { path: 'show-career-for-register', component:ShowCareerForRegister, canActivate:[AuthGuard] },
+    { path: 'show-career-for-commission', component:ShowCareerForCommission, canActivate:[AuthGuard]},
+    { path: 'register-student-career/:name', component:RegisterStudentCareer, canActivate:[AuthGuard] },
 
     { path: 'engineerings', component: Engineerings, canActivate: [AuthGuard] },
     { path: 'technicals', component: Technicals, canActivate: [AuthGuard] },

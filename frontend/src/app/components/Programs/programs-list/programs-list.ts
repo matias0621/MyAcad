@@ -182,8 +182,7 @@ export class ProgramsList implements OnInit {
   }
 
   registerToStudent(nameProgram: string) {
-    this.service.setCareerSelected(nameProgram)
-    this.router.navigate(['register-student-to-commission'])
+    this.router.navigate(['/register-student-to-commission/', nameProgram]);
   }
 
 }

@@ -54,4 +54,6 @@ public class SubjectsEntity {
     //Nombre de la carrera.
     private String program;
 
+
+
 }

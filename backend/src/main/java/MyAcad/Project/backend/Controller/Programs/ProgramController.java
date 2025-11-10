@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Controller.Programs;
 
 import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Service.Programs.ProgramService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,4 +32,23 @@ public class ProgramController {
     public ResponseEntity<List<Program>> findByTeacher(@PathVariable Long teacherId) {
         return ResponseEntity.ok(programService.findByTeacher(teacherId));
     }
+
+    @GetMapping("/program/{name}")
+    public ResponseEntity<Program> findByName(@PathVariable String name) {
+        return ResponseEntity.ok(programService.findByName(name));
+    }
+
+    @PutMapping("/register-student/{name}")
+    public ResponseEntity<?> registerStudent(@PathVariable String name, @RequestBody String legajoStudent) {
+        programService.registerStudent(name, legajoStudent);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/register-teacher/{name}")
+    public ResponseEntity<?> registerTeacher(@PathVariable String name, @RequestBody String legajoStudent) {
+        programService.registerTeacher(name, legajoStudent);
+        return ResponseEntity.ok().build();
+    }
+    
+
 }

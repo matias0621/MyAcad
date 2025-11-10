@@ -1,9 +1,16 @@
 package MyAcad.Project.backend.Service.Programs;
 
+import MyAcad.Project.backend.Model.Programs.Career;
+import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.Programs.Technical;
+import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Programs.CareerRepository;
 import MyAcad.Project.backend.Repository.Programs.CourseRepository;
 import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
+import MyAcad.Project.backend.Repository.Users.StudentRepository;
+import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +23,8 @@ public class ProgramService {
     private final CourseRepository courseRepository;
     private final TechnicalRepository technicalRepository;
     private final CareerRepository careerRepository;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
     public List<Program> findPrograms(){
         List<Program> programs = new ArrayList<>();
@@ -44,5 +53,41 @@ public class ProgramService {
         programs.addAll(courseRepository.findByTeacher(teacherId));
 
         return programs;
+    }
+
+    public void registerStudent(String nameProgram, String legajoStudent){
+        Student student = studentRepository.findByLegajo(legajoStudent).orElseThrow();
+        Program program = findByName(nameProgram);
+
+        program.getStudents().add(student);
+
+        switch (program) {
+            case Career career -> careerRepository.save(career);
+            case Technical technical -> technicalRepository.save(technical);
+            case Course course -> courseRepository.save(course);
+            default -> throw new RuntimeException("No existe esa materia");
+        }
+    }
+
+    public void registerTeacher(String nameProgram, String legajoTeacher){
+        Teacher teacher = teacherRepository.findByLegajo(legajoTeacher).orElseThrow();
+        Program program = findByName(nameProgram);
+
+        program.getTeachers().add(teacher);
+
+        switch (program) {
+            case Career career -> careerRepository.save(career);
+            case Technical technical -> technicalRepository.save(technical);
+            case Course course -> courseRepository.save(course);
+            default -> throw new RuntimeException("No existe esa materia");
+        }
+    }
+
+    public Program findByName(String name){
+        return  careerRepository.findByName(name)
+                .map(p -> (Program) p)
+                .or(() -> courseRepository.findByName(name).map(p -> (Program) p))
+                .or(() -> technicalRepository.findByName(name).map(p -> (Program) p))
+                .orElseThrow(() -> new RuntimeException("Program not found"));
     }
 }

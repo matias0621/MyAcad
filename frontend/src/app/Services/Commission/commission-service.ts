@@ -60,6 +60,10 @@ export class CommissionService {
     return this.http.put(`${this.API_URL}/add-subject/${idCommission}`, idSubjects)
   }
 
+  removeSubjectFromCommission(idCommission: number, idSubject: number) {
+    return this.http.put(`${this.API_URL}/delete-subject/${idCommission}`, idSubject);
+  }
+
   registerStudentToCommissionByManager(idCommision: number, requestStudent: RegistrationStudentOrTeacher) {
     return this.http.put(`${this.API_URL}/register-student-by-manager/${idCommision}`, requestStudent)
   }

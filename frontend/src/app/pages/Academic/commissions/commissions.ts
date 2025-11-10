@@ -211,22 +211,44 @@ export class Commissions {
   }
 
   addToCommission(subjectsId: number) {
+    if (!this.commissionId) {
+      this.notificationService.error('Seleccioná una comisión antes de asignar materias', true);
+      return;
+    }
+
     const index = this.selectedSubjectsIds.indexOf(subjectsId);
-    if (index > -1) {
+    const removing = index > -1;
+
+    if (removing) {
       this.selectedSubjectsIds.splice(index, 1);
+      this.service.removeSubjectFromCommission(this.commissionId, subjectsId).subscribe({
+        next: () => {
+          this.notificationService.success('Se eliminó la materia de la comisión');
+          this.getCommissions();
+        },
+        error: (err) => {
+          this.notificationService.error('Hubo un error al eliminar la materia', true);
+          console.log(err);
+          this.selectedSubjectsIds.push(subjectsId);
+        },
+      });
     } else {
       this.selectedSubjectsIds.push(subjectsId);
+      this.service.addSubjectsToCommission(this.commissionId, subjectsId).subscribe({
+        next: () => {
+          this.notificationService.success('Se añadió la materia a la comisión y carrera');
+          this.getCommissions();
+        },
+        error: (err) => {
+          this.notificationService.error('Hubo un error al añadir la materia', true);
+          console.log(err);
+          const rollbackIndex = this.selectedSubjectsIds.indexOf(subjectsId);
+          if (rollbackIndex > -1) {
+            this.selectedSubjectsIds.splice(rollbackIndex, 1);
+          }
+        },
+      });
     }
-    this.service.addSubjectsToCommission(this.commissionId, subjectsId).subscribe({
-      next: (res) => {
-        this.getCommissions();
-        this.notificationService.success('Se añadio la materia a la comision y carrera');
-      },
-      error: (err) => {
-        this.notificationService.error('Hubo un error', true);
-        console.log(err);
-      },
-    });
   }
 
   // BAJA DEFINITIVA

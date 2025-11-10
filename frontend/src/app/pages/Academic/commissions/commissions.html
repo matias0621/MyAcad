@@ -140,7 +140,9 @@
                         @for (s of subjectsList; track $index) {
                         <div [class.selected]="selectedSubjectsIds.includes(s.id)">
                             <p> {{ s.name }} </p>
-                            <button (click)="addToCommission(s.id)">Añadir</button>
+                            <button (click)="addToCommission(s.id)" [class.remove]="selectedSubjectsIds.includes(s.id)">
+                                {{ selectedSubjectsIds.includes(s.id) ? 'Eliminar' : 'Añadir' }}
+                            </button>
                         </div>
                         }
                     </div>

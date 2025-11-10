@@ -147,6 +147,14 @@ button {
     box-shadow: 0 12px 24px rgba(61, 91, 105, 0.25);
 }
 
+#modal-add-subjects .modal-body button.remove {
+    background: linear-gradient(135deg, #d9534f, #b52b27);
+}
+
+#modal-add-subjects .modal-body button.remove:hover {
+    box-shadow: 0 12px 24px rgba(217, 83, 79, 0.25);
+}
+
 @media (max-width: 576px) {
     #modal-add-subjects .modal-dialog {
         max-width: 92vw;

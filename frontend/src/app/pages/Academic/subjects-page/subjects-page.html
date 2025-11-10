@@ -5,14 +5,6 @@
         <div class="w-100 d-flex flex-column align-items-center mb-3">
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal"
                 (click)="addSubject()">Agregar</button>
-            <select class="select-filter" [(ngModel)]="filter" (change)="filterSubjects()">
-                <option value="">Mostrar todo</option>
-                <option value="Activas">Activas</option>
-                <option value="Inactivas">Inactivas</option>
-                @for(program of programs; track $index){
-                <option [value]="program.name">{{ program.name }}</option>
-                }
-            </select>
         </div>
 
         <!-- TABLA -->

@@ -23,6 +23,8 @@ export class SubjectsPage {
   programs: Program[] = [];
   subjects!: Subjects[];
   allSubjects !: Subjects[];
+  private allSubjectsLoaded = false;
+  private showingAllSubjects = false;
   listPrerequisite: Subjects[] = []
   selectedSubject ?: Subjects;
   // Paginación
@@ -42,6 +44,7 @@ export class SubjectsPage {
     this.getPrograms();
     this.getAllSubject();
     this.getAllCommission();
+    this.loadAllSubjects();
 
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
@@ -56,13 +59,29 @@ export class SubjectsPage {
     this.subjectService.getAllSubjectPaginated(page, size).subscribe({
       next: (res) => {
         this.subjects = res.content;
-        this.allSubjects = res.content;
         this.totalPages = res.totalPages;
         this.currentPage = res.number;
+        this.loadAllSubjects(this.filter !== '' || this.showingAllSubjects);
       },
       error: (err) => {
         console.log(err);
       },
+    });
+  }
+
+  private loadAllSubjects(applyFilterAfterLoad: boolean = false) {
+    this.allSubjectsLoaded = false;
+    this.subjectService.getAllSubject().subscribe({
+      next: (subjects) => {
+        this.allSubjects = subjects;
+        this.allSubjectsLoaded = true;
+        if (applyFilterAfterLoad) {
+          this.applyFilter();
+        }
+      },
+      error: (error) => {
+        console.error(error);
+      }
     });
   }
 
@@ -215,21 +234,49 @@ export class SubjectsPage {
 
   filterSubjects() {
     if (this.filter === '') {
-      this.getAllSubject();
-    } else if (this.filter === "Activas") {
-      this.subjects = this.allSubjects.filter(
-        s => s.subjectActive === true
-      )
-    } else if (this.filter === "Inactivas") {
-      this.subjects = this.allSubjects.filter(
-        s => s.subjectActive === false
-      )
+      this.showingAllSubjects = true;
     } else {
-      this.subjectService.getByProgram(this.filter).subscribe({
-        next: (data) => { this.subjects = data },
-        error: (error) => { console.error(error) }
-      })
+      this.showingAllSubjects = false;
     }
+
+    if (!this.allSubjectsLoaded) {
+      this.loadAllSubjects(true);
+      return;
+    }
+
+    this.applyFilter();
+  }
+
+  private applyFilter(): void {
+    if (!this.allSubjects) {
+      this.subjects = [];
+      return;
+    }
+
+    if (this.filter === '') {
+      this.subjects = [...this.allSubjects];
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    if (this.filter === 'Activas') {
+      this.subjects = this.allSubjects.filter((s) => s.subjectActive);
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    if (this.filter === 'Inactivas') {
+      this.subjects = this.allSubjects.filter((s) => !s.subjectActive);
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    this.subjects = this.allSubjects.filter((s) => s.program === this.filter);
+    this.totalPages = 1;
+    this.currentPage = 0;
   }
 
   // form

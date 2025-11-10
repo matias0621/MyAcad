@@ -50,7 +50,7 @@ export class SubjectsPage {
       name: ['', [Validators.required, Validators.maxLength(30)]],
       description: ['', [Validators.required, Validators.maxLength(300)]],
       semesters: ['', [Validators.required, Validators.maxLength(50)]],
-      // acacademicStatus: ['', [Validators.required]],
+      acacademicStatus: ['', [Validators.required]],
       program: ['', [Validators.required]]
     });
   }
@@ -178,7 +178,7 @@ export class SubjectsPage {
             this.getAllSubject();
           },
           error: (error) => {
-            this.notificationService.error('Error al eliminar la materia. Por favor, intenta nuevamente', true);
+            this.notificationService.error('Esta  materia tiene correlativas', true);
           }
         });
       }

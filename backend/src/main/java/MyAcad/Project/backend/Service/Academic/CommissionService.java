@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Service.Academic;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
+import MyAcad.Project.backend.Exception.InscriptionException;
 import MyAcad.Project.backend.Mapper.CommissionMapper;
 import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Programs.Career;
@@ -10,9 +11,11 @@ import MyAcad.Project.backend.Model.Programs.Technical;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
+import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
 import MyAcad.Project.backend.Repository.Programs.CareerRepository;
 import MyAcad.Project.backend.Repository.Programs.CourseRepository;
 import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
+import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
@@ -41,6 +44,8 @@ public class CommissionService {
     private final TechnicalRepository technicalRepository;
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
+    private final ExamsRepository examsRepository;
+    private final SubjectsXStudentRepository subjectsXStudentRepository;
 
     public void add(Commission c) {
         if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
@@ -334,17 +339,16 @@ public class CommissionService {
         SubjectsXStudentEntity sxStudentEntity = opt.get();
         AcademicStatus statusStudent = sxStudentEntity.getStateStudent();
         AcademicStatus statusRequired = prerequisite.getAcademicStatus();
-        
 
         switch (statusRequired) {
             case COMPLETED -> {
                 if (!(statusStudent.equals(AcademicStatus.COMPLETED) || statusStudent.equals(AcademicStatus.APPROVED))) {
-                    throw new RuntimeException("Can't register in this subject");
+                    throw new RuntimeException("1");
                 }
             }
             case APPROVED -> {
                 if (!statusStudent.equals(AcademicStatus.APPROVED)) {
-                    throw new RuntimeException("Can't register in this subject");
+                    throw new RuntimeException("2");
                 }
             }
             default -> throw new RuntimeException("Can't register in this subject");

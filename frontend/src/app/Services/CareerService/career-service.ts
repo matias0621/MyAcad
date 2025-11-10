@@ -10,14 +10,18 @@ import Technical from '../../Models/Users/Careers/Technical';
 export class CareerService {
   readonly API_URL = 'http://localhost:8080';
 
-  private careerSelected:string | null = null
+  private careerSelected: string | null = null
 
   constructor(
     private http: HttpClient
   ) { }
 
+  getCareersPaginated(endpoint: string, page: number, size: number) {
+    return this.http.get<any>(`${this.API_URL}/${endpoint}/paginated?page=${page}&size=${size}`);
+  }
+
   getCareers(endpoint: string) {
-    return this.http.get<Course[] | Technical[] | Career[] >(`${this.API_URL}/${endpoint}`);
+    return this.http.get<Course[] | Technical[] | Career[]>(`${this.API_URL}/${endpoint}`);
   }
 
   postCareer(career: any, endpoint: string) {
@@ -36,11 +40,11 @@ export class CareerService {
     return this.http.put<Course | Technical | Career>(`${this.API_URL}/${endpoint}/${career.id}`, career);
   }
 
-  getCareerSelected(): string | null{
+  getCareerSelected(): string | null {
     return this.careerSelected
   }
 
-  setCareerSelected(name:string | null){
+  setCareerSelected(name: string | null) {
     this.careerSelected = name
   }
 

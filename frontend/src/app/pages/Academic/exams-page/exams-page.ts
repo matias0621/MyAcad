@@ -23,6 +23,10 @@ export class ExamsPage implements OnInit {
   idSubjects!: number 
   examId!:number
 
+  // Paginación
+  totalPages: number = 0;
+  currentPage: number = 0;
+
   constructor(
     private examsService: ExamsService,
     private subjectsService: SubjectsService,
@@ -34,12 +38,12 @@ export class ExamsPage implements OnInit {
     this.getAllExam()
   }
 
-  getAllExam(){
-    this.examsService.getAllExams().subscribe({
+  getAllExam(page: number = 0, size : number = 10){
+    this.examsService.getExamsPaginated(page, size).subscribe({
       next: (res) => {
-        this.listExams = res;
-        console.log(res)
-        console.log(this.listExams)
+        this.listExams = res.content;
+        this.currentPage = res.number;
+        this.totalPages = res.totalPages
       },
       error: (err) => {
         console.log(err)

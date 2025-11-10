@@ -35,6 +35,13 @@ public class StudentController {
         return services.listStudentsPaginated(page, size);
     }
 
+    //Obtener por comisión
+    @GetMapping("/commission/{commissionId}")
+    public List<Student> getByCommission(@PathVariable Long commissionId) {
+        return services.getByCommission(commissionId);
+    }
+
+
     //Obtener por legajo
     @GetMapping("/legajo/{legajo}")
     public List<Student> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {

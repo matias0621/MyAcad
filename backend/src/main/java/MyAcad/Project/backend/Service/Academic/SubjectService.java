@@ -2,9 +2,7 @@ package MyAcad.Project.backend.Service.Academic;
 
 import MyAcad.Project.backend.Exception.NameMateriaAlreadyExistsException;
 import MyAcad.Project.backend.Mapper.SubjectsMapper;
-import MyAcad.Project.backend.Model.Academic.SubjectsDTO;
-import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
-import MyAcad.Project.backend.Model.Academic.SubjectsResponse;
+import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Programs.Career;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.Program;
@@ -15,6 +13,7 @@ import MyAcad.Project.backend.Repository.Programs.CourseRepository;
 import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -57,8 +56,18 @@ public class SubjectService {
                 .toList();
     }
 
-    public Page<SubjectsEntity> listSubject(int page, int size) {
-       return subjectsRepository.findBySubjectActiveTrue(PageRequest.of(page, size));
+    public Page<SubjectsResponse> listSubject(int page, int size) {
+        Page<SubjectsEntity> subjectsPage = subjectsRepository.findAll(PageRequest.of(page, size));
+        List<SubjectsResponse> responseList = subjectsPage.getContent()
+                .stream()
+                .map(subjectsMapper::toResponseWithPrerequisites)
+                .toList();
+
+        return new PageImpl<>(
+                responseList,
+                subjectsPage.getPageable(),
+                subjectsPage.getTotalElements()
+        );
     }
 
     public List<SubjectsResponse> getByNameIgnoringCase(String name) {
@@ -111,6 +120,8 @@ public class SubjectService {
         existingSubject.setProgram(updatedSubject.getProgram());
         existingSubject.setPrerequisites(updatedSubject.getPrerequisites());
         existingSubject.setSubjectActive(updatedSubject.isSubjectActive());
+
+        System.out.println("Subject modified:" + updatedSubject.isSubjectActive());
 
         subjectsRepository.save(existingSubject);
     }

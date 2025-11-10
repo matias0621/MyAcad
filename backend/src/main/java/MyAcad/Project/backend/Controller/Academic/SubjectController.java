@@ -31,11 +31,11 @@ public class SubjectController {
 
     // Listar materias con paginación
     @GetMapping("/paginated")
-    public Page<SubjectsEntity> listSubjects(
+    public ResponseEntity<Page<SubjectsResponse>> listSubjects(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return subjectService.listSubject(page, size);
+        return ResponseEntity.ok(subjectService.listSubject(page, size));
     }
 
     @GetMapping

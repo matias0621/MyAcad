@@ -68,6 +68,7 @@ public class SecurityConfig {
                                 "/technicals/**",
 
                                 "/exams/**",
+                                "/inscriptions/**",
                                 "/inscription-final-exam/**",
                                 "/subject-x-student/**"
                         ).hasAnyRole("MANAGER", "TEACHER")

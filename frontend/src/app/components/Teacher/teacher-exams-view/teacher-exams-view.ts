@@ -28,7 +28,7 @@ export class TeacherExamsView implements OnInit {
   ngOnInit(): void {
     this.legajo = new FormControl("", [Validators.required])
     this.examType = new FormControl("", [Validators.required])
-    this.score = new FormControl("", [Validators.required, Validators.min(1), Validators.max(10)])
+    this.score = new FormControl("", [Validators.required, Validators.min(0), Validators.max(100)])
 
     this.form = new FormGroup({
       legajo: this.legajo,

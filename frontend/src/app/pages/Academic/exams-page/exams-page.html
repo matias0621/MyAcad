@@ -49,7 +49,7 @@
                 }@empty {
                 <tr>
                     <td colspan="7" class="text-center">
-                        <p style="color: red;"> Aun no hay ninguna comisión cargado.</p>
+                        <p style="color: red;"> Aun no hay ningun exámen cargado.</p>
                     </td>
                 </tr>
                 }
@@ -108,17 +108,16 @@
         </div>
 
         <!-- Modal de crear examen -->
-        <div class="modal fade" id="modal-create-exam" tabindex="-1" aria-labelledby="modal-detail-label"
+        <div class="modal fade crud-modal" id="modal-create-exam" tabindex="-1" aria-labelledby="modal-detail-label"
             style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Crear examen</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
+            <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
+                <div class="modal-content crud-modal__content">
+                    <div class="modal-header crud-modal__header">
+                        <h1 class="modal-title fs-5 titles crud-modal__title">Crear examen</h1>
+                        <button type="button" class="btn-close crud-modal__close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body crud-modal__body">
                         <form class="modal-form" [formGroup]="form" (submit)="postExam()" id="add-form">
                             <fieldset>
                                 <label for="score">Nota:</label>
@@ -173,17 +172,16 @@
         </div>
 
         <!-- Modal de editar examen -->
-        <div class="modal fade" id="modal-editar-exam" tabindex="-1" aria-labelledby="modal-detail-label"
-            style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Editar examen</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
+        <div class="modal fade crud-modal" id="modal-editar-exam" tabindex="-1"
+            aria-labelledby="modal-detail-label" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
+                <div class="modal-content crud-modal__content">
+                    <div class="modal-header crud-modal__header">
+                        <h1 class="modal-title fs-5 titles crud-modal__title">Editar examen</h1>
+                        <button type="button" class="btn-close crud-modal__close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body crud-modal__body">
                         <form class="modal-form" [formGroup]="form" (submit)="putExam()" id="add-form">
                             <fieldset>
                                 <label for="score">Nota:</label>

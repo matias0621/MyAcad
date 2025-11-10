@@ -16,6 +16,7 @@ h2 {
 
 .empty-state p {
     background: var(--color-1);
+    color: var(--color-4);
     padding: 2em;
     border-radius: 8px;
     border: 2px dashed var(--color-3);

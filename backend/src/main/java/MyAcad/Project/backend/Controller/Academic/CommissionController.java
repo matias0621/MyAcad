@@ -2,6 +2,7 @@ package MyAcad.Project.backend.Controller.Academic;
 
 import MyAcad.Project.backend.Configuration.UserDetailsImpl;
 import MyAcad.Project.backend.Exception.CommissionAlreadyExistsException;
+import MyAcad.Project.backend.Exception.InscriptionException;
 import MyAcad.Project.backend.Model.Academic.Commission;
 import MyAcad.Project.backend.Model.Academic.CommissionDTO;
 import MyAcad.Project.backend.Model.Academic.CommissionResponse;
@@ -129,14 +130,22 @@ public class CommissionController {
 
     @PutMapping("/register-student-by-manager/{id}")
     public ResponseEntity<?> registerStudent(@PathVariable Long id, @RequestBody RegistrationRequest request){
-        services.registerStudentbyManager(request.getLegajo(), id, request.getSubjectsId());
-        return ResponseEntity.ok().build();
+        try {
+            services.registerStudentbyManager(request.getLegajo(), id, request.getSubjectsId());
+            return ResponseEntity.ok().build();
+        }catch (InscriptionException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/register-teacher-by-manager/{id}")
     public ResponseEntity<?> registerTeacher(@PathVariable Long id, @RequestBody RegistrationRequest request){
-        services.registerTeacherToProgram(request.getLegajo(), id, request.getSubjectsId());
-        return ResponseEntity.ok().build();
+        try {
+            services.registerTeacherToProgram(request.getLegajo(), id, request.getSubjectsId());
+            return ResponseEntity.ok().build();
+        }catch (InscriptionException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/register-commision-to-student/{id}")

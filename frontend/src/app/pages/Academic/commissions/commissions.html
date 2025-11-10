@@ -76,17 +76,16 @@
             </tfoot>
         </table>
         <!-- Modal agregar -->
-        <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modal-label" style="display: none;"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">{{ modalText }}</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
+        <div class="modal fade crud-modal" id="modal" tabindex="-1" aria-labelledby="modal-label"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
+                <div class="modal-content crud-modal__content">
+                    <div class="modal-header crud-modal__header">
+                        <h1 class="modal-title fs-5 titles crud-modal__title">{{ modalText }}</h1>
+                        <button type="button" class="btn-close crud-modal__close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body crud-modal__body">
                         <form class="modal-form" [formGroup]="form" (submit)="OnSubmit()">
                             <fieldset>
                                 <label for="number">Número:</label>

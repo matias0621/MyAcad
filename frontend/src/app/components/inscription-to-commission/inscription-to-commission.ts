@@ -82,7 +82,7 @@ export class InscriptionToCommission implements OnInit {
         this.notificationService.success('Se registro el alumno correctamente');
       },
       error: (err) => {
-        this.notificationService.error('Hubo un error', true);
+        this.notificationService.error(err.error, true);
         console.log(err);
       },
     });
@@ -114,7 +114,7 @@ export class InscriptionToCommission implements OnInit {
         this.notificationService.success('Se registro el profesor correctamente');
       },
       error: (err) => {
-        this.notificationService.error('Hubo un error', true);
+        this.notificationService.error(err.error, true);
         console.log(err);
       },
     });

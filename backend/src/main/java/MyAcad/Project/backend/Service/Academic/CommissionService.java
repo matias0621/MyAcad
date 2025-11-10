@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Service.Academic;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
+import MyAcad.Project.backend.Exception.InscriptionException;
 import MyAcad.Project.backend.Mapper.CommissionMapper;
 import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Programs.Career;
@@ -235,28 +236,46 @@ public class CommissionService {
     }
 
     public void registerStudentbyManager(String legajo, Long commissionId, Long subjectsId){
-        Student s = studentRepository.findByLegajo(legajo).orElseThrow();
+        Optional<Student> studentOptional = studentRepository.findByLegajo(legajo);
         Commission commission = repository.findById(commissionId).orElseThrow();
         SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
-        registerToStudent(s, commission, subjectsEntity);
+
+        if (studentOptional.isEmpty()){
+            throw new InscriptionException("El legajo no existe.");
+        }
+        try {
+            Student s = studentOptional.get();
+            registerToStudent(s, commission, subjectsEntity);
+        }catch (InscriptionException e){
+            throw new InscriptionException(e.getMessage());
+        }
     }
 
     public void registerStudentByToken(Long studentId, Long commissionId, Long subjectsId){
         Student s = studentRepository.findById(studentId).orElseThrow();
         Commission commission = repository.findById(commissionId).orElseThrow();
         SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
-        registerToStudent(s, commission, subjectsEntity);
+        try {
+            registerToStudent(s, commission, subjectsEntity);
+        }catch (InscriptionException e){
+            throw new InscriptionException(e.getMessage());
+        }
     }
 
     public void registerToStudent(Student student, Commission commission, SubjectsEntity subjectsEntity){
 
+        Optional<Student> optStudent = studentRepository.findById(student.getId());
+
+        if (optStudent.isEmpty()){
+            throw new InscriptionException("El legajo no existe.");
+        }
 
         if (!commission.getStudents().contains(student)){
             commission.getStudents().add(student);
         }
 
         if (subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), subjectsEntity.getId()).isPresent()){
-            throw new RuntimeException("Subject already exists");
+            throw new InscriptionException("El alumno ya está anotado a la materia.");
         }
 
         if (!subjectsEntity.getPrerequisites().isEmpty()){
@@ -294,7 +313,15 @@ public class CommissionService {
     public void registerTeacherToProgram(String legajo, Long commissionId, Long subjectsId){
         Commission commission = repository.findById(commissionId).orElseThrow();
         SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
-        Teacher teacher = teacherRepository.findByLegajo(legajo).orElseThrow();
+        Optional<Teacher> teacherOpt = teacherRepository.findByLegajo(legajo);
+
+        if (teacherOpt.isEmpty()){
+            throw new InscriptionException("El legajo no existe.");
+        }
+        Teacher teacher = teacherOpt.get();
+
+
+
         // Asignamos un profesor a la carrera
         Program program = findProgramByName(commission.getProgram());
         program.getTeachers().add(teacher);
@@ -330,15 +357,15 @@ public class CommissionService {
         switch (statusRequired) {
             case COMPLETED -> {
                 if (!(statusStudent.equals(AcademicStatus.COMPLETED) || statusStudent.equals(AcademicStatus.APPROVED))) {
-                    throw new RuntimeException("Can't register in this subject");
+                    throw new InscriptionException("El alumno no ha aprobado las correlativas.");
                 }
             }
             case APPROVED -> {
                 if (!statusStudent.equals(AcademicStatus.APPROVED)) {
-                    throw new RuntimeException("Can't register in this subject");
+                    throw new InscriptionException("El alumno no ha aprobado las correlativas.");
                 }
             }
-            default -> throw new RuntimeException("Can't register in this subject");
+            default -> throw new InscriptionException("El alumno no ha aprobado las correlativas.");
         }
     }
 

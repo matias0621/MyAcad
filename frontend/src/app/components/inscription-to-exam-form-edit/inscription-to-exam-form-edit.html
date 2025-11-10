@@ -32,31 +32,7 @@
         @for (subjects of subjectsServices.listSubject; track $index) {
         <li class="exam-subject-item" [class.exam-subject-item--selected]="subjectId === subjects.id">
             <span class="exam-subject-name">{{ subjects.name }}</span>
-            <button type="button" class="exam-subject-action" (click)="addToSubject(subjects.id, subjects.name)">Asignar</button>
-        </li>
-        }
-    </ul>
-    }
-</section>
-
-<section class="exam-existing">
-    <header class="exam-existing__header">
-    <h3>Inscripciones creadas</h3>
-        <p>Usá este listado para identificar rápidamente qué mesa querés editar.</p>
-    </header>
-
-    @if (inscriptionToFinalExamService.inscriptionList.length === 0) {
-    <p class="exam-empty-text">Todavía no hay inscripciones creadas.</p>
-    }
-    @else {
-    <ul class="exam-existing-list">
-        @for (inscription of inscriptionToFinalExamService.inscriptionList; track $index) {
-        <li class="exam-existing-item">
-            <span class="exam-existing-name">{{ inscription.subjects.name }}</span>
-            <span class="exam-existing-dates">
-                {{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }} ·
-                {{ inscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }}
-            </span>
+            <button type="button" class="exam-subject-action" (click)="addToSubject(subjects.id)">Asignar</button>
         </li>
         }
     </ul>

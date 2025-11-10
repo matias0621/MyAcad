@@ -5,6 +5,8 @@ import { InscriptionToExamForm } from "../inscription-to-exam-form/inscription-t
 import { InscriptionToExamFormEdit } from "../inscription-to-exam-form-edit/inscription-to-exam-form-edit";
 import { DatePipe } from '@angular/common';
 
+declare const bootstrap: { Modal: any };
+
 @Component({
   selector: 'app-inscription-to-exam-list',
   imports: [InscriptionToExamForm, InscriptionToExamFormEdit, DatePipe],
@@ -14,6 +16,8 @@ import { DatePipe } from '@angular/common';
 export class InscriptionToExamList implements OnInit {
   inscriptionList !: InscriptionToFinalExam[];
   selectedInscription ?: InscriptionToFinalExam;
+  editingInscription: InscriptionToFinalExam | null = null;
+  private pendingSelectionId: number | null = null;
 
   constructor(public inscriptionService:InscriptionToFinalExamService, private crd:ChangeDetectorRef){}
 
@@ -25,6 +29,10 @@ export class InscriptionToExamList implements OnInit {
     this.inscriptionService.getAllInscription().subscribe({
       next: (res) => {
         this.inscriptionList = res;
+        if (this.pendingSelectionId !== null) {
+          this.selectedInscription = this.inscriptionList.find(item => item.id === this.pendingSelectionId) ?? this.selectedInscription;
+          this.pendingSelectionId = null;
+        }
         this.crd.detectChanges()
       },
       error: (err) => {
@@ -33,15 +41,26 @@ export class InscriptionToExamList implements OnInit {
     })
   }
 
-  addStudent(idInscription:number){
-    this.inscriptionService.addStudentToFinalExam(idInscription).subscribe({
-      next: (res) => {
-        alert("Te anotaste correctamente")
-      },
-      error: (err) => {
-        alert("Hubo un error, intente mas tarde")
-      }
-    })
+  openEdit(inscription: InscriptionToFinalExam) {
+    this.editingInscription = inscription;
+  }
+
+  handleInscriptionUpdated() {
+    const updatedId = this.editingInscription?.id ?? null;
+    this.pendingSelectionId = updatedId;
+    this.getAllInscription();
+    this.closeModal('modal-edit');
+    this.editingInscription = null;
+  }
+
+  private closeModal(modalId: string) {
+    const element = document.getElementById(modalId);
+    if (!element || typeof bootstrap === 'undefined') {
+      return;
+    }
+
+    const instance = bootstrap.Modal.getInstance(element) ?? new bootstrap.Modal(element);
+    instance.hide();
   }
 
 }

@@ -1,131 +1,151 @@
-<section class="crud-management d-flex justify-content-center">
-    <div class="crud-management-container">
-        <div class="w-100 d-flex flex-column align-items-center mb-3">
-            <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
+<section class="exam-inscription" aria-labelledby="final-inscriptions-title">
+    <header class="exam-header">
+        <div class="exam-header-text">
+            <h2 id="final-inscriptions-title" class="exam-title">Inscripción a exámenes finales</h2>
+
         </div>
-        <table class="crud-table">
+        <button type="button" class="exam-add-btn" data-bs-toggle="modal" data-bs-target="#modal-add">
+            Nueva inscripción
+        </button>
+    </header>
+
+    <div class="exam-table-wrapper">
+        <table class="exam-table">
             <thead>
-                <tr class="text-center">
+                <tr>
                     <th scope="col">Materia</th>
                     <th scope="col">Fecha examen</th>
                     <th scope="col" class="responsive-hide-2">Fecha inscripción</th>
-                    <th scope="col"></th>
+                    <th scope="col" class="exam-table-actions-header">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="crud-table-body">
-                <!-- USERS -->
+            <tbody>
                 @for (inscription of inscriptionList; track $index) {
-                <tr class="crud-table-item">
-                    <td>{{inscription.subjects.name}}</td>
-                    <td>{{ inscription.finalExamDate | date:'dd/MM/yyyy' }}</td>
-                    <td class="responsive-hide-2">{{ inscription.inscriptionDate | date:'dd/MM/yyyy' }}</td>
-                    <td class="crud-table-actions">
-                        <button class="detail-crud-btn" (click)="selectedInscription = inscription"
-                            data-bs-toggle="modal" data-bs-target="#modal-detail"
-                            style="display: block; margin: auto !important;">Detalles</button>
-                            <button class="modify-crud-btn" (click)="addStudent(inscription.id)">Registrarse</button>
-                        <button class="modify-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-edit" >Editar</button>
+                <tr>
+                    <td data-label="Materia">{{ inscription.subjects.name }}</td>
+                    <td data-label="Fecha examen">{{ inscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="responsive-hide-2" data-label="Fecha inscripción">{{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="exam-actions" data-label="Acciones">
+                        <button type="button" class="exam-action exam-action--info" (click)="selectedInscription = inscription"
+                            data-bs-toggle="modal" data-bs-target="#modal-detail">
+                            Detalles
+                        </button>
+                        <button type="button" class="exam-action exam-action--secondary"
+                            (click)="addStudent(inscription.id)">
+                            Registrarse
+                        </button>
+                        <button type="button" class="exam-action exam-action--primary" data-bs-toggle="modal"
+                            data-bs-target="#modal-edit">
+                            Editar
+                        </button>
                     </td>
                 </tr>
-                }@empty {
+                } @empty {
                 <tr>
-                    <td colspan="6" class="text-center">
-                        <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
+                    <td colspan="4" class="exam-empty-state">
+                        Aún no hay inscripciones a finales cargadas.
                     </td>
                 </tr>
                 }
             </tbody>
-            <tfoot>
-                <!-- Paginación -->
-                <tr>
-                    <td colspan="7">
-                        <ul class="pagination-container">
-                        </ul>
-                    </td>
-                </tr>
-            </tfoot>
         </table>
-        <!-- Modal agregar usuario -->
-        <div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Agregar</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <app-inscription-to-exam-form></app-inscription-to-exam-form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal editar -->
-        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" style="display: none;"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Editar</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <app-inscription-to-exam-form-edit></app-inscription-to-exam-form-edit>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 
-        <!-- Modal ver detalle -->
-        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
-            style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Detalle de la inscripción</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @if (selectedInscription) {
-                        <div class="detail-container">
-                            <div class="detail-item">
-                                <strong>ID:</strong>
-                                <span>{{selectedInscription.id}}</span>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Materia:</strong>
-                                <span>{{selectedInscription.subjects.name}}</span>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Fecha de inscripción:</strong>
-                                <span>{{selectedInscription.inscriptionDate}}</span>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Fecha del examen:</strong>
-                                <span>{{selectedInscription.finalExamDate}}</span>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Alumnos:</strong>
-                                @if(selectedInscription.students && selectedInscription.students.length > 0){
-                                @for (student of selectedInscription.students; track $index) {
-                                <p> {{ student.name }} {{student.lastName}}</p>
-                                <p> {{ student.legajo }} </p>
-                                }
-                                }@else {
-                                <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
-                                }
-                            </div>
-                        </div>
-                        }
-                    </div>
+    <div class="exam-pagination">
+        <ul class="pagination-container"></ul>
+    </div>
+</section>
+
+<!-- Modal agregar inscripción -->
+<div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-title" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-medium">
+        <div class="modal-content exam-modal">
+            <div class="modal-header exam-modal__header">
+                <div>
+                    <p class="exam-modal__tag">Nueva mesa final</p>
+                    <h1 id="modal-add-title" class="exam-modal__title">Crear inscripción</h1>
                 </div>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body exam-modal__body">
+                <app-inscription-to-exam-form></app-inscription-to-exam-form>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+<!-- Modal editar inscripción -->
+<div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-title" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-medium">
+        <div class="modal-content exam-modal">
+            <div class="modal-header exam-modal__header">
+                <div>
+                    <p class="exam-modal__tag">Actualizar mesa final</p>
+                    <h1 id="modal-edit-title" class="exam-modal__title">Editar inscripción</h1>
+                </div>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body exam-modal__body">
+                <app-inscription-to-exam-form-edit></app-inscription-to-exam-form-edit>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal ver detalle -->
+<div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-title" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-narrow">
+        <div class="modal-content exam-modal">
+            <div class="modal-header exam-modal__header exam-modal__header--compact">
+                <h1 id="modal-detail-title" class="exam-modal__title">Detalle de la inscripción</h1>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body exam-modal__body exam-modal__body--detail">
+                @if (selectedInscription) {
+                <div class="exam-detail-grid">
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">ID</span>
+                        <span class="exam-detail-value">{{ selectedInscription.id }}</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">Materia</span>
+                        <span class="exam-detail-value">{{ selectedInscription.subjects.name }}</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">Fecha de inscripción</span>
+                        <span class="exam-detail-value">{{ selectedInscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">Fecha del examen</span>
+                        <span class="exam-detail-value">{{ selectedInscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                    <div class="exam-detail-item exam-detail-item--students">
+                        <span class="exam-detail-label">Alumnos registrados</span>
+                        @if (selectedInscription.students && selectedInscription.students.length > 0) {
+                        <ul class="exam-student-list">
+                            @for (student of selectedInscription.students; track $index) {
+                            <li>
+                                <span class="exam-student-name">{{ student.name }} {{ student.lastName }}</span>
+                                <span class="exam-student-id">Legajo {{ student.legajo }}</span>
+                            </li>
+                            }
+                        </ul>
+                        } @else {
+                        <p class="exam-student-empty">Aún no hay estudiantes inscriptos.</p>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

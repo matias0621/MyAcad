@@ -1,47 +1,64 @@
-<form class="modal-form" [formGroup]="form" (submit)="OnSubmit()">
-    <fieldset>
-        <label> Fecha de la inscripcion </label>
-        <input type="datetime-local" formControlName="inscriptionDate">
-    </fieldset>
+<form class="exam-form" [formGroup]="form" (submit)="OnSubmit()">
+    <div class="exam-form-field">
+        <label for="edit-inscription-date">Fecha de inscripción</label>
+        <input id="edit-inscription-date" type="datetime-local" formControlName="inscriptionDate"
+            placeholder="Actualizá la fecha y hora de apertura">
+    </div>
 
-    <fieldset>
-        <label>Fecha del examen</label>
-        <input type="datetime-local" formControlName="finalExamDate">
-    </fieldset>
+    <div class="exam-form-field">
+        <label for="edit-final-date">Fecha del examen</label>
+        <input id="edit-final-date" type="datetime-local" formControlName="finalExamDate"
+            placeholder="Actualizá la fecha y hora del examen">
+    </div>
 
-
-    <button [disabled]="form.invalid">Enviar</button>
+    <button type="submit" class="exam-form-submit" [disabled]="form.invalid || subjectId === null">Guardar cambios</button>
 </form>
 
-<ul>
+<section class="exam-form-subjects">
+    <header class="exam-form-subjects__header">
+        <h3>Materias disponibles</h3>
+        <p>Asigná o actualizá la materia asociada a la mesa.</p>
+    </header>
+
+    @if (selectedSubjectName) {
+    <p class="exam-selected-info">Materia seleccionada: <span>{{ selectedSubjectName }}</span></p>
+    }
+
     @if (subjectsServices.listSubject.length === 0) {
-    <li>
-        <p style="color: red;"> Aun no hay ninguna materia cargada.</p>
-    </li>
+    <p class="exam-empty-text">Aún no hay materias cargadas en el sistema.</p>
     }
     @else {
-    @for (subjects of subjectsServices.listSubject; track $index) {
-    <li>
-        {{ subjects.name }}
-        <button (click)="addToSubject(subjects.id)">Añadir</button>
-    </li>
+    <ul class="exam-subject-list">
+        @for (subjects of subjectsServices.listSubject; track $index) {
+        <li class="exam-subject-item" [class.exam-subject-item--selected]="subjectId === subjects.id">
+            <span class="exam-subject-name">{{ subjects.name }}</span>
+            <button type="button" class="exam-subject-action" (click)="addToSubject(subjects.id, subjects.name)">Asignar</button>
+        </li>
+        }
+    </ul>
     }
+</section>
+
+<section class="exam-existing">
+    <header class="exam-existing__header">
+    <h3>Inscripciones creadas</h3>
+        <p>Usá este listado para identificar rápidamente qué mesa querés editar.</p>
+    </header>
+
+    @if (inscriptionToFinalExamService.inscriptionList.length === 0) {
+    <p class="exam-empty-text">Todavía no hay inscripciones creadas.</p>
     }
-
-</ul>
-
-
-@if (inscriptionToFinalExamService.inscriptionList.length === 0) {
-<li>
-    <p style="color: red;"> Aun no hay ningun usuario cargado.</p>
-</li>
-}
-@else {
-<ul>
-    @for (inscription of inscriptionToFinalExamService.inscriptionList; track $index) {
-    <li>
-        {{ inscription.inscriptionDate }} - {{ inscription.finalExamDate }} - {{ inscription.subjects.name }}
-    </li>
+    @else {
+    <ul class="exam-existing-list">
+        @for (inscription of inscriptionToFinalExamService.inscriptionList; track $index) {
+        <li class="exam-existing-item">
+            <span class="exam-existing-name">{{ inscription.subjects.name }}</span>
+            <span class="exam-existing-dates">
+                {{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }} ·
+                {{ inscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }}
+            </span>
+        </li>
+        }
+    </ul>
     }
-</ul>
-}
+</section>

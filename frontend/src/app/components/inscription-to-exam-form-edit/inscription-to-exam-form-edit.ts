@@ -5,10 +5,11 @@ import { InscriptionToFinalExamService } from '../../Services/InscriptionToFinal
 import { SubjectsService } from '../../Services/Subjects/subjects-service';
 import { PostInscriptionToFinalExam } from '../../Models/InscriptionToFinalExam/InscriptionToFinalExam';
 import { NotificationService } from '../../Services/notification/notification.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-inscription-to-exam-form-edit',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './inscription-to-exam-form-edit.html',
   styleUrl: './inscription-to-exam-form-edit.css'
 })
@@ -18,6 +19,7 @@ export class InscriptionToExamFormEdit {
   finalExamDate!: FormControl;
   subjectId: number | null = null;
   idInscription!: string
+  selectedSubjectName: string | null = null;
 
   constructor(
     public inscriptionToFinalExamService: InscriptionToFinalExamService,
@@ -43,17 +45,19 @@ export class InscriptionToExamFormEdit {
     this.getSubjects();
   }
 
-  addToSubject(idSubject: number) {
+  addToSubject(idSubject: number, subjectName: string) {
     this.subjectId = idSubject;
-    alert('Se asigno corectamente la materia a la inscripcion');
+    this.selectedSubjectName = subjectName;
+    this.notificationService.info(`Materia asignada: ${subjectName}`);
   }
 
   getInscription() {
     this.inscriptionToFinalExamService.getInscriptionById(parseInt(this.idInscription)).subscribe({
       next: (res) => {
-        this.inscriptionDate.setValue(res.inscriptionDate)
-        this.finalExamDate.setValue(res.finalExamDate)
+        this.inscriptionDate.setValue(this.toDatetimeLocal(res.inscriptionDate));
+        this.finalExamDate.setValue(this.toDatetimeLocal(res.finalExamDate));
         this.subjectId = res.subjects.id
+        this.selectedSubjectName = res.subjects.name;
       },
       error: (err) => {
         console.error(err);
@@ -74,7 +78,7 @@ export class InscriptionToExamFormEdit {
 
   OnSubmit() {
     if (this.subjectId === null) {
-      alert('Añada de que materia es el examen');
+      this.notificationService.warning('Seleccioná una materia antes de guardar la inscripción.');
       return;
     }
 
@@ -103,13 +107,38 @@ export class InscriptionToExamFormEdit {
     this.inscriptionToFinalExamService.putInscriptionToFinal(inscription, parseInt(this.idInscription)).subscribe({
       next: (res) => {
         this.notificationService.success("Inscripción editada exitosamente.");
-        this.getInscription()
-        this.form.reset();
+        this.getInscription();
       },
       error: (err) => {
         this.notificationService.error(err.error, true);
         console.error(err);
       },
     });
+  }
+
+  private toDatetimeLocal(value: string): string {
+    if (!value) {
+      return '';
+    }
+
+    const parsed = new Date(value);
+    if (!isNaN(parsed.getTime())) {
+      const tzOffset = parsed.getTimezoneOffset();
+      const adjusted = new Date(parsed.getTime() - tzOffset * 60000);
+      return adjusted.toISOString().slice(0, 16);
+    }
+
+    const [datePart, timePart] = value.split(' ');
+    if (datePart && timePart) {
+      const [day, month, year] = datePart.split('/');
+      const timePieces = timePart.split(':');
+      const hour = timePieces[0];
+      const minute = timePieces[1];
+      if (day && month && year && hour && minute) {
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+      }
+    }
+
+    return value;
   }
 }

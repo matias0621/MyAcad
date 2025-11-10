@@ -1,31 +1,41 @@
-<form class="modal-form" [formGroup]="form" (submit)="OnSubmit()">
-    <fieldset>
-        <label> Fecha de la inscripcion </label>
-        <input type="datetime-local" formControlName="inscriptionDate">
-    </fieldset>
+<form class="exam-form" [formGroup]="form" (submit)="OnSubmit()">
+    <div class="exam-form-field">
+        <label for="inscription-date">Fecha de inscripción</label>
+        <input id="inscription-date" type="datetime-local" formControlName="inscriptionDate"
+            placeholder="Seleccioná la fecha y hora de apertura">
+    </div>
 
-    <fieldset>
-        <label>Fecha del examen</label>
-        <input type="datetime-local" formControlName="finalExamDate">
-    </fieldset>
+    <div class="exam-form-field">
+        <label for="final-date">Fecha del examen</label>
+        <input id="final-date" type="datetime-local" formControlName="finalExamDate"
+            placeholder="Seleccioná la fecha y hora del examen">
+    </div>
 
-
-    <button [disabled]="form.invalid">Enviar</button>
+    <button type="submit" class="exam-form-submit" [disabled]="form.invalid || subjectId === null">Guardar inscripción</button>
 </form>
 
-<ul>
-    @if (subjectsServices.listSubject.length === 0) {
-    <li>
-        <p style="color: red;"> Aun no hay ninguna materia cargada.</p>
-    </li>
-    }
-    @else {
-    @for (subjects of subjectsServices.listSubject; track $index) {
-    <li>
-        {{ subjects.name }}
-        <button (click)="addToSubject(subjects.id)">Añadir</button>
-    </li>
-    }
+<section class="exam-form-subjects">
+    <header class="exam-form-subjects__header">
+        <h3>Materias disponibles</h3>
+        <p>Asigná la materia correspondiente a esta mesa final.</p>
+    </header>
+
+    @if (selectedSubjectName) {
+    <p class="exam-selected-info">Materia seleccionada: <span>{{ selectedSubjectName }}</span></p>
     }
 
-</ul>
+    @if (subjectsServices.listSubject.length === 0) {
+    <p class="exam-empty-text">Aún no hay materias cargadas en el sistema.</p>
+    }
+    @else {
+    <ul class="exam-subject-list">
+        @for (subjects of subjectsServices.listSubject; track $index) {
+        <li class="exam-subject-item" [class.exam-subject-item--selected]="subjectId === subjects.id">
+            <span class="exam-subject-name">{{ subjects.name }}</span>
+            <button type="button" class="exam-subject-action"
+                (click)="addToSubject(subjects.id, subjects.name)">Asignar</button>
+        </li>
+        }
+    </ul>
+    }
+</section>

@@ -10,103 +10,118 @@ import Subjects from '../../Models/Subjects/Subjects';
 import { RegistrationStudentOrTeacher } from '../../Models/Users/Student';
 import { NotificationService } from '../../Services/notification/notification.service';
 import { AuthService } from '../../Services/Auth/auth-service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-inscription-to-commission',
   imports: [ReactiveFormsModule],
   templateUrl: './inscription-to-commission.html',
-  styleUrl: './inscription-to-commission.css'
+  styleUrl: './inscription-to-commission.css',
 })
-export class InscriptionToCommission implements OnInit, OnDestroy {
+export class InscriptionToCommission implements OnInit {
+  listCommission: Commission[] = [];
+  form!: FormGroup;
+  legajo!: FormControl;
+  com!: Commission;
+  sub!: Subjects;
+  programSelected: string | null = null;
+  programName!: string;
 
-  listCommission: Commission[] = []
-  form!:FormGroup
-  legajo!:FormControl
-  com!:Commission
-  sub!:Subjects
-
-  constructor(public careerService:CareerService, 
-    private notificationService:NotificationService,
-    public auth:AuthService,
-    public commisionService:CommissionService){
-      this.legajo = new FormControl("", Validators.required)
-      this.form = new FormGroup({
-        legajo:this.legajo
-      })
-    }
+  constructor(
+    public careerService: CareerService,
+    private notificationService: NotificationService,
+    public auth: AuthService,
+    public actRouter: ActivatedRoute,
+    public commisionService: CommissionService
+  ) {
+    this.programName = this.actRouter.snapshot.params['name'];
+    this.legajo = new FormControl('', Validators.required);
+    this.form = new FormGroup({
+      legajo: this.legajo,
+    });
+  }
 
   ngOnInit(): void {
-    this.getCommisionByNameProgram()
-    console.log(this.auth.getRole())
+    this.getCommisionByNameProgram();
+    console.log(this.auth.getRole());
   }
 
-  ngOnDestroy(): void {
-    this.careerService.setCareerSelected(null)
-  }
-
-  getCommisionByNameProgram(){
-    
-    const program:string = this.careerService.getCareerSelected() ?? "career"; 
-
-    this.commisionService.getByProgram(program).subscribe({
+  getCommisionByNameProgram() {
+    this.commisionService.getByProgram(this.programName).subscribe({
       next: (res) => {
-        this.listCommission = res
+        this.listCommission = res;
       },
       error: (err) => {
-        console.log(err)
-      }
-    })
+        console.log(err);
+      },
+    });
   }
 
-  addStudentToCommision(){
-
-    const request:RegistrationStudentOrTeacher = {
+  addStudentToCommision() {
+    const request: RegistrationStudentOrTeacher = {
       legajo: this.legajo.value,
-      subjectsId: this.sub.id
+      subjectsId: this.sub.id,
+    };
+    if (this.form.invalid) {
+      this.notificationService.warning(
+        'Formulario inválido. Por favor, complete todos los campos correctamente.'
+      );
+      this.form.markAllAsTouched();
+      return;
     }
 
     this.commisionService.registerStudentToCommissionByManager(this.com.id, request).subscribe({
       next: (res) => {
-        this.notificationService.success("Se registro el alumno correctamente")
+        this.notificationService.success('Se registro el alumno correctamente');
       },
       error: (err) => {
-        this.notificationService.error("Hubo un error",true)
-        console.log(err)
-      }
-    })
+        this.notificationService.error(
+          'El alumno no existe o ya está anotado a esta materia.',
+          true
+        );
+        console.log(err);
+      },
+    });
   }
-  addTeacherToCommision(){
-
-    const request:RegistrationStudentOrTeacher = {
+  addTeacherToCommision() {
+    const request: RegistrationStudentOrTeacher = {
       legajo: this.legajo.value,
-      subjectsId: this.sub.id
+      subjectsId: this.sub.id,
+    };
+
+    if (this.form.invalid) {
+      this.notificationService.warning(
+        'Formulario inválido. Por favor, complete todos los campos correctamente.'
+      );
+      this.form.markAllAsTouched();
+      return;
     }
 
     this.commisionService.registerTeacherToCommissionByManager(this.com.id, request).subscribe({
       next: (res) => {
-        this.notificationService.success("Se registro el profesor correctamente")
+        this.notificationService.success('Se registro el profesor correctamente');
       },
       error: (err) => {
-        this.notificationService.error("Hubo un error",true)
-        console.log(err)
-      }
-    })
+        this.notificationService.error('Hubo un error', true);
+        console.log(err);
+      },
+    });
   }
 
-  registerStudent(commissionId:number, subjectsId:number){
+  registerStudent(commissionId: number, subjectsId: number) {
     this.commisionService.regiterByStudent(commissionId, subjectsId).subscribe({
       next: (res) => {
-        this.notificationService.success("Te registraste correctamente")
+        this.notificationService.success('Te registraste correctamente');
       },
       error: (err) => {
-        this.notificationService.error("Hubo un error", true)
-        console.log(err)
-      }
-    })
+        this.notificationService.error('Hubo un error', true);
+        console.log(err);
+      },
+    });
   }
 
-  setCommissionAndSubject(com:Commission, s:Subjects){
-     this.com = com
-     this.sub = s
+  setCommissionAndSubject(com: Commission, s: Subjects) {
+    this.com = com;
+    this.sub = s;
   }
 }

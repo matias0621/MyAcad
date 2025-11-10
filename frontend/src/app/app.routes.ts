@@ -23,7 +23,10 @@ import { ExamsPage } from './pages/Academic/exams-page/exams-page';
 import { ExamsFormEdit } from './components/Academic/exams-form-edit/exams-form-edit';
 import { ExamsForm } from './components/Academic/exams-form/exams-form';
 import { StudentRegisterCommission } from './components/StudentView/student-register-commission/student-register-commission';
-
+import { ShowCareerForRegister } from './components/show-career-for-register/show-career-for-register';
+import { SelectTypeRegisterPage } from './pages/select-type-register-page/select-type-register-page';
+import { ShowCareerForCommission } from './components/show-career-for-commission/show-career-for-commission';
+import { RegisterStudentCareer } from './components/register-student-career/register-student-career';
 
 
 
@@ -52,11 +55,18 @@ export const routes: Routes = [
 
     { path: 'register-to-final-exam', component: InscriptionToExamList, canActivate:[AuthGuard] },
 
-    { path: 'register-student-to-commission', component:InscriptionCommision },
+    { path: 'register-student-to-commission/:name', component:InscriptionCommision, canActivate:[AuthGuard] },
+
+    { path: 'select-type-register', component:SelectTypeRegisterPage, canActivate:[AuthGuard] },
+
+    { path: 'show-career-for-register', component:ShowCareerForRegister, canActivate:[AuthGuard] },
+    { path: 'show-career-for-commission', component:ShowCareerForCommission, canActivate:[AuthGuard]},
+    { path: 'register-student-career/:name', component:RegisterStudentCareer, canActivate:[AuthGuard] },
 
     { path: 'engineerings', component: Engineerings, canActivate: [AuthGuard] },
     { path: 'technicals', component: Technicals, canActivate: [AuthGuard] },
     { path: 'courses', component: Courses, canActivate: [AuthGuard] },
-    { path: 'programs-edit-form/:id', component: ProgramsEditForm, canActivate: [AuthGuard] }
+    { path: 'programs-edit-form/:id', component: ProgramsEditForm, canActivate: [AuthGuard] },
+
 
 ];

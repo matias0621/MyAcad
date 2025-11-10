@@ -171,6 +171,10 @@ public class CommissionService {
             }
         }
 
+        if (c.getCapacity() <= old.getStudents().size()){
+            throw new RuntimeException("Capacity limit exceeded");
+        }
+
         old.setNumber(c.getNumber());
         old.setSubjects(c.getSubjects());
         old.setStudents(c.getStudents());
@@ -251,6 +255,10 @@ public class CommissionService {
     public void registerToStudent(Student student, Commission commission, SubjectsEntity subjectsEntity){
 
 
+        if (commission.getStudents().size() >= commission.getCapacity()){
+            throw new InscriptionException("Esta comision esta llena");
+        }
+
         if (!commission.getStudents().contains(student)){
             commission.getStudents().add(student);
         }
@@ -326,6 +334,7 @@ public class CommissionService {
         SubjectsXStudentEntity sxStudentEntity = opt.get();
         AcademicStatus statusStudent = sxStudentEntity.getStateStudent();
         AcademicStatus statusRequired = prerequisite.getAcademicStatus();
+        
 
         switch (statusRequired) {
             case COMPLETED -> {

@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ExamsDTO {
-    @Min(1)
+    @Min(0)
     @Max(100)
     private int score;
 

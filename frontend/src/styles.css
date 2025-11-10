@@ -29,6 +29,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input[type=number] {
+    appearance: textfield;
     -moz-appearance: textfield;
 }
 
@@ -99,23 +100,68 @@ input[type=number] {
     background-color: var(--color-5);
 }
 
-/* IMPARES */
-.crud-table-item:nth-child(odd) {
-    color: var(--color-1);
+/* --------Add modal (Users)-------- */
+.crud-modal .modal-dialog {
+    max-width: clamp(360px, 68vw, 640px);
+    margin: 2.6rem auto;
+    transition: transform 0.32s ease, opacity 0.32s ease;
 }
 
-/* Modificar */
-.crud-table-item:nth-child(odd) .modify-crud-btn {
-    background-color: var(--color-5);
-    color: var(--color-1);
-    transition: .4s;
+.crud-modal.fade .modal-dialog {
+    transform: translateY(24px) scale(0.97);
 }
 
-/* PARES */
-.crud-table-item:nth-child(even) {
-    background-color: var(--color-5);
-    color: white;
+.crud-modal.fade.show .modal-dialog {
+    transform: translateY(0) scale(1);
 }
+
+.crud-modal .modal-content {
+    border-radius: 24px;
+    border: 1px solid rgba(39, 58, 67, 0.12);
+    background: linear-gradient(160deg, #ffffff 0%, #f4f7fb 52%, #ffffff 100%);
+    box-shadow: 0 34px 60px rgba(15, 23, 42, 0.22);
+    overflow: hidden;
+}
+
+.crud-modal .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.6rem 1.9rem 1.25rem;
+    background: linear-gradient(135deg, rgba(39, 58, 67, 0.12), rgba(59, 130, 246, 0.18), rgba(255, 255, 255, 0.94));
+    border-bottom: 1px solid rgba(59, 130, 246, 0.18);
+}
+
+.crud-modal .modal-title {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0.02rem;
+    color: var(--color-5);
+}
+
+.crud-modal .btn-close {
+    margin-left: auto;
+    background-size: 1em;
+    opacity: 0.72;
+    filter: invert(18%) sepia(18%) saturate(540%) hue-rotate(168deg) brightness(92%) contrast(88%);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.crud-modal .btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.crud-modal .modal-body {
+    padding: 1.85rem 1.95rem 2rem;
+    background: linear-gradient(180deg, rgba(245, 248, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+}
+
+.crud-modal .modal-body>*:first-child {
+    margin-top: 0;
+}
+
 
 /* Modificar */
 .crud-table-item:nth-child(even) .modify-crud-btn {
@@ -515,6 +561,10 @@ fieldset {
         margin: .2em auto !important;
     }
 
+    .crud-modal .modal-body {
+        padding: 1.45rem 1.35rem 1.6rem;
+    }
+
     /* Modales más adaptables en tablets/móvil */
     .modal-dialog {
         max-width: 90vw !important;
@@ -558,5 +608,17 @@ fieldset {
 
     .modal-body {
         padding: 0.75rem;
+    }
+
+    .crud-modal .modal-header {
+        padding: 1.25rem 1.2rem 1rem;
+    }
+
+    .crud-modal .modal-title {
+        font-size: 1.25rem;
+    }
+
+    .crud-modal .modal-body {
+        padding: 1.2rem 1rem 1.4rem;
     }
 }

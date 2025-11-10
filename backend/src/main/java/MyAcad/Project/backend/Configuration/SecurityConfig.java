@@ -75,7 +75,7 @@ public class SecurityConfig {
                                 "/exams/**",
                                 "/inscription-final-exam/**",
                                 "/subject-x-student/**"
-                        ).hasRole("MANAGER")
+                        ).hasAnyRole("MANAGER", "TEACHER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(service))

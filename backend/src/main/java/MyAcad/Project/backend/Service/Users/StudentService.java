@@ -1,12 +1,12 @@
 package MyAcad.Project.backend.Service.Users;
 
-import MyAcad.Project.backend.Configuration.SecurityConfig;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -17,22 +17,25 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class StudentService {
+
     private final StudentRepository repository;
     private final UserLookupService userLookupService;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final SubjectsXStudentRepository subjectsXStudentRepository;
 
     public void add(Student t) {
         if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
             throw new LegajoAlreadyExistsException();
-        }else if(userLookupService.findByEmail(t.getEmail()).isPresent()) {
+        } else if (userLookupService.findByEmail(t.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException();
-        }else if(userLookupService.findByDni(t.getDni()).isPresent()) {
+        } else if (userLookupService.findByDni(t.getDni()).isPresent()) {
             throw new DniAlreadyExistsException();
         }
 
-        t.setPassword(SecurityConfig.passwordEncoder().encode(t.getPassword()));
+        // usar SIEMPRE el bean inyectado
+        t.setPassword(passwordEncoder.encode(t.getPassword()));
 
         t = repository.save(t);
         t.setLegajo(String.valueOf(t.getId() + 100000));
@@ -70,30 +73,31 @@ public class StudentService {
         repository.deleteById(studentId);
         return ResponseEntity.ok().build();
     }
+
     public List<Student> list() {
         return repository.findAll();
     }
 
-    public void modify (Long id, Student t){
-        Student old = repository.findById(id).get();
-        //Verificar si cambió el legajo o el email
+    public void modify(Long id, Student t){
+        Student old = repository.findById(id).orElseThrow();
+
         if (!old.getEmail().equals(t.getEmail())) {
-            //Verificar si el email nuevo ya se encuentra en uso
             if (userLookupService.findByEmail(t.getEmail()).isPresent()) {
                 throw new EmailAlreadyExistsException();
             }
         }
+
         old.setName(t.getName());
         old.setLastName(t.getLastName());
         old.setEmail(t.getEmail());
         old.setDni(t.getDni());
         old.setActive(t.isActive());
 
-        // Verificar si se ingresó una contraseña nueva, si el usuario no quiso cambiarla debe dejar ese input vacío.
         if (t.getPassword() != null && !t.getPassword().isBlank()) {
             String encoded = passwordEncoder.encode(t.getPassword());
             old.setPassword(encoded);
         }
+
         repository.save(old);
     }
 
@@ -107,5 +111,9 @@ public class StudentService {
 
     public Optional<Student> getByEmail(String email){
         return repository.findByEmail(email);
+    }
+
+    public List<Student> getStudentsForTeacherSubjectCommission(Long teacherId, Long subjectId, Long commissionId) {
+        return subjectsXStudentRepository.findStudentsBySubjectAndCommissionAndTeacher(subjectId, commissionId, teacherId);
     }
 }

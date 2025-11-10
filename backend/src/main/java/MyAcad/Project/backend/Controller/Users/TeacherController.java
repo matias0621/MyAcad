@@ -4,15 +4,22 @@ import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherDTO;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
+import MyAcad.Project.backend.Service.Users.StudentService;
 import MyAcad.Project.backend.Service.Users.TeacherService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +28,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TeacherController {
     private final TeacherService services;
+    private final StudentService studentService;
+
 
     //GET
     //Listado
@@ -104,4 +113,42 @@ public class TeacherController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    //GET Students for Teacher, Subject and Commission
+    @GetMapping("/{teacherId}/subjects/{subjectId}/commissions/{commissionId}/students")
+    @PreAuthorize("hasAnyRole('TEACHER','MANAGER')")
+    public ResponseEntity<List<Student>> getStudentsForTeacherSubjectCommission(
+            @PathVariable Long teacherId,
+            @PathVariable Long subjectId,
+            @PathVariable Long commissionId
+    ) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        boolean isTeacher = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(a -> a.equals("ROLE_TEACHER"));
+
+        if (isTeacher) {
+            Long authUserId = extractIdFromPrincipal(auth.getPrincipal());
+            if (authUserId == null || !authUserId.equals(teacherId)) {
+                return ResponseEntity.status(403).build();
+            }
+        }
+
+        List<Student> students = studentService.getStudentsForTeacherSubjectCommission(teacherId, subjectId, commissionId);
+        return ResponseEntity.ok(students);
+    }
+
+    private Long extractIdFromPrincipal(Object principal) {
+        if (principal == null) return null;
+        try {
+            Method m = principal.getClass().getMethod("getId");
+            Object idObj = m.invoke(principal);
+            if (idObj instanceof Long) return (Long) idObj;
+            if (idObj instanceof Integer) return ((Integer) idObj).longValue();
+            if (idObj instanceof String) return Long.valueOf((String) idObj);
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
 }
+

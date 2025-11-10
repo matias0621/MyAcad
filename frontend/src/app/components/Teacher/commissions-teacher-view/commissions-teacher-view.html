@@ -24,9 +24,24 @@
       </div>
 
       @if (isExpanded(commission.id)) {
-        @if (commission.students.length > 0) {
+        <div class="subject-filter">
+          <label>Materia:</label>
+          <select [(ngModel)]="commissionSubjectsState[commission.id].subjectId" (change)="onSubjectSelected(commission)">
+            <option [ngValue]="undefined">-- Seleccionar --</option>
+            @for (subj of commission.subjects; track subj.id) {
+              <option [ngValue]="subj.id">{{ subj.name }}</option>
+            }
+          </select>
+        </div>
+        @if (getCommissionState(commission.id).loading) {
+          <p>Cargando alumnos...</p>
+        } @else if (getCommissionState(commission.id).error) {
+          <p class="error">{{ getCommissionState(commission.id).error }}</p>
+        } @else if (commissionSubjectsState[commission.id]?.subjectId && getCommissionState(commission.id).students.length === 0) {
+          <p class="no-students">No hay alumnos inscriptos contigo en esta materia</p>
+        } @else if (getCommissionState(commission.id).students.length > 0) {
           <div class="students-section">
-            <h4>Alumnos inscriptos</h4>
+            <h4>Alumnos inscriptos en materia seleccionada</h4>
             <table class="students-table">
               <thead>
                 <tr>
@@ -38,14 +53,14 @@
                 </tr>
               </thead>
               <tbody>
-                @for (student of commission.students; track $index) {
+                @for (student of getCommissionState(commission.id).students; track student.id) {
                   <tr>
                     <td>{{ student.legajo }}</td>
                     <td>{{ student.name }}</td>
                     <td>{{ student.lastName }}</td>
                     <td>{{ student.email }}</td>
                     <td>
-                      <button class="btn-notas" (click)="openGradesModal(student)">📋 Notas</button>
+                      <button class="btn-notas" (click)="openGradesModal(student, commission)">📋 Notas</button>
                     </td>
                   </tr>
                 }
@@ -53,7 +68,7 @@
             </table>
           </div>
         } @else {
-          <p class="no-students">No hay alumnos inscriptos en esta comisión</p>
+          <p class="no-students">Selecciona una materia para ver alumnos</p>
         }
       }
     </div>

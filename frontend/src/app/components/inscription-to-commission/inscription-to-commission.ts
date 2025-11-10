@@ -59,7 +59,6 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
   }
 
   addStudentToCommision() {
-
     const request: RegistrationStudentOrTeacher = {
       legajo: this.legajo.value,
       subjectsId: this.sub.id
@@ -75,7 +74,11 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
         this.notificationService.success("Se registro el alumno correctamente")
       },
       error: (err) => {
-        this.notificationService.error("El alumno no existe o ya está anotado a esta materia.", true)
+        if (err.status === 403) {
+          this.notificationService.error('Permisos insuficientes (403). Verificá la configuración de roles en el backend.', true)
+        } else {
+          this.notificationService.error("El alumno no existe o ya está anotado a esta materia.", true)
+        }
         console.log(err)
       }
     })

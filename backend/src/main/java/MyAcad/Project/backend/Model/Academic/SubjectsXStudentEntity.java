@@ -2,6 +2,7 @@ package MyAcad.Project.backend.Model.Academic;
 
 import MyAcad.Project.backend.Enum.AcademicStatus;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +27,16 @@ public class SubjectsXStudentEntity {
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
+    @ManyToOne
+    @JoinColumn(name = "commission_id", nullable = false)
+    private Commission commission;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private Teacher teacher;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "state_student", nullable = false)
     private AcademicStatus stateStudent;
 }
+

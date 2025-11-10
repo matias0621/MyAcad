@@ -13,6 +13,9 @@ import Program from '../../../Models/Program/Program';
 import { NotificationService } from '../../../Services/notification/notification.service';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
 import Subjects from '../../../Models/Subjects/Subjects';
+import { UserService } from '../../../Services/Users/user-service';
+import Student from '../../../Models/Users/Student';
+import Teacher from '../../../Models/Users/Teachers';
 
 @Component({
   selector: 'app-commissions',
@@ -24,20 +27,31 @@ export class Commissions {
   programs: Program[] = [];
   commissions!: Commission[];
   allCommissions!: Commission[];
-  subjectsList!:Subjects[];
+  subjectsList!: Subjects[];
   form!: FormGroup;
   filter: string = '';
   commissionId: number = 0;
   modalText = 'Agregar';
   selectedSubjectsIds: number[] = [];
 
+  //Detalles
+  selectedStudents !: Student[]
+  selectedTeachers !: Teacher[];
+  selectedCommission !: Commission;
+  detailText !: String;
+  detailText2 !: String;
+  // Paginación
+  totalPages: number = 0;
+  currentPage: number = 0;
+
   constructor(
     private fb: FormBuilder,
     private service: CommissionService,
     private pService: ProgramService,
     private sService: SubjectsService,
+    private uService: UserService,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getCommissions();
@@ -54,14 +68,17 @@ export class Commissions {
     });
   }
 
-  getCommissions() {
-    this.service.getCommissions().subscribe({
+  getCommissions(page: number = 0, size: number = 10) {
+    this.service.getCommissionsPaginated(page, size).subscribe({
       next: (data) => {
         // Guarda las comisiones filtradas
-        this.commissions = data;
-        console.log(this.commissions)
+        this.commissions = data.content;
         // Guarda todas las comisiones
-        this.allCommissions = data;
+        this.allCommissions = data.content;
+        console.log(data.content)
+        // Paginación
+        this.totalPages = data.totalPages;
+        this.currentPage = data.number;
       },
       error: (error) => {
         console.error(error);
@@ -69,7 +86,7 @@ export class Commissions {
     });
   }
 
-  getSubjects(){
+  getSubjects() {
     this.sService.getAllSubject().subscribe({
       next: (res) => {
         this.subjectsList = res
@@ -92,13 +109,42 @@ export class Commissions {
     });
   }
 
+  // OBTENER ALUMNOS DE UNA COMISION  
+  getStudents(commissionId: number) {
+    this.uService.getUsersByCommission(commissionId, 'students').subscribe({
+      next: (data) => {
+        this.detailText = "Alumnos"
+        this.detailText2 = "alumnos"
+        this.selectedStudents = data;
+      },
+      error: (error) => {
+
+        console.error(error);
+      }
+    });
+  }
+  // OBTENER PROFESORES DE UNA COMISION  
+  getTeachers(commissionId: number) {
+    this.uService.getUsersByCommission(commissionId, 'teachers').subscribe({
+      next: (data) => {
+        this.detailText = "Profesores"
+        this.detailText2 = "profesores"
+        this.selectedTeachers = data;
+      },
+      error: (error) => {
+
+        console.error(error);
+      }
+    });
+  }
+
   OnSubmit() {
     if (this.form.invalid) {
       this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
       this.form.markAllAsTouched();
       return;
     }
-    
+
     if (this.commissionId != 0) {
       const commissionJson = {
         id: this.commissionId,
@@ -173,6 +219,7 @@ export class Commissions {
     }
     this.service.addSubjectsToCommission(this.commissionId, subjectsId).subscribe({
       next: (res) => {
+        this.getCommissions();
         this.notificationService.success('Se añadio la materia a la comision y carrera');
       },
       error: (err) => {
@@ -209,9 +256,9 @@ export class Commissions {
       });
   }
 
-  setCommisionId(id:number){
+  setCommisionId(id: number) {
     this.commissionId = id
-    let ids:number[] = []
+    let ids: number[] = []
 
     this.service.getById(id).subscribe({
       next: (res) => {
@@ -224,7 +271,7 @@ export class Commissions {
     })
 
 
-    
+
   }
 
   addCommission() {

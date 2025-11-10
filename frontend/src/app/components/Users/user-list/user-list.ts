@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { UserForm } from '../user-form/user-form';
 import { UserEditForm } from '../user-edit-form/user-edit-form';
 import { NotificationService } from '../../../Services/notification/notification.service';
+import { DecimalPipe } from '@angular/common';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-user-list',
-  imports: [FormsModule, UserForm, UserEditForm],
+  imports: [FormsModule, UserForm, UserEditForm, DecimalPipe],
   templateUrl: './user-list.html',
   styleUrl: './user-list.css'
 })
@@ -84,7 +85,6 @@ export class UserList implements OnInit {
   getUsers(page: number = 0, size: number = 10 ) {
     this.service.getUsersPaginated(this.endpoint, page, size).subscribe({
       next: (data) => {
-        console.log(data)
         this.users = this.normalizeUsersArray(data.content);
         this.totalPages = data.totalPages;
         this.currentPage = data.number;

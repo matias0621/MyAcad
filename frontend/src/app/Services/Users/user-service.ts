@@ -14,6 +14,9 @@ export class UserService {
     return this.http.get<any>(`${this.API_URL}/${endpoint}`);
   }
 
+  getUsersByCommission(commissionId: number, endpoint: string) {
+    return this.http.get<any>(`${this.API_URL}/${endpoint}/commission/${commissionId}`);
+  }
 
   getUsersPaginated(endpoint: string, page: number, size: number) {
     return this.http.get<any>(`${this.API_URL}/${endpoint}/paginated?page=${page}&size=${size}`);

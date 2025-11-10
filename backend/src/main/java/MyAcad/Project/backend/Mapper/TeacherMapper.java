@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherDTO;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public interface TeacherMapper {
 
     Teacher toEntity(TeacherDTO teacher);
+    @Mapping(source = "active", target = "active")
     TeacherResponse toResponse(Teacher teacher);
 
     List<TeacherResponse> toResponseList(List<Teacher> teachers);

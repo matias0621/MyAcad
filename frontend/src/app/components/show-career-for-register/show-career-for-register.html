@@ -1,1 +1,83 @@
-<p>show-career-for-register works!</p>
+<section class="crud-management d-flex justify-content-center">
+    <div class="crud-management-container">
+        <div class="w-100 d-flex flex-column align-items-center mb-3">
+            <h1 style="text-align: center;">Carreras</h1>
+
+        </div>
+        <table class="crud-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Legajo</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col" class="responsive-hide-2">opciones</th>
+
+                </tr>
+            </thead>
+            <tbody class="crud-table-body">
+                <!-- USERS -->
+                @for (program of listProgram; track $index) {
+                <tr class="crud-table-item">
+                    <td>{{program.id}}</td>
+                    <td>{{program.name}}</td>
+                    <td class="responsive-hide-2">
+                        <button class="exam-add-btn" data-bs-toggle="modal"
+                            data-bs-target="#modal-add-student" (click)="setName(program.name)">Inscribir alumno</button>
+                        <button class="exam-add-btn" data-bs-toggle="modal"
+                            data-bs-target="#modal-add-teacher"(click)="setName(program.name)" >Inscribir profesor</button>
+                    </td>
+                </tr>
+                }@empty {
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <p style="color: red;"> Aun no hay ninguna carrera cargada.</p>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div class="modal fade" id="modal-add-student" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-narrow">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h1 class="modal-title">Agregar alumno</h1>
+                <button class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                <form class="modal-form" [formGroup]="form">
+                    <label for="legajo-alumno">Legajo</label>
+                    <input id="legajo-alumno" type="text" formControlName="legajo" placeholder="Ingresá el legajo">
+                    <button type="button" class="modal-submit primary" (click)="addToStudent()"
+                        [disabled]="form.invalid">Añadir alumno</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal agregar un profesor -->
+<div class="modal fade" id="modal-add-teacher" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-narrow">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h1 class="modal-title">Agregar profesor</h1>
+                <button class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                <form class="modal-form" [formGroup]="form">
+                    <label for="legajo-profesor">Legajo</label>
+                    <input id="legajo-profesor" type="text" formControlName="legajo" placeholder="Ingresá el legajo">
+                    <button type="button" class="modal-submit secondary" (click)="addToTeacher()"
+                        [disabled]="form.invalid">Añadir profesor</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

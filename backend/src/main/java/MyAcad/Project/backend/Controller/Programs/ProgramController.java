@@ -44,6 +44,11 @@ public class ProgramController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/register-teacher/{name}")
+    public ResponseEntity<?> registerTeacher(@PathVariable String name, @RequestBody String legajoStudent) {
+        programService.registerTeacher(name, legajoStudent);
+        return ResponseEntity.ok().build();
+    }
     
 
 }

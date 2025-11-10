@@ -10,11 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SelectTypeRegisterPage {
 
-  nameCareer:string | undefined
-
-  constructor(private actRoute:ActivatedRoute){
-    this.nameCareer = this.actRoute.snapshot.params['name']
-  }
+ 
 
 
 }

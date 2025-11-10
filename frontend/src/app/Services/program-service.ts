@@ -26,4 +26,12 @@ export class ProgramService {
   getById(programId: number) {
     return this.http.get<Program>(`${this.API_URL}/${programId}`);
   }
+
+  registerStudent(nameProgram:string, legajoStudent:string){
+    return this.http.put(`${this.API_URL}/register-student/${nameProgram}`, legajoStudent)
+  }
+
+  registerTeacher(nameProgram:string, teacherLegajo:string){
+    return this.http.put(`${this.API_URL}/register-teacher/${nameProgram}`, teacherLegajo)
+  }
 }

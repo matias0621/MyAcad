@@ -71,16 +71,28 @@ export class ExamsPage implements OnInit {
     });
   }
 
-  getAllExam(){
-    this.examsService.getAllExams().subscribe({
+  getAllCarrer() {
+    this.programService.getPrograms().subscribe({
+      next: (res) => {
+        this.listCareer = res;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+
+  getAllExam(page: number = 0, size: number = 10) {
+    this.examsService.getExamsPaginated(page, size).subscribe({
       next: (res) => {
         this.listExams = res.content;
         this.currentPage = res.number;
         this.totalPages = res.totalPages
       },
       error: (err) => {
-        console.log(err);
-      },
+        console.log(err)
+      }
     });
   }
 

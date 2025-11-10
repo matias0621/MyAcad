@@ -261,7 +261,9 @@ public class CommissionService {
 
         if (!subjectsEntity.getPrerequisites().isEmpty()){
             for (SubjectsEntity prerequisite : subjectsEntity.getPrerequisites()) {
-                validatePrerequisite(student, prerequisite);
+                if (prerequisite.isSubjectActive()){
+                    validatePrerequisite(student, prerequisite);
+                }
             }
         }
 

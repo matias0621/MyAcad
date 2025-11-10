@@ -61,6 +61,11 @@ input[type=number] {
 }
 
 /* --------TABLE-------- */
+.select-filter {
+    margin-top: 1em;
+    height: 2em;
+}
+
 .crud-table {
     max-width: 900px;
     min-height: auto;
@@ -221,16 +226,19 @@ input[type=number] {
     box-shadow: 0 0 5px 1px #c90000;
 }
 
-.detail-crud-btn{
+.detail-crud-btn {
     display: none;
 }
-.detail-crud-btn, .detail-crud-btn-2 {
+
+.detail-crud-btn,
+.detail-crud-btn-2 {
     background-color: #007bff;
     color: white;
     transition: .4s;
 }
 
-.detail-crud-btn:hover, .detail-crud-btn-2:hover {
+.detail-crud-btn:hover,
+.detail-crud-btn-2:hover {
     box-shadow: 0 0 8px 2px rgba(0, 123, 255, 0.5);
     transform: translateY(-1px);
 }
@@ -472,9 +480,10 @@ fieldset {
         margin: .3em 0;
     }
 
-    .modal-form{
+    .modal-form {
         min-height: 60vh;
     }
+
     form {
         display: flex !important;
         flex-direction: column;
@@ -525,7 +534,8 @@ fieldset {
         width: 100%;
         margin-top: .5em;
     }
-    .select-filter{
+
+    .select-filter {
         width: 100%;
     }
 

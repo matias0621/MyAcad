@@ -121,8 +121,6 @@ public class SubjectService {
         existingSubject.setPrerequisites(updatedSubject.getPrerequisites());
         existingSubject.setSubjectActive(updatedSubject.isSubjectActive());
 
-        System.out.println("Subject modified:" + updatedSubject.isSubjectActive());
-
         subjectsRepository.save(existingSubject);
     }
 

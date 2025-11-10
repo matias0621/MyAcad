@@ -2,7 +2,7 @@
     <div class="crud-management-container">
         <div class="w-100 d-flex flex-column align-items-center mb-3">
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
-            <select id="select-filter" [(ngModel)]="filter" (change)="filterPrograms()">
+            <select class="select-filter" [(ngModel)]="filter" (change)="filterPrograms()">
                 <option value="">Mostrar todo</option>
                 <option value="Activos">Activos</option>
                 <option value="Inactivos">Inactivos</option>

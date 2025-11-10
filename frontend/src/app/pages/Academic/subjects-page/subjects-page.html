@@ -12,9 +12,9 @@
             <thead>
                 <tr class="text-center">
                     <th scope="col">Nombre</th>
+                    <th scope="col">Carrera/Curso</th>
                     <th scope="col" class="responsive-hide-2">Cuatrimestre</th>
                     <th scope="col" class="responsive-hide">Correlativas</th>
-                    <th scope="col">Carrera/Curso</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -23,8 +23,9 @@
                 @for (subject of subjects; track $index) {
                 <tr class="crud-table-item">
                     <td>{{subject.name}}</td>
+                    <td>{{subject.program}}</td>
                     <td class="responsive-hide-2">{{subject.semesters}}</td>
-                    @if (subject.prerequisites!.length > 0) {
+                    @if (subject?.prerequisites!.length > 0 || !subject.prerequisites) {
                     <td class="responsive-hide">
                         @for (s of subject.prerequisites; track $index) {
                         {{ s.name }}
@@ -33,9 +34,8 @@
                     }@else{
                     <td class="responsive-hide">Sin correlativas</td>
                     }
-                    <td>{{subject.program}}</td>
                     <td class="crud-table-actions">
-                        <button class="detail-crud-btn" (click)="selectedSubject = subject" data-bs-toggle="modal"
+                        <button class="detail-crud-btn-2" (click)="selectedSubject = subject" data-bs-toggle="modal"
                             data-bs-target="#modal-detail">Detalles</button>
                         @if (subject.subjectActive) {
                         <button class="delete-crud-btn" (click)="deleteSubject(subject.id)">Eliminar</button>
@@ -47,7 +47,7 @@
                         <button class="modify-crud-btn" (click)="modifySubject(subject)" data-bs-toggle="modal"
                             data-bs-target="#modal">Editar</button>
                         <button class="modify-crud-btn" (click)="prerequisite(subject)" data-bs-toggle="modal"
-                            data-bs-target="#modal-prerequisite">Añadir correlativa</button>
+                            data-bs-target="#modal-prerequisite">Correlativas</button>
                     </td>
                 </tr>
                 }@empty {
@@ -59,19 +59,6 @@
                 }
             </tbody>
             <tfoot>
-                <!-- Paginación -->
-                <tr>
-                    <td class="pagination-container" colspan="7">
-                        <button (click)="getAllSubject(currentPage - 1)" [disabled]="currentPage === 0">
-                            Anterior
-                        </button>
-
-                        <button (click)="getAllSubject(currentPage + 1)"
-                            [disabled]="currentPage === totalPages - 1 || currentPage === totalPages    ">
-                            Siguiente
-                        </button>
-                    </td>
-                </tr>
             </tfoot>
         </table>
 
@@ -142,7 +129,7 @@
                             <div class="form-buttons">
                                 <button type="button" (click)="cleanForm()">Limpiar</button>
                                 <button type="submit" [disabled]="form.invalid" data-bs-dismiss="modal"
-                                    aria-label="Close">Agregar</button>
+                                    aria-label="Close">{{ modalText }}</button>
                             </div>
                         </form>
                     </div>
@@ -177,13 +164,14 @@
             </div>
         </div>
 
+
         <!-- Modal ver detalle -->
         <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
             style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles">Detalle del Usuario</h1>
+                        <h1 class="modal-title fs-5 titles">Detalle de la materia</h1>
                         <button data-bs-dismiss="modal" aria-label="Close">
                             <i class="fa-solid fa-x"></i>
                         </button>
@@ -208,12 +196,20 @@
                                 <span>{{selectedSubject.semesters}}</span>
                             </div>
                             <div class="detail-item">
-                                <strong>Correlativas:</strong>
-                                @if (selectedSubject.prerequisites?.length == 0) {
-                                    <span>Sin correlativas</span>
-                                }@else {
-                                <span>{{selectedSubject.prerequisites}}</span>
-                                }
+                                <strong>Descripción:</strong>
+                                <span>{{selectedSubject.description}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Correlativas</strong>
+                                <span>
+                                    @if (!selectedSubject.prerequisites || selectedSubject.prerequisites.length == 0) {
+                                    Esta materia no tiene correlativas.
+                                    } @else {
+                                    @for (s of selectedSubject.prerequisites; track $index) {
+                                    {{ s.name }}{{ !$last ? ', ' : '' }}
+                                    }
+                                    }
+                                </span>
                             </div>
                         </div>
                         }

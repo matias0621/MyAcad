@@ -58,6 +58,7 @@ export class SubjectsPage {
   getAllSubject(page: number = 0, size: number = 10) {
     this.subjectService.getAllSubjectPaginated(page, size).subscribe({
       next: (res) => {
+        console.log(res.content)
         this.subjects = res.content;
         this.totalPages = res.totalPages;
         this.currentPage = res.number;
@@ -308,6 +309,7 @@ export class SubjectsPage {
     if (this.subjectId != 0) {
       const subjectJson = {
         id: this.subjectId,
+        subjectActive: true,
         ...this.form.value
       }
       this.subjectService.putSubject(subjectJson).subscribe({
@@ -323,7 +325,13 @@ export class SubjectsPage {
         }
       })
     } else {
-      this.subjectService.postSubject(this.form.value).subscribe({
+      const subjectJson = {
+        academicStatus: 'INPROGRESS',
+        prerequisites: [],
+        ...this.form.value
+      }
+
+      this.subjectService.postSubject(subjectJson).subscribe({
         next: (data) => {
           console.log('Materia agregada exitosamente');
           this.form.reset();

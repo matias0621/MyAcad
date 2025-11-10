@@ -26,6 +26,7 @@ import { StudentRegisterCommission } from './components/StudentView/student-regi
 import { CommissionsTeacherView } from './components/Teacher/commissions-teacher-view/commissions-teacher-view';
 import { TeacherExamsView } from './components/Teacher/teacher-exams-view/teacher-exams-view';
 import { TeacherGradesView } from './components/Teacher/teacher-grades-view/teacher-grades-view';
+import { SubjectsTeacherView } from './components/Teacher/subjects-teacher-view/subjects-teacher-view';
 
 
 
@@ -66,6 +67,7 @@ export const routes: Routes = [
 
     // Rutas Teacher
     { path: 'teacher/program/:programId/commissions', component: CommissionsTeacherView, canActivate: [AuthGuard] },
+    { path: 'teacher/program/:programId/subjects', component: SubjectsTeacherView, canActivate: [AuthGuard] },
     { path: 'teacher/exams', component: TeacherExamsView, canActivate: [AuthGuard] },
     { path: 'teacher/grades', component: TeacherGradesView, canActivate: [AuthGuard] }
 

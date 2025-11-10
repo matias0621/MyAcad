@@ -11,37 +11,37 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Id</th>
-                    <th scope="col">Nota</th>
-                    <th scope="col">Nombre</th>
+                    <th scope="col">Alumno</th>
                     <th scope="col">Materia</th>
-                    <th scope="col">Tipo de examen</th>
+                    <th scope="col" class="responsive-hide">Tipo de examen</th>
+                    <th scope="col" class="responsive-hide">Nota</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody class="crud-table-body">
                 <!-- USERS -->
-                @for (exams of listExams; track $index) {
+                @for (exam of listExams; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{exams.id}}</td>
-                    <td>{{exams.score}}</td>
-                    <td>{{exams.student.name}}</td>
-                    <td>{{exams.subject.name}}</td>
+                    <td>{{exam.student.name}}</td>
+                    <td>{{exam.subject.name}}</td>
 
-                    @if(exams.examType === "EXAM"){
-                        <td>Parcial</td>
+                    @if(exam.examType === "EXAM"){
+                    <td class="responsive-hide">Parcial</td>
                     }
-                    @else if (exams.examType === "FINAL_EXAM") {
-                        <td>Final</td>
+                    @else if (exam.examType === "FINAL_EXAM") {
+                    <td class="responsive-hide">Final</td>
                     }
-                    @else if (exams.examType === "MAKEUP_EXAM") {
-                        <td>Recuperatorio</td>
+                    @else if (exam.examType === "MAKEUP_EXAM") {
+                    <td class="responsive-hide">Recuperatorio</td>
                     }
 
+                    <td class="responsive-hide">{{exam.score}}</td>
                     <td class="crud-table-actions">
-                        <button class="delete-crud-btn" (click)="deleteExam(exams.id)">Eliminar</button>
+                        <button class="detail-crud-btn-2" (click)="selectedExam = exam" data-bs-toggle="modal"
+                            data-bs-target="#modal-detail">Detalles</button>
+                        <button class="delete-crud-btn" (click)="deleteExam(exam.id)">Eliminar</button>
 
-                        <button class="modify-crud-btn" (click)="modifyExam(exams)" data-bs-toggle="modal"
+                        <button class="modify-crud-btn" (click)="modifyExam(exam)" data-bs-toggle="modal"
                             data-bs-target="#modal-editar-exam">Editar</button>
 
                     </td>
@@ -84,10 +84,6 @@
                     <div class="modal-body">
                         @if (selectedExam) {
                         <div class="detail-container">
-                            <div class="detail-item">
-                                <strong>ID:</strong>
-                                <span>{{selectedExam.id}}</span>
-                            </div>
                             <div class="detail-item">
                                 <strong>Alumno:</strong>
                                 <span>{{selectedExam.student.legajo}} | {{selectedExam.student.name}}
@@ -138,7 +134,7 @@
                                 <label for="">Carrera</label>
                                 <select name="" id="" formControlName="careerName">
                                     @for (career of listCareer; track $index) {
-                                        <option [value]="career.name">{{ career.name }}</option>
+                                    <option [value]="career.name">{{ career.name }}</option>
                                     }
                                 </select>
                             </fieldset>
@@ -147,7 +143,7 @@
                                 <label for="">Materia</label>
                                 <select name="" id="" formControlName="subjects">
                                     @for (subjects of listSubjects; track $index) {
-                                        <option [value]="subjects.id"> {{ subjects.name }} </option>
+                                    <option [value]="subjects.id"> {{ subjects.name }} </option>
                                     }
                                 </select>
                             </fieldset>
@@ -203,7 +199,7 @@
                                 <label for="">Carrera</label>
                                 <select name="" id="" formControlName="careerName">
                                     @for (career of listCareer; track $index) {
-                                        <option [value]="career.name">{{ career.name }}</option>
+                                    <option [value]="career.name">{{ career.name }}</option>
                                     }
                                 </select>
                             </fieldset>
@@ -212,7 +208,7 @@
                                 <label for="">Materia</label>
                                 <select name="" id="" formControlName="subjects">
                                     @for (subjects of listSubjects; track $index) {
-                                        <option [value]="subjects.id"> {{ subjects.name }} </option>
+                                    <option [value]="subjects.id"> {{ subjects.name }} </option>
                                     }
                                 </select>
                             </fieldset>

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import Commission, { CommissionResponse } from '../../Models/Commission/commission';
+import Commission from '../../Models/Commission/commission';
 import { RegistrationStudentOrTeacher } from '../../Models/Users/Student';
 
 
@@ -17,12 +17,16 @@ export class CommissionService {
     return this.http.get<Commission[]>(this.API_URL);
   }
 
-  getCommissionResponse() {
-    return this.http.get<CommissionResponse[]>(`${this.API_URL}/response`)
+  getCommissionsPaginated(page: number, size: number) {
+    return this.http.get<any>(`${this.API_URL}/paginated?page=${page}&size=${size}`);
   }
 
-  getCommissionByStudentInfo(programName:string){
+  getCommissionByStudentInfo(programName: string) {
     return this.http.get<Commission[]>(`${this.API_URL}/program/info-student/${programName}`)
+  }
+
+  getCommissionNotEnrolled(program: string) {
+    return this.http.get<Commission[]>(`${this.API_URL}/program/not-enrolled/${program}`)
   }
 
   getCommissionsByTeacher(teacherId: number) {
@@ -34,15 +38,11 @@ export class CommissionService {
     return this.http.get<Commission[]>(`${this.API_URL}/teacher/${teacherId}?programId=${programId}`)
   }
 
-  getCommissionNotEnrolled(program:string){
-    return this.http.get<Commission[]>(`${this.API_URL}/program/not-enrolled/${program}`)
-  }
-
   getByProgram(program: string) {
     return this.http.get<Commission[]>(`${this.API_URL}/program/${program}`);
   }
 
-  getById(id:number){
+  getById(id: number) {
     return this.http.get<Commission>(`${this.API_URL}/${id}`)
   }
 
@@ -64,11 +64,11 @@ export class CommissionService {
   registerTeacherToCommissionByManager(idCommision: number, requestTeacher: RegistrationStudentOrTeacher) {
     return this.http.put(`${this.API_URL}/register-teacher-by-manager/${idCommision}`, requestTeacher)
   }
-  regiterByStudent(commissionId:number, subjectsId:number){
+  regiterByStudent(commissionId: number, subjectsId: number) {
     return this.http.put(`${this.API_URL}/register-commision-to-student/${commissionId}`, subjectsId)
   }
 
-    definitiveDeleteCommission(id: number) {
+  definitiveDeleteCommission(id: number) {
     return this.http.delete<Commission>(`${this.API_URL}/delete/${id}`);
   }
 

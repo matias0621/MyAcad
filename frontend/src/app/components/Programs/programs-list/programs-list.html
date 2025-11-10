@@ -41,7 +41,7 @@
                         <button class="modify-crud-btn"
                             (click)="modifyProgram(program); programEditForm.loadData(program)" data-bs-toggle="modal"
                             data-bs-target="#modal-edit">Editar</button>
-                        <button class="modify-crud-btn" (click)="registerToStudent(program.name)">Inscribir</button>
+                        <button class="modify-crud-btn inscribe-btn" (click)="registerToStudent(program.name)">Inscribir</button>
                     </td>
                 </tr>
                 }@empty {

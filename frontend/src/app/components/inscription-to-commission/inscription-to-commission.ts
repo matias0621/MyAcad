@@ -24,6 +24,7 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
   legajo!: FormControl
   com!: Commission
   sub!: Subjects
+  programSelected: string | null = null;
 
   constructor(public careerService: CareerService,
     private notificationService: NotificationService,
@@ -45,7 +46,9 @@ export class InscriptionToCommission implements OnInit, OnDestroy {
   }
 
   getCommisionByNameProgram() {
-    const program: string = this.careerService.getCareerSelected() ?? "career";
+    const selectedProgram = this.careerService.getCareerSelected();
+    const program: string = selectedProgram ?? "career";
+    this.programSelected = selectedProgram ?? null;
 
     this.commisionService.getByProgram(program).subscribe({
       next: (res) => {

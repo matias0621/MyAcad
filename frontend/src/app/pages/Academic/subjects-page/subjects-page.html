@@ -164,9 +164,12 @@
                     <div class="modal-body">
                         @for (sub of listPrerequisite; track $index) {
                         <div>
-                            {{ sub.name }}
-                            <button class="modify-crud-btn" (click)="addPrerequisite(sub.id)"> Añadir </button>
-                            <button class="delete-crud-btn" (click)="deletePrerequisite(sub.id)"> Eliminar </button>
+                            <span>{{ sub.name }}</span>
+                            @if (isPrerequisite(sub.id)) {
+                            <button class="delete-crud-btn" (click)="deletePrerequisite(sub.id)">Eliminar</button>
+                            } @else {
+                            <button class="modify-crud-btn" (click)="addPrerequisite(sub.id)">Añadir</button>
+                            }
                         </div>
                         }
                     </div>

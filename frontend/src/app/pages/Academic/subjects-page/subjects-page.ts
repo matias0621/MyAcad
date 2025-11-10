@@ -24,7 +24,7 @@ export class SubjectsPage {
   subjects!: Subjects[];
   allSubjects !: Subjects[];
   private allSubjectsLoaded = false;
-  private showingAllSubjects = false;
+  private showingAllSubjects = true;
   listPrerequisite: Subjects[] = []
   selectedSubject ?: Subjects;
   // Paginación
@@ -87,7 +87,11 @@ export class SubjectsPage {
 
 
   prerequisite(subjects: Subjects) {
-    this.subjectId = subjects.id
+    this.subjectId = subjects.id;
+    this.selectedSubject = subjects;
+    if (!this.selectedSubject.prerequisites) {
+      this.selectedSubject.prerequisites = [];
+    }
 
     this.getAllBySemestraLessThanAndProgram(subjects.program, subjects.semesters)
   }
@@ -105,8 +109,14 @@ export class SubjectsPage {
 
   addPrerequisite(subjectPrerequisiteId: number) {
     this.subjectService.addPrerequisite(this.subjectId, subjectPrerequisiteId).subscribe({
-      next: (res) => {
-        this.notificationService.success("Se agrego la correlativa")
+      next: () => {
+        this.notificationService.success("Se agrego la correlativa");
+        if (this.selectedSubject?.prerequisites && !this.selectedSubject.prerequisites.some((p) => p.id === subjectPrerequisiteId)) {
+          const prerequisite = this.listPrerequisite.find((p) => p.id === subjectPrerequisiteId);
+          if (prerequisite) {
+            this.selectedSubject.prerequisites = [...this.selectedSubject.prerequisites, prerequisite];
+          }
+        }
         this.getAllSubject()
       },
       error: (err) => {
@@ -118,7 +128,10 @@ export class SubjectsPage {
   deletePrerequisite(subjectPrerequisiteId: number) {
     this.subjectService.deletePrerequiste(this.subjectId, subjectPrerequisiteId).subscribe({
       next: (res) => {
-        this.notificationService.success("Se elimino la correlativa")
+        this.notificationService.success("Se elimino la correlativa");
+        if (this.selectedSubject?.prerequisites) {
+          this.selectedSubject.prerequisites = this.selectedSubject.prerequisites.filter((p) => p.id !== subjectPrerequisiteId);
+        }
         this.getAllSubject()
       },
       error: (err) => {
@@ -277,6 +290,10 @@ export class SubjectsPage {
     this.subjects = this.allSubjects.filter((s) => s.program === this.filter);
     this.totalPages = 1;
     this.currentPage = 0;
+  }
+
+  isPrerequisite(subjectId: number): boolean {
+    return !!this.selectedSubject?.prerequisites?.some((p) => p.id === subjectId);
   }
 
   // form

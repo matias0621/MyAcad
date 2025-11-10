@@ -1,0 +1,224 @@
+.inscription-wrapper {
+  max-width: 1100px;
+  margin: 0 auto 2.5rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.inscription-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.6rem 1.8rem;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(231, 238, 243, 0.96));
+  border: 1px solid rgba(61, 91, 105, 0.18);
+  box-shadow: 0 16px 32px rgba(39, 58, 67, 0.12);
+}
+
+.inscription-program {
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.24rem;
+  color: rgba(61, 91, 105, 0.72);
+}
+
+#inscription-title {
+  margin: 0;
+  font-size: 1.9rem;
+  color: var(--color-5);
+  letter-spacing: 0.4px;
+}
+
+.inscription-note {
+  margin: 0;
+  max-width: 380px;
+  color: rgba(39, 58, 67, 0.78);
+  font-weight: 500;
+}
+
+.inscription-empty {
+  padding: 1.6rem 2rem;
+  border-radius: 18px;
+  background: rgba(61, 91, 105, 0.08);
+  color: var(--color-5);
+  text-align: center;
+  font-weight: 500;
+}
+
+.commission-grid {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.commission-card {
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(235, 243, 247, 0.95));
+  border: 1px solid rgba(61, 91, 105, 0.16);
+  box-shadow: 0 22px 44px rgba(39, 58, 67, 0.18);
+  overflow: hidden;
+}
+
+.commission-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1.8rem 1.2rem;
+  background: rgba(61, 91, 105, 0.1);
+}
+
+.commission-card-heading h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: var(--color-5);
+  letter-spacing: 0.3px;
+}
+
+.commission-program {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: rgba(61, 91, 105, 0.2);
+  color: var(--color-5);
+}
+
+.commission-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  color: rgba(39, 58, 67, 0.75);
+  font-weight: 500;
+}
+
+.subjects-list {
+  list-style: none;
+  margin: 0;
+  padding: 1.3rem 1.6rem 1.8rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.subject-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  background: rgba(61, 91, 105, 0.08);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.subject-item:hover {
+  background: rgba(61, 91, 105, 0.16);
+  transform: translateY(-1px);
+}
+
+.subject-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.subject-name {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-5);
+}
+
+.subject-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.subject-action {
+  min-width: 140px;
+  height: 2.4rem;
+  border: none;
+  border-radius: 12px;
+  padding: 0 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.3px;
+}
+
+.subject-action.primary {
+  background: linear-gradient(135deg, #3d5b69, #273a43);
+}
+
+.subject-action.secondary {
+  background: linear-gradient(135deg, #5a8dee, #3d5bba);
+}
+
+.subject-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(61, 91, 105, 0.25);
+}
+
+.subjects-empty {
+  margin: 0;
+  padding: 1.3rem 1.6rem 1.6rem;
+  border-top: 1px solid rgba(61, 91, 105, 0.12);
+  color: rgba(181, 43, 39, 0.85);
+  font-weight: 500;
+}
+
+@media (max-width: 992px) {
+  .inscription-wrapper {
+    padding: 1.3rem;
+  }
+
+  .subjects-list {
+    padding: 1.2rem 1.3rem 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .inscription-header {
+    padding: 1.4rem 1.5rem;
+  }
+
+  .commission-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .subject-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .subject-actions {
+    width: 100%;
+  }
+
+  .subject-action {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .inscription-wrapper {
+    padding: 1rem;
+  }
+
+  .subjects-list {
+    padding: 1rem;
+  }
+}

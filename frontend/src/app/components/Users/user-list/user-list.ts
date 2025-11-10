@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { UserForm } from '../user-form/user-form';
 import { UserEditForm } from '../user-edit-form/user-edit-form';
 import { NotificationService } from '../../../Services/notification/notification.service';
+import { DecimalPipe } from '@angular/common';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-user-list',
-  imports: [FormsModule, UserForm, UserEditForm],
+  imports: [FormsModule, UserForm, UserEditForm, DecimalPipe],
   templateUrl: './user-list.html',
   styleUrl: './user-list.css'
 })
@@ -25,6 +26,9 @@ export class UserList implements OnInit {
   search: string = '';
   timeout: any;
   selectedUser: any = null;
+  // Paginación
+  totalPages: number = 0;
+  currentPage: number = 0;
 
   constructor(
     private service: UserService,
@@ -33,6 +37,18 @@ export class UserList implements OnInit {
 
   ngOnInit(): void {
     this.getUsers();
+  }
+
+  private normalizeUsersArray(arr: any[]): any[] {
+    return (arr || []).map(u => {
+      const hasActive = u?.active !== undefined && u?.active !== null;
+      const normalizedActive = hasActive
+        ? u.active
+        : (u?.enabled !== undefined ? u.enabled
+          : (u?.isActive !== undefined ? u.isActive
+            : (u?.status === 'ACTIVE' || u?.state === 'ACTIVE')));
+      return { ...u, active: normalizedActive };
+    });
   }
 
   onSearch() {
@@ -52,13 +68,13 @@ export class UserList implements OnInit {
       //Si tiene solo números busca por legajo, si tiene letras busca por nombre completo
       if (/^[0-9]+$/.test(value)) {
         this.service.getByLegajo(value, this.endpoint).subscribe({
-          next: (data) => this.users = data,
+          next: (data) => this.users = this.normalizeUsersArray(data),
           error: (err) => console.error(err)
         });
         return;
       } else if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
         this.service.getByName(value, this.endpoint).subscribe({
-          next: (data) => { this.users = data },
+          next: (data) => { this.users = this.normalizeUsersArray(data) },
           error: (err) => console.error(err)
         });
         return;
@@ -66,9 +82,14 @@ export class UserList implements OnInit {
     }, 500)
   }
 
-  getUsers() {
-    this.service.getUsers(this.endpoint).subscribe({
-      next: (data) => { this.users = data },
+  getUsers(page: number = 0, size: number = 10 ) {
+    this.service.getUsersPaginated(this.endpoint, page, size).subscribe({
+      next: (data) => {
+        this.users = this.normalizeUsersArray(data.content);
+        this.totalPages = data.totalPages;
+        this.currentPage = data.number;
+
+      },
       error: (error) => { console.error(error) }
     })
   }

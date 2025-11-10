@@ -1,65 +1,106 @@
-@if (auth.getRole() === 'ROLE_MANAGER') {
-    @for (commission of listCommission; track $index) {
-    <p> {{commission.number}} - {{ commission.program }} </p>
-    
-    @for (s of commission.subjects; track $index) {
-        <p> {{ s.name }} </p>
-        <button class="modify-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add-student" (click)="setCommissionAndSubject(commission,s)" >Añadir Alumno</button>
-        <button class="modify-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add-teacher" (click)="setCommissionAndSubject(commission,s)" >Añadir profesor</button>
-    }
-    }
-    
-    <!-- Modal agregar un alumno -->
-    <div class="modal fade" id="modal-add-student" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header justify-content-center">
-                    <h1 class="modal-title fs-5 titles">Agregar alumno</h1>
-                    <button data-bs-dismiss="modal" aria-label="Close" id="button2">
-                        <i class="fa-solid fa-x"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form [formGroup]="form">
-                        <label for="">Legajo:</label>
-                        <input type="text" formControlName="legajo">
-                        <button (click)="addStudentToCommision()" [disabled]="form.invalid" > Añadir </button>
-                    </form>
-                </div>
-            </div>
+<section class="inscription-wrapper" aria-labelledby="inscription-title">
+    <header class="inscription-header">
+        <div class="inscription-heading">
+            <p class="inscription-program">Programa seleccionado</p>
+            <h1 id="inscription-title">{{ programSelected ?? 'Programa' }}</h1>
         </div>
-    </div>
-    <!-- Modal agregar un profesor -->
-    <div class="modal fade" id="modal-add-teacher" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header justify-content-center">
-                    <h1 class="modal-title fs-5 titles">Agregar profesor</h1>
-                    <button data-bs-dismiss="modal" aria-label="Close" id="button2">
-                        <i class="fa-solid fa-x"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form [formGroup]="form">
-                        <label for="">Legajo:</label>
-                        <input type="text" formControlName="legajo">
-                        <button (click)="addTeacherToCommision()" [disabled]="form.invalid" > Añadir </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+    </header>
 
-@else if (auth.getRole() === 'STUDENT') {
-    @for (commission of listCommission; track $index) {
-    <p> {{commission.number}} - {{ commission.program }} </p>
-    
-    @for (s of commission.subjects; track $index) {
-        <p> {{ s.name }} </p>
-        <button class="modify-crud-btn" (click)="registerStudent(commission.id, s.id)" >Añadir profesor</button>
+    @if (listCommission.length === 0) {
+    <p class="inscription-empty">Por el momento no hay comisiones disponibles para este programa.</p>
+    } @else {
+    <div class="commission-grid">
+        @for (commission of listCommission; track commission.id) {
+        <article class="commission-card">
+            <header class="commission-card-header">
+                <div class="commission-card-heading">
+                    <h2>Comisión {{ commission.number }}</h2>
+                    <span class="commission-program">{{ commission.program }}</span>
+                </div>
+                <div class="commission-meta">
+                    <span>Cupo: {{ commission.capacity }}</span>
+                    <span>Materias: {{ commission.subjects.length }}</span>
+                </div>
+            </header>
+
+            @if (commission.subjects && commission.subjects.length > 0) {
+            <ul class="subjects-list">
+                @for (subject of commission.subjects; track subject.id) {
+                <li class="subject-item">
+                    <div class="subject-info">
+                        <h3 class="subject-name">{{ subject.name }}</h3>
+                    </div>
+
+                    @if (auth.getRole() === 'ROLE_MANAGER') {
+                    <div class="subject-actions">
+                        <button type="button" class="subject-action primary" data-bs-toggle="modal"
+                            data-bs-target="#modal-add-student" (click)="setCommissionAndSubject(commission, subject)">
+                            Añadir alumno
+                        </button>
+                        <button type="button" class="subject-action secondary" data-bs-toggle="modal"
+                            data-bs-target="#modal-add-teacher" (click)="setCommissionAndSubject(commission, subject)">
+                            Añadir profesor
+                        </button>
+                    </div>
+                    } @else {
+                    <button type="button" class="subject-action primary"
+                        (click)="registerStudent(commission.id, subject.id)">
+                        Inscribirme
+                    </button>
+                    }
+                </li>
+                }
+            </ul>
+            } @else {
+            <p class="subjects-empty">Esta comisión todavía no tiene materias asignadas.</p>
+            }
+        </article>
+        }
+    </div>
     }
-    }
-}
+</section>
+
+<!-- Modal agregar un alumno -->
+<div class="modal fade" id="modal-add-student" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-narrow">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h1 class="modal-title">Agregar alumno</h1>
+                <button class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                <form class="modal-form" [formGroup]="form">
+                    <label for="legajo-alumno">Legajo</label>
+                    <input id="legajo-alumno" type="text" formControlName="legajo" placeholder="Ingresá el legajo">
+                    <button type="button" class="modal-submit primary" (click)="addStudentToCommision()"
+                        [disabled]="form.invalid">Añadir alumno</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal agregar un profesor -->
+<div class="modal fade" id="modal-add-teacher" tabindex="-1" aria-labelledby="modal-add-label" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-narrow">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h1 class="modal-title">Agregar profesor</h1>
+                <button class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                <form class="modal-form" [formGroup]="form">
+                    <label for="legajo-profesor">Legajo</label>
+                    <input id="legajo-profesor" type="text" formControlName="legajo" placeholder="Ingresá el legajo">
+                    <button type="button" class="modal-submit secondary" (click)="addTeacherToCommision()"
+                        [disabled]="form.invalid">Añadir profesor</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

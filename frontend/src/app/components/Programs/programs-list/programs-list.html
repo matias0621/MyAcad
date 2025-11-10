@@ -2,7 +2,7 @@
     <div class="crud-management-container">
         <div class="w-100 d-flex flex-column align-items-center mb-3">
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
-            <select id="select-filter" [(ngModel)]="filter" (change)="filterPrograms()">
+            <select class="select-filter" [(ngModel)]="filter" (change)="filterPrograms()">
                 <option value="">Mostrar todo</option>
                 <option value="Activos">Activos</option>
                 <option value="Inactivos">Inactivos</option>
@@ -23,26 +23,31 @@
                 @for (program of programs; track $index) {
                 <tr class="crud-table-item">
                     <td>{{program.name}}</td>
-                    <td>${{program.monthlyFee}}</td>
-                    <td class="responsive-hide">${{program.annualFee}}</td>
+                    <td>${{program.monthlyFee | number:'1.0-0'}}</td>
+                    <td class="responsive-hide">${{program.annualFee | number:'1.0-0'}}</td>
                     <td class="responsive-hide">{{program.durationMonths}}</td>
                     <td class="crud-table-actions">
-                        <button class="detail-crud-btn" (click)="selectedProgram = program" data-bs-toggle="modal" data-bs-target="#modal-detail">Ver detalle</button>
-                        <button class="modify-crud-btn" (click)="modifyProgram(program); programEditForm.loadData(program)" data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>
-                        <button class="modify-crud-btn" (click)="registerToStudent(program.name)">Inscribir</button>
                         @if (program.active) {
                         <button class="delete-crud-btn" (click)="deleteProgram(program.id)"
                             data-id="${program.id}">Eliminar</button>
                         }
                         @if (!program.active) {
                         <button class="activate-crud-btn" (click)="viewDisabled(program)">Activar</button>
+                        <button class="delete-crud-btn" (click)="definitiveDeleteProgram(program.id)"
+                            data-id="${program.id}">Eliminar</button>
                         }
+                        <button class="detail-crud-btn" (click)="selectedProgram = program" data-bs-toggle="modal"
+                            data-bs-target="#modal-detail">Detalle</button>
+                        <button class="modify-crud-btn"
+                            (click)="modifyProgram(program); programEditForm.loadData(program)" data-bs-toggle="modal"
+                            data-bs-target="#modal-edit">Editar</button>
+                        <button class="modify-crud-btn inscribe-btn" (click)="registerToStudent(program.name)">Inscribir</button>
                     </td>
                 </tr>
                 }@empty {
                 <tr>
                     <td colspan="5" class="text-center">
-                        <p style="color: red;"> Aun no hay ningun prorgrama cargado.</p>
+                        <p style="color: red;"> Aun no hay ningun programa cargado.</p>
                     </td>
                 </tr>
                 }
@@ -50,9 +55,15 @@
             <tfoot>
                 <!-- Paginación -->
                 <tr>
-                    <td colspan="7">
-                        <ul class="pagination-container">
-                        </ul>
+                    <td class="pagination-container" colspan="7">
+                        <button (click)="getCareers(currentPage - 1)" [disabled]="currentPage === 0">
+                            Anterior
+                        </button>
+
+                        <button (click)="getCareers(currentPage + 1)"
+                            [disabled]="currentPage === totalPages - 1 || currentPage === totalPages">
+                            Siguiente
+                        </button>
                     </td>
                 </tr>
             </tfoot>
@@ -121,7 +132,7 @@
                             </div>
                             <div class="detail-item">
                                 <strong>Duración (meses):</strong>
-                                <span>{{selectedProgram.durationMonths}}</span>
+                                <span>{{selectedProgram.durationMonths | number:'1.0-0'}}</span>
                             </div>
                             <div class="detail-item">
                                 <strong>Mensualidad:</strong>

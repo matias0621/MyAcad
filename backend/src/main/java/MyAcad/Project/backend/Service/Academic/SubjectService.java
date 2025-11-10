@@ -2,9 +2,7 @@ package MyAcad.Project.backend.Service.Academic;
 
 import MyAcad.Project.backend.Exception.NameMateriaAlreadyExistsException;
 import MyAcad.Project.backend.Mapper.SubjectsMapper;
-import MyAcad.Project.backend.Model.Academic.SubjectsDTO;
-import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
-import MyAcad.Project.backend.Model.Academic.SubjectsResponse;
+import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Programs.Career;
 import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.Program;
@@ -15,6 +13,7 @@ import MyAcad.Project.backend.Repository.Programs.CourseRepository;
 import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -57,12 +56,22 @@ public class SubjectService {
                 .toList();
     }
 
-    public Page<SubjectsEntity> listSubject(int page, int size) {
-       return subjectsRepository.findBySubjectActiveTrue(PageRequest.of(page, size));
+    public Page<SubjectsResponse> listSubject(int page, int size) {
+        Page<SubjectsEntity> subjectsPage = subjectsRepository.findAll(PageRequest.of(page, size));
+        List<SubjectsResponse> responseList = subjectsPage.getContent()
+                .stream()
+                .map(subjectsMapper::toResponseWithPrerequisites)
+                .toList();
+
+        return new PageImpl<>(
+                responseList,
+                subjectsPage.getPageable(),
+                subjectsPage.getTotalElements()
+        );
     }
 
-    public List<SubjectsEntity> getByNameIgnoringCase(String name) {
-        return subjectsRepository.findByNameContainingIgnoreCase(name);
+    public List<SubjectsResponse> getByNameIgnoringCase(String name) {
+        return subjectsMapper.toResponseList(subjectsRepository.findByNameContainingIgnoreCase(name));
     }
     public List<SubjectsResponse> findByProgram(String program) {
         return subjectsMapper.toResponseList(subjectsRepository.findByProgram(program));
@@ -90,11 +99,11 @@ public class SubjectService {
         return subjectsRepository.findById(subjectId);
     }
 
-    public ResponseEntity<SubjectsEntity> modifySubject(Long subjectId, SubjectsEntity updatedSubject) {
+    public void modifySubject(Long subjectId, SubjectsEntity updatedSubject) {
         Optional<SubjectsEntity> existingSubjectOpt = subjectsRepository.findById(subjectId);
 
         if (existingSubjectOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("No existe la materia");
         }
 
         SubjectsEntity existingSubject = existingSubjectOpt.get();
@@ -113,10 +122,25 @@ public class SubjectService {
         existingSubject.setSubjectActive(updatedSubject.isSubjectActive());
 
         subjectsRepository.save(existingSubject);
-        return ResponseEntity.ok(existingSubject);
     }
 
-    public void addPrerequisite(List<Long> subjectPrerequisiteId, Long subjectId) {
+    public List<SubjectsResponse> findByProgramAndSemesterLessThan(String programName, int semester) {
+        return subjectsMapper.toResponseList(subjectsRepository.findByProgramAndSemestersLessThan(programName, semester));
+    }
+
+    public void addPrerequisite(Long subjectPrerequisiteId, Long subjectId) {
+        SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
+        SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(subjectPrerequisiteId).orElseThrow();
+
+        if (subjects.getPrerequisites().contains(subjectsPrerequisite)) {
+            throw new NameMateriaAlreadyExistsException();
+        }
+
+        subjects.getPrerequisites().add(subjectsPrerequisite);
+        subjectsRepository.save(subjects);
+    }
+
+    public void addPrerequisiteList(List<Long> subjectPrerequisiteId, Long subjectId) {
         SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
 
         for (int i = 0; i < subjectPrerequisiteId.size(); i++) {
@@ -140,6 +164,9 @@ public class SubjectService {
         SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(subjectPrerequisiteId).orElseThrow();
         SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
 
+        if (!subjects.getPrerequisites().contains(subjectsPrerequisite)){
+            throw new NameMateriaAlreadyExistsException();
+        }
         subjects.getPrerequisites().remove(subjectsPrerequisite);
         subjectsRepository.save(subjects);
     }

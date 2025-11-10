@@ -21,7 +21,7 @@ export class CommissionStudentView implements OnInit {
     private commissionService: CommissionService,
     private activatedRoute: ActivatedRoute,
     private auth:AuthService,
-    private examsService:ExamsService
+    private examsService:ExamsService,
   ) {
     this.programName = this.activatedRoute.snapshot.params['name'];
   }

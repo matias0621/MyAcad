@@ -8,10 +8,18 @@ export class UserService {
   readonly API_URL = 'http://localhost:8080';
   constructor(
     private http: HttpClient
-  ) {}
+  ) { }
 
   getUsers(endpoint: string) {
-    return this.http.get<any[]>(`${this.API_URL}/${endpoint}`);
+    return this.http.get<any>(`${this.API_URL}/${endpoint}`);
+  }
+
+  getUsersByCommission(commissionId: number, endpoint: string) {
+    return this.http.get<any>(`${this.API_URL}/${endpoint}/commission/${commissionId}`);
+  }
+
+  getUsersPaginated(endpoint: string, page: number, size: number) {
+    return this.http.get<any>(`${this.API_URL}/${endpoint}/paginated?page=${page}&size=${size}`);
   }
 
   getByLegajo(legajo: string, endpoint: string) {

@@ -1,0 +1,141 @@
+<h2>Mis Comisiones</h2>
+
+@if (loading) {
+  <p>Cargando comisiones...</p>
+} @else if (commissionList.length === 0) {
+  <div class="empty-state">
+    <p>No tienes comisiones asignadas en este programa</p>
+  </div>
+} @else {
+  @for (commission of commissionList; track $index) {
+    <div class="commission-card">
+      <div class="commission-header">
+        <div class="title">
+          <h3>Comisión {{ commission.number }}</h3>
+          <div class="meta">
+            <span class="badge">ID: {{ commission.id }}</span>
+            @if (commission.program) { <span class="badge">Programa: {{ commission.program }}</span> }
+            <span class="capacity">{{ commission.students.length }} / {{ commission.capacity }} alumnos</span>
+          </div>
+        </div>
+        <button class="toggle-btn" (click)="toggleStudents(commission.id)">
+          {{ isExpanded(commission.id) ? 'Ocultar lista de alumnos' : 'Ver lista de alumnos' }}
+        </button>
+      </div>
+
+      @if (isExpanded(commission.id)) {
+        @if (commission.students.length > 0) {
+          <div class="students-section">
+            <h4>Alumnos inscriptos</h4>
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th>Legajo</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Email</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (student of commission.students; track $index) {
+                  <tr>
+                    <td>{{ student.legajo }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.lastName }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>
+                      <button class="btn-notas" (click)="openGradesModal(student, commission)">📋 Notas</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="no-students">No hay alumnos inscriptos en esta comisión</p>
+        }
+      }
+    </div>
+  }
+}
+
+<!-- Modal de Notas -->
+@if (showGradesModal && selectedStudent) {
+  <div class="modal-overlay" (click)="closeGradesModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Notas de {{ selectedStudent.name }} {{ selectedStudent.lastName }}</h3>
+        <button class="close-btn" (click)="closeGradesModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Formulario para agregar/editar nota -->
+        <div class="grade-form">
+          <h4>{{ editingGradeId ? 'Editar Nota' : 'Agregar Nueva Nota' }}</h4>
+          <div class="form-group">
+            <label>Tipo de Examen</label>
+            <select [(ngModel)]="newGrade.type" class="form-control">
+              <option value="EXAM">Parcial</option>
+              <option value="FINAL_EXAM">Final</option>
+              <option value="MAKEUP_EXAM">Recuperatorio</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Materia</label>
+            <select [(ngModel)]="newGrade.subjectId" class="form-control">
+              <option [value]="0" disabled>Seleccionar materia</option>
+              @for (subject of selectedCommission?.subjects; track subject.id) {
+                <option [value]="subject.id">{{ subject.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nota (0-10)</label>
+            <input type="number" [(ngModel)]="newGrade.score" min="0" max="10" step="0.1" class="form-control" />
+          </div>
+          <div class="form-actions">
+            <button class="btn-primary" (click)="addGrade()">{{ editingGradeId ? 'Actualizar' : 'Agregar' }}</button>
+            @if (editingGradeId) {
+              <button class="btn-secondary" (click)="cancelEdit()">Cancelar</button>
+            }
+          </div>
+        </div>
+
+        <!-- Lista de notas existentes -->
+        <div class="grades-list">
+          <h4>Notas Registradas</h4>
+          @if (studentGrades.length === 0) {
+            <p class="no-grades">No hay notas registradas para este alumno</p>
+          } @else {
+            <table class="grades-table">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Materia</th>
+                  <th>Nota</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (grade of studentGrades; track grade.id) {
+                  <tr>
+                    <td><span class="grade-type-badge">{{ getExamTypeLabel(grade.type) }}</span></td>
+                    <td>{{ getSubjectName(grade.subjectId) }}</td>
+                    <td><span [class.approved]="grade.score >= 6" [class.failed]="grade.score < 6">{{ grade.score }}</span></td>
+                    <td>{{ grade.date ? (grade.date | date:'dd/MM/yyyy') : '-' }}</td>
+                    <td>
+                      <button class="btn-edit" (click)="editGrade(grade)">✏️</button>
+                      <button class="btn-delete" (click)="deleteGrade(grade.id!)">🗑️</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

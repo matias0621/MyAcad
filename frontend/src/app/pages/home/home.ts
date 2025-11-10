@@ -4,10 +4,11 @@ import { ProgramService } from '../../Services/program-service';
 import Program from '../../Models/Program/Program';
 import { RouterLink } from '@angular/router';
 import { ViewStudent } from '../../components/StudentView/view-student/view-student';
+import { TeacherView } from '../../components/Teacher/teacher-view/teacher-view';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, ViewStudent],
+  imports: [RouterLink, ViewStudent, TeacherView],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

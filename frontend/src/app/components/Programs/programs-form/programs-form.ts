@@ -26,15 +26,22 @@ export class ProgramsForm implements OnInit {
   ngOnInit(): void {
     this.formPrograms = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(60), Validators.pattern(/^[a-zA-Z\s]+$/)]],
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
+      description: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
       durationMonths: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100), Validators.pattern(/^[0-9]+$/)]],
       monthlyFee: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30), Validators.pattern(/^[0-9]+$/)]],
       annualFee: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30), Validators.pattern(/^[0-9]+$/)]],
-      active: [true, [Validators.required]]
+      active: [true]
     })
   }
 
   OnSubmit() {
+
+    if (this.formPrograms.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.formPrograms.markAllAsTouched();
+      return;
+    }
+
     this.service.postCareer(this.formPrograms.value, this.endpoint).subscribe({
       next: (data) => {
         this.formPrograms.reset({ active: true });

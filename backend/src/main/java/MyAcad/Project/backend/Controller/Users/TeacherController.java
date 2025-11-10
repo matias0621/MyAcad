@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
+import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherDTO;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
@@ -26,14 +27,21 @@ public class TeacherController {
     //Listado
     @GetMapping()
     public List<TeacherResponse> listTeachers() {
+        System.out.println("Listado de profesores" +  services.list().toString());
         return services.list();
     }
 
     //Paginación
     @GetMapping("/paginated")
-    public Page<Teacher> listTeacherPaginated(@RequestParam(name = "page") int page,
+    public Page<TeacherResponse> listTeacherPaginated(@RequestParam(name = "page") int page,
                                               @RequestParam(name = "size") int size) {
         return services.listTeachersPaginated(page, size);
+    }
+
+    //Obtener por comisión
+    @GetMapping("/commission/{commissionId}")
+    public List<TeacherResponse> getByCommission(@PathVariable Long commissionId) {
+        return services.getByCommission(commissionId);
     }
 
 
@@ -75,7 +83,7 @@ public class TeacherController {
             Teacher teacher = new Teacher(dto);
             //Por defecto se le asigna el dni como contraseña a un usuario nuevo, luego lo cambia el mismo en su cuenta
             teacher.setPassword(String.valueOf(dto.getDni()));
-            teacher.setRole(Role.STUDENT);
+            teacher.setRole(Role.TEACHER);
             services.add(teacher);
             return ResponseEntity.ok(teacher);
         }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException | DniAlreadyExistsException e) {

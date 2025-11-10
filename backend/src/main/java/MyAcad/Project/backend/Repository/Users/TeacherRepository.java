@@ -14,6 +14,13 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
     List<Teacher> findByLegajoContaining(String legajo);
 
+    //Obtener todos los docentes por los id
+    List<Teacher> findByIdIn(List<Long> ids);
+
+    //Obtener por comisión
+    @Query("SELECT t FROM Commission c JOIN c.teachers t WHERE c.id = :commissionId")
+    List<Long> findTeachersByCommissionId(@Param("commissionId") Long commissionId);
+
     @Query("SELECT t FROM Teacher t WHERE " +
             "LOWER(CONCAT(t.name, ' ', t.lastName)) LIKE LOWER(CONCAT('%', :term, '%'))")
     List<Teacher> findByFullName(@Param("term") String term);

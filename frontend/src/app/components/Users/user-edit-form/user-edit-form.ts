@@ -38,7 +38,15 @@ export class UserEditForm implements OnInit {
 
 
   OnSubmit() {
-    const modifiedUser = { id: this.userId, ...this.form.value }
+    if (this.form.invalid) {
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
+    }
+    
+    const modifiedUser = { id: this.userId,
+      active: true,
+      ...this.form.value }
     
     this.service.putUser(modifiedUser, this.endpoint).subscribe({
       next: (data) => {

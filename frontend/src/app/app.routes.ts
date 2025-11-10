@@ -23,10 +23,17 @@ import { ExamsPage } from './pages/Academic/exams-page/exams-page';
 import { ExamsFormEdit } from './components/Academic/exams-form-edit/exams-form-edit';
 import { ExamsForm } from './components/Academic/exams-form/exams-form';
 import { StudentRegisterCommission } from './components/StudentView/student-register-commission/student-register-commission';
+import { CommissionsTeacherView } from './components/Teacher/commissions-teacher-view/commissions-teacher-view';
+import { TeacherExamsView } from './components/Teacher/teacher-exams-view/teacher-exams-view';
+import { TeacherGradesView } from './components/Teacher/teacher-grades-view/teacher-grades-view';
+import { SubjectsTeacherView } from './components/Teacher/subjects-teacher-view/subjects-teacher-view';
+
 import { ShowCareerForRegister } from './components/show-career-for-register/show-career-for-register';
 import { SelectTypeRegisterPage } from './pages/select-type-register-page/select-type-register-page';
 import { ShowCareerForCommission } from './components/show-career-for-commission/show-career-for-commission';
 import { RegisterStudentCareer } from './components/register-student-career/register-student-career';
+
+
 
 
 
@@ -68,5 +75,10 @@ export const routes: Routes = [
     { path: 'courses', component: Courses, canActivate: [AuthGuard] },
     { path: 'programs-edit-form/:id', component: ProgramsEditForm, canActivate: [AuthGuard] },
 
+    // Rutas Teacher
+    { path: 'teacher/program/:programId/commissions', component: CommissionsTeacherView, canActivate: [AuthGuard] },
+    { path: 'teacher/program/:programId/subjects', component: SubjectsTeacherView, canActivate: [AuthGuard] },
+    { path: 'teacher/exams', component: TeacherExamsView, canActivate: [AuthGuard] },
+    { path: 'teacher/grades', component: TeacherGradesView, canActivate: [AuthGuard] }
 
 ];

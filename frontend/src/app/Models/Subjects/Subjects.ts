@@ -7,7 +7,7 @@ export default interface Subjects {
   semesters: number;
   academicStatus: string;
   prerequisites?: Subjects[];
-  program : String;
+  program : string;
   subjectActive: boolean
 }
 

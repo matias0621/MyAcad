@@ -69,16 +69,20 @@ export class InscriptionToCommission implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
+    if (this.form.invalid) {
+      this.notificationService.warning(
+        'Formulario inválido. Por favor, complete todos los campos correctamente.'
+      );
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.commisionService.registerStudentToCommissionByManager(this.com.id, request).subscribe({
       next: (res) => {
         this.notificationService.success('Se registro el alumno correctamente');
       },
       error: (err) => {
-        this.notificationService.error(
-          'El alumno no existe o ya está anotado a esta materia.',
-          true
-        );
+        this.notificationService.error('Hubo un error', true);
         console.log(err);
       },
     });
@@ -88,6 +92,14 @@ export class InscriptionToCommission implements OnInit {
       legajo: this.legajo.value,
       subjectsId: this.sub.id,
     };
+
+    if (this.form.invalid) {
+      this.notificationService.warning(
+        'Formulario inválido. Por favor, complete todos los campos correctamente.'
+      );
+      this.form.markAllAsTouched();
+      return;
+    }
 
     if (this.form.invalid) {
       this.notificationService.warning(

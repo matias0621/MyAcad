@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import Commission, { CommissionResponse } from '../../Models/Commission/commission';
+import Commission from '../../Models/Commission/commission';
 import { RegistrationStudentOrTeacher } from '../../Models/Users/Student';
 
 
@@ -17,12 +17,23 @@ export class CommissionService {
     return this.http.get<Commission[]>(this.API_URL);
   }
 
-  getCommissionResponse() {
-    return this.http.get<CommissionResponse[]>(`${this.API_URL}/response`)
+  getCommissionsPaginated(page: number, size: number) {
+    return this.http.get<any>(`${this.API_URL}/paginated?page=${page}&size=${size}`);
   }
 
-  getCommissionByStudentInfo(programName:string){
+  getCommissionByStudentInfo(programName: string) {
     return this.http.get<Commission[]>(`${this.API_URL}/program/info-student/${programName}`)
+  }
+
+
+
+  getCommissionsByTeacher(teacherId: number) {
+    return this.http.get<Commission[]>(`${this.API_URL}/teacher/${teacherId}`)
+  }
+
+  getCommissionsByProgramAndTeacher(programId: number, teacherId: number) {
+
+    return this.http.get<Commission[]>(`${this.API_URL}/teacher/${teacherId}?programId=${programId}`)
   }
 
   getCommissionNotEnrolled(program:string){
@@ -33,7 +44,7 @@ export class CommissionService {
     return this.http.get<Commission[]>(`${this.API_URL}/program/${program}`);
   }
 
-  getById(id:number){
+  getById(id: number) {
     return this.http.get<Commission>(`${this.API_URL}/${id}`)
   }
 
@@ -49,17 +60,21 @@ export class CommissionService {
     return this.http.put(`${this.API_URL}/add-subject/${idCommission}`, idSubjects)
   }
 
+  removeSubjectFromCommission(idCommission: number, idSubject: number) {
+    return this.http.put(`${this.API_URL}/delete-subject/${idCommission}`, idSubject);
+  }
+
   registerStudentToCommissionByManager(idCommision: number, requestStudent: RegistrationStudentOrTeacher) {
     return this.http.put(`${this.API_URL}/register-student-by-manager/${idCommision}`, requestStudent)
   }
   registerTeacherToCommissionByManager(idCommision: number, requestTeacher: RegistrationStudentOrTeacher) {
     return this.http.put(`${this.API_URL}/register-teacher-by-manager/${idCommision}`, requestTeacher)
   }
-  regiterByStudent(commissionId:number, subjectsId:number){
+  regiterByStudent(commissionId: number, subjectsId: number) {
     return this.http.put(`${this.API_URL}/register-commision-to-student/${commissionId}`, subjectsId)
   }
 
-    definitiveDeleteCommission(id: number) {
+  definitiveDeleteCommission(id: number) {
     return this.http.delete<Commission>(`${this.API_URL}/delete/${id}`);
   }
 

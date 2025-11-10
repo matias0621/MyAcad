@@ -1,0 +1,66 @@
+<div class="grades-container">
+  <h2>Gestionar Notas</h2>
+
+  @if (loading) {
+    <p class="loading">Cargando exámenes...</p>
+  } @else if (examsList.length === 0) {
+    <div class="empty-state">
+      <p>No tienes exámenes registrados</p>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="grades-table">
+        <thead>
+          <tr>
+            <th>Legajo</th>
+            <th>Alumno</th>
+            <th>Materia</th>
+            <th>Tipo</th>
+            <th>Nota</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (exam of examsList; track $index) {
+            <tr>
+              <td>{{ exam.student.legajo || 'N/A' }}</td>
+              <td>{{ exam.student.name }} {{ exam.student.lastName }}</td>
+              <td>{{ exam.subject.name || 'Sin materia' }}</td>
+              <td>
+                <span class="badge" [class.final]="exam.examType === 'FINAL_EXAM'"
+                                    [class.partial]="exam.examType === 'EXAM'"
+                                    [class.makeup]="exam.examType === 'MAKEUP_EXAM'">
+                  @if (exam.examType === 'EXAM') { Parcial }
+                  @else if (exam.examType === 'FINAL_EXAM') { Final }
+                  @else if (exam.examType === 'MAKEUP_EXAM') { Recuperatorio }
+                  @else { {{ exam.examType }} }
+                </span>
+              </td>
+              <td>
+                @if (editingExamId === exam.id) {
+                  <input type="number" 
+                         [(ngModel)]="tempScore" 
+                         min="1" 
+                         max="10" 
+                         class="score-input">
+                } @else {
+                  <span class="score" [class.approved]="exam.score >= 6" [class.failed]="exam.score < 6">
+                    {{ exam.score }}
+                  </span>
+                }
+              </td>
+              <td>
+                @if (editingExamId === exam.id) {
+                  <button class="btn-save" (click)="saveScore(exam)">Guardar</button>
+                  <button class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+                } @else {
+                  <button class="btn-edit" (click)="startEdit(exam)">Editar</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProgramsForm } from '../programs-form/programs-form';
@@ -8,15 +8,16 @@ import { NotificationService } from '../../../Services/notification/notification
 import { Router } from '@angular/router';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
 import Subjects from '../../../Models/Subjects/Subjects';
+import { DecimalPipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-programs-list',
-  imports: [FormsModule, ProgramsForm, ProgramsEditForm],
+  imports: [FormsModule, ProgramsForm, ProgramsEditForm, DecimalPipe],
   templateUrl: './programs-list.html',
   styleUrl: './programs-list.css'
 })
-export class ProgramsList implements OnInit{
+export class ProgramsList implements OnInit {
   @Input()
   endpoint = ""
   @Output()
@@ -28,12 +29,15 @@ export class ProgramsList implements OnInit{
   showDisabled = false;
   allPrograms!: any[];
   selectedProgram: any = null;
-  careerName:string | null = null
+  careerName: string | null = null
+  // Paginación
+  totalPages: number = 0;
+  currentPage: number = 0;
 
   constructor(
     private service: CareerService,
     public subjectsService: SubjectsService,
-    private router:Router,
+    private router: Router,
     private notificationService: NotificationService
 
   ) { }
@@ -43,11 +47,13 @@ export class ProgramsList implements OnInit{
     this.getSubjects();
   }
 
-  getCareers() {
-    this.service.getCareers(this.endpoint).subscribe({
-      next: (data) => { 
-        this.programs = data;
-        this.allPrograms = data;
+  getCareers(page: number = 0, size: number = 10) {
+    this.service.getCareersPaginated(this.endpoint, page, size).subscribe({
+      next: (data) => {
+        this.programs = data.content;
+        this.allPrograms = data.content;
+        this.totalPages = data.totalPages;
+        this.currentPage = data.number;
       },
       error: (error) => {
         console.error('Error al obtener programas:', error);
@@ -55,7 +61,7 @@ export class ProgramsList implements OnInit{
     })
   }
 
-  getSubjects(){
+  getSubjects() {
     this.subjectsService.getAllSubject().subscribe({
       next: (res) => {
         this.subjectsService.listSubject = [...res]
@@ -66,8 +72,8 @@ export class ProgramsList implements OnInit{
     })
   }
 
-  addSubjectsToCareer(subjects:Subjects){
-    if (this.careerName == null){
+  addSubjectsToCareer(subjects: Subjects) {
+    if (this.careerName == null) {
       alert("Seleccione una materia")
       return
     }
@@ -84,11 +90,11 @@ export class ProgramsList implements OnInit{
     })
   }
 
-  saveNameCareer(name:string){
+  saveNameCareer(name: string) {
     this.careerName = name
   }
 
-  deleteNameCareer(){
+  deleteNameCareer() {
     this.careerName = null
   }
 
@@ -101,11 +107,11 @@ export class ProgramsList implements OnInit{
     ).then((confirmed) => {
       if (confirmed) {
         this.service.deleteCareer(id, this.endpoint).subscribe({
-          next: (data) => { 
+          next: (data) => {
             this.notificationService.success('Programa eliminado exitosamente');
             this.getCareers();
           },
-          error: (error) => { 
+          error: (error) => {
             this.notificationService.error('Error al eliminar el programa. Por favor, intenta nuevamente', true);
           }
         });
@@ -113,7 +119,28 @@ export class ProgramsList implements OnInit{
     });
   }
 
-  modifyProgram(program : any){
+  definitiveDeleteProgram(id: number) {
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar permanentemente este programa?',
+      'Confirmar eliminación permanente',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.deleteCareer(id, this.endpoint).subscribe({
+          next: (data) => {
+            this.notificationService.success('Programa eliminado exitosamente');
+            this.getCareers();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al eliminar el programa permanentemente. Por favor, intenta nuevamente', true);
+          }
+        });
+      }
+    });
+  }
+
+  modifyProgram(program: any) {
     this.program.emit(program);
   }
 
@@ -129,7 +156,7 @@ export class ProgramsList implements OnInit{
         this.service.updateCareer(updatedItem, this.endpoint).subscribe({
           next: (response) => {
             this.notificationService.success(`${item.name} activado/a exitosamente`);
-            this.getCareers();  
+            this.getCareers();
           },
           error: (error) => {
             this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);
@@ -142,7 +169,7 @@ export class ProgramsList implements OnInit{
   toggleDisabledView() {
     this.showDisabled = !this.showDisabled;
   }
-  
+
   filter: string = '';
   filterPrograms() {
     if (this.filter === '') {
@@ -154,9 +181,9 @@ export class ProgramsList implements OnInit{
     }
   }
 
-  registerToStudent(nameProgram:string){
+  registerToStudent(nameProgram: string) {
     this.service.setCareerSelected(nameProgram)
     this.router.navigate(['register-student-to-commission'])
   }
-  
+
 }

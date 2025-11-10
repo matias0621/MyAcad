@@ -30,12 +30,12 @@ public class SubjectController {
     }
 
     // Listar materias con paginación
-    @GetMapping("/pagined")
-    public Page<SubjectsEntity> listSubjects(
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<SubjectsResponse>> listSubjects(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return subjectService.listSubject(page, size);
+        return ResponseEntity.ok(subjectService.listSubject(page, size));
     }
 
     @GetMapping
@@ -45,7 +45,7 @@ public class SubjectController {
 
     // Buscar materias por nombre (ignore case)
     @GetMapping("/search")
-    public List<SubjectsEntity> searchByName(@RequestParam String name) {
+    public List<SubjectsResponse> searchByName(@RequestParam String name) {
         return subjectService.getByNameIgnoringCase(name);
     }
 
@@ -62,6 +62,11 @@ public class SubjectController {
         return ResponseEntity.ok(subjectService.findBySemestersLessThan(semester));
     }
 
+    @GetMapping("/semester-less-than-and-program/{program}/{semester}")
+    public ResponseEntity<List<SubjectsResponse>> getSubjectsBySemesterLessThanAndProgram(@PathVariable String program, @PathVariable Integer semester) {
+        return ResponseEntity.ok(subjectService.findByProgramAndSemesterLessThan(program,semester));
+    }
+
     @GetMapping("/program/{program}")
     public ResponseEntity<List<SubjectsResponse>> getByProgram(@PathVariable String program) {
         return ResponseEntity.ok(subjectService.findByProgram(program));
@@ -69,22 +74,29 @@ public class SubjectController {
 
     // Modificar materia
     @PutMapping("/{id}")
-    public ResponseEntity<SubjectsEntity> modifySubject(
+    public ResponseEntity<?> modifySubject(
             @PathVariable Long id,
             @RequestBody SubjectsEntity updatedSubject
     ) {
-        return subjectService.modifySubject(id, updatedSubject);
-    }
-
-    @PutMapping(value = "/prerequisite/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addPrerequisite(@PathVariable Long id, @RequestBody List<Long> IdPrerequisite) {
-        subjectService.addPrerequisite(IdPrerequisite, id);
+        subjectService.modifySubject(id, updatedSubject);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "/prerequisite/delete/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deletePrerequisite(@PathVariable Long idSubject, @RequestBody Long IdPrerequisite) {
-        subjectService.deleteAPrerequisite(idSubject, IdPrerequisite);
+    @PutMapping("/prerequisite-list/{id}")
+    public ResponseEntity<?> addPrerequisiteList(@PathVariable Long id, @RequestBody List<Long> IdPrerequisite) {
+        subjectService.addPrerequisiteList(IdPrerequisite, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/prerequisite/{id}")
+    public ResponseEntity<?> addPrerequisite(@PathVariable Long id, @RequestBody Long subjectPrerequiste){
+        subjectService.addPrerequisite(subjectPrerequiste, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/prerequisite/delete/{id}")
+    public ResponseEntity<?> deletePrerequisite(@PathVariable Long id, @RequestBody Long IdPrerequisite) {
+        subjectService.deleteAPrerequisite(IdPrerequisite, id);
         return ResponseEntity.ok().build();
     }
 

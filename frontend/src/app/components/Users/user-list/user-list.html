@@ -28,10 +28,10 @@
                     <td class="crud-table-actions">
                         <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal"
                             data-bs-target="#modal-detail">Detalles</button>
-                        @if (user.active) {
+                        @if (user.active || user.enabled || user.isActive || user.status === 'ACTIVE') {
                         <button class="delete-crud-btn" (click)="deleteUser(user.id)">Eliminar</button>
                         }
-                        @if (!user.active) {
+                        @if (!(user.active || user.enabled || user.isActive || user.status === 'ACTIVE')) {
                         <button class="activate-crud-btn" (click)="viewDisabled(user)">Activar</button>
                         <button class="delete-crud-btn" (click)="definitiveDeleteUser(user.id)">Eliminar</button>
                         }
@@ -50,9 +50,15 @@
             <tfoot>
                 <!-- Paginación -->
                 <tr>
-                    <td colspan="7">
-                        <ul class="pagination-container">
-                        </ul>
+                    <td class="pagination-container" colspan="7">
+                        <button (click)="getUsers(currentPage - 1)" [disabled]="currentPage === 0">
+                            Anterior
+                        </button>
+
+                        <button (click)="getUsers(currentPage + 1)"
+                            [disabled]="currentPage === totalPages - 1 || currentPage === totalPages    ">
+                            Siguiente
+                        </button>
                     </td>
                 </tr>
             </tfoot>
@@ -129,7 +135,7 @@
                             </div>
                             <div class="detail-item">
                                 <strong>DNI:</strong>
-                                <span>{{selectedUser.dni}}</span>
+                                <span>{{selectedUser.dni | number:'1.0-0'}}</span>
                             </div>
                         </div>
                         }

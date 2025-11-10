@@ -16,6 +16,7 @@ public interface CommissionRepository extends JpaRepository<Commission, Long> {
     @Query("SELECT c FROM #{#entityName} c WHERE c.active = true")
     List<Commission> findAllActives();
 
+
     @Query("SELECT c FROM #{#entityName} c WHERE c.active = true")
     List<Commission> findAllByActiveTrue();
 

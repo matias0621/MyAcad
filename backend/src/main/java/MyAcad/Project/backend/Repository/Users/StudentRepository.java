@@ -14,6 +14,13 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     List<Student> findByLegajoContaining(String legajo);
 
+    //Obtener todos los estudiantes por los id
+    List<Student> findByIdIn(List<Long> ids);
+
+    @Query("SELECT s FROM Commission c JOIN c.students s WHERE c.id = :commissionId")
+    List<Long> findStudentsByCommissionId(@Param("commissionId") Long commissionId);
+
+
     @Query("SELECT s FROM Student s WHERE " +
             "LOWER(CONCAT(s.name, ' ', s.lastName)) LIKE LOWER(CONCAT('%', :term, '%'))")
     List<Student> findByFullName(@Param("term") String term);

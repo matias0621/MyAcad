@@ -23,7 +23,13 @@ export class SubjectsPage {
   programs: Program[] = [];
   subjects!: Subjects[];
   allSubjects !: Subjects[];
-  subject !: Subjects;
+  private allSubjectsLoaded = false;
+  private showingAllSubjects = true;
+  listPrerequisite: Subjects[] = []
+  selectedSubject ?: Subjects;
+  // Paginación
+  totalPages: number = 0;
+  currentPage: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -38,6 +44,7 @@ export class SubjectsPage {
     this.getPrograms();
     this.getAllSubject();
     this.getAllCommission();
+    this.loadAllSubjects();
 
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
@@ -48,17 +55,92 @@ export class SubjectsPage {
     });
   }
 
-  getAllSubject() {
-    this.subjectService.getAllSubject().subscribe({
+  getAllSubject(page: number = 0, size: number = 10) {
+    this.subjectService.getAllSubjectPaginated(page, size).subscribe({
       next: (res) => {
-        this.subjects = res;
-        this.allSubjects = res;
+        console.log(res.content)
+        this.subjects = res.content;
+        this.totalPages = res.totalPages;
+        this.currentPage = res.number;
+        this.loadAllSubjects(this.filter !== '' || this.showingAllSubjects);
       },
       error: (err) => {
         console.log(err);
       },
     });
   }
+
+  private loadAllSubjects(applyFilterAfterLoad: boolean = false) {
+    this.allSubjectsLoaded = false;
+    this.subjectService.getAllSubject().subscribe({
+      next: (subjects) => {
+        this.allSubjects = subjects;
+        this.allSubjectsLoaded = true;
+        if (applyFilterAfterLoad) {
+          this.applyFilter();
+        }
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
+
+  prerequisite(subjects: Subjects) {
+    this.subjectId = subjects.id;
+    this.selectedSubject = subjects;
+    if (!this.selectedSubject.prerequisites) {
+      this.selectedSubject.prerequisites = [];
+    }
+
+    this.getAllBySemestraLessThanAndProgram(subjects.program, subjects.semesters)
+  }
+
+  getAllBySemestraLessThanAndProgram(program: string, semester: number) {
+    this.subjectService.getAllSubjectWithSemesterLessThanAndProgram(semester, program).subscribe({
+      next: (res) => {
+        this.listPrerequisite = res
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
+
+  addPrerequisite(subjectPrerequisiteId: number) {
+    this.subjectService.addPrerequisite(this.subjectId, subjectPrerequisiteId).subscribe({
+      next: () => {
+        this.notificationService.success("Se agrego la correlativa");
+        if (this.selectedSubject?.prerequisites && !this.selectedSubject.prerequisites.some((p) => p.id === subjectPrerequisiteId)) {
+          const prerequisite = this.listPrerequisite.find((p) => p.id === subjectPrerequisiteId);
+          if (prerequisite) {
+            this.selectedSubject.prerequisites = [...this.selectedSubject.prerequisites, prerequisite];
+          }
+        }
+        this.getAllSubject()
+      },
+      error: (err) => {
+        this.notificationService.error("Hubo un error, intente denuevo mas tarde", false)
+      }
+    })
+  }
+
+  deletePrerequisite(subjectPrerequisiteId: number) {
+    this.subjectService.deletePrerequiste(this.subjectId, subjectPrerequisiteId).subscribe({
+      next: (res) => {
+        this.notificationService.success("Se elimino la correlativa");
+        if (this.selectedSubject?.prerequisites) {
+          this.selectedSubject.prerequisites = this.selectedSubject.prerequisites.filter((p) => p.id !== subjectPrerequisiteId);
+        }
+        this.getAllSubject()
+      },
+      error: (err) => {
+        this.notificationService.error("Hubo un error, intente denuevo mas tarde", false)
+      }
+    })
+  }
+
 
   getAllCommission() {
     this.commissionService.getCommissions().subscribe({
@@ -91,11 +173,11 @@ export class SubjectsPage {
     ).then((confirmed) => {
       if (confirmed) {
         this.subjectService.deleteSubject(id).subscribe({
-          next: (data) => { 
+          next: (data) => {
             this.notificationService.success('Materia eliminada exitosamente');
             this.getAllSubject();
           },
-          error: (error) => { 
+          error: (error) => {
             this.notificationService.error('Error al eliminar la materia. Por favor, intenta nuevamente', true);
           }
         });
@@ -113,11 +195,11 @@ export class SubjectsPage {
     ).then((confirmed) => {
       if (confirmed) {
         this.subjectService.definitiveDeleteSubject(id).subscribe({
-          next: (data) => { 
+          next: (data) => {
             this.notificationService.success('Materia eliminada exitosamente');
             this.getAllSubject();
           },
-          error: (error) => { 
+          error: (error) => {
             this.notificationService.error('Error al eliminar la materia. Por favor, intenta nuevamente', true);
           }
         });
@@ -125,7 +207,7 @@ export class SubjectsPage {
     });
   }
 
-   viewDisabled(subject: Subjects) {
+  viewDisabled(subject: Subjects) {
     this.notificationService.confirm(
       `¿Deseas activar "${subject.name}"?`,
       'Confirmar activación',
@@ -166,35 +248,68 @@ export class SubjectsPage {
 
   filterSubjects() {
     if (this.filter === '') {
-      this.getAllSubject();
-    } else if (this.filter === "Activas") {
-      this.subjects = this.allSubjects.filter(
-        s => s.subjectActive === true
-      )
-    } else if (this.filter === "Inactivas") {
-      this.subjects = this.allSubjects.filter(
-        s => s.subjectActive === false
-      )
+      this.showingAllSubjects = true;
     } else {
-      this.subjectService.getByProgram(this.filter).subscribe({
-        next: (data) => { this.subjects = data },
-        error: (error) => { console.error(error) }
-      })
+      this.showingAllSubjects = false;
     }
+
+    if (!this.allSubjectsLoaded) {
+      this.loadAllSubjects(true);
+      return;
+    }
+
+    this.applyFilter();
+  }
+
+  private applyFilter(): void {
+    if (!this.allSubjects) {
+      this.subjects = [];
+      return;
+    }
+
+    if (this.filter === '') {
+      this.subjects = [...this.allSubjects];
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    if (this.filter === 'Activas') {
+      this.subjects = this.allSubjects.filter((s) => s.subjectActive);
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    if (this.filter === 'Inactivas') {
+      this.subjects = this.allSubjects.filter((s) => !s.subjectActive);
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    this.subjects = this.allSubjects.filter((s) => s.program === this.filter);
+    this.totalPages = 1;
+    this.currentPage = 0;
+  }
+
+  isPrerequisite(subjectId: number): boolean {
+    return !!this.selectedSubject?.prerequisites?.some((p) => p.id === subjectId);
   }
 
   // form
   OnSubmit() {
 
     if (this.form.invalid) {
-      this.notificationService.warning("Complete todos los campos de la materia para subirla", true);
-      return
+      this.notificationService.warning('Formulario inválido. Por favor, complete todos los campos correctamente.');
+      this.form.markAllAsTouched();
+      return;
     }
 
-
-     if (this.subjectId != 0) {
+    if (this.subjectId != 0) {
       const subjectJson = {
         id: this.subjectId,
+        subjectActive: true,
         ...this.form.value
       }
       this.subjectService.putSubject(subjectJson).subscribe({
@@ -204,21 +319,29 @@ export class SubjectsPage {
           this.subjectId = 0;
           this.getAllSubject();
         },
-        error: (error) => { 
+        error: (error) => {
           this.notificationService.error(error.error, true);
-          console.error(error) }
+          console.error(error)
+        }
       })
     } else {
-      this.subjectService.postSubject(this.form.value).subscribe({
+      const subjectJson = {
+        academicStatus: 'INPROGRESS',
+        prerequisites: [],
+        ...this.form.value
+      }
+
+      this.subjectService.postSubject(subjectJson).subscribe({
         next: (data) => {
           console.log('Materia agregada exitosamente');
           this.form.reset();
           this.subjectId = 0;
           this.getAllSubject();
         },
-        error: (error) => { 
+        error: (error) => {
           this.notificationService.error(error.error, true);
-          console.error(error) }
+          console.error(error)
+        }
       })
     }
   }

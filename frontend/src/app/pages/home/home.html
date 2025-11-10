@@ -41,26 +41,18 @@
                 </a>
             </li>
             <li>
-                <a routerLink="final-exam" class="card">
-                    <img src="/Media/final-exam.jpg" alt="">
-                    <div class="card-content">
-                        <h5>Mesas de examen</h5>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a routerLink="exam" class="card">
+                <a routerLink="exams" class="card">
                     <img src="/Media/exam.jpg" alt="">
                     <div class="card-content">
-                        <h5>Parciales</h5>
+                        <h5>Examenes</h5>
                     </div>
                 </a>
             </li>
             <li>
-                <a routerLink="" class="card">
-                    <img src="/Media/connections.jpg" alt="">
+                <a routerLink="inscriptionToFinalExam" class="card">
+                    <img src="/Media/final-exam.jpg" alt="">
                     <div class="card-content">
-                        <h5>Correlativas</h5>
+                        <h5>Inscripciones</h5>
                     </div>
                 </a>
             </li>
@@ -106,6 +98,10 @@
 
     @if (authService.getRole() === 'ROLE_STUDENT') {
         <app-view-student></app-view-student>
+    }
+
+    @if (authService.getRole() === 'ROLE_TEACHER') {
+        <app-teacher-view></app-teacher-view>
     }
 
 }

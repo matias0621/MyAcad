@@ -10,6 +10,7 @@ import { ProgramService } from '../../../Services/program-service';
 import Program from '../../../Models/Program/Program';
 import Subjects from '../../../Models/Subjects/Subjects';
 
+
 @Component({
   selector: 'app-exams-page',
   imports: [ReactiveFormsModule],
@@ -28,8 +29,11 @@ export class ExamsPage implements OnInit {
   subjects!: FormControl;
   selectedExam?: Exams;
 
-  idSubjects!: number;
-  examId!: number;
+  idSubjects!: number 
+  examId!:number
+  // Paginación
+  totalPages: number = 0;
+  currentPage: number = 0;
 
   constructor(
     private examsService: ExamsService,
@@ -67,23 +71,12 @@ export class ExamsPage implements OnInit {
     });
   }
 
-  getAllCarrer() {
-    this.programService.getPrograms().subscribe({
-      next: (res) => {
-        this.listCareer = res;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-  }
-
-  getAllExam() {
+  getAllExam(){
     this.examsService.getAllExams().subscribe({
       next: (res) => {
-        this.listExams = res;
-        console.log(res);
-        console.log(this.listExams);
+        this.listExams = res.content;
+        this.currentPage = res.number;
+        this.totalPages = res.totalPages
       },
       error: (err) => {
         console.log(err);
@@ -145,7 +138,6 @@ export class ExamsPage implements OnInit {
   cleanForm() {
     this.form.reset();
   }
-
   postExam() {
     if (this.form.invalid) {
       this.notificationService.warning(

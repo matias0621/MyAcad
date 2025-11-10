@@ -45,7 +45,7 @@ public class CommissionController {
 
     //Paginacion
     @GetMapping("/paginated")
-    public Page<Commission> listCommissionPaginated(@RequestParam(name = "page") int page,
+    public Page<CommissionResponse> listCommissionPaginated(@RequestParam(name = "page") int page,
                                                     @RequestParam(name = "size") int size) {
         return services.listCommissionPaginated(page, size);
     }
@@ -145,6 +145,11 @@ public class CommissionController {
         UserDetailsImpl user = (UserDetailsImpl) auth.getPrincipal();
         services.registerStudentByToken(user.getId(), id, subjectsId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/teacher/{teacherId}")
+    public ResponseEntity<List<CommissionResponse>> getByTeacherId(@PathVariable Long teacherId) {
+        return ResponseEntity.ok(services.findByTeacherId(teacherId));
     }
 
 }

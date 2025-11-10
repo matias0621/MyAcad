@@ -35,7 +35,7 @@
                     @if (subject.prerequisites!.length > 0) {
                     <td class="responsive-hide">
                         @for (s of subject.prerequisites; track $index) {
-                            {{ s.name }}
+                        {{ s.name }}
                         }
                     </td>
                     }@else{
@@ -43,6 +43,8 @@
                     }
                     <td>{{subject.program}}</td>
                     <td class="crud-table-actions">
+                        <button class="detail-crud-btn" (click)="selectedSubject = subject" data-bs-toggle="modal"
+                            data-bs-target="#modal-detail">Detalles</button>
                         @if (subject.subjectActive) {
                         <button class="delete-crud-btn" (click)="deleteSubject(subject.id)">Eliminar</button>
                         }
@@ -65,6 +67,19 @@
                 }
             </tbody>
             <tfoot>
+                <!-- Paginación -->
+                <tr>
+                    <td class="pagination-container" colspan="7">
+                        <button (click)="getAllSubject(currentPage - 1)" [disabled]="currentPage === 0">
+                            Anterior
+                        </button>
+
+                        <button (click)="getAllSubject(currentPage + 1)"
+                            [disabled]="currentPage === totalPages - 1 || currentPage === totalPages    ">
+                            Siguiente
+                        </button>
+                    </td>
+                </tr>
             </tfoot>
         </table>
 
@@ -134,7 +149,8 @@
 
                             <div class="form-buttons">
                                 <button type="button" (click)="cleanForm()">Limpiar</button>
-                                <button type="submit" [disabled]="form.invalid" data-bs-dismiss="modal" aria-label="Close">Agregar</button>
+                                <button type="submit" [disabled]="form.invalid" data-bs-dismiss="modal"
+                                    aria-label="Close">Agregar</button>
                             </div>
                         </form>
                     </div>
@@ -143,8 +159,8 @@
         </div>
 
         <!-- MODAL de correlativas -->
-        <div class="modal fade" id="modal-prerequisite" tabindex="-1" aria-labelledby="modal-label" style="display: none;"
-            aria-hidden="true">
+        <div class="modal fade" id="modal-prerequisite" tabindex="-1" aria-labelledby="modal-label"
+            style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
@@ -155,11 +171,56 @@
                     </div>
                     <div class="modal-body">
                         @for (sub of listPrerequisite; track $index) {
-                            <div>
-                                {{ sub.name }}
-                                <button class="modify-crud-btn" (click)="addPrerequisite(sub.id)" > Añadir </button>
-                                <button class="delete-crud-btn" (click)="deletePrerequisite(sub.id)" > Eliminar </button>
+                        <div>
+                            {{ sub.name }}
+                            <button class="modify-crud-btn" (click)="addPrerequisite(sub.id)"> Añadir </button>
+                            <button class="delete-crud-btn" (click)="deletePrerequisite(sub.id)"> Eliminar </button>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal ver detalle -->
+        <div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h1 class="modal-title fs-5 titles">Detalle del Usuario</h1>
+                        <button data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @if (selectedSubject) {
+                        <div class="detail-container">
+                            <div class="detail-item">
+                                <strong>ID:</strong>
+                                <span>{{selectedSubject.id}}</span>
                             </div>
+                            <div class="detail-item">
+                                <strong>Materia:</strong>
+                                <span>{{selectedSubject.name}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Carrera/Curso:</strong>
+                                <span>{{selectedSubject.program}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Cuatrimestre:</strong>
+                                <span>{{selectedSubject.semesters}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Correlativas:</strong>
+                                @if (selectedSubject.prerequisites?.length == 0) {
+                                    <span>Sin correlativas</span>
+                                }@else {
+                                <span>{{selectedSubject.prerequisites}}</span>
+                                }
+                            </div>
+                        </div>
                         }
                     </div>
                 </div>

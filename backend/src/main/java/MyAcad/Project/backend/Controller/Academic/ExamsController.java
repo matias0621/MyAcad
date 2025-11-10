@@ -5,6 +5,7 @@ import MyAcad.Project.backend.Model.Academic.ExamsResponse;
 import MyAcad.Project.backend.Service.Academic.ExamsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,15 @@ public class ExamsController {
         List<ExamsResponse> exams = examsService.findAll();
         return ResponseEntity.ok(exams);
     }
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<ExamsResponse>> getAllFinalExamsPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ExamsResponse> exams = examsService.listExamsPaginated(page, size);
+        return ResponseEntity.ok(exams);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ExamsResponse> getFinalExamById(@PathVariable Long id) {

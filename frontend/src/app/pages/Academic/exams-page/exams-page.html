@@ -53,6 +53,19 @@
                 }
             </tbody>
             <tfoot>
+                <!-- Paginación -->
+                <tr>
+                    <td class="pagination-container" colspan="7">
+                        <button (click)="getAllExam(currentPage - 1)" [disabled]="currentPage === 0">
+                            Anterior
+                        </button>
+
+                        <button (click)="getAllExam(currentPage + 1)"
+                            [disabled]="currentPage === totalPages - 1 || currentPage === totalPages">
+                            Siguiente
+                        </button>
+                    </td>
+                </tr>
             </tfoot>
         </table>
         <!-- Modal ver detalle -->
@@ -75,11 +88,12 @@
                             </div>
                             <div class="detail-item">
                                 <strong>Alumno:</strong>
-                                <span>{{selectedExam.student}}</span>
+                                <span>{{selectedExam.student.legajo}} | {{selectedExam.student.name}}
+                                    {{selectedExam.student.lastName}}</span>
                             </div>
                             <div class="detail-item">
                                 <strong>Materia:</strong>
-                                <span>{{selectedExam.subject}}</span>
+                                <span>{{selectedExam.subject.program}} | {{selectedExam.subject.name}}</span>
                             </div>
                             <div class="detail-item">
                                 <strong>Nota:</strong>

@@ -1,10 +1,9 @@
 package MyAcad.Project.backend.Controller.Programs;
 
+import MyAcad.Project.backend.Enum.ProgramType;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
-import MyAcad.Project.backend.Model.Programs.Course;
-import MyAcad.Project.backend.Model.Programs.CourseDTO;
-import MyAcad.Project.backend.Model.Programs.CourseResponse;
-import MyAcad.Project.backend.Service.Programs.CourseService;
+import MyAcad.Project.backend.Model.Programs.*;
+import MyAcad.Project.backend.Service.Programs.ProgramService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +16,19 @@ import java.util.Optional;
 @RequestMapping("/courses")
 @AllArgsConstructor
 public class CourseController {
-    private final CourseService services;
+    private final ProgramService programService;
 
     //Paginacion
     @GetMapping("/paginated")
-    public Page<Course> listCoursesPaginated(@RequestParam(name = "page") int page,
-                                             @RequestParam(name = "size") int size) {
-        return services.listCoursesPaginated(page, size);
+    public Page<ProgramResponse> listCoursesPaginated(@RequestParam(name = "page") int page,
+                                                      @RequestParam(name = "size") int size) {
+        return programService.listProgramPaginatedByProgramType(page, size, ProgramType.COURSE);
     }
 
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<CourseResponse> course = services.getById(id);
+        Optional<ProgramResponse> course = Optional.ofNullable(programService.findProgramById(id));
         if (course.isPresent()) {
             return ResponseEntity.ok(course.get());
         }else{
@@ -39,11 +38,10 @@ public class CourseController {
 
     //POST
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody CourseDTO dto) {
+    public ResponseEntity<?> add(@RequestBody ProgramsDTO dto) {
         try {
-            Course course = new Course(dto);
-            services.add(course);
-            return ResponseEntity.ok(course);
+            programService.createCourse(dto);
+            return ResponseEntity.ok().build();
         }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
@@ -51,30 +49,31 @@ public class CourseController {
 
     //DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCourse(@PathVariable(name = "id") Long id){
-        return services.delete(id);
+    public ResponseEntity<?> deleteCourse(@PathVariable(name = "id") Long id){
+        programService.logicDeleteProgram(id);
+        return ResponseEntity.ok().build();
     }
 
     // Baja definitiva
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> definitiveDeleteCourse(@PathVariable Long id) {
-        return services.definitiveDeleteCourse(id);
+    public ResponseEntity<?> definitiveDeleteCourse(@PathVariable Long id) {
+        programService.deleteProgram(id);
+        return ResponseEntity.ok().build();
     }
     //PUT
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody CourseDTO dto){
+    public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody ProgramsDTO dto){
         try {
-            Course course = new Course(dto);
-            services.modify(id, course);
-            return ResponseEntity.ok(course);
+            programService.updateProgram(id, dto);
+            return ResponseEntity.ok().build();
         }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
     }
 
     @GetMapping()
-    public List<CourseResponse> listCourses() {
-        return services.list();
+    public List<ProgramResponse> listCourses() {
+        return programService.findByProgramType(ProgramType.COURSE);
     }
 
 }

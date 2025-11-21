@@ -4,7 +4,6 @@ import MyAcad.Project.backend.Configuration.SecurityConfig;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
-import MyAcad.Project.backend.Model.Programs.Career;
 import MyAcad.Project.backend.Model.Users.Manager;
 import MyAcad.Project.backend.Repository.Users.ManagerRepository;
 import lombok.AllArgsConstructor;

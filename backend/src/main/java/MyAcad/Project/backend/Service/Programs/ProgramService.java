@@ -2,13 +2,11 @@ package MyAcad.Project.backend.Service.Programs;
 
 import MyAcad.Project.backend.Enum.ProgramType;
 import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
+import MyAcad.Project.backend.Mapper.ProgramMapper;
 import MyAcad.Project.backend.Model.Programs.*;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
-import MyAcad.Project.backend.Repository.Programs.CareerRepository;
-import MyAcad.Project.backend.Repository.Programs.CourseRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
-import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import lombok.AllArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +22,7 @@ public class ProgramService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final ProgramRepository programRepository;
+    private final ProgramMapper programMapper;
 
     public void createEngineering(ProgramsDTO programsDTO) {
         if (programRepository.findByName(programsDTO.getName()).isPresent()){
@@ -80,28 +78,36 @@ public class ProgramService {
         programRepository.save(program);
     }
 
-    public Page<Program> listProgramPaginated(int page, int size) {
-        return programRepository.findAll(PageRequest.of(page, size));
+    public Page<ProgramResponse> listProgramPaginated(int page, int size) {
+        Page<Program> programs = programRepository.findAll(PageRequest.of(page, size));
+        return programs.map(programMapper::toResponse);
     }
 
-    public List<Program> findByProgramType(ProgramType programType) {
-        return programRepository.findByProgramType(programType);
+    public Page<ProgramResponse> listProgramPaginatedByProgramType(int page, int size, ProgramType programType) {
+        Page<Program> programs = programRepository.findByProgramType(programType,PageRequest.of(page, size));
+        return programs.map(programMapper::toResponse);
     }
 
-    public List<Program> findPrograms(){
-        return programRepository.findAll();
+
+
+    public List<ProgramResponse> findByProgramType(ProgramType programType) {
+        return programMapper.toResponseList(programRepository.findByProgramType(programType));
     }
 
-    public Program findProgramById(Long id) {
-        return programRepository.findById(id).orElse(null);
+    public List<ProgramResponse> findPrograms(){
+        return programMapper.toResponseList(programRepository.findAll());
     }
 
-    public List<Program> findByStudent(Long studentId){
-        return programRepository.findByStudent(studentId);
+    public ProgramResponse findProgramById(Long id) {
+        return programMapper.toResponse(programRepository.findById(id).orElse(null));
     }
 
-    public List<Program> findByTeacher(Long teacherId){
-        return programRepository.findByTeacher(teacherId);
+    public List<ProgramResponse> findByStudent(Long studentId){
+        return programMapper.toResponseList(programRepository.findByStudent(studentId));
+    }
+
+    public List<ProgramResponse> findByTeacher(Long teacherId){
+        return programMapper.toResponseList(programRepository.findByTeacher(teacherId));
     }
 
     public void registerStudent(String nameProgram, String legajoStudent){
@@ -120,22 +126,28 @@ public class ProgramService {
         programRepository.save(program);
     }
 
-    public Program findByName(String programName){
-        return programRepository.findByName(programName).orElseThrow();
+    public ProgramResponse findByName(String programName){
+        return programMapper.toResponse(programRepository.findByName(programName).orElseThrow());
     }
 
     public void deleteProgram(Long programId){
         programRepository.deleteById(programId);
     }
 
-    public void updateProgram(Long id, ProgramsDTO programsDTO){
+    public void logicDeleteProgram(Long programId){
+        Program program = programRepository.findById(programId).orElseThrow();
+        program.setActive(false);
+        programRepository.save(program);
+    }
+
+    public void updateProgram(Long id, ProgramsDTO programUpdate){
         Program program = programRepository.findById(id).orElseThrow();
-        program.setName(programsDTO.getName());
-        program.setDescription(programsDTO.getDescription());
-        program.setAnnualFee(programsDTO.getAnnualFee());
-        program.setMonthlyFee(programsDTO.getMonthlyFee());
-        program.setDurationMonths(programsDTO.getDurationMonths());
-        program.setActive(programsDTO.getActive());
+        program.setName(programUpdate.getName());
+        program.setDescription(programUpdate.getDescription());
+        program.setAnnualFee(programUpdate.getAnnualFee());
+        program.setMonthlyFee(programUpdate.getMonthlyFee());
+        program.setDurationMonths(programUpdate.getDurationMonths());
+        program.setActive(programUpdate.getActive());
         programRepository.save(program);
     }
 

@@ -17,6 +17,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ProgramsDTO {
+    private int id;
     @NotBlank(message = "El nombre no puede estar vacío")
     @Size(max = 50)
     private String name;

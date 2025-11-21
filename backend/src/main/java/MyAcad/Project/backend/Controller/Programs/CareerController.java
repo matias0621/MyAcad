@@ -1,12 +1,11 @@
 package MyAcad.Project.backend.Controller.Programs;
 
 
+import MyAcad.Project.backend.Enum.ProgramType;
 import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
-import MyAcad.Project.backend.Model.Programs.Career;
-import MyAcad.Project.backend.Model.Programs.CareerDTO;
-import MyAcad.Project.backend.Model.Programs.CareerResponse;
-import MyAcad.Project.backend.Service.Programs.CareerService;
+import MyAcad.Project.backend.Model.Programs.*;
+import MyAcad.Project.backend.Service.Programs.ProgramService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +18,23 @@ import java.util.Optional;
 @RequestMapping("/careers")
 @AllArgsConstructor
 public class CareerController {
-    private final CareerService services;
+    private final ProgramService programService;
 
     @GetMapping()
-    public List<CareerResponse> listCareers() {
-        return services.list();
+    public List<ProgramResponse> listCareers() {
+        return programService.findByProgramType(ProgramType.ENGINEERING);
     }
     //Paginacion
     @GetMapping("/paginated")
-    public Page<Career> listCareerPaginated(@RequestParam(name = "page") int page,
-                                             @RequestParam(name = "size") int size) {
-        return services.listCareersPaginated(page, size);
+    public Page<ProgramResponse> listCareerPaginated(@RequestParam(name = "page") int page,
+                                                     @RequestParam(name = "size") int size) {
+        return programService.listProgramPaginatedByProgramType(page,size, ProgramType.ENGINEERING);
     }
 
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<CareerResponse> career = services.getById(id);
+        Optional<ProgramResponse> career = Optional.ofNullable(programService.findProgramById(id));
         if (career.isPresent()) {
             return ResponseEntity.ok(career.get());
         }else{
@@ -45,11 +44,10 @@ public class CareerController {
 
     //POST
     @PostMapping
-    public ResponseEntity<?> addCareer(@RequestBody CareerDTO dto) {
+    public ResponseEntity<?> addCareer(@RequestBody ProgramsDTO dto) {
         try {
-            Career career = new Career(dto);
-            services.add(career);
-            return ResponseEntity.ok(career);
+            programService.createEngineering(dto);
+            return ResponseEntity.ok().build();
         }catch (CareerAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
@@ -57,22 +55,23 @@ public class CareerController {
 
     //DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCareer(@PathVariable(name = "id") Long id){
-        return services.delete(id);
+    public ResponseEntity<?> deleteCareer(@PathVariable(name = "id") Long id){
+        programService.logicDeleteProgram(id);
+        return ResponseEntity.ok().build();
     }
 
     // Baja definitiva
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> definitiveDeleteCareer(@PathVariable Long id) {
-        return services.definitiveDeleteCareer(id);
+    public ResponseEntity<?> definitiveDeleteCareer(@PathVariable Long id) {
+        programService.deleteProgram(id);
+        return ResponseEntity.ok().build();
     }
     //PUT
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCareer(@PathVariable Long id, @RequestBody CareerDTO dto){
+    public ResponseEntity<?> updateCareer(@PathVariable Long id, @RequestBody ProgramsDTO dto){
         try {
-            Career career = new Career(dto);
-            services.modify(id, career);
-            return ResponseEntity.ok(career);
+            programService.updateProgram(id, dto);
+            return ResponseEntity.ok().build();
         }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }

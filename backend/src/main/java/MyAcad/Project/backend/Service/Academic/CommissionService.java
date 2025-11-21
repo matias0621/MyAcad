@@ -4,18 +4,11 @@ import MyAcad.Project.backend.Enum.AcademicStatus;
 import MyAcad.Project.backend.Exception.InscriptionException;
 import MyAcad.Project.backend.Mapper.CommissionMapper;
 import MyAcad.Project.backend.Model.Academic.*;
-import MyAcad.Project.backend.Model.Programs.Career;
-import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.Program;
-import MyAcad.Project.backend.Model.Programs.Technical;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
-import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
-import MyAcad.Project.backend.Repository.Programs.CareerRepository;
-import MyAcad.Project.backend.Repository.Programs.CourseRepository;
-import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
-import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
+import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
@@ -27,7 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.Subject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +32,8 @@ public class CommissionService {
     private final SubjectsRepository subjectsRepository;
     private final StudentRepository studentRepository;
     private final SubjectsXStudentService subjectsXStudentService;
-    private final CareerRepository careerRepository;
-    private final TechnicalRepository technicalRepository;
-    private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
-    private final ExamsRepository examsRepository;
-    private final SubjectsXStudentRepository subjectsXStudentRepository;
+    private final ProgramRepository programRepository;
 
     public void add(Commission c) {
         if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
@@ -222,13 +210,7 @@ public class CommissionService {
             program.getSubjects().add(s);
         }
 
-        // Guardar según el tipo de programa
-        switch (program) {
-            case Career career -> careerRepository.save(career);
-            case Technical technical -> technicalRepository.save(technical);
-            case Course course -> courseRepository.save(course);
-            default -> throw new RuntimeException("No existe ese programa");
-        }
+        programRepository.save(program);
 
         System.out.println("Comisión editada" + c);
 
@@ -288,20 +270,13 @@ public class CommissionService {
 
         registerStudentToProgram(student, commission.getProgram());
         subjectsXStudentService.createSubjectsXStudent(subjectsXStudentDTO);
-
-
     }
 
     public void registerStudentToProgram(Student student, String programName){
         Program program = findProgramByName(programName);
 
         program.getStudents().add(student);
-        switch (program) {
-            case Career career -> careerRepository.save(career);
-            case Technical technical -> technicalRepository.save(technical);
-            case Course course -> courseRepository.save(course);
-            default -> throw new RuntimeException("No existe esa materia");
-        }
+        programRepository.save(program);
     }
 
     public void registerTeacherToProgram(String legajo, Long commissionId, Long subjectsId){
@@ -318,12 +293,7 @@ public class CommissionService {
         if (!commission.getTeachers().contains(teacher)) commission.getTeachers().add(teacher);
 
         // Seteamos y guardamos la carrera
-        switch (program) {
-            case Career career -> careerRepository.save(career);
-            case Technical technical -> technicalRepository.save(technical);
-            case Course course -> courseRepository.save(course);
-            default -> throw new RuntimeException("No existe esa materia");
-        }
+        programRepository.save(program);
         teacherRepository.save(teacher);
         repository.save(commission);
     }
@@ -360,11 +330,7 @@ public class CommissionService {
     }
 
     public Program findProgramByName(String name) {
-        return  careerRepository.findByName(name)
-                .map(p -> (Program) p)
-                .or(() -> courseRepository.findByName(name).map(p -> (Program) p))
-                .or(() -> technicalRepository.findByName(name).map(p -> (Program) p))
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+        return  programRepository.findByName(name).orElseThrow();
     }
 
 

@@ -21,7 +21,7 @@ import java.util.Set;
 public class Program {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "program_id")
     private Long id;
     private String name;
@@ -34,16 +34,6 @@ public class Program {
     @Enumerated(EnumType.STRING)
     protected ProgramType programType;
 
-    public Program(ProgramsDTO dto) {
-        this.id = dto.getId();
-        this.name = dto.getName();
-        this.description = dto.getDescription();
-        this.durationMonths = dto.getDurationMonths();
-        this.monthlyFee = dto.getMonthlyFee();
-        this.annualFee = dto.getAnnualFee();
-        this.active = dto.getActive();
-        this.programType = dto.getProgramType();
-    }
 
     @ManyToMany
     @JoinTable(

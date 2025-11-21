@@ -1,17 +1,19 @@
 package MyAcad.Project.backend.Service.Programs;
 
-import MyAcad.Project.backend.Model.Programs.Career;
-import MyAcad.Project.backend.Model.Programs.Course;
-import MyAcad.Project.backend.Model.Programs.Program;
-import MyAcad.Project.backend.Model.Programs.Technical;
+import MyAcad.Project.backend.Enum.ProgramType;
+import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
+import MyAcad.Project.backend.Model.Programs.*;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Programs.CareerRepository;
 import MyAcad.Project.backend.Repository.Programs.CourseRepository;
+import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,74 +22,122 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ProgramService {
-    private final CourseRepository courseRepository;
-    private final TechnicalRepository technicalRepository;
-    private final CareerRepository careerRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final ProgramRepository programRepository;
+
+    public void createEngineering(ProgramsDTO programsDTO) {
+        if (programRepository.findByName(programsDTO.getName()).isPresent()){
+            throw new CareerAlreadyExistsException();
+        }
+
+        Program program = Program.builder()
+                .name(programsDTO.getName())
+                .description(programsDTO.getDescription())
+                .annualFee(programsDTO.getAnnualFee())
+                .monthlyFee(programsDTO.getMonthlyFee())
+                .durationMonths(programsDTO.getDurationMonths())
+                .active(programsDTO.getActive())
+                .programType(ProgramType.ENGINEERING)
+                .build();
+
+        programRepository.save(program);
+    }
+
+    public void createCourse(ProgramsDTO programsDTO) {
+        if (programRepository.findByName(programsDTO.getName()).isPresent()){
+            throw new CareerAlreadyExistsException();
+        }
+
+        Program program = Program.builder()
+                .name(programsDTO.getName())
+                .description(programsDTO.getDescription())
+                .annualFee(programsDTO.getAnnualFee())
+                .monthlyFee(programsDTO.getMonthlyFee())
+                .durationMonths(programsDTO.getDurationMonths())
+                .active(programsDTO.getActive())
+                .programType(ProgramType.COURSE)
+                .build();
+
+        programRepository.save(program);
+    }
+
+    public void createTechnical(ProgramsDTO programsDTO) {
+        if (programRepository.findByName(programsDTO.getName()).isPresent()){
+            throw new CareerAlreadyExistsException();
+        }
+
+        Program program = Program.builder()
+                .name(programsDTO.getName())
+                .description(programsDTO.getDescription())
+                .annualFee(programsDTO.getAnnualFee())
+                .monthlyFee(programsDTO.getMonthlyFee())
+                .durationMonths(programsDTO.getDurationMonths())
+                .active(programsDTO.getActive())
+                .programType(ProgramType.TECHNICAL)
+                .build();
+
+        programRepository.save(program);
+    }
+
+    public Page<Program> listProgramPaginated(int page, int size) {
+        return programRepository.findAll(PageRequest.of(page, size));
+    }
+
+    public List<Program> findByProgramType(ProgramType programType) {
+        return programRepository.findByProgramType(programType);
+    }
 
     public List<Program> findPrograms(){
-        List<Program> programs = new ArrayList<>();
-        programs.addAll(careerRepository.findAll());
-        programs.addAll(technicalRepository.findAll());
-        programs.addAll(courseRepository.findAll());
-        return programs;
+        return programRepository.findAll();
+    }
+
+    public Program findProgramById(Long id) {
+        return programRepository.findById(id).orElse(null);
     }
 
     public List<Program> findByStudent(Long studentId){
-
-        List<Program> programs = new ArrayList<>();
-
-        programs.addAll(careerRepository.findByStudent(studentId));
-        programs.addAll(technicalRepository.findByStudent(studentId));
-        programs.addAll(courseRepository.findByStudent(studentId));
-
-        return programs;
+        return programRepository.findByStudent(studentId);
     }
 
     public List<Program> findByTeacher(Long teacherId){
-        List<Program> programs = new ArrayList<>();
-
-        programs.addAll(careerRepository.findByTeacher(teacherId));
-        programs.addAll(technicalRepository.findByTeacher(teacherId));
-        programs.addAll(courseRepository.findByTeacher(teacherId));
-
-        return programs;
+        return programRepository.findByTeacher(teacherId);
     }
 
     public void registerStudent(String nameProgram, String legajoStudent){
         Student student = studentRepository.findByLegajo(legajoStudent).orElseThrow();
-        Program program = findByName(nameProgram);
+        Program program = programRepository.findByName(nameProgram).orElseThrow();
 
         program.getStudents().add(student);
-
-        switch (program) {
-            case Career career -> careerRepository.save(career);
-            case Technical technical -> technicalRepository.save(technical);
-            case Course course -> courseRepository.save(course);
-            default -> throw new RuntimeException("No existe esa materia");
-        }
+        programRepository.save(program);
     }
 
     public void registerTeacher(String nameProgram, String legajoTeacher){
         Teacher teacher = teacherRepository.findByLegajo(legajoTeacher).orElseThrow();
-        Program program = findByName(nameProgram);
+        Program program = programRepository.findByName(nameProgram).orElseThrow();
 
         program.getTeachers().add(teacher);
-
-        switch (program) {
-            case Career career -> careerRepository.save(career);
-            case Technical technical -> technicalRepository.save(technical);
-            case Course course -> courseRepository.save(course);
-            default -> throw new RuntimeException("No existe esa materia");
-        }
+        programRepository.save(program);
     }
 
-    public Program findByName(String name){
-        return  careerRepository.findByName(name)
-                .map(p -> (Program) p)
-                .or(() -> courseRepository.findByName(name).map(p -> (Program) p))
-                .or(() -> technicalRepository.findByName(name).map(p -> (Program) p))
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+    public Program findByName(String programName){
+        return programRepository.findByName(programName).orElseThrow();
     }
+
+    public void deleteProgram(Long programId){
+        programRepository.deleteById(programId);
+    }
+
+    public void updateProgram(Long id, ProgramsDTO programsDTO){
+        Program program = programRepository.findById(id).orElseThrow();
+        program.setName(programsDTO.getName());
+        program.setDescription(programsDTO.getDescription());
+        program.setAnnualFee(programsDTO.getAnnualFee());
+        program.setMonthlyFee(programsDTO.getMonthlyFee());
+        program.setDurationMonths(programsDTO.getDurationMonths());
+        program.setActive(programsDTO.getActive());
+        programRepository.save(program);
+    }
+
+    
 }

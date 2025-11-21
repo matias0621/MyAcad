@@ -11,12 +11,14 @@ import lombok.*;
 
 import java.util.Set;
 
-@MappedSuperclass
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public abstract class Program {
+@Builder
+@Entity
+public class Program {
 
     @Id
     @GeneratedValue

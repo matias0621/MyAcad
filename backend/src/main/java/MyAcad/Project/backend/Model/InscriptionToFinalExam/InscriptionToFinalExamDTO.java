@@ -18,4 +18,6 @@ public class InscriptionToFinalExamDTO {
 
     private Long subjectsId;
 
+    private String program;
+
 }

@@ -44,6 +44,11 @@ public class InscriptionsController {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsBySubjectId(id));
     }
 
+    @GetMapping("/final-exams-students/{studentId}")
+    public ResponseEntity<List<InscriptionToFinalExamEntity>> findByFinalExamStudentId(@PathVariable Long studentId) {
+        return ResponseEntity.ok(inscriptionToFinalExamService.getActiveInscriptionsForStudent(studentId));
+    }
+
     @PostMapping
     public ResponseEntity<InscriptionToFinalExamDTO> save(@RequestBody InscriptionToFinalExamDTO entity) {
         inscriptionToFinalExamService.createInscription(entity);

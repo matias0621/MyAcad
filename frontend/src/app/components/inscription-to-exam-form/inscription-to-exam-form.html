@@ -11,6 +11,16 @@
             placeholder="Seleccioná la fecha y hora del examen">
     </div>
 
+    <div class="exam-form-field">
+        <label for="final-date">Carrera</label>
+        <select name="programName" id="programName" formControlName="programName">
+            @for (program of programs; track $index) {
+                <option [value]="program.name"> {{ program.name }} </option>
+            }
+        </select>
+    </div>
+
+
     <button type="submit" class="exam-form-submit" [disabled]="form.invalid || subjectId === null">Guardar inscripción</button>
 </form>
 
@@ -24,12 +34,12 @@
     <p class="exam-selected-info">Materia seleccionada: <span>{{ selectedSubjectName }}</span></p>
     }
 
-    @if (subjectsServices.listSubject.length === 0) {
+    @if (form.get('programName')?.errors?.['required']) {
     <p class="exam-empty-text">Aún no hay materias cargadas en el sistema.</p>
     }
     @else {
     <ul class="exam-subject-list">
-        @for (subjects of subjectsServices.listSubject; track $index) {
+        @for (subjects of subjectsList; track $index) {
         <li class="exam-subject-item" [class.exam-subject-item--selected]="subjectId === subjects.id">
             <span class="exam-subject-name">{{ subjects.name }}</span>
             <button type="button" class="exam-subject-action"

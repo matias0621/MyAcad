@@ -18,8 +18,10 @@ export class InscriptionToExamFormEdit {
   inscriptionDate!: FormControl;
   finalExamDate!: FormControl;
   subjectId: number | null = null;
-  idInscription!: string
+  idInscription: number | null = null;
   selectedSubjectName: string | null = null;
+  programName:FormControl
+
 
   constructor(
     public inscriptionToFinalExamService: InscriptionToFinalExamService,
@@ -29,12 +31,14 @@ export class InscriptionToExamFormEdit {
   ) {
     this.inscriptionDate = new FormControl('', [Validators.required]);
     this.finalExamDate = new FormControl('', [Validators.required]);
+    this.programName = new FormControl('',[Validators.required])
 
     this.idInscription = this.activatedRoute.snapshot.params['id']
 
     this.form = new FormGroup({
       inscriptionDate: this.inscriptionDate,
-      finalExamDate: this.finalExamDate
+      finalExamDate: this.finalExamDate,
+      program: this.programName
     });
   }
 
@@ -101,6 +105,7 @@ export class InscriptionToExamFormEdit {
     const inscription: PostInscriptionToFinalExam = {
       inscriptionDate: formatDate(this.inscriptionDate.value),
       finalExamDate: formatDate(this.finalExamDate.value),
+      program: this.programName.value,
       subjectsId: this.subjectId,
     };
 

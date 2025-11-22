@@ -67,6 +67,11 @@ public class ManagerService {
         if (!repository.existsById(managerId)) {
             return ResponseEntity.notFound().build();
         }
+
+        if (managerId == 1){
+            throw new RuntimeException("No se puede eliminar este manager");
+        }
+
         repository.deleteById(managerId);
         return ResponseEntity.ok().build();
     }

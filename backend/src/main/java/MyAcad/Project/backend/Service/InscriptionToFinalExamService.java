@@ -3,8 +3,10 @@ package MyAcad.Project.backend.Service;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamDTO;
 import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamEntity;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.InscriptionToFinalExamRepository;
+import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import MyAcad.Project.backend.Service.Academic.SubjectService;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import lombok.AllArgsConstructor;
@@ -21,12 +23,14 @@ public class InscriptionToFinalExamService {
     private final InscriptionToFinalExamRepository inscriptionToFinalExamRepository;
     private final SubjectService subjectService;
     private final StudentService studentService;
+    private final ProgramRepository programRepository;
 
     public void createInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO) {
         SubjectsEntity subjects = subjectService.getById(inscriptionToFinalExamDTO.getSubjectsId()).orElseThrow();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime examDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getFinalExamDate(), formatter);
         LocalDateTime inscriptionDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getInscriptionDate(), formatter);
+        Program program = programRepository.findByName(inscriptionToFinalExamDTO.getProgram()).orElseThrow();
 
         if (!examDate.isAfter(inscriptionDate)) {
             throw new IllegalArgumentException("La fecha del examen debe ser posterior a la fecha de inscripción.");
@@ -36,10 +40,10 @@ public class InscriptionToFinalExamService {
                 .finalExamDate(examDate)
                 .inscriptionDate(inscriptionDate)
                 .subjects(subjects)
+                .program(program)
                 .build();
 
         inscriptionToFinalExamRepository.save(inscriptionToFinalExamEntity);
-
     }
 
     public List<InscriptionToFinalExamEntity> getAllInscriptions() {
@@ -95,6 +99,11 @@ public class InscriptionToFinalExamService {
         inscription.getStudents().add(student);
         inscriptionToFinalExamRepository.save(inscription);
         return inscription;
+    }
+
+    public List<InscriptionToFinalExamEntity> getActiveInscriptionsForStudent(Long studentId) {
+        LocalDateTime now = LocalDateTime.now();
+        return inscriptionToFinalExamRepository.findActiveInscriptionsForStudent(studentId, now);
     }
 
     public void deleteInscription(Long id) {

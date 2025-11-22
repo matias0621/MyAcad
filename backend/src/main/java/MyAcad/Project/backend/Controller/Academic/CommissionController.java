@@ -6,8 +6,6 @@ import MyAcad.Project.backend.Exception.InscriptionException;
 import MyAcad.Project.backend.Model.Academic.Commission;
 import MyAcad.Project.backend.Model.Academic.CommissionDTO;
 import MyAcad.Project.backend.Model.Academic.CommissionResponse;
-import MyAcad.Project.backend.Model.Programs.Course;
-import MyAcad.Project.backend.Model.Programs.CourseDTO;
 import MyAcad.Project.backend.Model.RegistrationStudent.RegistrationRequest;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;

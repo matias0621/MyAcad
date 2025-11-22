@@ -28,6 +28,10 @@ public class InscriptionToFinalExamService {
         LocalDateTime examDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getFinalExamDate(), formatter);
         LocalDateTime inscriptionDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getInscriptionDate(), formatter);
 
+        if (!examDate.isAfter(inscriptionDate)) {
+            throw new IllegalArgumentException("La fecha del examen debe ser posterior a la fecha de inscripción.");
+        }
+
         InscriptionToFinalExamEntity inscriptionToFinalExamEntity = InscriptionToFinalExamEntity.builder()
                 .finalExamDate(examDate)
                 .inscriptionDate(inscriptionDate)
@@ -71,6 +75,10 @@ public class InscriptionToFinalExamService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime examDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getFinalExamDate(), formatter);
         LocalDateTime inscriptionDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getInscriptionDate(), formatter);
+
+        if (!examDate.isAfter(inscriptionDate)) {
+            throw new IllegalArgumentException("La fecha del examen debe ser posterior a la fecha de inscripción.");
+        }
 
         inscriptionToFinalExamEntity.setFinalExamDate(examDate);
         inscriptionToFinalExamEntity.setInscriptionDate(inscriptionDate);

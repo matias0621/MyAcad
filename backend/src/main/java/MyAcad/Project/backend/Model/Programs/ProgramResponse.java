@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class CourseResponse {
+public class ProgramResponse {
     private Long id;
     private String name;
     private String description;

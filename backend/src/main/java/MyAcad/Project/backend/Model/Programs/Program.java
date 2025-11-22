@@ -11,15 +11,17 @@ import lombok.*;
 
 import java.util.Set;
 
-@MappedSuperclass
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public abstract class Program {
+@Builder
+@Entity
+public class Program {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "program_id")
     private Long id;
     private String name;
@@ -32,16 +34,6 @@ public abstract class Program {
     @Enumerated(EnumType.STRING)
     protected ProgramType programType;
 
-    public Program(ProgramsDTO dto) {
-        this.id = dto.getId();
-        this.name = dto.getName();
-        this.description = dto.getDescription();
-        this.durationMonths = dto.getDurationMonths();
-        this.monthlyFee = dto.getMonthlyFee();
-        this.annualFee = dto.getAnnualFee();
-        this.active = dto.getActive();
-        this.programType = dto.getProgramType();
-    }
 
     @ManyToMany
     @JoinTable(

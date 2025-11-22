@@ -1,10 +1,9 @@
 package MyAcad.Project.backend.Controller.Programs;
 
+import MyAcad.Project.backend.Enum.ProgramType;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
-import MyAcad.Project.backend.Model.Programs.Technical;
-import MyAcad.Project.backend.Model.Programs.TechnicalDTO;
-import MyAcad.Project.backend.Model.Programs.TechnicalResponse;
-import MyAcad.Project.backend.Service.Programs.TechnicalService;
+import MyAcad.Project.backend.Model.Programs.*;
+import MyAcad.Project.backend.Service.Programs.ProgramService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,24 +16,24 @@ import java.util.Optional;
 @RequestMapping("/technicals")
 @AllArgsConstructor
 public class TechnicalController {
-    private final TechnicalService services;
+    private final ProgramService programService;
 
     @GetMapping()
-    public List<TechnicalResponse> listTechnicals() {
-        return services.list();
+    public List<ProgramResponse> listTechnicals() {
+        return programService.findByProgramType(ProgramType.TECHNICAL);
     }
 
     //Paginacion
     @GetMapping("/paginated")
-    public Page<Technical> listTechnicalPaginated(@RequestParam(name = "page") int page,
+    public Page<ProgramResponse> listTechnicalPaginated(@RequestParam(name = "page") int page,
                                             @RequestParam(name = "size") int size) {
-        return services.listTechnicalPaginated(page, size);
+        return programService.listProgramPaginatedByProgramType(page, size, ProgramType.TECHNICAL);
     }
 
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<TechnicalResponse> technical = services.getById(id);
+        Optional<ProgramResponse> technical = Optional.ofNullable(programService.findProgramById(id));
         if (technical.isPresent()) {
             return ResponseEntity.ok(technical.get());
         }else{
@@ -44,11 +43,10 @@ public class TechnicalController {
 
     //POST
     @PostMapping
-    public ResponseEntity<?> addTechnical(@RequestBody TechnicalDTO dto) {
+    public ResponseEntity<?> addTechnical(@RequestBody ProgramsDTO dto) {
         try {
-            Technical technical = new Technical(dto);
-            services.add(technical);
-            return ResponseEntity.ok(technical);
+            programService.createTechnical(dto);
+            return ResponseEntity.ok().build();
         }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }
@@ -56,22 +54,24 @@ public class TechnicalController {
 
     //DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTechnical(@PathVariable(name = "id") Long id){
-        return services.delete(id);
+    public ResponseEntity<?> deleteTechnical(@PathVariable(name = "id") Long id){
+        programService.logicDeleteProgram(id);
+        return ResponseEntity.ok().build();
+
     }
 
     // Baja definitiva
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> definitiveDeleteTechnical(@PathVariable Long id) {
-        return services.definitiveDeleteTechnical(id);
+    public ResponseEntity<?> definitiveDeleteTechnical(@PathVariable Long id) {
+        programService.deleteProgram(id);
+        return ResponseEntity.ok().build();
     }
     //PUT
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTechnical(@PathVariable Long id, @RequestBody TechnicalDTO dto){
+    public ResponseEntity<?> updateTechnical(@PathVariable Long id, @RequestBody ProgramsDTO dto){
         try {
-            Technical technical = new Technical(dto);
-            services.modify(id, technical);
-            return ResponseEntity.ok(technical);
+            programService.updateProgram(id, dto);
+            return ResponseEntity.ok().build();
         }catch (LegajoAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
         }

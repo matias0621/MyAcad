@@ -3,14 +3,9 @@ package MyAcad.Project.backend.Service.Academic;
 import MyAcad.Project.backend.Exception.NameMateriaAlreadyExistsException;
 import MyAcad.Project.backend.Mapper.SubjectsMapper;
 import MyAcad.Project.backend.Model.Academic.*;
-import MyAcad.Project.backend.Model.Programs.Career;
-import MyAcad.Project.backend.Model.Programs.Course;
 import MyAcad.Project.backend.Model.Programs.Program;
-import MyAcad.Project.backend.Model.Programs.Technical;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
-import MyAcad.Project.backend.Repository.Programs.CareerRepository;
-import MyAcad.Project.backend.Repository.Programs.CourseRepository;
-import MyAcad.Project.backend.Repository.Programs.TechnicalRepository;
+import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,9 +21,7 @@ import java.util.Optional;
 public class SubjectService {
     private final SubjectsRepository subjectsRepository;
     private final SubjectsMapper subjectsMapper;
-    private final CareerRepository careerRepository;
-    private final TechnicalRepository technicalRepository;
-    private final CourseRepository courseRepository;
+    private final ProgramRepository programRepository;
 
     public void createSubject(SubjectsDTO subject) {
         if (subjectsRepository.findByName(subject.getName()).isPresent()){
@@ -143,8 +136,8 @@ public class SubjectService {
     public void addPrerequisiteList(List<Long> subjectPrerequisiteId, Long subjectId) {
         SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
 
-        for (int i = 0; i < subjectPrerequisiteId.size(); i++) {
-            SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(subjectPrerequisiteId.get(i)).orElseThrow();
+        for (Long aLong : subjectPrerequisiteId) {
+            SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(aLong).orElseThrow();
 
             if (subjectsPrerequisite.getPrerequisites().contains(subjects)) {
                 throw new NameMateriaAlreadyExistsException();
@@ -176,11 +169,7 @@ public class SubjectService {
     }
 
     public Program findProgramByName(String name) {
-        return  careerRepository.findByName(name)
-                .map(p -> (Program) p)
-                .or(() -> courseRepository.findByName(name).map(p -> (Program) p))
-                .or(() -> technicalRepository.findByName(name).map(p -> (Program) p))
-                .orElseThrow(() -> new RuntimeException("Program not found"));
+        return  programRepository.findByName(name).orElseThrow();
     }
 
     public void addSubjectsToCareer(String nameCareer, SubjectsEntity subjectsEntity) {
@@ -188,12 +177,7 @@ public class SubjectService {
 
         program.getSubjects().add(subjectsEntity);
 
-        switch (program) {
-            case Career career -> careerRepository.save(career);
-            case Technical technical -> technicalRepository.save(technical);
-            case Course course -> courseRepository.save(course);
-            default -> throw new RuntimeException("No existe esa materia");
-        }
+        programRepository.save(program);
     }
 
     public void deleteSubjectsToCareer(String nameCareer, SubjectsEntity subjectsEntity){
@@ -201,12 +185,7 @@ public class SubjectService {
 
         program.getSubjects().remove(subjectsEntity);
 
-        switch (program) {
-            case Career career -> careerRepository.save(career);
-            case Technical technical -> technicalRepository.save(technical);
-            case Course course -> courseRepository.save(course);
-            default -> throw new RuntimeException("No existe esa materia");
-        }
+        programRepository.save(program);
     }
 
 }

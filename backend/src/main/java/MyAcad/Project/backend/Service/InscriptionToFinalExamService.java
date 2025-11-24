@@ -92,13 +92,15 @@ public class InscriptionToFinalExamService {
 
     }
 
-    public InscriptionToFinalExamEntity addToStudent(Long inscriptionId, Long studentId) {
+    public void addToStudent(Long inscriptionId, Long studentId) {
         Student student = studentService.getById(studentId).orElseThrow();
         InscriptionToFinalExamEntity inscription = inscriptionToFinalExamRepository.findById(inscriptionId).orElseThrow();
 
+        if (inscription.getStudents().contains(student)){
+            throw new RuntimeException("Ya estas registrado al examen");
+        }
         inscription.getStudents().add(student);
         inscriptionToFinalExamRepository.save(inscription);
-        return inscription;
     }
 
     public List<InscriptionToFinalExamEntity> getActiveInscriptionsForStudent(Long studentId) {

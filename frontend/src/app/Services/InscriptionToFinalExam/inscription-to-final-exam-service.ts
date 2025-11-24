@@ -9,7 +9,7 @@ import {
   providedIn: 'root',
 })
 export class InscriptionToFinalExamService {
-  readonly api_url = 'http://localhost:8080/inscription-final-exam';
+  readonly api_url = 'http://localhost:8080/inscriptions';
 
   inscriptionList: InscriptionToFinalExam[] = [];
 
@@ -37,6 +37,10 @@ export class InscriptionToFinalExamService {
     return this.http.get<PostInscriptionToFinalExam[]>(
       `${this.api_url}/date-inscription/${examDate}`
     );
+  }
+
+  getAllInscriptionForStudentsRegister(studentId:number){
+    return this.http.get<InscriptionToFinalExam[]>(`${this.api_url}/final-exams-students/${studentId}`)
   }
 
   postInscriptionToFinal(inscription: PostInscriptionToFinalExam) {

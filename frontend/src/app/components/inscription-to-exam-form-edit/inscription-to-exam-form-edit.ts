@@ -18,7 +18,7 @@ export class InscriptionToExamFormEdit {
   inscriptionDate!: FormControl;
   finalExamDate!: FormControl;
   subjectId: number | null = null;
-  idInscription: number | null = null;
+  idInscription!: string;
   selectedSubjectName: string | null = null;
   programName:FormControl
 

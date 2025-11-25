@@ -1,18 +1,27 @@
 package MyAcad.Project.backend.Service.Users;
 
 import MyAcad.Project.backend.Configuration.SecurityConfig;
+import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +47,30 @@ public class StudentService {
         t.setLegajo(String.valueOf(t.getId() + 100000));
 
         repository.save(t);
+    }
+
+    public List<StudentCsvDto> parseCsv(MultipartFile file) throws IOException {
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            CsvToBean<StudentCsvDto> csvToBean = new CsvToBeanBuilder<StudentCsvDto>(reader)
+                    .withType(StudentCsvDto.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            return csvToBean.parse();
+        }
+    }
+
+    public void saveStudentByCsv(List<StudentCsvDto> records){
+        for (StudentCsvDto record : records) {
+            Student student = new Student();
+            student.setEmail(record.getEmail());
+            student.setPassword(String.valueOf(record.getDni()));
+            student.setActive(true);
+            student.setDni(Integer.parseInt((record.getDni())));
+            student.setName(record.getName());
+            student.setLastName(student.getLastName());
+            student.setRole(Role.STUDENT);
+            add(student);
+        }
     }
 
     public Page<Student> listStudentsPaginated(int page, int size) {

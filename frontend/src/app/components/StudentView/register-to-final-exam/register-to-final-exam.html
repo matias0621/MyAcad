@@ -1,0 +1,46 @@
+<section class="exam-inscription" aria-labelledby="final-inscriptions-title">
+    <header class="exam-header">
+        <div class="exam-header-text">
+            <h2 id="final-inscriptions-title" class="exam-title">Inscripciónes a exámenes finales</h2>
+
+        </div>
+    </header>
+
+    <div class="exam-table-wrapper">
+        <table class="exam-table">
+            <thead>
+                <tr>
+                    <th scope="col">Materia</th>
+                    <th scope="col">Fecha examen</th>
+                    <th scope="col" class="responsive-hide-2">Fecha inscripción</th>
+                    <th scope="col" class="exam-table-actions-header">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (inscription of inscriptionList; track $index) {
+                <tr>
+                    <td data-label="Materia">{{ inscription.subjects.name }}</td>
+                    <td data-label="Fecha examen">{{ inscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="responsive-hide-2" data-label="Fecha inscripción">{{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="exam-actions" data-label="Acciones">
+                        <button type="button" class="exam-action exam-action--secondary"
+                            (click)="addStudent(inscription.id)">
+                            Registrarse
+                        </button>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="4" class="exam-empty-state">
+                        Aún no hay inscripciones a finales cargadas.
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="exam-pagination">
+        <ul class="pagination-container"></ul>
+    </div>
+</section>

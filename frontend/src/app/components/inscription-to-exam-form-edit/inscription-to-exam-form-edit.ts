@@ -22,6 +22,7 @@ export class InscriptionToExamFormEdit implements OnInit, OnChanges {
   finalExamDate!: FormControl;
   subjectId: number | null = null;
   idInscription: number | null = null;
+  programName:FormControl
 
   constructor(
     public inscriptionToFinalExamService: InscriptionToFinalExamService,
@@ -32,15 +33,12 @@ export class InscriptionToExamFormEdit implements OnInit, OnChanges {
     this.inscriptionDate = new FormControl('', [Validators.required]);
     this.finalExamDate = new FormControl('', [Validators.required]);
 
-    const routeId = this.activatedRoute.snapshot.params['id'];
-    if (routeId) {
-      const parsedRouteId = Number(routeId);
-      this.idInscription = Number.isNaN(parsedRouteId) ? null : parsedRouteId;
-    }
+    this.idInscription = this.activatedRoute.snapshot.params['id']
 
     this.form = new FormGroup({
       inscriptionDate: this.inscriptionDate,
-      finalExamDate: this.finalExamDate
+      finalExamDate: this.finalExamDate,
+      program: this.programName
     });
   }
 
@@ -113,6 +111,7 @@ export class InscriptionToExamFormEdit implements OnInit, OnChanges {
     const inscription: PostInscriptionToFinalExam = {
       inscriptionDate: formatDate(this.inscriptionDate.value),
       finalExamDate: formatDate(this.finalExamDate.value),
+      program: this.programName.value,
       subjectsId: this.subjectId,
     };
 

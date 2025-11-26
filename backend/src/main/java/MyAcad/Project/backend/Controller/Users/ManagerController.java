@@ -5,12 +5,16 @@ import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Manager;
+import MyAcad.Project.backend.Model.Users.ManagerCsvDto;
 import MyAcad.Project.backend.Model.Users.ManagerDTO;
+import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Service.Users.ManagerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -74,11 +78,27 @@ public class ManagerController {
             Manager manager = new Manager(dto);
             //Por defecto se le asigna el dni como contraseña a un usuario nuevo, luego lo cambia el mismo en su cuenta
             manager.setPassword(String.valueOf(dto.getDni()));
-            manager.setRole(Role.STUDENT);
+            manager.setRole(Role.MANAGER);
             services.add(manager);
             return ResponseEntity.ok(manager);
         }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException | DniAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
+        }
+    }
+
+    @PostMapping("/upload-by-csv")
+    public ResponseEntity<?> uploadStudentCSV(@RequestParam("file") MultipartFile file) {
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("El archivo esta vacio");
+        }
+
+        try {
+            List<ManagerCsvDto> managerCsvDtos = services.parseCsv(file);
+            services.saveStudentByCsv(managerCsvDtos);
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el CSV: " + e.getMessage());
         }
     }
 

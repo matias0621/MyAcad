@@ -5,12 +5,15 @@ import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Model.Users.StudentDTO;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +88,22 @@ public class StudentController {
             return ResponseEntity.ok(student);
         }catch (EmailAlreadyExistsException | LegajoAlreadyExistsException | DniAlreadyExistsException e) {
             return ResponseEntity.badRequest().body((e.getMessage()));
+        }
+    }
+
+    @PostMapping("/upload-by-csv")
+    public ResponseEntity<?> uploadStudentCSV(@RequestParam("file") MultipartFile file) {
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("El archivo esta vacio");
+        }
+
+        try {
+            List<StudentCsvDto> studentCsvDtos = services.parseCsv(file);
+            services.saveStudentByCsv(studentCsvDtos);
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el CSV: " + e.getMessage());
         }
     }
 

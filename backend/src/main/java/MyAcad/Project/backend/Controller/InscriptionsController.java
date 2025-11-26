@@ -44,6 +44,11 @@ public class InscriptionsController {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsBySubjectId(id));
     }
 
+    @GetMapping("/final-exams-students/{studentId}")
+    public ResponseEntity<List<InscriptionToFinalExamEntity>> findByFinalExamStudentId(@PathVariable Long studentId) {
+        return ResponseEntity.ok(inscriptionToFinalExamService.getActiveInscriptionsForStudent(studentId));
+    }
+
     @PostMapping
     public ResponseEntity<InscriptionToFinalExamDTO> save(@RequestBody InscriptionToFinalExamDTO entity) {
         inscriptionToFinalExamService.createInscription(entity);
@@ -57,12 +62,14 @@ public class InscriptionsController {
     }
 
     @PutMapping("/register-student-for-exam/{id}")
-    public ResponseEntity<InscriptionToFinalExamEntity> inscriptionAtStudentToExam(@PathVariable Long id) {
+    public ResponseEntity<?> inscriptionAtStudentToExam(@PathVariable Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long studentId = userDetails.getId();
 
-        return ResponseEntity.ok(inscriptionToFinalExamService.addToStudent(id, studentId));
+        inscriptionToFinalExamService.addToStudent(id, studentId);
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

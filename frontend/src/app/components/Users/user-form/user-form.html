@@ -31,8 +31,18 @@
         }
     </fieldset>
 
+    <fieldset>
+        <label for="csv">CSV:</label>
+        <input type="file" accept=".csv" name="csv" (change)="onFileSelected($event)">
+    </fieldset>
+
+
     <div class="form-buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>
         <button type="submit" [disabled]="form.invalid" >Agregar</button>
+    </div>
+
+    <div class="form-buttons">
+        <button type="button" (click)="uploadCsv()">Subir CSV</button>
     </div>
 </form>

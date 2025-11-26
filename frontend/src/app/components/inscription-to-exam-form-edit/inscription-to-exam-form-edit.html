@@ -24,7 +24,7 @@
     <p class="exam-selected-info">Materia seleccionada: <span>{{ selectedSubjectName }}</span></p>
     }
 
-    @if (subjectsServices.listSubject.length === 0) {
+    @if (form.get('programName')?.errors?.['required']) {
     <p class="exam-empty-text">Aún no hay materias cargadas en el sistema.</p>
     }
     @else {

@@ -1,6 +1,7 @@
 package MyAcad.Project.backend.Model.InscriptionToFinalExam;
 
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Model.Users.Student;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,8 @@ public class InscriptionToFinalExamEntity {
     )
     private List<Student> students;
 
+    @ManyToOne
+    private Program program;
 
 
 }

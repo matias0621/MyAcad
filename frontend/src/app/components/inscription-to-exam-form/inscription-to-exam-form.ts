@@ -1,3 +1,4 @@
+import { ProgramService } from './../../Services/program-service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InscriptionToFinalExamService } from '../../Services/InscriptionToFinalExam/inscription-to-final-exam-service';
@@ -6,6 +7,9 @@ import { PostInscriptionToFinalExam } from '../../Models/InscriptionToFinalExam/
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../Services/notification/notification.service';
 import { Router } from '@angular/router';
+import Program from '../../Models/Program/Program';
+import Subjects from '../../Models/Subjects/Subjects';
+
 
 @Component({
   selector: 'app-inscription-to-exam-form',
@@ -19,25 +23,41 @@ export class InscriptionToExamForm implements OnInit {
   inscriptionDate!: FormControl;
   finalExamDate!: FormControl;
   subjectId: number | null = null;
+  programName!:FormControl
+  programs!:Program[]
+  subjectsList!:Subjects[]
 
   constructor(
     public inscriptionToFinalExamService: InscriptionToFinalExamService,
     public subjectsServices: SubjectsService,
     public router: Router,
+    public programService:ProgramService,
     private notificationService : NotificationService
   ) {
     this.inscriptionDate = new FormControl('', [Validators.required]);
     this.finalExamDate = new FormControl('', [Validators.required]);
+    this.programName = new FormControl('', [Validators.required])
 
     this.form = new FormGroup({
       inscriptionDate: this.inscriptionDate,
       finalExamDate: this.finalExamDate,
+      programName:this.programName
     });
   }
 
   ngOnInit(): void {
     this.getInscription();
     this.getSubjects();
+    this.getProgram();
+
+    this.programName.valueChanges.subscribe({
+      next: () => {
+        this.getSubjectsByNameProgram(this.programName.value)
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
   }
 
   addToSubject(idSubject: number) {
@@ -67,6 +87,30 @@ export class InscriptionToExamForm implements OnInit {
     });
   }
 
+  getProgram() {
+    this.programService.getPrograms().subscribe({
+      next: (res) => {
+        this.programs = res
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
+
+  getSubjectsByNameProgram(careerName: string) {
+    this.subjectsServices.getByProgram(careerName).subscribe({
+      next: (res) => {
+        this.subjectsList = res;
+      },
+      error: (err) => {
+        console.error(err);
+        this.subjectsList = [];
+      },
+    });
+  }
+
+
   OnSubmit() {
     if (this.subjectId === null) {
       this.notificationService.error('Debe seleccionar una materia antes de inscribirse al examen.', true);
@@ -92,6 +136,7 @@ export class InscriptionToExamForm implements OnInit {
     const inscription: PostInscriptionToFinalExam = {
       inscriptionDate: formatDate(this.inscriptionDate.value),
       finalExamDate: formatDate(this.finalExamDate.value),
+      program: this.programName.value,
       subjectsId: this.subjectId,
     };
 

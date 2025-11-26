@@ -32,6 +32,7 @@ export class InscriptionToExamFormEdit implements OnInit, OnChanges {
   ) {
     this.inscriptionDate = new FormControl('', [Validators.required]);
     this.finalExamDate = new FormControl('', [Validators.required]);
+    this.programName = new FormControl('', [Validators.required])
 
     this.idInscription = this.activatedRoute.snapshot.params['id']
 

@@ -91,7 +91,7 @@ public class StudentController {
         }
     }
 
-    @PostMapping("/student-csv/upload")
+    @PostMapping("/upload-by-csv")
     public ResponseEntity<?> uploadStudentCSV(@RequestParam("file") MultipartFile file) {
 
         if (file.isEmpty()) {

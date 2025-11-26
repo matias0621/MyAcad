@@ -2,13 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   readonly API_URL = 'http://localhost:8080';
-  constructor(
-    private http: HttpClient
-  ) { }
+  constructor(private http: HttpClient) {}
 
   getUsers(endpoint: string) {
     return this.http.get<any>(`${this.API_URL}/${endpoint}`);
@@ -36,6 +34,10 @@ export class UserService {
 
   putUser(user: any, endpoint: string) {
     return this.http.put<any>(`${this.API_URL}/${endpoint}`, user);
+  }
+
+  uploadCsv(formData: FormData, endpoint: string) {
+    return this.http.post(`${this.API_URL}/${endpoint}/upload-by-csv`, formData);
   }
 
   deleteUser(id: number, endpoint: string) {

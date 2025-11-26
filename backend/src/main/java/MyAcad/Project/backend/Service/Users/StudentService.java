@@ -67,7 +67,7 @@ public class StudentService {
             student.setActive(true);
             student.setDni(Integer.parseInt((record.getDni())));
             student.setName(record.getName());
-            student.setLastName(student.getLastName());
+            student.setLastName(record.getLastname());
             student.setRole(Role.STUDENT);
             add(student);
         }

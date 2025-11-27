@@ -5,7 +5,9 @@ import MyAcad.Project.backend.Exception.InscriptionException;
 import MyAcad.Project.backend.Mapper.CommissionMapper;
 import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.RegistrationStudent.RegisterStudentToCommissionByCsv;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
@@ -13,13 +15,20 @@ import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,6 +82,29 @@ public class CommissionService {
         }
         repository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    public List<RegisterStudentToCommissionByCsv> parseCsv(MultipartFile file) throws IOException {
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            CsvToBean<RegisterStudentToCommissionByCsv> csvToBean = new CsvToBeanBuilder<RegisterStudentToCommissionByCsv>(reader)
+                    .withType(RegisterStudentToCommissionByCsv.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            return csvToBean.parse();
+        }
+    }
+
+    public void registerStudentByCsv(List<RegisterStudentToCommissionByCsv> listStudent, Long commissionId){
+        Commission commission = repository.findById(commissionId).orElseThrow();
+
+        for (RegisterStudentToCommissionByCsv studentToRegister: listStudent) {
+            Student student = studentRepository.findByLegajo(studentToRegister.getLegajo()).orElseThrow();
+            for (SubjectsEntity subjects: commission.getSubjects()) {
+                registerToStudent(student, commission, subjects);
+            }
+        }
+
+        repository.save(commission);
     }
 
     public List<CommissionResponse> list() {

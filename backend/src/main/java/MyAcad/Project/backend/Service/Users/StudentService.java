@@ -5,9 +5,13 @@ import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
+import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.StudentCsvDto;
+import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
+import MyAcad.Project.backend.Service.Programs.ProgramService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
@@ -29,10 +33,11 @@ import java.util.Optional;
 @AllArgsConstructor
 public class StudentService {
     private final StudentRepository repository;
+    private final ProgramRepository programRepository;
     private final UserLookupService userLookupService;
     private PasswordEncoder passwordEncoder;
 
-    public void add(Student t) {
+    public Student add(Student t) {
         if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
             throw new LegajoAlreadyExistsException();
         }else if(userLookupService.findByEmail(t.getEmail()).isPresent()) {
@@ -46,7 +51,7 @@ public class StudentService {
         t = repository.save(t);
         t.setLegajo(String.valueOf(t.getId() + 100000));
 
-        repository.save(t);
+        return repository.save(t);
     }
 
     public List<StudentCsvDto> parseCsv(MultipartFile file) throws IOException {
@@ -59,17 +64,37 @@ public class StudentService {
         }
     }
 
-    public void saveStudentByCsv(List<StudentCsvDto> records){
+    public void saveStudentByCsv(List<StudentCsvDto> records) {
+
         for (StudentCsvDto record : records) {
+
             Student student = new Student();
             student.setEmail(record.getEmail());
-            student.setPassword(String.valueOf(record.getDni()));
+            student.setPassword(record.getDni());
             student.setActive(true);
-            student.setDni(Integer.parseInt((record.getDni())));
+            student.setDni(Integer.parseInt(record.getDni()));
             student.setName(record.getName());
             student.setLastName(record.getLastname());
             student.setRole(Role.STUDENT);
-            add(student);
+
+            // 1) guardo primero el student (para generar ID)
+            Student savedStudent = add(student);
+
+            // 2) asigno una carrera (si existen)
+            if (record.getCareer() != null && !record.getCareer().isBlank()) {
+
+                String[] careers = record.getCareer().split(";");
+
+                for (String careerName : careers) {
+                    programRepository.findByName(careerName.trim())
+                            .ifPresent(program -> {
+                                if (!program.getStudents().contains(savedStudent)) {
+                                    program.getStudents().add(student);
+                                    programRepository.save(program);
+                                }
+                            });
+                }
+            }
         }
     }
 

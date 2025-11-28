@@ -83,21 +83,21 @@
                     </div>
                     <div class="modal-body">
                         @if (selectedExam) {
-                        <div class="detail-container">
-                            <div class="detail-item">
-                                <strong>ID:</strong>
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-id-card"></i> ID</strong>
                                 <span>{{selectedExam.id}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Alumno:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-user"></i> Alumno</strong>
                                 <span>{{selectedExam.student}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Materia:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-book"></i> Materia</strong>
                                 <span>{{selectedExam.subject}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Nota:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-star"></i> Nota</strong>
                                 <span>{{selectedExam.score}}</span>
                             </div>
                         </div>

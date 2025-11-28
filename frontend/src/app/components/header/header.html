@@ -1,118 +1,100 @@
 <header>
   <nav [class.menu-open]="isMenuOpen">
+
+    <!-- Si no hay rol (no logueado) -->
     @if (!service.getRole()) {
+      <a routerLink="">
+        <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+      </a>
     }
-    <!-- ---------------HEADER GESTORES--------------- -->
-    @else if (service.getRole() == "ROLE_MANAGER") {
-    <!-- Botón hamburguesa-->
-    <button class="hamburger" type="button" aria-label="Abrir menú" [attr.aria-expanded]="isMenuOpen"
-      (click)="toggleMenu()">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </button>
-    <a routerLink="">
-      <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
-    </a>
-    <div class="left-navs">
-      <a routerLink="">Inicio</a>
-      <div class="dropdown">
-        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Usuarios
+    @else {
+
+      <!-- Botón hamburguesa -->
+      @if (service.getRole() === 'ROLE_MANAGER') {
+        <button
+          class="hamburger"
+          type="button"
+          aria-label="Abrir menú"
+          [attr.aria-expanded]="isMenuOpen"
+          (click)="toggleMenu()">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      }
+
+      <!-- Logo -->
+      <a routerLink="">
+        <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+      </a>
+
+      <!-- Menu principal segun rol-->
+      <div class="left-navs">
+        @for (item of menu(); track item.id) {
+
+          @if (!item.subItems || item.subItems.length === 0) {
+            <a [routerLink]="item.route">{{ item.label }}</a>
+          }
+          @else {
+            <!-- Dropdown -->
+            <div class="dropdown">
+              <button
+                class="dropdown-button dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                {{ item.label }}
+              </button>
+              <ul class="dropdown-menu">
+                @for (child of item.subItems; track child.id) {
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      [routerLink]="child.route">
+                      {{ child.label }}
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+
+        }
+      </div>
+
+      <!-- Perfil igual para todos los roles -->
+      <div class="dropdown" id="dropdown-profile">
+        <button
+          class="dropdown-button dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <i class="fa-solid fa-circle-user"></i>
         </button>
         <ul class="dropdown-menu">
-          <li><a routerLink="students">Alumnos</a></li>
-          <li><a routerLink="teachers">Docentes</a></li>
-          <li><a routerLink="managers">Gestores</a></li>
+          <li>
+            <button
+              type="button"
+              class="dropdown-item"
+              (click)="openChangePassword(); $event.stopPropagation();">
+              Cambiar contraseña
+            </button>
+          </li>
+          <li>
+            <a (click)="logout()" class="logout-link">
+              <span>Cerrar sesión</span>
+            </a>
+          </li>
         </ul>
       </div>
-      <div class="dropdown">
-        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Académico
-        </button>
-        <ul class="dropdown-menu">
-          <li><a routerLink="/subject">Materias</a></li>
-          <li><a routerLink="/exams">Examenes</a></li>
-          <li><a routerLink="/commissions">Comisiones</a></li>
-        </ul>
-      </div>
-      <div class="dropdown">
-        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Ofertas académicas
-        </button>
-        <ul class="dropdown-menu">
-          <li><a routerLink="engineerings">Ingenierías</a></li>
-          <li><a routerLink="technicals">Tecnicaturas</a></li>
-          <li><a routerLink="courses">Cursos</a></li>
-        </ul>
-      </div>
-      <div class="dropdown">
-        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Inscripciones
-        </button>
 
-        <ul class="dropdown-menu">
-          <li> <a routerLink="/select-type-register"> Inscripciones </a> </li>
-          <li><a routerLink="/inscriptionToFinalExam">Crear Inscripcion a mesa de examen</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="dropdown" id="dropdown-profile">
-      <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fa-solid fa-circle-user"></i>
-      </button>
-      <ul class="dropdown-menu">
-        <li><button type="button" class="dropdown-item"
-            (click)="openChangePassword(); $event.stopPropagation();">Cambiar contraseña</button></li>
-        <li><a (click)="logout()" class="logout-link"><span>Cerrar sesión</span></a></li>
-      </ul>
-    </div>
-    }
-    <!-- ---------------HEADER PROFESORES--------------- -->
-    @else if (service.getRole() == "ROLE_TEACHER") {
-    <a routerLink="">Inicio</a>
-    <a routerLink="">
-      <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
-    </a>
-
-    <div class="dropdown" id="dropdown-profile">
-      <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fa-solid fa-circle-user"></i>
-      </button>
-      <ul class="dropdown-menu">
-        <li><button type="button" class="dropdown-item"
-            (click)="openChangePassword(); $event.stopPropagation();">Cambiar contraseña</button></li>
-        <li><a (click)="logout()" class="logout-link"><span>Cerrar sesión</span></a></li>
-      </ul>
-    </div>
-    }
-    <!-- ---------------HEADER ALUMNOS--------------- -->
-    @else if (service.getRole() == "ROLE_STUDENT") {
-    <a routerLink="">Inicio</a>
-
-    <div class="dropdown" id="dropdown-profile">
-      <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fa-solid fa-circle-user"></i>
-      </button>
-
-      <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Inscripciones
-      </button>
-
-      <ul class="dropdown-menu">
-        <li> <a routerLink="/register-student-to-final-exam"> Inscripciones </a> </li>
-        <li><a routerLink="/inscriptionToFinalExam">Crear Inscripcion a mesa de examen</a></li>
-      </ul>
-
-
-      <ul class="dropdown-menu">
-        <li><button type="button" class="dropdown-item"
-            (click)="openChangePassword(); $event.stopPropagation();">Cambiar contraseña</button></li>
-        <li><a (click)="logout()" class="logout-link"><span>Cerrar sesión</span></a></li>
-      </ul>
-    </div>
     }
   </nav>
-  <!-- Overlay para cerrar el menú en mobile -->
-  <div class="mobile-overlay" [class.show]="isMenuOpen" (click)="closeMenu()"></div>
+
+  <!-- Overlay para cerrar el menu en mobile -->
+  <div
+    class="mobile-overlay"
+    [class.show]="isMenuOpen"
+    (click)="closeMenu()">
+  </div>
 </header>

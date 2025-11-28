@@ -110,29 +110,29 @@
                     </div>
                     <div class="modal-body">
                         @if (selectedUser) {
-                        <div class="detail-container">
-                            <div class="detail-item">
-                                <strong>ID:</strong>
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-id-card"></i> ID</strong>
                                 <span>{{selectedUser.id}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Legajo:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-hashtag"></i> Legajo</strong>
                                 <span>{{selectedUser.legajo}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Nombre:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-user"></i> Nombre</strong>
                                 <span>{{selectedUser.name}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Apellido:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-user"></i> Apellido</strong>
                                 <span>{{selectedUser.lastName}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Email:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-envelope"></i> Email</strong>
                                 <span>{{selectedUser.email}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>DNI:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-id-badge"></i> DNI</strong>
                                 <span>{{selectedUser.dni | number:'1.0-0'}}</span>
                             </div>
                         </div>

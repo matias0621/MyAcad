@@ -115,33 +115,33 @@
                     </div>
                     <div class="modal-body">
                         @if (selectedProgram) {
-                        <div class="detail-container">
-                            <div class="detail-item">
-                                <strong>ID:</strong>
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-id-card"></i> ID</strong>
                                 <span>{{selectedProgram.id}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Nombre:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-book"></i> Nombre</strong>
                                 <span>{{selectedProgram.name}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Descripción:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-align-left"></i> Descripción</strong>
                                 <span>{{selectedProgram.description}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Duración (meses):</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-clock"></i> Duración (meses)</strong>
                                 <span>{{selectedProgram.durationMonths | number:'1.0-0'}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Mensualidad:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-dollar-sign"></i> Mensualidad</strong>
                                 <span>${{selectedProgram.monthlyFee}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Matrícula:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-dollar-sign"></i> Matrícula</strong>
                                 <span>${{selectedProgram.annualFee}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Estado:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-circle"></i> Estado</strong>
                                 <span [class]="selectedProgram.active ? 'status-active' : 'status-inactive'">
                                     {{selectedProgram.active ? 'Activo' : 'Inactivo'}}
                                 </span>

@@ -186,29 +186,29 @@
                     </div>
                     <div class="modal-body">
                         @if (selectedSubject) {
-                        <div class="detail-container">
-                            <div class="detail-item">
-                                <strong>ID:</strong>
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-id-card"></i> ID</strong>
                                 <span>{{selectedSubject.id}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Materia:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-book"></i> Materia</strong>
                                 <span>{{selectedSubject.name}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Carrera/Curso:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-graduation-cap"></i> Carrera/Curso</strong>
                                 <span>{{selectedSubject.program}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Cuatrimestre:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-calendar"></i> Cuatrimestre</strong>
                                 <span>{{selectedSubject.semesters}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Descripción:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-align-left"></i> Descripción</strong>
                                 <span>{{selectedSubject.description}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Correlativas</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-link"></i> Correlativas</strong>
                                 <span>
                                     @if (!selectedSubject.prerequisites || selectedSubject.prerequisites.length == 0) {
                                     Esta materia no tiene correlativas.

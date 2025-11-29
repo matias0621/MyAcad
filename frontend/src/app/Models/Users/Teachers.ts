@@ -6,4 +6,5 @@ export default interface Teacher {
     email: string;
     legajo: string;
     password: string;
+    active: boolean
 }

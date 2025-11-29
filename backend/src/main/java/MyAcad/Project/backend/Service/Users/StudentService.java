@@ -5,14 +5,21 @@ import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
+import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Mapper.ProgramMapper;
+import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.StudentCsvDto;
+import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
+import MyAcad.Project.backend.Model.Users.StudentResponse;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +37,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class StudentService {
     private final StudentRepository repository;
+     private final ProgramMapper programMapper;
+    private final ProgramRepository programRepository;
     private final UserLookupService userLookupService;
     private PasswordEncoder passwordEncoder;
 
@@ -76,6 +86,38 @@ public class StudentService {
     public Page<Student> listStudentsPaginated(int page, int size) {
         return repository.findAll(PageRequest.of(page, size));
     }
+
+    public Page<StudentResponse> listStudentResponsePaginated(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Traés los estudiantes paginados
+        Page<Student> studentsPage = repository.findAll(pageable);
+
+        // Transformás el contenido a StudentResponse
+        List<StudentResponse> responseList = studentsPage.getContent().stream()
+                .map(student -> StudentResponse.builder()
+                        .name(student.getName())
+                        .lastName(student.getLastName())
+                        .id(student.getId())
+                        .dni(student.getDni())
+                        .email(student.getEmail())
+                        .legajo(student.getLegajo())
+                        .programs(programMapper.toResponseList(
+                                programRepository.findByStudent(student.getId())
+                        ))
+                        .build()
+                )
+                .toList();
+
+        // Devolvés un Page nuevo con tus respuestas ya mapeadas
+        return new PageImpl<>(
+                responseList,
+                pageable,
+                studentsPage.getTotalElements()
+        );
+    }
+
 
     public List<Student> getByCommission(Long commissionId) {
         List<Long> studentIds = repository.findStudentsByCommissionId(commissionId);

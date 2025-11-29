@@ -6,6 +6,7 @@ export default interface Student {
     email: string;
     legajo: string;
     password: string;
+    active: boolean
 }
 
 export interface RegistrationStudentOrTeacher {

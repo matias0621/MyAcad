@@ -13,7 +13,7 @@
                     <th scope="col" class="responsive-hide-2">Apellido</th>
                     <th scope="col" class="responsive-hide">DNI</th>
                     <th scope="col" class="responsive-hide">Email</th>
-                    <th scope="col"></th>
+                    <th scope="col" class="responsive-hide"></th>
                 </tr>
             </thead>
             <tbody class="crud-table-body">
@@ -25,8 +25,12 @@
                     <td class="responsive-hide-2">{{user.lastName}}</td>
                     <td class="responsive-hide">{{user.dni}}</td>
                     <td class="responsive-hide">{{user.email}}</td>
+                    <td class="responsive-hide">
+                        
+                    </td>
+                    
                     <td class="crud-table-actions">
-                        <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal"
+                        <button class="detail-crud-btn" (click)="selectedUser = user; getProgramByStudentId(user.id)" data-bs-toggle="modal"
                             data-bs-target="#modal-detail">Detalles</button>
                         @if (user.active || user.enabled || user.isActive || user.status === 'ACTIVE') {
                         <button class="delete-crud-btn" (click)="deleteUser(user.id)">Eliminar</button>
@@ -136,6 +140,12 @@
                             <div class="detail-item">
                                 <strong>DNI:</strong>
                                 <span>{{selectedUser.dni | number:'1.0-0'}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Carreras:</strong>
+                                @for (program of programList; track $index) {
+                                    <span> {{ program.name }} </span>
+                                }
                             </div>
                         </div>
                         }

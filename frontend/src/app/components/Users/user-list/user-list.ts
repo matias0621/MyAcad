@@ -5,6 +5,11 @@ import { UserForm } from '../user-form/user-form';
 import { UserEditForm } from '../user-edit-form/user-edit-form';
 import { NotificationService } from '../../../Services/notification/notification.service';
 import { DecimalPipe } from '@angular/common';
+import { ProgramService } from '../../../Services/program-service';
+import Program from '../../../Models/Program/Program';
+import Student from '../../../Models/Users/Student';
+import Teacher from '../../../Models/Users/Teachers';
+import Manager from '../../../Models/Users/Manager';
 
 declare var bootstrap: any;
 
@@ -23,6 +28,7 @@ export class UserList implements OnInit {
   @ViewChild(UserEditForm) userEditForm!: UserEditForm;
 
   users !: any[]
+  programList!:Program[]
   search: string = '';
   timeout: any;
   selectedUser: any = null;
@@ -32,6 +38,7 @@ export class UserList implements OnInit {
 
   constructor(
     private service: UserService,
+    private programService:ProgramService,
     private notificationService: NotificationService
   ) { }
 
@@ -161,6 +168,17 @@ export class UserList implements OnInit {
         });
       }
     });
+  }
+
+  getProgramByStudentId(id:number){
+    this.programService.getProgramsByStudent(id).subscribe({
+      next: (res) => {
+        this.programList = res
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
   }
 
   onUserSuccess(modalId: string) {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Program from '../../Models/Program/Program';
-import { ProgramService } from '../../Services/program-service';
+import { ProgramService } from '../../Services/Program/program-service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../Services/notification/notification.service';
 

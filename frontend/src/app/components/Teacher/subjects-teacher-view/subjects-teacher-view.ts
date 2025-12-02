@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProgramService } from '../../../Services/program-service';
+import { ProgramService } from '../../../Services/Program/program-service';
 
 @Component({
   selector: 'app-subjects-teacher-view',

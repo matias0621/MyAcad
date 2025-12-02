@@ -4,6 +4,11 @@
     <div class="crud-management-container">
         <h1 style="text-align: center;">{{programName}}</h1>
 
+        <div id="subjects">
+            <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-subjects">Estado de
+                materias</button>
+        </div>
+
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
@@ -79,3 +84,30 @@
         </table>
     </div>
 </section>
+
+<!-- Modal agregar usuario -->
+<div class="modal fade crud-modal" id="modal-subjects" tabindex="-1" aria-labelledby="modal-subjects-label"
+    style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
+        <div class="modal-content crud-modal__content">
+            <div class="modal-header crud-modal__header">
+                <h1 class="modal-title fs-5 titles crud-modal__title">Estado de materias</h1>
+                <button type="button" class="btn-close crud-modal__close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body crud-modal__body">
+                <div class="detail-container">
+                    @for (subjects of listSubjects; track $index) {
+                    <div class="detail-item">
+                        <strong>Materia:</strong>
+                        <span>{{subjects.subjects.name}}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Estado:</strong>
+                        <span>{{subjects.academicStatus}}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>

@@ -10,5 +10,6 @@ export interface PostSubjectsXStudent {
 export interface SubjectsXStudent {
     id: number,
     subjects:Subjects,
-    student:Student
+    student:Student,
+    academicStatus: string
 }

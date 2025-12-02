@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommissionService } from '../../../Services/Commission/commission-service';
-import { ProgramService } from '../../../Services/program-service';
+import { ProgramService } from '../../../Services/Program/program-service';
 import Program from '../../../Models/Program/Program';
 import { NotificationService } from '../../../Services/notification/notification.service';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';

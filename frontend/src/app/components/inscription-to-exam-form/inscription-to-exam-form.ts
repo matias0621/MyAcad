@@ -1,4 +1,4 @@
-import { ProgramService } from './../../Services/program-service';
+import { ProgramService } from '../../Services/Program/program-service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InscriptionToFinalExamService } from '../../Services/InscriptionToFinalExam/inscription-to-final-exam-service';

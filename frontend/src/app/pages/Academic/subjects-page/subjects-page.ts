@@ -5,7 +5,7 @@ import Subjects from '../../../Models/Subjects/Subjects';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
 import { CommissionService } from '../../../Services/Commission/commission-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProgramService } from '../../../Services/program-service';
+import { ProgramService } from '../../../Services/Program/program-service';
 import Program from '../../../Models/Program/Program';
 
 @Component({

@@ -51,6 +51,9 @@ public class SubjectsXStudentService {
     }
 
     public List<SubjectsXStudentEntity> getAllSubjectsXStudentByStudentId(Long studentId) {
+        List<SubjectsXStudentEntity> subjectsXStudentEntities = subjectsXStudentRepository.findByStudent_Id(studentId);
+        SubjectsEntity subjectsEntity = subjectsXStudentEntities.get(0).getSubjects();
+        SubjectsXStudentEntity subjectsXStudentEntity = SubjectsXStudentEntity.builder().subjects(subjectsEntity).build();
         return subjectsXStudentRepository.findByStudent_Id(studentId);
     }
 

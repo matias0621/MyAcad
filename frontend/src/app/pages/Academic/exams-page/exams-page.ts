@@ -6,7 +6,7 @@ import { SubjectsService } from '../../../Services/Subjects/subjects-service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CareerService } from '../../../Services/CareerService/career-service';
-import { ProgramService } from '../../../Services/program-service';
+import { ProgramService } from '../../../Services/Program/program-service';
 import Program from '../../../Models/Program/Program';
 import Subjects from '../../../Models/Subjects/Subjects';
 

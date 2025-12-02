@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Exams, ExamsPost } from '../../../Models/Exam/Exam';
 import { ExamsService } from '../../../Services/Exams/exams-service';
 import { SubjectsService } from '../../../Services/Subjects/subjects-service';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CareerService } from '../../../Services/CareerService/career-service';
 import { ProgramService } from '../../../Services/Program/program-service';
@@ -13,12 +13,13 @@ import Subjects from '../../../Models/Subjects/Subjects';
 
 @Component({
   selector: 'app-exams-page',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormsModule],
   templateUrl: './exams-page.html',
   styleUrl: './exams-page.css',
 })
 export class ExamsPage implements OnInit {
   listExams: Exams[] = [];
+  allExams !: Exams[];
   listCareer: Program[] = [];
   listSubjects: Subjects[] = [];
   form!: FormGroup;
@@ -29,8 +30,10 @@ export class ExamsPage implements OnInit {
   subjects!: FormControl;
   selectedExam?: Exams;
 
-  idSubjects!: number 
-  examId!:number
+  filter: string = '';
+
+  idSubjects!: number
+  examId!: number
   // Paginación
   totalPages: number = 0;
   currentPage: number = 0;
@@ -71,6 +74,24 @@ export class ExamsPage implements OnInit {
     });
   }
 
+  filterExams() {
+    if (!this.allExams) {
+      this.listExams = [];
+      return;
+    }
+
+    if (this.filter === '') {
+      this.listExams = [...this.allExams];
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    this.listExams = this.allExams.filter((s) => s.subject.program === this.filter);
+    this.totalPages = 1;
+    this.currentPage = 0;
+  }
+
   getAllCarrer() {
     this.programService.getPrograms().subscribe({
       next: (res) => {
@@ -87,6 +108,7 @@ export class ExamsPage implements OnInit {
     this.examsService.getExamsPaginated(page, size).subscribe({
       next: (res) => {
         this.listExams = res.content;
+        this.allExams = res.content;
         this.currentPage = res.number;
         this.totalPages = res.totalPages
       },
@@ -168,7 +190,7 @@ export class ExamsPage implements OnInit {
 
     this.examsService.postExam(examLoad).subscribe({
       next: (data) => {
-        this.notificationService.success('Examen cdxagregado exitosamente');
+        this.notificationService.success('Examen agregado exitosamente');
         this.getAllExam();
         this.form.reset();
       },

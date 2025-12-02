@@ -102,13 +102,6 @@ public class StudentService {
         return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity<Void> definitiveDeleteStudent(Long studentId) {
-        if (!repository.existsById(studentId)) {
-            return ResponseEntity.notFound().build();
-        }
-        repository.deleteById(studentId);
-        return ResponseEntity.ok().build();
-    }
     public List<Student> list() {
         return repository.findAll();
     }

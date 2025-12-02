@@ -6,6 +6,12 @@
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-create-exam">
                 Agregar
             </button>
+            <select class="select-filter" [(ngModel)]="filter" (change)="filterExams()">
+                <option value="">Mostrar todo</option>
+                @for(program of listCareer; track $index){
+                <option [value]="program.name">{{ program.name }}</option>
+                }
+            </select>
         </div>
         <!-- TABLA -->
         <table class="crud-table">
@@ -136,7 +142,7 @@
                                 <label for="">Carrera</label>
                                 <select name="" id="" formControlName="careerName">
                                     @for (career of listCareer; track $index) {
-                                        <option [value]="career.name">{{ career.name }}</option>
+                                    <option [value]="career.name">{{ career.name }}</option>
                                     }
                                 </select>
                             </fieldset>
@@ -145,7 +151,7 @@
                                 <label for="">Materia</label>
                                 <select name="" id="" formControlName="subjects">
                                     @for (subjects of listSubjects; track $index) {
-                                        <option [value]="subjects.id"> {{ subjects.name }} </option>
+                                    <option [value]="subjects.id"> {{ subjects.name }} </option>
                                     }
                                 </select>
                             </fieldset>
@@ -172,8 +178,8 @@
         </div>
 
         <!-- Modal de editar examen -->
-        <div class="modal fade crud-modal" id="modal-editar-exam" tabindex="-1"
-            aria-labelledby="modal-detail-label" style="display: none;" aria-hidden="true">
+        <div class="modal fade crud-modal" id="modal-editar-exam" tabindex="-1" aria-labelledby="modal-detail-label"
+            style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
                 <div class="modal-content crud-modal__content">
                     <div class="modal-header crud-modal__header">
@@ -200,7 +206,7 @@
                                 <label for="">Carrera</label>
                                 <select name="" id="" formControlName="careerName">
                                     @for (career of listCareer; track $index) {
-                                        <option [value]="career.name">{{ career.name }}</option>
+                                    <option [value]="career.name">{{ career.name }}</option>
                                     }
                                 </select>
                             </fieldset>
@@ -209,7 +215,7 @@
                                 <label for="">Materia</label>
                                 <select name="" id="" formControlName="subjects">
                                     @for (subjects of listSubjects; track $index) {
-                                        <option [value]="subjects.id"> {{ subjects.name }} </option>
+                                    <option [value]="subjects.id"> {{ subjects.name }} </option>
                                     }
                                 </select>
                             </fieldset>

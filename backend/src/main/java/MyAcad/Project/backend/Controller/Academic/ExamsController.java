@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Controller.Academic;
 
+import MyAcad.Project.backend.Exception.ExamException;
 import MyAcad.Project.backend.Model.Academic.ExamsDTO;
 import MyAcad.Project.backend.Model.Academic.ExamsResponse;
 import MyAcad.Project.backend.Service.Academic.ExamsService;

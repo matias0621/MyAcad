@@ -20,8 +20,6 @@ import { InscriptionCommision } from './pages/inscription-commision/inscription-
 import { SubjectsPage } from './pages/Academic/subjects-page/subjects-page';
 import { CommissionStudentView } from './components/StudentView/commission-student-view/commission-student-view';
 import { ExamsPage } from './pages/Academic/exams-page/exams-page';
-import { ExamsFormEdit } from './components/Academic/exams-form-edit/exams-form-edit';
-import { ExamsForm } from './components/Academic/exams-form/exams-form';
 import { StudentRegisterCommission } from './components/StudentView/student-register-commission/student-register-commission';
 import { CommissionsTeacherView } from './components/Teacher/commissions-teacher-view/commissions-teacher-view';
 import { TeacherExamsView } from './components/Teacher/teacher-exams-view/teacher-exams-view';
@@ -33,6 +31,8 @@ import { SelectTypeRegisterPage } from './pages/select-type-register-page/select
 import { ShowCareerForCommission } from './components/show-career-for-commission/show-career-for-commission';
 import { RegisterStudentCareer } from './components/register-student-career/register-student-career';
 import { RegisterToFinalExam } from './components/StudentView/register-to-final-exam/register-to-final-exam';
+import { StudentTicket } from './pages/student-ticket/student-ticket';
+import { Certificates } from './pages/certificates/certificates';
 
 
 
@@ -66,6 +66,9 @@ export const routes: Routes = [
     { path: 'register-student-to-commission/:name', component:InscriptionCommision, canActivate:[AuthGuard] },
 
     { path: 'select-type-register', component:SelectTypeRegisterPage, canActivate:[AuthGuard] },
+
+    { path: 'student-ticket', component: StudentTicket, canActivate: [AuthGuard] },
+    { path: 'certificates', component: Certificates, canActivate: [AuthGuard] },
 
     { path: 'show-career-for-register', component:ShowCareerForRegister, canActivate:[AuthGuard] },
     { path: 'show-career-for-commission', component:ShowCareerForCommission, canActivate:[AuthGuard]},

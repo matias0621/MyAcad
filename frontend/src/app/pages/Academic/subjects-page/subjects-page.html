@@ -83,12 +83,6 @@
                     <div class="modal-body crud-modal__body">
                         <form class="modal-form" [formGroup]="form" (submit)="OnSubmit()">
 
-                            @if (form.invalid && form.touched) {
-                            <div class="error-global">
-                                <p>Por favor, completá correctamente todos los campos antes de continuar.</p>
-                            </div>
-                            }
-
                             <fieldset>
                                 <label for="name">Nombre de la materia:</label>
                                 <input type="text" id="name" name="name" formControlName="name">

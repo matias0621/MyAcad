@@ -52,6 +52,7 @@ public class SecurityConfig {
                                 "/commissions/register-commision-to-student/**",
                                 "/inscriptions/**",
                                 "/subject-x-student",
+                                "/certificate/**",
                                 "/student-ticket"
                         ).hasAnyRole("STUDENT", "TEACHER", "MANAGER")
                         .requestMatchers(

@@ -32,6 +32,7 @@ import { ShowCareerForCommission } from './components/show-career-for-commission
 import { RegisterStudentCareer } from './components/register-student-career/register-student-career';
 import { RegisterToFinalExam } from './components/StudentView/register-to-final-exam/register-to-final-exam';
 import { StudentTicket } from './pages/student-ticket/student-ticket';
+import { Certificates } from './pages/certificates/certificates';
 
 
 
@@ -67,6 +68,7 @@ export const routes: Routes = [
     { path: 'select-type-register', component:SelectTypeRegisterPage, canActivate:[AuthGuard] },
 
     { path: 'student-ticket', component: StudentTicket, canActivate: [AuthGuard] },
+    { path: 'certificates', component: Certificates, canActivate: [AuthGuard] },
 
     { path: 'show-career-for-register', component:ShowCareerForRegister, canActivate:[AuthGuard] },
     { path: 'show-career-for-commission', component:ShowCareerForCommission, canActivate:[AuthGuard]},

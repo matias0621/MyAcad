@@ -9,6 +9,7 @@ import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
+import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
@@ -32,6 +33,7 @@ public class CommissionService {
     private final SubjectsRepository subjectsRepository;
     private final StudentRepository studentRepository;
     private final SubjectsXStudentService subjectsXStudentService;
+    private final SubjectsXStudentRepository subjectsXStudentRepository;
     private final TeacherRepository teacherRepository;
     private final ProgramRepository programRepository;
 
@@ -321,8 +323,7 @@ public class CommissionService {
     }
 
     private void validatePrerequisite(Student student, SubjectsEntity prerequisite) {
-        Optional<SubjectsXStudentEntity> opt = subjectsXStudentService
-                .getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), prerequisite.getId());
+        Optional<SubjectsXStudentEntity> opt = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(student.getId(), prerequisite.getId());
 
         if (opt.isEmpty()) {
             throw new RuntimeException("Subject not found");

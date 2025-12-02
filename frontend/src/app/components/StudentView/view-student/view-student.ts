@@ -24,6 +24,8 @@ export class ViewStudent implements OnInit{
   getProgramByStudentId(){
 
     const token:any = this.authService.getDecodedToken()
+
+    console.log(this.authService.getToken())
     if (!token) return;
     
     this.studentName = token.name

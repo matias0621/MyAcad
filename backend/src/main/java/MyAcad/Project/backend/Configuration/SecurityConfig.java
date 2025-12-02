@@ -51,7 +51,7 @@ public class SecurityConfig {
                                 "/program/not-enrolled/**",
                                 "/commissions/register-commision-to-student/**",
                                 "/inscriptions/**",
-                                "/subject-x-student"
+                                "/subject-x-student/**"
                         ).hasAnyRole("STUDENT", "TEACHER", "MANAGER")
                         .requestMatchers(
                                 "/**",

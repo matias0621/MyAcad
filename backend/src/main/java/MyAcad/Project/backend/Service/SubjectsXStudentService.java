@@ -1,8 +1,10 @@
 package MyAcad.Project.backend.Service;
 
+import MyAcad.Project.backend.Mapper.SubjectsXStudentMapper;
 import MyAcad.Project.backend.Model.Academic.SubjectsXStudentDTO;
 import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentResponse;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import MyAcad.Project.backend.Service.Academic.SubjectService;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubjectsXStudentService {
     private final SubjectsXStudentRepository subjectsXStudentRepository;
+    private final SubjectsXStudentMapper subjectsXStudentMapper;
     private final SubjectService subjectService;
     private final StudentService studentService;
 
@@ -42,23 +45,22 @@ public class SubjectsXStudentService {
         subjectsXStudentRepository.save(subjectsXStudentEntity);
     }
 
-    public List<SubjectsXStudentEntity> getAllSubjectsXStudent() {
-        return subjectsXStudentRepository.findAll();
+    public List<SubjectsXStudentResponse> getAllSubjectsXStudent() {
+        return subjectsXStudentMapper.toResponseList(subjectsXStudentRepository.findAll());
     }
 
-    public SubjectsXStudentEntity getSubjectsXStudentById(Long id) {
-        return subjectsXStudentRepository.findById(id).orElseThrow();
+    public SubjectsXStudentResponse getSubjectsXStudentById(Long id) {
+        return subjectsXStudentMapper.toResponse(subjectsXStudentRepository.findById(id).orElseThrow());
     }
 
-    public List<SubjectsXStudentEntity> getAllSubjectsXStudentByStudentId(Long studentId) {
-        List<SubjectsXStudentEntity> subjectsXStudentEntities = subjectsXStudentRepository.findByStudent_Id(studentId);
-        SubjectsEntity subjectsEntity = subjectsXStudentEntities.get(0).getSubjects();
-        SubjectsXStudentEntity subjectsXStudentEntity = SubjectsXStudentEntity.builder().subjects(subjectsEntity).build();
-        return subjectsXStudentRepository.findByStudent_Id(studentId);
+    public List<SubjectsXStudentResponse> getAllSubjectsXStudentByStudentId(Long studentId) {
+        return subjectsXStudentMapper.toResponseList(subjectsXStudentRepository.findByStudent_Id(studentId));
     }
 
-    public Optional<SubjectsXStudentEntity> getSubjectsXStudentByStudentIdAndSubjectsId(Long studentId, Long subjectsId) {
-        return subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId, subjectsId);
+    public Optional<SubjectsXStudentResponse> getSubjectsXStudentByStudentIdAndSubjectsId(Long studentId, Long subjectsId) {
+        return subjectsXStudentRepository
+                .findByStudent_IdAndSubjects_Id(studentId, subjectsId)
+                .map(subjectsXStudentMapper::toResponse);
     }
 
     public void updateSubjectsXStudent(SubjectsXStudentDTO subjectsXStudentDTO, Long SubjectXStudentId) {

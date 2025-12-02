@@ -22,7 +22,9 @@ export class UserList implements OnInit {
 
   @ViewChild(UserEditForm) userEditForm!: UserEditForm;
 
+  filter : string = '';
   users !: any[]
+  allUsers !: any[];
   search: string = '';
   timeout: any;
   selectedUser: any = null;
@@ -82,10 +84,38 @@ export class UserList implements OnInit {
     }, 500)
   }
 
+  filterUsers() {
+    if (this.filter === '') {
+      this.users = [...this.allUsers];
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    if (this.filter === 'Activos') {
+      this.users = this.allUsers.filter((u) => u.active);
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    if (this.filter === 'Inactivos') {
+      this.users = this.allUsers.filter((u) => !u.active);
+      this.totalPages = 1;
+      this.currentPage = 0;
+      return;
+    }
+
+    this.users = this.allUsers.filter((s) => s.program === this.filter);
+    this.totalPages = 1;
+    this.currentPage = 0;
+  }
+
   getUsers(page: number = 0, size: number = 10 ) {
     this.service.getUsersPaginated(this.endpoint, page, size).subscribe({
       next: (data) => {
         this.users = this.normalizeUsersArray(data.content);
+        this.allUsers = this.normalizeUsersArray(data.content);
         this.totalPages = data.totalPages;
         this.currentPage = data.number;
 

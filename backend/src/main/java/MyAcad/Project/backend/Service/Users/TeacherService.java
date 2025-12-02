@@ -114,13 +114,6 @@ public class TeacherService {
         return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity<Void> definitiveDeleteTeacher(Long teacherId) {
-        if (!repository.existsById(teacherId)) {
-            return ResponseEntity.notFound().build();
-        }
-        repository.deleteById(teacherId);
-        return ResponseEntity.ok().build();
-    }
     public List<TeacherResponse> list() {
         return mapper.toResponseList(repository.findAll());
     }

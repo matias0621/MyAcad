@@ -4,6 +4,11 @@
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
             <input type="text" class="crud-search-bar" (input)="onSearch()" [(ngModel)]="search"
                 placeholder="Buscar por legajo o nombre">
+            <select class="select-filter" [(ngModel)]="filter" (change)="filterUsers()">
+                <option value="">Mostrar todos</option>
+                <option value="Activos">Activos</option>
+                <option value="Inactivos">Inactivos</option>
+            </select>
         </div>
         <table class="crud-table">
             <thead>
@@ -33,7 +38,6 @@
                         }
                         @if (!(user.active || user.enabled || user.isActive || user.status === 'ACTIVE')) {
                         <button class="activate-crud-btn" (click)="viewDisabled(user)">Activar</button>
-                        <button class="delete-crud-btn" (click)="definitiveDeleteUser(user.id)">Eliminar</button>
                         }
                         <button class="modify-crud-btn" (click)="modifyUser(user); userEditForm.loadData(user)"
                             data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>

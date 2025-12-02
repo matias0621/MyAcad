@@ -111,12 +111,6 @@ public class TeacherController {
     public ResponseEntity<Void> deleteTeacher(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }
-
-    // Baja definitiva
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> definitiveDeleteTeacher(@PathVariable Long id) {
-        return services.definitiveDeleteTeacher(id);
-    }
     //PUT
     @PutMapping
     public ResponseEntity<?> updateTeacher(@RequestBody Teacher updatedUser) {

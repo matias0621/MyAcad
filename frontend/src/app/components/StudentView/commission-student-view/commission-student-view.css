@@ -1,4 +1,17 @@
 .subjects-state-btn{
-    height: none !important;
+    border: none;
+    color: var(--color-3);
+    background-color: var(--color-5);
+    border-radius: 15px;
+    min-height: 2.5em;
+    min-width: 150px;
+    padding: 0 1.5em;
+    transition: .4s;
     margin-bottom: 1em;
+}
+
+.subjects-state-btn:hover {
+    color: var(--color-5);
+    background-color: var(--color-3);
+    border: solid 1px var(--color-5);
 }

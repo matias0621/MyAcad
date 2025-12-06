@@ -17,18 +17,18 @@ declare var bootstrap: any;
   selector: 'app-user-list',
   imports: [FormsModule, UserForm, UserEditForm, DecimalPipe],
   templateUrl: './user-list.html',
-  styleUrl: './user-list.css'
+  styleUrl: './user-list.css',
 })
 export class UserList implements OnInit {
   @Input()
-  endpoint = ""
+  endpoint = '';
   @Output()
-  user = new EventEmitter<any>;
+  user = new EventEmitter<any>();
 
   @ViewChild(UserEditForm) userEditForm!: UserEditForm;
 
-  users !: any[]
-  programList!:Program[]
+  users!: any[];
+  programList!: Program[];
   search: string = '';
   timeout: any;
   selectedUser: any = null;
@@ -36,24 +36,35 @@ export class UserList implements OnInit {
   totalPages: number = 0;
   currentPage: number = 0;
 
+  // Filtro
+  filter: string = '';
+  allUsers!: any[];
+  filteredUsers!: any[];
+  listPrograms!: Program[];
+  private allUsersLoaded = false;
+  private showingAllStudents = true;
+
   constructor(
     private service: UserService,
-    private programService:ProgramService,
+    private programService: ProgramService,
     private notificationService: NotificationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getUsers();
+    this.getPrograms();
   }
 
   private normalizeUsersArray(arr: any[]): any[] {
-    return (arr || []).map(u => {
+    return (arr || []).map((u) => {
       const hasActive = u?.active !== undefined && u?.active !== null;
       const normalizedActive = hasActive
         ? u.active
-        : (u?.enabled !== undefined ? u.enabled
-          : (u?.isActive !== undefined ? u.isActive
-            : (u?.status === 'ACTIVE' || u?.state === 'ACTIVE')));
+        : u?.enabled !== undefined
+        ? u.enabled
+        : u?.isActive !== undefined
+        ? u.isActive
+        : u?.status === 'ACTIVE' || u?.state === 'ACTIVE';
       return { ...u, active: normalizedActive };
     });
   }
@@ -75,111 +86,137 @@ export class UserList implements OnInit {
       //Si tiene solo números busca por legajo, si tiene letras busca por nombre completo
       if (/^[0-9]+$/.test(value)) {
         this.service.getByLegajo(value, this.endpoint).subscribe({
-          next: (data) => this.users = this.normalizeUsersArray(data),
-          error: (err) => console.error(err)
+          next: (data) => (this.users = this.normalizeUsersArray(data)),
+          error: (err) => console.error(err),
         });
         return;
       } else if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
         this.service.getByName(value, this.endpoint).subscribe({
-          next: (data) => { this.users = this.normalizeUsersArray(data) },
-          error: (err) => console.error(err)
+          next: (data) => {
+            this.users = this.normalizeUsersArray(data);
+          },
+          error: (err) => console.error(err),
         });
         return;
       }
-    }, 500)
+    }, 500);
   }
 
-  getUsers(page: number = 0, size: number = 10 ) {
+  getPrograms() {
+    this.programService.getPrograms().subscribe({
+      next: (res) => {
+        this.listPrograms = res;
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  getUsers(page: number = 0, size: number = 10) {
     this.service.getUsersPaginated(this.endpoint, page, size).subscribe({
       next: (data) => {
-        console.log(data)
+        console.log(data);
         this.users = this.normalizeUsersArray(data.content);
         this.totalPages = data.totalPages;
         this.currentPage = data.number;
 
-        console.log(data.content)
+        this.loadAllUsers(this.filter !== '');
 
+        console.log(data.content);
       },
-      error: (error) => { console.error(error) }
-    })
+      error: (error) => {
+        console.error(error);
+      },
+    });
   }
 
   deleteUser(id: number) {
-    this.notificationService.confirm(
-      '¿Estás seguro de que deseas eliminar este usuario?',
-      'Confirmar eliminación',
-      'Eliminar',
-      'Cancelar'
-    ).then((confirmed) => {
-      if (confirmed) {
-        this.service.deleteUser(id, this.endpoint).subscribe({
-          next: (data) => {
-            this.notificationService.success('Usuario eliminado exitosamente');
-            this.getUsers();
-          },
-          error: (error) => {
-            this.notificationService.error('Error al eliminar el usuario. Por favor, intenta nuevamente', true);
-            console.error(error);
-          }
-        });
-      }
-    });
+    this.notificationService
+      .confirm(
+        '¿Estás seguro de que deseas eliminar este usuario?',
+        'Confirmar eliminación',
+        'Eliminar',
+        'Cancelar'
+      )
+      .then((confirmed) => {
+        if (confirmed) {
+          this.service.deleteUser(id, this.endpoint).subscribe({
+            next: (data) => {
+              this.notificationService.success('Usuario eliminado exitosamente');
+              this.getUsers();
+            },
+            error: (error) => {
+              this.notificationService.error(
+                'Error al eliminar el usuario. Por favor, intenta nuevamente',
+                true
+              );
+              console.error(error);
+            },
+          });
+        }
+      });
   }
-
 
   // BAJA DEFINITIVA
   definitiveDeleteUser(id: number) {
-    this.notificationService.confirm(
-      '¿Estás seguro de que deseas eliminar permanentemente este usuario?',
-      'Confirmar eliminación definitiva',
-      'Eliminar',
-      'Cancelar'
-    ).then((confirmed) => {
-      if (confirmed) {
-        this.service.definitiveDeleteUser(id, this.endpoint).subscribe({
-          next: (data) => {
-            this.notificationService.success('Usuario eliminado exitosamente');
-            this.getUsers();
-          },
-          error: (error) => {
-            this.notificationService.error('Error al eliminar el usuario. Por favor, intenta nuevamente', true);
-          }
-        });
-      }
-    });
+    this.notificationService
+      .confirm(
+        '¿Estás seguro de que deseas eliminar permanentemente este usuario?',
+        'Confirmar eliminación definitiva',
+        'Eliminar',
+        'Cancelar'
+      )
+      .then((confirmed) => {
+        if (confirmed) {
+          this.service.definitiveDeleteUser(id, this.endpoint).subscribe({
+            next: (data) => {
+              this.notificationService.success('Usuario eliminado exitosamente');
+              this.getUsers();
+            },
+            error: (error) => {
+              this.notificationService.error(
+                'Error al eliminar el usuario. Por favor, intenta nuevamente',
+                true
+              );
+            },
+          });
+        }
+      });
   }
 
   viewDisabled(user: any) {
-    this.notificationService.confirm(
-      `¿Deseas activar "${user.name}"?`,
-      'Confirmar activación',
-      'Activar',
-      'Cancelar'
-    ).then((confirmed) => {
-      if (confirmed) {
-        const updatedItem = { ...user, active: true };
-        this.service.putUser(updatedItem, this.endpoint).subscribe({
-          next: (response) => {
-            this.notificationService.success(`${user.name} activado/a exitosamente`);
-            this.getUsers();
-          },
-          error: (error) => {
-            this.notificationService.error('Error al activar. Por favor, intenta nuevamente', true);
-          }
-        });
-      }
-    });
+    this.notificationService
+      .confirm(`¿Deseas activar "${user.name}"?`, 'Confirmar activación', 'Activar', 'Cancelar')
+      .then((confirmed) => {
+        if (confirmed) {
+          const updatedItem = { ...user, active: true };
+          this.service.putUser(updatedItem, this.endpoint).subscribe({
+            next: (response) => {
+              this.notificationService.success(`${user.name} activado/a exitosamente`);
+              this.getUsers();
+            },
+            error: (error) => {
+              this.notificationService.error(
+                'Error al activar. Por favor, intenta nuevamente',
+                true
+              );
+            },
+          });
+        }
+      });
   }
 
-  getProgramByStudentId(id:number){
+  getProgramByStudentId(id: number) {
     this.programService.getProgramsByStudent(id).subscribe({
       next: (res) => {
-        this.programList = res
+        this.programList = res;
       },
       error: (err) => {
-        console.log(err)
-      }
-    })
+        console.log(err);
+      },
+    });
   }
 
   onUserSuccess(modalId: string) {
@@ -193,5 +230,55 @@ export class UserList implements OnInit {
 
   modifyUser(user: any) {
     this.user.emit(user);
+  }
+
+  filterUsers() {
+    if (!this.allUsersLoaded) return;
+    this.applyFilter();
+  }
+
+  private applyFilter() {
+    if (this.endpoint === 'managers') {
+      this.filteredUsers = [...this.allUsers];
+      return;
+    }
+
+    if (this.filter === '' || this.filter === undefined) {
+      this.filteredUsers = [...this.allUsers];
+      this.showingAllStudents = true;
+      return;
+    }
+
+    this.showingAllStudents = false;
+
+    // Activos / Inactivos
+    if (this.filter === 'Activos') {
+      this.filteredUsers = this.allUsers.filter((s) => s.active === true);
+      return;
+    }
+
+    if (this.filter === 'Inactivos') {
+      this.filteredUsers = this.allUsers.filter((s) => s.active === false);
+      return;
+    }
+
+    // Programas (solo para student / teacher)
+    this.filteredUsers = this.allUsers.filter((s) =>
+      s.programs?.some((p: any) => p.name === this.filter)
+    );
+  }
+
+  private loadAllUsers(applyFilterAfterLoad: boolean = false) {
+    this.allUsersLoaded = false;
+    this.service.getUsers(this.endpoint).subscribe({
+      next: (res) => {
+        this.allUsers = res;
+        this.allUsersLoaded = true;
+
+        if (applyFilterAfterLoad) {
+          this.applyFilter();
+        }
+      },
+    });
   }
 }

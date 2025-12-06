@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Model.Users;
 
+import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import lombok.*;
 
@@ -17,6 +18,8 @@ public class StudentResponse {
     private String legajo;
     private String email;
     private int dni;
+    private Role role;
+    private boolean isActive;
 
     private List<ProgramResponse> programs;
 }

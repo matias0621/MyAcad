@@ -7,6 +7,7 @@ import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.InscriptionToFinalExamRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
+import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Service.Academic.SubjectService;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class InscriptionToFinalExamService {
 
     private final InscriptionToFinalExamRepository inscriptionToFinalExamRepository;
     private final SubjectService subjectService;
-    private final StudentService studentService;
+    private final StudentRepository studentRepository;
     private final ProgramRepository programRepository;
 
     public void createInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO) {
@@ -93,7 +94,7 @@ public class InscriptionToFinalExamService {
     }
 
     public void addToStudent(Long inscriptionId, Long studentId) {
-        Student student = studentService.getById(studentId).orElseThrow();
+        Student student = studentRepository.findById(studentId).orElseThrow();
         InscriptionToFinalExamEntity inscription = inscriptionToFinalExamRepository.findById(inscriptionId).orElseThrow();
 
         if (inscription.getStudents().contains(student)){

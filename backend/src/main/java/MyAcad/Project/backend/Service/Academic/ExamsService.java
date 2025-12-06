@@ -9,6 +9,7 @@ import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
+import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +27,13 @@ public class ExamsService {
     private final ExamsRepository examsRepository;
     private final ExamsMapper examsMapper;
     private final SubjectService subjectService;
-    private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
     public void create(ExamsDTO dto) {
         SubjectsEntity subject = subjectService.getById(dto.getSubjectId())
                 .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubjectId()));
 
-        Student student = studentService.getByLegajo(dto.getLegajoStudent()).orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + dto.getLegajoStudent()));
+        Student student = studentRepository.findByLegajo(dto.getLegajoStudent()).orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + dto.getLegajoStudent()));
 
 
         ExamsEntity exam = ExamsEntity.builder()
@@ -82,7 +83,7 @@ public class ExamsService {
         SubjectsEntity subject = subjectService.getById((long) dto.getSubjectId())
                 .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubjectId()));
 
-        Student student = studentService.getByLegajo(dto.getLegajoStudent()).orElseThrow();
+        Student student = studentRepository.findByLegajo(dto.getLegajoStudent()).orElseThrow();
 
         existingExam.setScore(dto.getScore());
         existingExam.setSubject(subject);

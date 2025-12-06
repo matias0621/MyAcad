@@ -6,13 +6,20 @@ import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Programs.Program;
+
 import MyAcad.Project.backend.Mapper.ProgramMapper;
 import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
+
+import MyAcad.Project.backend.Model.Programs.ProgramResponse;
+import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.StudentCsvDto;
+
 import MyAcad.Project.backend.Model.Users.StudentResponse;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
+import MyAcad.Project.backend.Service.Programs.ProgramService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
@@ -40,6 +47,7 @@ public class StudentService {
      private final ProgramMapper programMapper;
     private final ProgramRepository programRepository;
     private final UserLookupService userLookupService;
+    private final ProgramService programService;
     private PasswordEncoder passwordEncoder;
 
     public void add(Student t) {
@@ -83,9 +91,11 @@ public class StudentService {
         }
     }
 
-    public Page<Student> listStudentsPaginated(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size));
+    public Page<StudentResponse> listStudentsPaginated(int page, int size) {
+        Page<Student> list = repository.findAll(PageRequest.of(page, size));
+        return list.map(this::toResponse);
     }
+
 
     public Page<StudentResponse> listStudentResponsePaginated(int page, int size) {
 
@@ -119,18 +129,34 @@ public class StudentService {
     }
 
 
-    public List<Student> getByCommission(Long commissionId) {
+    public List<StudentResponse> getByCommission(Long commissionId) {
+
         List<Long> studentIds = repository.findStudentsByCommissionId(commissionId);
-        return repository.findByIdIn(studentIds);
+        List<Student> listOfStudent = repository.findByIdIn(studentIds);
+        List<StudentResponse> responses = new ArrayList<>();
+        for (Student student : listOfStudent) {
+            responses.add(toResponse(student));
+        }
+        return responses;
     }
 
 
-    public List<Student> getByLegajoContaining(String legajo) {
-        return repository.findByLegajoContaining(legajo);
+    public List<StudentResponse> getByLegajoContaining(String legajo) {
+        List<Student> list = repository.findByLegajoContaining(legajo);
+        List<StudentResponse> responses = new ArrayList<>();
+        for (Student student : list) {
+            responses.add(toResponse(student));
+        }
+        return responses;
     }
 
-    public List<Student> getByFullName(String fullName) {
-        return repository.findByFullName(fullName);
+    public List<StudentResponse> getByFullName(String fullName) {
+        List<Student> list = repository.findByFullName(fullName);
+        List<StudentResponse> responses = new ArrayList<>();
+        for (Student student : list) {
+            responses.add(toResponse(student));
+        }
+        return responses;
     }
 
     public ResponseEntity<Void> delete(Long id){
@@ -151,8 +177,14 @@ public class StudentService {
         repository.deleteById(studentId);
         return ResponseEntity.ok().build();
     }
-    public List<Student> list() {
-        return repository.findAll();
+
+    public List<StudentResponse> list() {
+        List<Student> list = repository.findAll();
+        List<StudentResponse> responses = new ArrayList<>();
+        for (Student student : list) {
+            responses.add(toResponse(student));
+        }
+        return responses;
     }
 
     public void modify (Long id, Student t){
@@ -178,15 +210,34 @@ public class StudentService {
         repository.save(old);
     }
 
-    public Optional<Student> getById(Long id){
-        return repository.findById(id);
+    public Optional<StudentResponse> getById(Long id){
+        Optional<Student> student = repository.findById(id);
+        return student.map(this::toResponse);
     }
 
-    public Optional<Student> getByLegajo(String legajo) {
-        return repository.findByLegajo(legajo);
+    public Optional<StudentResponse> getByLegajo(String legajo) {
+        Optional<Student> student = repository.findByLegajo(legajo);
+        return student.map(this::toResponse);
     }
 
-    public Optional<Student> getByEmail(String email){
-        return repository.findByEmail(email);
+    public Optional<StudentResponse> getByEmail(String email){
+        Optional<Student> student = repository.findByEmail(email);
+        return student.map(this::toResponse);
+    }
+
+    private StudentResponse toResponse(Student student){
+        List<ProgramResponse> programs = programService.findByStudent(student.getId());
+
+        return StudentResponse.builder()
+                .name(student.getName())
+                .lastName(student.getLastName())
+                .email(student.getEmail())
+                .dni(student.getDni())
+                .isActive(student.isActive())
+                .programs(programs)
+                .id(student.getId())
+                .role(student.getRole())
+                .legajo(student.getLegajo())
+                .build();
     }
 }

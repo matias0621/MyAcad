@@ -92,6 +92,7 @@ export class UserList implements OnInit {
   getUsers(page: number = 0, size: number = 10 ) {
     this.service.getUsersPaginated(this.endpoint, page, size).subscribe({
       next: (data) => {
+        console.log(data)
         this.users = this.normalizeUsersArray(data.content);
         this.totalPages = data.totalPages;
         this.currentPage = data.number;

@@ -42,4 +42,7 @@ public abstract class User {
     }
 
 
+    public Object getFullName() {
+        return this.name + " " + this.lastName;
+    }
 }

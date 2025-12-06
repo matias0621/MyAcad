@@ -13,7 +13,10 @@
                     <th scope="col" class="responsive-hide-2">Apellido</th>
                     <th scope="col" class="responsive-hide">DNI</th>
                     <th scope="col" class="responsive-hide">Email</th>
-                    <th scope="col" class="responsive-hide"></th>
+                    @if (endpoint === "students") {
+                    <th scope="col" class="responsive-hide">Carrera</th>
+                    }
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody class="crud-table-body">
@@ -25,10 +28,13 @@
                     <td class="responsive-hide-2">{{user.lastName}}</td>
                     <td class="responsive-hide">{{user.dni}}</td>
                     <td class="responsive-hide">{{user.email}}</td>
+                    @if (endpoint === "students") {
                     <td class="responsive-hide">
-                        
+                        @for (program of user.programs; track $index) {
+                            <p> {{ program.name }} </p>
+                        }
                     </td>
-                    
+                    }
                     <td class="crud-table-actions">
                         <button class="detail-crud-btn" (click)="selectedUser = user; getProgramByStudentId(user.id)" data-bs-toggle="modal"
                             data-bs-target="#modal-detail">Detalles</button>

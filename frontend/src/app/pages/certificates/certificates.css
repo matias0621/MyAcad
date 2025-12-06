@@ -1,0 +1,24 @@
+h1{
+    text-align: center;
+    margin: 1em;
+}
+#certificates-buttons{
+    display: flex;
+    justify-content: center;
+}
+.certificate-button {
+    border: none;
+    color: var(--color-3);
+    background-color: var(--color-5);
+    border-radius: 15px;
+    width: 15em;
+    margin: 1em;
+    padding: 0 1.5em;
+    transition: .4s;
+}
+
+.certificate-button:hover {
+    color: var(--color-5);
+    background-color: var(--color-3);
+    border: solid 1px var(--color-5);
+}

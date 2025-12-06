@@ -42,7 +42,7 @@ public abstract class User {
     }
 
 
-    public Object getFullName() {
+    public String getFullName() {
         return this.name + " " + this.lastName;
     }
 }

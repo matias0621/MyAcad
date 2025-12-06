@@ -20,10 +20,26 @@ export class Certificates {
   }
 
 
-  downloadCertificate() {
+  downloadRegularStudentCertificate() {
 
     if (this.studentId) {
-      this.certificateService.downloadCertificate(this.studentId).subscribe((pdf) => {
+      this.certificateService.downloadRegularStudentCertificate(this.studentId).subscribe((pdf) => {
+        const url = window.URL.createObjectURL(pdf);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "certificado_alumno_regular.pdf";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    }else{
+      console.error("Error al obtener el id del usuario.")
+    }
+  }
+
+  downloadAcademicActivityCertificate() {
+
+    if (this.studentId) {
+      this.certificateService.downloadAcademicActivityCertificate(this.studentId).subscribe((pdf) => {
         const url = window.URL.createObjectURL(pdf);
         const a = document.createElement("a");
         a.href = url;

@@ -22,12 +22,25 @@ public class CertificateController {
     @Autowired
     private CertificateService certificateService;
 
-    @GetMapping("/{studentId}")
-    public ResponseEntity<byte[]> downloadCertificate(@PathVariable Long studentId) throws Exception {
+    @GetMapping("/regular-student/{studentId}")
+    public ResponseEntity<byte[]> downloadRegularStudentCertificate(@PathVariable Long studentId) throws Exception {
 
         Student student = studentService.getById(studentId).get();
 
-        byte[] pdf = certificateService.generateCertificate(student);
+        byte[] pdf = certificateService.generateRegularStudentCertificate(student);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=certificado.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+    @GetMapping("/academic-activity/{studentId}")
+    public ResponseEntity<byte[]> downloadAcademicActivityCertificate(@PathVariable Long studentId) throws Exception {
+
+        Student student = studentService.getById(studentId).get();
+
+        byte[] pdf = certificateService.generateAcademicActivityCertificate(student);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=certificado.pdf")

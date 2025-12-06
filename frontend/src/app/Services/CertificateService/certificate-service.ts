@@ -10,8 +10,14 @@ export class CertificateService {
 
   constructor(private http: HttpClient) { }
 
-  downloadCertificate(studentId: number) {
-    return this.http.get(`${this.api_URL}/${studentId}`, {
+  downloadRegularStudentCertificate(studentId: number) {
+    return this.http.get(`${this.api_URL}/regular-student/${studentId}`, {
+      responseType: 'blob'
+    });
+  }
+
+  downloadAcademicActivityCertificate(studentId: number) {
+    return this.http.get(`${this.api_URL}/academic-activity/${studentId}`, {
       responseType: 'blob'
     });
   }

@@ -34,12 +34,13 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TeacherService {
     private final TeacherRepository repository;
+    private final ProgramRepository programRepository;
     private final ProgramService programService;
     private final TeacherMapper mapper;
     private final UserLookupService userLookupService;
     private PasswordEncoder passwordEncoder;
 
-    public void add(Teacher t) {
+    public Teacher add(Teacher t) {
         if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
             throw new LegajoAlreadyExistsException();
         }else if(userLookupService.findByEmail(t.getEmail()).isPresent()) {
@@ -52,8 +53,9 @@ public class TeacherService {
         t = repository.save(t);
         t.setLegajo(String.valueOf(t.getId() + 600000));
 
-        repository.save(t);
+        return repository.save(t);
     }
+
 
     public List<TeacherCsvDto> parseCsv(MultipartFile file) throws IOException {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
@@ -65,17 +67,38 @@ public class TeacherService {
         }
     }
 
-    public void saveStudentByCsv(List<TeacherCsvDto> records){
+    public void saveTeacherByCsv(List<TeacherCsvDto> records) {
+
         for (TeacherCsvDto record : records) {
+
             Teacher teacher = new Teacher();
             teacher.setEmail(record.getEmail());
-            teacher.setPassword(String.valueOf(record.getDni()));
+            teacher.setPassword(record.getDni());
             teacher.setActive(true);
-            teacher.setDni(Integer.parseInt((record.getDni())));
+            teacher.setDni(Integer.parseInt(record.getDni()));
             teacher.setName(record.getName());
             teacher.setLastName(record.getLastname());
             teacher.setRole(Role.TEACHER);
-            add(teacher);
+
+            // 1) guardo primero el teacher (para generar ID)
+            teacher = add(teacher);
+
+            // 2) asigno la carrera (si existe)
+            if (record.getCareer() != null && !record.getCareer().isBlank()) {
+
+                String[] careers = record.getCareer().split(";");
+
+                for (String careerName : careers) {
+                    Teacher finalTeacher = teacher;
+                    programRepository.findByName(careerName.trim())
+                            .ifPresent(program -> {
+                                program.getTeachers().add(finalTeacher);
+                                programRepository.save(program);
+                            });
+                }
+
+
+            }
         }
     }
 

@@ -6,8 +6,12 @@ import MyAcad.Project.backend.Exception.DniAlreadyExistsException;
 import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Mapper.TeacherMapper;
+import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import MyAcad.Project.backend.Model.Users.*;
+import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
+import MyAcad.Project.backend.Service.Programs.ProgramService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
@@ -30,6 +34,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TeacherService {
     private final TeacherRepository repository;
+    private final ProgramService programService;
     private final TeacherMapper mapper;
     private final UserLookupService userLookupService;
     private PasswordEncoder passwordEncoder;
@@ -76,9 +81,11 @@ public class TeacherService {
 
     public Page<TeacherResponse> listTeachersPaginated(int page, int size) {
         Page<Teacher> teacherPage = repository.findAll(PageRequest.of(page, size));
+
         List<TeacherResponse> responseList = teacherPage.getContent()
                 .stream()
                 .map(mapper::toResponse)
+                .map(this::getProgramsForTeacher)   // ✔ ahora sí tiene sentido
                 .toList();
 
         return new PageImpl<>(
@@ -89,18 +96,27 @@ public class TeacherService {
     }
 
     public List<TeacherResponse> getByCommission(Long commissionId) {
-        List<Long> studentIds = repository.findTeachersByCommissionId(commissionId);
-        return mapper.toResponseList(repository.findByIdIn(studentIds));
+
+        List<Long> teacherIds = repository.findTeachersByCommissionId(commissionId);
+
+        return mapper.toResponseList(repository.findByIdIn(teacherIds))
+                .stream()
+                .map(this::getProgramsForTeacher)
+                .toList();
     }
 
 
     public List<TeacherResponse> getByLegajoContaining(String legajo) {
-        return mapper.toResponseList(repository.findByLegajoContaining(legajo));
+        return mapper.toResponseList(repository.findByLegajoContaining(legajo))
+                .stream()
+                .map(this::getProgramsForTeacher)
+                .toList();
     }
 
     public List<TeacherResponse> getByFullName(String fullName) {
 
-        return mapper.toResponseList(repository.findByFullName(fullName));
+        return mapper.toResponseList(repository.findByFullName(fullName))
+                .stream().map(this::getProgramsForTeacher).toList();
     }
 
     public ResponseEntity<Void> delete(Long id){
@@ -122,7 +138,10 @@ public class TeacherService {
         return ResponseEntity.ok().build();
     }
     public List<TeacherResponse> list() {
-        return mapper.toResponseList(repository.findAll());
+        return mapper.toResponseList(repository.findAll())
+                .stream()
+                .map(this::getProgramsForTeacher)
+                .toList();
     }
 
     public void modify (Long id, Teacher t){
@@ -149,14 +168,28 @@ public class TeacherService {
     }
 
     public Optional<TeacherResponse> getById(Long id){
-        return repository.findById(id).map(mapper::toResponse);
+        return repository.findById(id)
+                .map(mapper::toResponse)
+                .map(this::getProgramsForTeacher); 
     }
 
     public Optional<TeacherResponse> getByLegajo(String legajo) {
-        return repository.findByLegajo(legajo).map(mapper::toResponse);
+        return repository.findByLegajo(legajo)
+                .map(mapper::toResponse)
+                .map(this::getProgramsForTeacher);
     }
 
     public Optional<TeacherResponse> getByEmail(String email){
-        return repository.findByEmail(email).map(mapper::toResponse);
+        return repository.findByEmail(email)
+                .map(mapper::toResponse)
+                .map(this::getProgramsForTeacher);
+    }
+
+
+    public TeacherResponse getProgramsForTeacher(TeacherResponse teacher) {
+        List<ProgramResponse> programList = programService.findByTeacher(teacher.getId());
+
+        teacher.setPrograms(programList);
+        return teacher;
     }
 }

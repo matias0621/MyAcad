@@ -2,6 +2,7 @@ package MyAcad.Project.backend.Model.Users;
 
 import MyAcad.Project.backend.Model.Academic.CommissionResponse;
 import MyAcad.Project.backend.Model.Academic.SubjectsResponse;
+import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import lombok.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class TeacherResponse {
     private int dni;
     private boolean active;
 
+    private List<ProgramResponse> programs;
     private List<SubjectsResponse> subjects;
     private List<CommissionResponse> commissions;
 }

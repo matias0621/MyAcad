@@ -13,6 +13,7 @@ public interface TeacherMapper {
 
     Teacher toEntity(TeacherDTO teacher);
     @Mapping(source = "active", target = "active")
+    @Mapping(target = "programs", ignore = true)
     TeacherResponse toResponse(Teacher teacher);
 
     List<TeacherResponse> toResponseList(List<Teacher> teachers);

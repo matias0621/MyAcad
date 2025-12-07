@@ -1,3 +1,5 @@
+import Program from "../Program/Program";
+
 export default interface Student {
     id: number;
     name: string;
@@ -6,6 +8,8 @@ export default interface Student {
     email: string;
     legajo: string;
     password: string;
+    active: boolean
+    programs: Program[]
 }
 
 export interface RegistrationStudentOrTeacher {

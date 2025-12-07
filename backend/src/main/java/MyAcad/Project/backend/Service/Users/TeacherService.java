@@ -7,9 +7,11 @@ import MyAcad.Project.backend.Exception.EmailAlreadyExistsException;
 import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Mapper.TeacherMapper;
 import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import MyAcad.Project.backend.Model.Users.*;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
+import MyAcad.Project.backend.Service.Programs.ProgramService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
@@ -32,12 +34,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TeacherService {
     private final TeacherRepository repository;
-    private final ProgramRepository programRepository;
+    private final ProgramService programService;
     private final TeacherMapper mapper;
     private final UserLookupService userLookupService;
     private PasswordEncoder passwordEncoder;
 
-    public Teacher add(Teacher t) {
+    public void add(Teacher t) {
         if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
             throw new LegajoAlreadyExistsException();
         }else if(userLookupService.findByEmail(t.getEmail()).isPresent()) {
@@ -50,7 +52,7 @@ public class TeacherService {
         t = repository.save(t);
         t.setLegajo(String.valueOf(t.getId() + 600000));
 
-        return repository.save(t);
+        repository.save(t);
     }
 
     public List<TeacherCsvDto> parseCsv(MultipartFile file) throws IOException {
@@ -63,46 +65,27 @@ public class TeacherService {
         }
     }
 
-    public void saveTeacherByCsv(List<TeacherCsvDto> records) {
-
+    public void saveStudentByCsv(List<TeacherCsvDto> records){
         for (TeacherCsvDto record : records) {
-
             Teacher teacher = new Teacher();
             teacher.setEmail(record.getEmail());
-            teacher.setPassword(record.getDni());
+            teacher.setPassword(String.valueOf(record.getDni()));
             teacher.setActive(true);
-            teacher.setDni(Integer.parseInt(record.getDni()));
+            teacher.setDni(Integer.parseInt((record.getDni())));
             teacher.setName(record.getName());
             teacher.setLastName(record.getLastname());
             teacher.setRole(Role.TEACHER);
-
-            // 1) guardo primero el teacher (para generar ID)
-            teacher = add(teacher);
-
-            // 2) asigno la carrera (si existe)
-            if (record.getCareer() != null && !record.getCareer().isBlank()) {
-
-                String[] careers = record.getCareer().split(";");
-
-                for (String careerName : careers) {
-                    Teacher finalTeacher = teacher;
-                    programRepository.findByName(careerName.trim())
-                            .ifPresent(program -> {
-                                program.getTeachers().add(finalTeacher);
-                                programRepository.save(program);
-                            });
-                }
-
-
-            }
+            add(teacher);
         }
     }
 
     public Page<TeacherResponse> listTeachersPaginated(int page, int size) {
         Page<Teacher> teacherPage = repository.findAll(PageRequest.of(page, size));
+
         List<TeacherResponse> responseList = teacherPage.getContent()
                 .stream()
                 .map(mapper::toResponse)
+                .map(this::getProgramsForTeacher)   // ✔ ahora sí tiene sentido
                 .toList();
 
         return new PageImpl<>(
@@ -113,18 +96,27 @@ public class TeacherService {
     }
 
     public List<TeacherResponse> getByCommission(Long commissionId) {
-        List<Long> studentIds = repository.findTeachersByCommissionId(commissionId);
-        return mapper.toResponseList(repository.findByIdIn(studentIds));
+
+        List<Long> teacherIds = repository.findTeachersByCommissionId(commissionId);
+
+        return mapper.toResponseList(repository.findByIdIn(teacherIds))
+                .stream()
+                .map(this::getProgramsForTeacher)
+                .toList();
     }
 
 
     public List<TeacherResponse> getByLegajoContaining(String legajo) {
-        return mapper.toResponseList(repository.findByLegajoContaining(legajo));
+        return mapper.toResponseList(repository.findByLegajoContaining(legajo))
+                .stream()
+                .map(this::getProgramsForTeacher)
+                .toList();
     }
 
     public List<TeacherResponse> getByFullName(String fullName) {
 
-        return mapper.toResponseList(repository.findByFullName(fullName));
+        return mapper.toResponseList(repository.findByFullName(fullName))
+                .stream().map(this::getProgramsForTeacher).toList();
     }
 
     public ResponseEntity<Void> delete(Long id){
@@ -146,7 +138,10 @@ public class TeacherService {
         return ResponseEntity.ok().build();
     }
     public List<TeacherResponse> list() {
-        return mapper.toResponseList(repository.findAll());
+        return mapper.toResponseList(repository.findAll())
+                .stream()
+                .map(this::getProgramsForTeacher)
+                .toList();
     }
 
     public void modify (Long id, Teacher t){
@@ -173,14 +168,28 @@ public class TeacherService {
     }
 
     public Optional<TeacherResponse> getById(Long id){
-        return repository.findById(id).map(mapper::toResponse);
+        return repository.findById(id)
+                .map(mapper::toResponse)
+                .map(this::getProgramsForTeacher); 
     }
 
     public Optional<TeacherResponse> getByLegajo(String legajo) {
-        return repository.findByLegajo(legajo).map(mapper::toResponse);
+        return repository.findByLegajo(legajo)
+                .map(mapper::toResponse)
+                .map(this::getProgramsForTeacher);
     }
 
     public Optional<TeacherResponse> getByEmail(String email){
-        return repository.findByEmail(email).map(mapper::toResponse);
+        return repository.findByEmail(email)
+                .map(mapper::toResponse)
+                .map(this::getProgramsForTeacher);
+    }
+
+
+    public TeacherResponse getProgramsForTeacher(TeacherResponse teacher) {
+        List<ProgramResponse> programList = programService.findByTeacher(teacher.getId());
+
+        teacher.setPrograms(programList);
+        return teacher;
     }
 }

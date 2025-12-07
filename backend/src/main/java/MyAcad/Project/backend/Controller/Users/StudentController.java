@@ -7,6 +7,7 @@ import MyAcad.Project.backend.Exception.LegajoAlreadyExistsException;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Model.Users.StudentDTO;
+import MyAcad.Project.backend.Model.Users.StudentResponse;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,27 +28,27 @@ public class StudentController {
     //GET
     //Listado
     @GetMapping()
-    public List<Student> listStudents() {
+    public List<StudentResponse> listStudents() {
         return services.list();
     }
 
     //Paginación
     @GetMapping("/paginated")
-    public Page<Student> listStudentPaginated(@RequestParam(name = "page") int page,
-                                              @RequestParam(name = "size") int size) {
+    public Page<StudentResponse> listStudentPaginated(@RequestParam(name = "page") int page,
+                                                      @RequestParam(name = "size") int size) {
         return services.listStudentsPaginated(page, size);
     }
 
     //Obtener por comisión
     @GetMapping("/commission/{commissionId}")
-    public List<Student> getByCommission(@PathVariable Long commissionId) {
+    public List<StudentResponse> getByCommission(@PathVariable Long commissionId) {
         return services.getByCommission(commissionId);
     }
 
 
     //Obtener por legajo
     @GetMapping("/legajo/{legajo}")
-    public List<Student> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {
+    public List<StudentResponse> getByLegajoContaining(@PathVariable(name = "legajo", required = false) String legajo) {
         if (legajo == null || legajo.isEmpty()) {
             return listStudents();
         } else {
@@ -57,7 +58,7 @@ public class StudentController {
 
     //Obtener por nombre
     @GetMapping("/name/{name}")
-    public List<Student> getByName(@PathVariable(name = "name", required = false) String name) {
+    public List<StudentResponse> getByName(@PathVariable(name = "name", required = false) String name) {
         if (name == null || name.isEmpty()) {
             return listStudents();
         } else {
@@ -68,7 +69,7 @@ public class StudentController {
     //Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id){
-        Optional<Student> student = services.getById(id);
+        Optional<StudentResponse> student = services.getById(id);
         if (student.isPresent()) {
             return ResponseEntity.ok(student.get());
         }else{

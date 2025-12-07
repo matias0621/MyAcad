@@ -5,6 +5,7 @@ import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
+import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Service.Academic.SubjectService;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import lombok.NoArgsConstructor;
@@ -19,11 +20,11 @@ import java.util.Optional;
 public class SubjectsXStudentService {
     private final SubjectsXStudentRepository subjectsXStudentRepository;
     private final SubjectService subjectService;
-    private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
     public void createSubjectsXStudent(SubjectsXStudentDTO subjectsXStudentDTO) {
         SubjectsEntity subjects = subjectService.getById(subjectsXStudentDTO.getSubjectsId()).orElseThrow();
-        Student student = studentService.getById(subjectsXStudentDTO.getStudentId()).orElseThrow();
+        Student student = studentRepository.findById(subjectsXStudentDTO.getStudentId()).orElseThrow();
 
         // Verificar si ya está inscripto
         Optional<SubjectsXStudentEntity> existingRelation =
@@ -61,7 +62,7 @@ public class SubjectsXStudentService {
     public void updateSubjectsXStudent(SubjectsXStudentDTO subjectsXStudentDTO, Long SubjectXStudentId) {
         SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findById(SubjectXStudentId).orElseThrow();
         SubjectsEntity subjects = subjectService.getById(subjectsXStudentDTO.getSubjectsId()).orElseThrow();
-        Student student = studentService.getById(subjectsXStudentDTO.getStudentId()).orElseThrow();
+        Student student = studentRepository.findById(subjectsXStudentDTO.getStudentId()).orElseThrow();
 
         subjectsXStudentEntity.setStudent(student);
         subjectsXStudentEntity.setSubjects(subjects);

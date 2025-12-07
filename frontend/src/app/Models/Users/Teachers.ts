@@ -1,3 +1,5 @@
+import Program from "../Program/Program";
+
 export default interface Teacher {
     id: number;
     name: string;
@@ -6,4 +8,6 @@ export default interface Teacher {
     email: string;
     legajo: string;
     password: string;
+    active: boolean
+    programs:Program[]
 }

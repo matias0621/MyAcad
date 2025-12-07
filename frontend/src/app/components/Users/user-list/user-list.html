@@ -4,6 +4,18 @@
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
             <input type="text" class="crud-search-bar" (input)="onSearch()" [(ngModel)]="search"
                 placeholder="Buscar por legajo o nombre">
+
+            @if (endpoint === 'students' || endpoint === 'teachers') {
+            <select class="select-filter" [(ngModel)]="filter" (change)="filterUsers()">
+                <option value="">Mostrar todo</option>
+                <option value="Activos">Activos</option>
+                <option value="Inactivos">Inactivos</option>
+
+                @for(program of listPrograms; track $index){
+                <option [value]="program.name">{{ program.name }}</option>
+                }
+            </select>
+            }
         </div>
         <table class="crud-table">
             <thead>
@@ -13,21 +25,31 @@
                     <th scope="col" class="responsive-hide-2">Apellido</th>
                     <th scope="col" class="responsive-hide">DNI</th>
                     <th scope="col" class="responsive-hide">Email</th>
+                    @if (endpoint != "managers") {
+                    <th scope="col" class="responsive-hide">Carrera</th>
+                    }
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody class="crud-table-body">
                 <!-- USERS -->
-                @for (user of users; track $index) {
+                @for (user of (filter ? filteredUsers : users); track $index) {
                 <tr class="crud-table-item">
                     <td>{{user.legajo}}</td>
                     <td>{{user.name}}</td>
                     <td class="responsive-hide-2">{{user.lastName}}</td>
                     <td class="responsive-hide">{{user.dni}}</td>
                     <td class="responsive-hide">{{user.email}}</td>
+                    @if (endpoint != "managers") {
+                    <td class="responsive-hide">
+                        @for (program of user.programs; track $index) {
+                        <p> {{ program.name }} </p>
+                        }
+                    </td>
+                    }
                     <td class="crud-table-actions">
-                        <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal"
-                            data-bs-target="#modal-detail">Detalles</button>
+                        <button class="detail-crud-btn" (click)="selectedUser = user; getProgramByStudentId(user.id)"
+                            data-bs-toggle="modal" data-bs-target="#modal-detail">Detalles</button>
                         @if (user.active || user.enabled || user.isActive || user.status === 'ACTIVE') {
                         <button class="delete-crud-btn" (click)="deleteUser(user.id)">Eliminar</button>
                         }
@@ -134,6 +156,12 @@
                             <div class="detail-card">
                                 <strong><i class="fa-solid fa-id-badge"></i> DNI</strong>
                                 <span>{{selectedUser.dni | number:'1.0-0'}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Carreras:</strong>
+                                @for (program of programList; track $index) {
+                                <span> {{ program.name }} </span>
+                                }
                             </div>
                         </div>
                         }

@@ -10,6 +10,7 @@ import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
+import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ExamsService {
     private final ExamsMapper examsMapper;
     private final SubjectService subjectService;
     private final StudentRepository studentRepository;
+    private final SubjectsXStudentService subjectsXStudentService;
 
     public void create(ExamsDTO dto) {
         SubjectsEntity subject = subjectService.getById(dto.getSubjectId())
@@ -44,6 +46,7 @@ public class ExamsService {
                 .build();
 
         examsRepository.save(exam);
+        subjectsXStudentService.updateAcademicStatusForExams(student, subject);
     }
 
     public Page<ExamsResponse> listExamsPaginated(int page, int size) {

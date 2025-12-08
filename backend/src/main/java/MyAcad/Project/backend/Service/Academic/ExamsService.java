@@ -1,5 +1,6 @@
 package MyAcad.Project.backend.Service.Academic;
 
+import MyAcad.Project.backend.Enum.ExamType;
 import MyAcad.Project.backend.Mapper.ExamsMapper;
 import MyAcad.Project.backend.Model.Academic.ExamsDTO;
 import MyAcad.Project.backend.Model.Academic.ExamsEntity;
@@ -10,6 +11,7 @@ import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
+import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class ExamsService {
     private final ExamsMapper examsMapper;
     private final SubjectService subjectService;
     private final StudentRepository studentRepository;
+    private final SubjectsXStudentService subjectsXStudentService;
 
     public void create(ExamsDTO dto) {
         SubjectsEntity subject = subjectService.getById(dto.getSubjectId())
@@ -35,6 +38,18 @@ public class ExamsService {
 
         Student student = studentRepository.findByLegajo(dto.getLegajoStudent()).orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + dto.getLegajoStudent()));
 
+        List<ExamsEntity> examsEntityList = examsRepository.findAllBySubject_IdAndStudent_Id(subject.getId(), student.getId());
+
+        if (examsEntityList.isEmpty() && dto.getExamType().equals(ExamType.MAKEUP_EXAM)) {
+            throw new RuntimeException("No podes agregar un Recuperatorio sin parciales");
+        }
+
+        List<ExamsEntity> exams = examsEntityList.stream().filter(e -> e.getExamType().equals(ExamType.EXAM)).toList();
+        List<ExamsEntity> makeUps = examsEntityList.stream().filter(e -> e.getExamType().equals(ExamType.MAKEUP_EXAM)).toList();
+
+        if (exams.size() == makeUps.size() && dto.getExamType().equals(ExamType.MAKEUP_EXAM)) {
+            throw new RuntimeException("No pueden haber mas recuperatorios que finales");
+        }
 
         ExamsEntity exam = ExamsEntity.builder()
                 .score(dto.getScore())
@@ -44,6 +59,7 @@ public class ExamsService {
                 .build();
 
         examsRepository.save(exam);
+        subjectsXStudentService.updateAcademicStatusForExams(student, subject);
     }
 
     public Page<ExamsResponse> listExamsPaginated(int page, int size) {

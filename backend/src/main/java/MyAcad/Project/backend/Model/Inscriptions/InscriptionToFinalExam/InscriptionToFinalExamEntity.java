@@ -1,4 +1,4 @@
-package MyAcad.Project.backend.Model.InscriptionToFinalExam;
+package MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam;
 
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Programs.Program;

@@ -1,11 +1,10 @@
-package MyAcad.Project.backend.Repository;
+package MyAcad.Project.backend.Repository.Inscriptions;
 
-import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamEntity;
+import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamEntity;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.security.auth.Subject;
 import java.time.LocalDateTime;
 import java.util.List;
 

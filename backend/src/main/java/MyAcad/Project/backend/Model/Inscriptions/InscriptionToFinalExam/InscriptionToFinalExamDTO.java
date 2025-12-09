@@ -1,4 +1,4 @@
-package MyAcad.Project.backend.Model.InscriptionToFinalExam;
+package MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

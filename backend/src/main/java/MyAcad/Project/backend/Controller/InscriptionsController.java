@@ -1,9 +1,9 @@
 package MyAcad.Project.backend.Controller;
 
 import MyAcad.Project.backend.Configuration.UserDetailsImpl;
-import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamDTO;
-import MyAcad.Project.backend.Model.InscriptionToFinalExam.InscriptionToFinalExamEntity;
-import MyAcad.Project.backend.Service.InscriptionToFinalExamService;
+import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamDTO;
+import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamEntity;
+import MyAcad.Project.backend.Service.Inscriptions.InscriptionToFinalExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

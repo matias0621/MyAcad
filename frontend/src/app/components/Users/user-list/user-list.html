@@ -9,6 +9,18 @@
                 <option value="Activos">Activos</option>
                 <option value="Inactivos">Inactivos</option>
             </select>
+
+            @if (endpoint === 'students' || endpoint === 'teachers') {
+            <select class="select-filter" [(ngModel)]="filter" (change)="filterUsers()">
+                <option value="">Mostrar todo</option>
+                <option value="Activos">Activos</option>
+                <option value="Inactivos">Inactivos</option>
+
+                @for(program of listPrograms; track $index){
+                <option [value]="program.name">{{ program.name }}</option>
+                }
+            </select>
+            }
         </div>
         <table class="crud-table">
             <thead>
@@ -18,26 +30,37 @@
                     <th scope="col" class="responsive-hide-2">Apellido</th>
                     <th scope="col" class="responsive-hide">DNI</th>
                     <th scope="col" class="responsive-hide">Email</th>
+                    @if (endpoint != "managers") {
+                    <th scope="col" class="responsive-hide">Carrera</th>
+                    }
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody class="crud-table-body">
                 <!-- USERS -->
-                @for (user of users; track $index) {
+                @for (user of (filter ? filteredUsers : users); track $index) {
                 <tr class="crud-table-item">
                     <td>{{user.legajo}}</td>
                     <td>{{user.name}}</td>
                     <td class="responsive-hide-2">{{user.lastName}}</td>
                     <td class="responsive-hide">{{user.dni}}</td>
                     <td class="responsive-hide">{{user.email}}</td>
+                    @if (endpoint != "managers") {
+                    <td class="responsive-hide">
+                        @for (program of user.programs; track $index) {
+                        <p> {{ program.name }} </p>
+                        }
+                    </td>
+                    }
                     <td class="crud-table-actions">
-                        <button class="detail-crud-btn" (click)="selectedUser = user" data-bs-toggle="modal"
-                            data-bs-target="#modal-detail">Detalles</button>
+                        <button class="detail-crud-btn" (click)="selectedUser = user; getProgramByStudentId(user.id)"
+                            data-bs-toggle="modal" data-bs-target="#modal-detail">Detalles</button>
                         @if (user.active || user.enabled || user.isActive || user.status === 'ACTIVE') {
                         <button class="delete-crud-btn" (click)="deleteUser(user.id)">Eliminar</button>
                         }
                         @if (!(user.active || user.enabled || user.isActive || user.status === 'ACTIVE')) {
                         <button class="activate-crud-btn" (click)="viewDisabled(user)">Activar</button>
+                        <button class="delete-crud-btn" (click)="definitiveDeleteUser(user.id)">Eliminar</button>
                         }
                         <button class="modify-crud-btn" (click)="modifyUser(user); userEditForm.loadData(user)"
                             data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</button>
@@ -114,30 +137,36 @@
                     </div>
                     <div class="modal-body">
                         @if (selectedUser) {
-                        <div class="detail-container">
-                            <div class="detail-item">
-                                <strong>ID:</strong>
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-id-card"></i> ID</strong>
                                 <span>{{selectedUser.id}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Legajo:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-hashtag"></i> Legajo</strong>
                                 <span>{{selectedUser.legajo}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Nombre:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-user"></i> Nombre</strong>
                                 <span>{{selectedUser.name}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Apellido:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-user"></i> Apellido</strong>
                                 <span>{{selectedUser.lastName}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Email:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-envelope"></i> Email</strong>
                                 <span>{{selectedUser.email}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>DNI:</strong>
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-id-badge"></i> DNI</strong>
                                 <span>{{selectedUser.dni | number:'1.0-0'}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Carreras:</strong>
+                                @for (program of programList; track $index) {
+                                <span> {{ program.name }} </span>
+                                }
                             </div>
                         </div>
                         }

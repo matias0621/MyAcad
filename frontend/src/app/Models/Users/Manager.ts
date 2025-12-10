@@ -6,4 +6,5 @@ export default interface Manager{
     email : string;
     legajo : string;
     password : string; 
+    active: boolean
 }

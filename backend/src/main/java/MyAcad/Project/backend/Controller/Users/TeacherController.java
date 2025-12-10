@@ -99,7 +99,7 @@ public class TeacherController {
 
         try {
             List<TeacherCsvDto> teacherCsvDtos = services.parseCsv(file);
-            services.saveStudentByCsv(teacherCsvDtos);
+            services.saveTeacherByCsv(teacherCsvDtos);
             return ResponseEntity.ok().build();
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el CSV: " + e.getMessage());

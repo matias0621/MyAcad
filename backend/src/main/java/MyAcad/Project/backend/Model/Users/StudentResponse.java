@@ -1,7 +1,6 @@
 package MyAcad.Project.backend.Model.Users;
 
-import MyAcad.Project.backend.Model.Academic.CommissionResponse;
-import MyAcad.Project.backend.Model.Academic.SubjectsResponse;
+import MyAcad.Project.backend.Enum.Role;
 import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import lombok.*;
 
@@ -9,20 +8,18 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class TeacherResponse {
+public class StudentResponse {
     private Long id;
-    private String legajo;
     private String name;
-    private String password;
     private String lastName;
+    private String legajo;
     private String email;
     private int dni;
-    private boolean active;
+    private Role role;
+    private boolean isActive;
 
     private List<ProgramResponse> programs;
-    private List<SubjectsResponse> subjects;
-    private List<CommissionResponse> commissions;
 }

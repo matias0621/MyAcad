@@ -1,6 +1,9 @@
 <header>
   <nav [class.menu-open]="isMenuOpen">
     @if (!service.getRole()) {
+      <a routerLink="">
+        <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+      </a>
     }
     <!-- ---------------HEADER GESTORES--------------- -->
     @else if (service.getRole() == "ROLE_MANAGER") {
@@ -102,6 +105,15 @@
       <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa-solid fa-circle-user"></i>
       </button>
+
+      <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Inscripciones
+      </button>
+
+      <ul class="dropdown-menu">
+        <li> <a routerLink="/register-student-to-final-exam"> Inscripciones </a> </li>
+        <li><a routerLink="/inscriptionToFinalExam">Crear Inscripcion a mesa de examen</a></li>
+      </ul>
 
 
       <ul class="dropdown-menu">

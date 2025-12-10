@@ -22,7 +22,8 @@ public class SubjectsXStudentService {
     private final SubjectsXStudentRepository subjectsXStudentRepository;
     private final SubjectsXStudentMapper subjectsXStudentMapper;
     private final SubjectService subjectService;
-    private final StudentService studentService;
+    private final StudentRepository studentRepository;
+    private final ExamsRepository examsRepository;
 
     public void createSubjectsXStudent(SubjectsXStudentDTO subjectsXStudentDTO) {
         SubjectsEntity subjects = subjectService.getById(subjectsXStudentDTO.getSubjectsId()).orElseThrow();

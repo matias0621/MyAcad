@@ -51,6 +51,10 @@ export class CommissionService {
   postCommission(commission: Commission) {
     return this.http.post<Commission>(this.API_URL, commission);
   }
+  
+  uploadCsv(commissionCsv:number, formData:FormData){
+    return this.http.post(`${this.API_URL}/register-student-by-csv/${commissionCsv}`, formData)
+  }
 
   putCommission(Commission: Commission) {
     return this.http.put<Commission>(`${this.API_URL}/${Commission.id}`, Commission);

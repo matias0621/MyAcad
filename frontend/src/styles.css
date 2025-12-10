@@ -15,7 +15,6 @@
 body {
     background: #f3f4f6;
 }
-
 ul {
     padding: 0;
 }
@@ -542,6 +541,8 @@ fieldset {
     }
 
     .crud-table-actions {
+        display: flex;
+        flex-wrap: wrap;
         padding: .5em 0;
     }
 
@@ -687,9 +688,6 @@ fieldset {
     max-width: clamp(360px, 68vw, 640px);
     margin: 2.6rem auto;
     border-radius: 18px;
-    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.13);
-    background: #fff;
-    border: 1px solid #e5e7eb;
     overflow: hidden;
     animation: fadeUp 0.7s cubic-bezier(.39, .575, .565, 1) both;
 }

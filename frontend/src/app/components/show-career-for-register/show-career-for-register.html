@@ -9,7 +9,7 @@
                 <tr class="text-center">
                     <th scope="col">Legajo</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col" class="responsive-hide-2">opciones</th>
+                    <th scope="col" class="responsive-hide-2"></th>
 
                 </tr>
             </thead>
@@ -20,10 +20,10 @@
                     <td>{{program.id}}</td>
                     <td>{{program.name}}</td>
                     <td class="responsive-hide-2">
-                        <button class="exam-add-btn" data-bs-toggle="modal"
-                            data-bs-target="#modal-add-student" (click)="setName(program.name)">Inscribir alumno</button>
-                        <button class="exam-add-btn" data-bs-toggle="modal"
-                            data-bs-target="#modal-add-teacher"(click)="setName(program.name)" >Inscribir profesor</button>
+                        <button class="exam-add-btn" data-bs-toggle="modal" data-bs-target="#modal-add-student"
+                            (click)="setName(program.name)">Inscribir alumno</button>
+                        <button class="exam-add-btn" data-bs-toggle="modal" data-bs-target="#modal-add-teacher"
+                            (click)="setName(program.name)">Inscribir profesor</button>
                     </td>
                 </tr>
                 }@empty {
@@ -52,8 +52,10 @@
                 <form class="modal-form" [formGroup]="form">
                     <label for="legajo-alumno">Legajo</label>
                     <input id="legajo-alumno" type="text" formControlName="legajo" placeholder="Ingresá el legajo">
-                    <button type="button" class="modal-submit primary" (click)="addToStudent()"
-                        [disabled]="form.invalid">Añadir alumno</button>
+                    <div class="form-buttons">
+                        <button type="button" class="modal-submit primary" (click)="addToStudent()"
+                            [disabled]="form.invalid">Añadir alumno</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -74,8 +76,10 @@
                 <form class="modal-form" [formGroup]="form">
                     <label for="legajo-profesor">Legajo</label>
                     <input id="legajo-profesor" type="text" formControlName="legajo" placeholder="Ingresá el legajo">
-                    <button type="button" class="modal-submit secondary" (click)="addToTeacher()"
-                        [disabled]="form.invalid">Añadir profesor</button>
+                    <div class="form-buttons">
+                        <button type="button" class="modal-submit secondary" (click)="addToTeacher()"
+                            [disabled]="form.invalid">Añadir profesor</button>
+                    </div>
                 </form>
             </div>
         </div>

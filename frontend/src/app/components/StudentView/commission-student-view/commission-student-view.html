@@ -8,6 +8,10 @@
             <button class="subjects-state-btn" data-bs-toggle="modal" data-bs-target="#modal-subjects">Estado de
                 materias</button>
         </div>
+        <div id="subjects">
+            <button class="subjects-state-btn" data-bs-toggle="modal" data-bs-target="#modal-subjects-plan">Materias del
+                plan</button>
+        </div>
 
         <table class="crud-table">
             <thead>
@@ -31,7 +35,7 @@
                 }@empty {
                 <tr>
                     <td colspan="6" class="text-center">
-                        <p style="color: red;"> Aun no hay ninguna comisión cargado.</p>
+                        <p style="color: red;"> Aun no hay ninguna comisión cargada.</p>
                     </td>
                 </tr>
                 }
@@ -45,7 +49,6 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Id</th>
                     <th scope="col">Nota</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Materia</th>
@@ -56,7 +59,6 @@
                 <!-- USERS -->
                 @for (exams of listExams; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{exams.id}}</td>
                     <td>{{exams.score}}</td>
                     <td>{{exams.student.name}}</td>
                     <td>{{exams.subject.name}}</td>
@@ -85,15 +87,16 @@
     </div>
 </section>
 
-<!-- Modal agregar usuario -->
+<!-- Modal estado de materias -->
 <div class="modal fade crud-modal" id="modal-subjects" tabindex="-1" aria-labelledby="modal-subjects-label"
     style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
         <div class="modal-content crud-modal__content">
-            <div class="modal-header crud-modal__header">
-                <h1 class="modal-title fs-5 titles crud-modal__title">Estado de materias</h1>
-                <button type="button" class="btn-close crud-modal__close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+            <div class="modal-header justify-content-center">
+                <h1 class="modal-title fs-5 titles">Estado de materias</h1>
+                <button data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-x"></i>
+                </button>
             </div>
             <div class="modal-body crud-modal__body">
                 <div class="detail-container">
@@ -101,13 +104,48 @@
                     <div class="detail-item">
                         <strong>Materia:</strong>
                         <span>{{subjects.subjects.name}}</span>
-                    </div>
-                    <div class="detail-item">
                         <strong>Estado:</strong>
-                        <span>{{subjects.academicStatus}}</span>
+                        @if (subjects.stateStudent == 'FAILED') {
+                        <span>Recursa</span>
+                        }@else if (subjects.stateStudent == 'INPROGRESS') {
+                        <span>Cursando</span>
+                        }
+                        @else if (subjects.stateStudent == 'COMPLETED') {
+                        <span>Cursada</span>
+                        }@else if (subjects.stateStudent == 'APPROVED') {
+                        <span>Aprobada</span>
+                        }
                     </div>
                     }
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal materias del plan -->
+<div class="modal fade crud-modal" id="modal-subjects-plan" tabindex="-1" aria-labelledby="modal-subjects-plan-label"
+    style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
+        <div class="modal-content crud-modal__content">
+            <div class="modal-header justify-content-center">
+                <h1 class="modal-title fs-5 titles">Estado de materias</h1>
+                <button data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body crud-modal__body">
+                <div class="detail-container">
+                    @for (subjects of listSubjects; track $index) {
+                    <div class="detail-item">
+                        <strong>Materia:</strong>
+                        <span>{{subjects.subjects.name}}</span>
+                        <strong>Correlativas:</strong>
+                        <span>{{subjects.subjects.prerequisites}}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

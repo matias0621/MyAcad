@@ -55,7 +55,6 @@ export class CommissionStudentView implements OnInit {
     this.subjectsXStudentService.getAllSubjectsXStudent().subscribe({
       next:(res)=>{
         this.listSubjects = res.filter(item => item.subjects.program == this.programName);
-        console.log(res);
       },
       error: (err)=>{
         console.log(err);

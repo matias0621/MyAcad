@@ -5,11 +5,11 @@ import { UserForm } from '../user-form/user-form';
 import { UserEditForm } from '../user-edit-form/user-edit-form';
 import { NotificationService } from '../../../Services/notification/notification.service';
 import { DecimalPipe } from '@angular/common';
-import { ProgramService } from '../../../Services/program-service';
 import Program from '../../../Models/Program/Program';
 import Student from '../../../Models/Users/Student';
 import Teacher from '../../../Models/Users/Teachers';
 import Manager from '../../../Models/Users/Manager';
+import { ProgramService } from '../../../Services/Program/program-service';
 
 declare var bootstrap: any;
 
@@ -39,7 +39,7 @@ export class UserList implements OnInit {
   filter: string = '';
   allUsers!: any[];
   filteredUsers!: any[];
-  listPrograms!: Program[];
+  programList!: Program[];
   private allUsersLoaded = false;
   private showingAllStudents = true;
 
@@ -104,7 +104,7 @@ export class UserList implements OnInit {
   getPrograms() {
     this.programService.getPrograms().subscribe({
       next: (res) => {
-        this.listPrograms = res;
+        this.programList = res;
         console.log(res);
       },
       error: (err) => {

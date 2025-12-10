@@ -12,3 +12,8 @@
 	cursor: pointer;
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+.modal-form{
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+}

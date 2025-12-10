@@ -25,12 +25,10 @@ export class ViewStudent implements OnInit{
 
     const token:any = this.authService.getDecodedToken()
 
-    console.log(this.authService.getToken())
     if (!token) return;
     
     this.studentName = token.name
 
-    console.log(this.authService.getRole())
 
     this.programService.getProgramsByStudent(token.id).subscribe({
       next: (res) => {

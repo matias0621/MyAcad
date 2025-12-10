@@ -10,6 +10,7 @@ import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Model.Users.TeacherResponse;
 import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
+import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import MyAcad.Project.backend.Service.Users.StudentService;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,12 +31,13 @@ public class ExamsService {
     private final SubjectService subjectService;
     private final SubjectsXStudentService subjectsXStudentService;
     private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
     public void create(ExamsDTO dto) {
         SubjectsEntity subject = subjectService.getById(dto.getSubjectId())
                 .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubjectId()));
 
-        Student student = studentService.getByLegajo(dto.getLegajoStudent()).orElseThrow(() -> new ExamException("El legajo ingresado no existe"));
+        Student student = studentRepository.findByLegajo(dto.getLegajoStudent()).orElseThrow(() -> new ExamException("El legajo ingresado no existe"));
 
         if (subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), subject.getId()).isEmpty()) {
             throw new ExamException("Este alumno no está anotado a la materia ingresada.");
@@ -89,7 +91,7 @@ public class ExamsService {
         SubjectsEntity subject = subjectService.getById((long) dto.getSubjectId())
                 .orElseThrow(() -> new EntityNotFoundException("Subject not found with id: " + dto.getSubjectId()));
 
-        Student student = studentService.getByLegajo(dto.getLegajoStudent()).orElseThrow();
+        Student student = studentRepository.findByLegajo(dto.getLegajoStudent()).orElseThrow();
 
         existingExam.setScore(dto.getScore());
         existingExam.setSubject(subject);

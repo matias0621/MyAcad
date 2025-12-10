@@ -4,11 +4,6 @@
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add">Agregar</button>
             <input type="text" class="crud-search-bar" (input)="onSearch()" [(ngModel)]="search"
                 placeholder="Buscar por legajo o nombre">
-            <select class="select-filter" [(ngModel)]="filter" (change)="filterUsers()">
-                <option value="">Mostrar todos</option>
-                <option value="Activos">Activos</option>
-                <option value="Inactivos">Inactivos</option>
-            </select>
 
             @if (endpoint === 'students' || endpoint === 'teachers') {
             <select class="select-filter" [(ngModel)]="filter" (change)="filterUsers()">
@@ -16,7 +11,7 @@
                 <option value="Activos">Activos</option>
                 <option value="Inactivos">Inactivos</option>
 
-                @for(program of listPrograms; track $index){
+                @for(program of programList; track $index){
                 <option [value]="program.name">{{ program.name }}</option>
                 }
             </select>

@@ -10,6 +10,7 @@ import { AuthService } from '../../Services/Auth/auth-service';
 })
 export class Certificates {
   studentId?: number;
+  studentLegajo?: number
 
   constructor(
     private certificateService: CertificateService,
@@ -17,6 +18,7 @@ export class Certificates {
   ) {
     const decoded: any = authService.getDecodedToken();
     this.studentId = decoded ? decoded.id : null;
+    this.studentLegajo = decoded ? decoded.sub : null;
   }
 
 
@@ -27,7 +29,7 @@ export class Certificates {
         const url = window.URL.createObjectURL(pdf);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "certificado_alumno_regular.pdf";
+        a.download = this.studentLegajo + "_alumno_regular.pdf";
         a.click();
         window.URL.revokeObjectURL(url);
       });
@@ -43,7 +45,7 @@ export class Certificates {
         const url = window.URL.createObjectURL(pdf);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "certificado_alumno_regular.pdf";
+        a.download = this.studentLegajo + "_actividad_academica.pdf";
         a.click();
         window.URL.revokeObjectURL(url);
       });

@@ -53,7 +53,4 @@ public class SubjectsEntity {
     private List<SubjectsEntity> prerequisites;
     //Nombre de la carrera.
     private String program;
-
-
-
 }

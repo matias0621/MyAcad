@@ -1,6 +1,9 @@
 <header>
   <nav [class.menu-open]="isMenuOpen">
     @if (!service.getRole()) {
+      <a routerLink="">
+        <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+      </a>
     }
     <!-- ---------------HEADER GESTORES--------------- -->
     @else if (service.getRole() == "ROLE_MANAGER") {
@@ -70,8 +73,12 @@
     }
     <!-- ---------------HEADER PROFESORES--------------- -->
     @else if (service.getRole() == "ROLE_TEACHER") {
-    <a routerLink="">Inicio</a>
-
+    <a routerLink="">
+      <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+    </a>
+    <div>
+      <a routerLink="">Inicio</a>
+    </div>
     <div class="dropdown" id="dropdown-profile">
       <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa-solid fa-circle-user"></i>
@@ -85,14 +92,15 @@
     }
     <!-- ---------------HEADER ALUMNOS--------------- -->
     @else if (service.getRole() == "ROLE_STUDENT") {
-    <a routerLink="">Inicio</a>
-
-    <div class="dropdown" id="dropdown-profile">
-      <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fa-solid fa-circle-user"></i>
-      </button>
-
-      <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a routerLink="">
+      <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+    </a>
+    <div class="left-navs">
+      <a routerLink="">Inicio</a>
+      <a routerLink="/student-ticket">Boleto estudiantil</a>
+      <a routerLink="/certificates">Certificados</a>
+      <div class="dropdown">
+        <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Inscripciones
       </button>
 
@@ -100,6 +108,13 @@
         <li> <a routerLink="/register-student-to-final-exam"> Inscripciones </a> </li>
         <li><a routerLink="/inscriptionToFinalExam">Crear Inscripcion a mesa de examen</a></li>
       </ul>
+      </div>
+    </div>
+
+    <div class="dropdown" id="dropdown-profile">
+      <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-circle-user"></i>
+      </button>
 
 
       <ul class="dropdown-menu">

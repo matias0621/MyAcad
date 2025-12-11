@@ -30,12 +30,8 @@
                             data-bs-toggle="modal" data-bs-target="#modal-detail">
                             Detalles
                         </button>
-                        <button type="button" class="exam-action exam-action--secondary"
-                            (click)="addStudent(inscription.id)">
-                            Registrarse
-                        </button>
                         <button type="button" class="exam-action exam-action--primary" data-bs-toggle="modal"
-                            data-bs-target="#modal-edit">
+                            data-bs-target="#modal-edit" (click)="openEdit(inscription)">
                             Editar
                         </button>
                     </td>
@@ -71,7 +67,7 @@
                 </button>
             </div>
             <div class="modal-body exam-modal__body">
-                <app-inscription-to-exam-form></app-inscription-to-exam-form>
+                <app-inscription-to-exam-form (inscriptionCreated)="getAllInscription()"></app-inscription-to-exam-form>
             </div>
         </div>
     </div>
@@ -92,7 +88,7 @@
                 </button>
             </div>
             <div class="modal-body exam-modal__body">
-                <app-inscription-to-exam-form-edit></app-inscription-to-exam-form-edit>
+                <app-inscription-to-exam-form-edit [inscription]="editingInscription" (updated)="handleInscriptionUpdated()"></app-inscription-to-exam-form-edit>
             </div>
         </div>
     </div>
@@ -104,12 +100,12 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-narrow">
         <div class="modal-content exam-modal">
             <div class="modal-header exam-modal__header exam-modal__header--compact">
-                <h1 id="modal-detail-title" class="exam-modal__title">Detalle de la inscripción</h1>
+                <h1 id="modal-detail-title" class="exam-modal__title" style="color: #fff;">Detalle de la inscripción</h1>
                 <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
                     <i class="fa-solid fa-x"></i>
                 </button>
             </div>
-            <div class="modal-body exam-modal__body exam-modal__body--detail">
+            <div class="modal-body exam-modal__body exam-modal__body--detail" style="max-height: 480px; overflow-y: auto;">
                 @if (selectedInscription) {
                 <div class="exam-detail-grid">
                     <div class="exam-detail-item">

@@ -240,7 +240,7 @@
   margin: 0;
   font-size: 1.35rem;
   font-weight: 600;
-  color: var(--color-5);
+  color: var(--color-3);
 }
 
 .modal-close {
@@ -269,7 +269,7 @@
 
 .modal-form label {
   font-weight: 600;
-  color: var(--color-5);
+  color: var(--color-3);
   letter-spacing: 0.2px;
 }
 

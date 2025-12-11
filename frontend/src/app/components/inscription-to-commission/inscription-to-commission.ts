@@ -26,6 +26,8 @@ export class InscriptionToCommission implements OnInit {
   sub!: Subjects;
   programSelected: string | null = null;
   programName!: string;
+  selectedFile!: File
+  commissionId!: number
 
   constructor(
     public careerService: CareerService,
@@ -82,7 +84,7 @@ export class InscriptionToCommission implements OnInit {
         this.notificationService.success('Se registro el alumno correctamente');
       },
       error: (err) => {
-        this.notificationService.error('Hubo un error', true);
+        this.notificationService.error(err.error, true);
         console.log(err);
       },
     });
@@ -114,7 +116,7 @@ export class InscriptionToCommission implements OnInit {
         this.notificationService.success('Se registro el profesor correctamente');
       },
       error: (err) => {
-        this.notificationService.error('Hubo un error', true);
+        this.notificationService.error(err.error, true);
         console.log(err);
       },
     });
@@ -136,4 +138,38 @@ export class InscriptionToCommission implements OnInit {
     this.com = com;
     this.sub = s;
   }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      this.selectedFile = file;
+      this.form.patchValue({ csv: file });
+    }
+  }
+
+  setCommissionId(id:number){
+    this.commissionId = id
+  }
+
+  uploadCsv() {
+    if (!this.selectedFile){
+      this.notificationService.warning('Debe subir un archivo CSV');
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('file', this.selectedFile)
+
+    this.commisionService.uploadCsv(this.commissionId, formData).subscribe({
+      next: () => {
+        this.notificationService.success('CSV procesado correctamente')
+      },
+      error: (err) => {
+        this.notificationService.error("Error procesando el CSV")
+        console.log(err)
+      }
+    })
+  }
+
 }

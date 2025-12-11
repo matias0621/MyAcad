@@ -99,7 +99,7 @@ public class TeacherController {
 
         try {
             List<TeacherCsvDto> teacherCsvDtos = services.parseCsv(file);
-            services.saveStudentByCsv(teacherCsvDtos);
+            services.saveTeacherByCsv(teacherCsvDtos);
             return ResponseEntity.ok().build();
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el CSV: " + e.getMessage());
@@ -110,12 +110,6 @@ public class TeacherController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTeacher(@PathVariable(name = "id") Long id){
         return services.delete(id);
-    }
-
-    // Baja definitiva
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> definitiveDeleteTeacher(@PathVariable Long id) {
-        return services.definitiveDeleteTeacher(id);
     }
     //PUT
     @PutMapping

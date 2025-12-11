@@ -2,22 +2,27 @@ package MyAcad.Project.backend.Controller.Academic;
 
 import MyAcad.Project.backend.Configuration.UserDetailsImpl;
 import MyAcad.Project.backend.Exception.CommissionAlreadyExistsException;
+import MyAcad.Project.backend.Exception.InscriptionException;
 import MyAcad.Project.backend.Model.Academic.Commission;
 import MyAcad.Project.backend.Model.Academic.CommissionDTO;
 import MyAcad.Project.backend.Model.Academic.CommissionResponse;
+import MyAcad.Project.backend.Model.RegistrationStudent.RegisterStudentToCommissionByCsv;
 import MyAcad.Project.backend.Model.RegistrationStudent.RegistrationRequest;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Service.Academic.CommissionService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -90,6 +95,22 @@ public class CommissionController {
         }
     }
 
+    @PostMapping("/register-student-by-csv/{commissionId}")
+    public ResponseEntity<?> uploadStudentCSV(@RequestParam("file") MultipartFile file, @PathVariable Long commissionId) {
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("El archivo esta vacio");
+        }
+
+        try {
+            List<RegisterStudentToCommissionByCsv> list = services.parseCsv(file);
+            services.registerStudentByCsv(list, commissionId);
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el CSV: " + e.getMessage());
+        }
+    }
+
     //DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCommission(@PathVariable(name = "id") Long id){
@@ -127,14 +148,22 @@ public class CommissionController {
 
     @PutMapping("/register-student-by-manager/{id}")
     public ResponseEntity<?> registerStudent(@PathVariable Long id, @RequestBody RegistrationRequest request){
-        services.registerStudentbyManager(request.getLegajo(), id, request.getSubjectsId());
-        return ResponseEntity.ok().build();
+        try {
+            services.registerStudentbyManager(request.getLegajo(), id, request.getSubjectsId());
+            return ResponseEntity.ok().build();
+        }catch (InscriptionException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/register-teacher-by-manager/{id}")
     public ResponseEntity<?> registerTeacher(@PathVariable Long id, @RequestBody RegistrationRequest request){
-        services.registerTeacherToProgram(request.getLegajo(), id, request.getSubjectsId());
-        return ResponseEntity.ok().build();
+        try {
+            services.registerTeacherToProgram(request.getLegajo(), id, request.getSubjectsId());
+            return ResponseEntity.ok().build();
+        }catch (InscriptionException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/register-commision-to-student/{id}")

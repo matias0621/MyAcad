@@ -1,5 +1,5 @@
-import { ProgramService } from './../../Services/program-service';
-import { Component, OnInit } from '@angular/core';
+import { ProgramService } from '../../Services/Program/program-service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InscriptionToFinalExamService } from '../../Services/InscriptionToFinalExam/inscription-to-final-exam-service';
 import { SubjectsService } from '../../Services/Subjects/subjects-service';
@@ -11,7 +11,6 @@ import Program from '../../Models/Program/Program';
 import Subjects from '../../Models/Subjects/Subjects';
 
 
-
 @Component({
   selector: 'app-inscription-to-exam-form',
   imports: [ReactiveFormsModule, CommonModule],
@@ -19,6 +18,7 @@ import Subjects from '../../Models/Subjects/Subjects';
   styleUrl: './inscription-to-exam-form.css',
 })
 export class InscriptionToExamForm implements OnInit {
+  @Output() inscriptionCreated = new EventEmitter<void>();
   form!: FormGroup;
   inscriptionDate!: FormControl;
   finalExamDate!: FormControl;
@@ -26,7 +26,6 @@ export class InscriptionToExamForm implements OnInit {
   programName!:FormControl
   programs!:Program[]
   subjectsList!:Subjects[]
-  selectedSubjectName: string | null = null;
 
   constructor(
     public inscriptionToFinalExamService: InscriptionToFinalExamService,
@@ -61,10 +60,9 @@ export class InscriptionToExamForm implements OnInit {
     })
   }
 
-  addToSubject(idSubject: number, subjectName: string) {
+  addToSubject(idSubject: number) {
     this.subjectId = idSubject;
-    this.selectedSubjectName = subjectName;
-    this.notificationService.info(`Materia asignada: ${subjectName}`);
+    this.notificationService.info('Materia asignada a la inscripción.');
   }
 
   getInscription() {
@@ -115,7 +113,7 @@ export class InscriptionToExamForm implements OnInit {
 
   OnSubmit() {
     if (this.subjectId === null) {
-      this.notificationService.warning('Seleccioná una materia antes de guardar la inscripción.');
+      this.notificationService.error('Debe seleccionar una materia antes de inscribirse al examen.', true);
       return;
     }
 
@@ -148,11 +146,22 @@ export class InscriptionToExamForm implements OnInit {
         this.getInscription();
         this.form.reset();
         this.subjectId = null;
-        this.selectedSubjectName = null;
+        this.form.markAsPristine();
+        this.form.markAsUntouched();
+        this.inscriptionCreated.emit();
       },
       error: (err) => {
         this.notificationService.error(err.error, true);
       },
     });
+  }
+
+  get selectedSubjectName(): string | null {
+    if (this.subjectId === null) {
+      return null;
+    }
+
+    const subject = this.subjectsServices.listSubject.find(sub => sub.id === this.subjectId);
+    return subject ? subject.name : null;
   }
 }

@@ -5,21 +5,31 @@ import MyAcad.Project.backend.Exception.InscriptionException;
 import MyAcad.Project.backend.Mapper.CommissionMapper;
 import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Programs.Program;
+import MyAcad.Project.backend.Model.RegistrationStudent.RegisterStudentToCommissionByCsv;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
+import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +42,7 @@ public class CommissionService {
     private final SubjectsRepository subjectsRepository;
     private final StudentRepository studentRepository;
     private final SubjectsXStudentService subjectsXStudentService;
+    private final SubjectsXStudentRepository subjectsXStudentRepository;
     private final TeacherRepository teacherRepository;
     private final ProgramRepository programRepository;
 
@@ -73,6 +84,29 @@ public class CommissionService {
         }
         repository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    public List<RegisterStudentToCommissionByCsv> parseCsv(MultipartFile file) throws IOException {
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            CsvToBean<RegisterStudentToCommissionByCsv> csvToBean = new CsvToBeanBuilder<RegisterStudentToCommissionByCsv>(reader)
+                    .withType(RegisterStudentToCommissionByCsv.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            return csvToBean.parse();
+        }
+    }
+
+    public void registerStudentByCsv(List<RegisterStudentToCommissionByCsv> listStudent, Long commissionId){
+        Commission commission = repository.findById(commissionId).orElseThrow();
+
+        for (RegisterStudentToCommissionByCsv studentToRegister: listStudent) {
+            Student student = studentRepository.findByLegajo(studentToRegister.getLegajo()).orElseThrow();
+            for (SubjectsEntity subjects: commission.getSubjects()) {
+                registerToStudent(student, commission, subjects);
+            }
+        }
+
+        repository.save(commission);
     }
 
     public List<CommissionResponse> list() {
@@ -226,24 +260,38 @@ public class CommissionService {
     }
 
     public void registerStudentbyManager(String legajo, Long commissionId, Long subjectsId){
-        Student s = studentRepository.findByLegajo(legajo).orElseThrow();
+        Optional<Student> studentOptional = studentRepository.findByLegajo(legajo);
         Commission commission = repository.findById(commissionId).orElseThrow();
         SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
-        registerToStudent(s, commission, subjectsEntity);
+
+        if (studentOptional.isEmpty()){
+            throw new InscriptionException("El legajo no existe.");
+        }
+        try {
+            Student s = studentOptional.get();
+            registerToStudent(s, commission, subjectsEntity);
+        }catch (InscriptionException e){
+            throw new InscriptionException(e.getMessage());
+        }
     }
 
     public void registerStudentByToken(Long studentId, Long commissionId, Long subjectsId){
         Student s = studentRepository.findById(studentId).orElseThrow();
         Commission commission = repository.findById(commissionId).orElseThrow();
         SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
-        registerToStudent(s, commission, subjectsEntity);
+        try {
+            registerToStudent(s, commission, subjectsEntity);
+        }catch (InscriptionException e){
+            throw new InscriptionException(e.getMessage());
+        }
     }
 
     public void registerToStudent(Student student, Commission commission, SubjectsEntity subjectsEntity){
 
+        Optional<Student> optStudent = studentRepository.findById(student.getId());
 
-        if (commission.getStudents().size() >= commission.getCapacity()){
-            throw new InscriptionException("Esta comision esta llena");
+        if (optStudent.isEmpty()){
+            throw new InscriptionException("El legajo no existe.");
         }
 
         if (!commission.getStudents().contains(student)){
@@ -251,7 +299,7 @@ public class CommissionService {
         }
 
         if (subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), subjectsEntity.getId()).isPresent()){
-            throw new RuntimeException("Subject already exists");
+            throw new InscriptionException("El alumno ya está anotado a la materia.");
         }
 
         if (!subjectsEntity.getPrerequisites().isEmpty()){
@@ -282,7 +330,15 @@ public class CommissionService {
     public void registerTeacherToProgram(String legajo, Long commissionId, Long subjectsId){
         Commission commission = repository.findById(commissionId).orElseThrow();
         SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
-        Teacher teacher = teacherRepository.findByLegajo(legajo).orElseThrow();
+        Optional<Teacher> teacherOpt = teacherRepository.findByLegajo(legajo);
+
+        if (teacherOpt.isEmpty()){
+            throw new InscriptionException("El legajo no existe.");
+        }
+        Teacher teacher = teacherOpt.get();
+
+
+
         // Asignamos un profesor a la carrera
         Program program = findProgramByName(commission.getProgram());
         program.getTeachers().add(teacher);
@@ -299,8 +355,7 @@ public class CommissionService {
     }
 
     private void validatePrerequisite(Student student, SubjectsEntity prerequisite) {
-        Optional<SubjectsXStudentEntity> opt = subjectsXStudentService
-                .getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), prerequisite.getId());
+        Optional<SubjectsXStudentEntity> opt = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(student.getId(), prerequisite.getId());
 
         if (opt.isEmpty()) {
             throw new RuntimeException("Subject not found");
@@ -313,15 +368,15 @@ public class CommissionService {
         switch (statusRequired) {
             case COMPLETED -> {
                 if (!(statusStudent.equals(AcademicStatus.COMPLETED) || statusStudent.equals(AcademicStatus.APPROVED))) {
-                    throw new RuntimeException("1");
+                    throw new InscriptionException("El alumno no ha aprobado las correlativas.");
                 }
             }
             case APPROVED -> {
                 if (!statusStudent.equals(AcademicStatus.APPROVED)) {
-                    throw new RuntimeException("2");
+                    throw new InscriptionException("El alumno no ha aprobado las correlativas.");
                 }
             }
-            default -> throw new RuntimeException("Can't register in this subject");
+            default -> throw new InscriptionException("El alumno no ha aprobado las correlativas.");
         }
     }
 

@@ -10,4 +10,3 @@ export default interface Subjects {
   program : string;
   subjectActive: boolean
 }
-

@@ -19,4 +19,7 @@ public class StudentCsvDto {
 
     @CsvBindByName(column = "email")
     private String email;
+
+    @CsvBindByName(column = "carrera")
+    private String career;
 }

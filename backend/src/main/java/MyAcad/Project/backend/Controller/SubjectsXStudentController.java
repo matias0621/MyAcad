@@ -2,6 +2,7 @@ package MyAcad.Project.backend.Controller;
 
 import MyAcad.Project.backend.Model.Academic.SubjectsXStudentDTO;
 import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentResponse;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,22 +17,22 @@ public class SubjectsXStudentController {
     private final SubjectsXStudentService subjectsXStudentService;
 
     @GetMapping
-    public ResponseEntity<List<SubjectsXStudentEntity>> getAllSubjectsXStudents() {
+    public ResponseEntity<List<SubjectsXStudentResponse>> getAllSubjectsXStudents() {
         return ResponseEntity.ok(subjectsXStudentService.getAllSubjectsXStudent());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubjectsXStudentEntity> getSubjectsXStudentById(@PathVariable Long id) {
+    public ResponseEntity<SubjectsXStudentResponse> getSubjectsXStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(subjectsXStudentService.getSubjectsXStudentById(id));
     }
 
     @GetMapping("/student/{id}")
-    public ResponseEntity<List<SubjectsXStudentEntity>> getSubjectsXStudentByStudentId(@PathVariable Long id) {
+    public ResponseEntity<List<SubjectsXStudentResponse>> getSubjectsXStudentByStudentId(@PathVariable Long id) {
         return ResponseEntity.ok(subjectsXStudentService.getAllSubjectsXStudentByStudentId(id));
     }
 
     @GetMapping("/student/{studentId}/subject/{subjectId}")
-    public ResponseEntity<SubjectsXStudentEntity> getSubjectsXStudentBySubjectIdAndStudentId(@PathVariable Long studentId, @PathVariable Long subjectId) {
+    public ResponseEntity<SubjectsXStudentResponse> getSubjectsXStudentBySubjectIdAndStudentId(@PathVariable Long studentId, @PathVariable Long subjectId) {
         return ResponseEntity.ok(subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(studentId, subjectId).orElseThrow());
     }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../Services/Auth/auth-service';
-import { ProgramService } from '../../Services/program-service';
+import { ProgramService } from '../../Services/Program/program-service';
 import Program from '../../Models/Program/Program';
 import { RouterLink } from '@angular/router';
 import { ViewStudent } from '../../components/StudentView/view-student/view-student';

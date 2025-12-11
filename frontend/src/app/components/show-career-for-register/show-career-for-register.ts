@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProgramService } from '../../Services/program-service';
+import { ProgramService } from '../../Services/Program/program-service';
 import Program from '../../Models/Program/Program';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';

@@ -1,8 +1,11 @@
 package MyAcad.Project.backend.Controller;
 
 import MyAcad.Project.backend.Configuration.UserDetailsImpl;
+import MyAcad.Project.backend.Model.Inscriptions.InscriptionToCommission.InscriptionToCommissionDTO;
+import MyAcad.Project.backend.Model.Inscriptions.InscriptionToCommission.InscriptionToCommissionResponse;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamDTO;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamEntity;
+import MyAcad.Project.backend.Service.Inscriptions.InscriptionToCommissionService;
 import MyAcad.Project.backend.Service.Inscriptions.InscriptionToFinalExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,50 +21,88 @@ import java.util.List;
 public class InscriptionsController {
 
     private final InscriptionToFinalExamService inscriptionToFinalExamService;
+    private final InscriptionToCommissionService inscriptionToCommissionService;
 
-    @GetMapping
+    @GetMapping("/final-exam")
     public ResponseEntity<List<InscriptionToFinalExamEntity>> findAll() {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptions());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/commission")
+    public ResponseEntity<List<InscriptionToCommissionResponse>> findAllInscriptionsCommission(){
+        return ResponseEntity.ok(inscriptionToCommissionService.findAll());
+    }
+
+    @GetMapping("/final-exam/{id}")
     public ResponseEntity<InscriptionToFinalExamEntity> findById(@PathVariable Long id) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getInscriptionById(id));
     }
 
-    @GetMapping("/date-inscription/{date}")
+    @GetMapping("/final-exam/commission/{id}")
+    public ResponseEntity<InscriptionToCommissionResponse> findCommissionById(@PathVariable Long id) {
+        return ResponseEntity.ok(inscriptionToCommissionService.findById(id));
+    }
+
+    @GetMapping("/final-exam/date-inscription/{date}")
     public ResponseEntity<List<InscriptionToFinalExamEntity>> findByInscriptionDate(@PathVariable String date) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsByInscriptionDate(date));
     }
 
-    @GetMapping("/date-exam/{date}")
+    @GetMapping("/commission/inscriptions/{dateInscription}")
+    public ResponseEntity<List<InscriptionToCommissionResponse>> findByCommissionDate(@PathVariable String dateInscription) {
+        return ResponseEntity.ok(inscriptionToCommissionService.findByinscriptionDate(dateInscription));
+    }
+
+    @GetMapping("/final-exam/date-exam/{date}")
     public ResponseEntity<List<InscriptionToFinalExamEntity>> findByInscriptionDateExam(@PathVariable String date) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsByExamDate(date));
     }
 
-    @GetMapping("/subjects/{id}")
+    @GetMapping("/commission/finishDate/{finishDate}")
+    public ResponseEntity<List<InscriptionToCommissionResponse>> findByInscriptionDateFinish(@PathVariable String finishDate) {
+        return ResponseEntity.ok(inscriptionToCommissionService.findByfinishInscription(finishDate));
+    }
+
+    @GetMapping("/final-exam/subjects/{id}")
     public ResponseEntity<List<InscriptionToFinalExamEntity>> findBySubjectId(@PathVariable Long id) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsBySubjectId(id));
     }
 
-    @GetMapping("/final-exams-students/{studentId}")
+    @GetMapping("/commission/find/{id}")
+    public ResponseEntity<List<InscriptionToCommissionResponse>> findByCommissionId(@PathVariable Long id) {
+        return ResponseEntity.ok(inscriptionToCommissionService.findAllByCommissionId(id));
+    }
+
+    @GetMapping("/final-exam/final-exams-students/{studentId}")
     public ResponseEntity<List<InscriptionToFinalExamEntity>> findByFinalExamStudentId(@PathVariable Long studentId) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getActiveInscriptionsForStudent(studentId));
     }
 
-    @PostMapping
+    @PostMapping("/final-exam")
     public ResponseEntity<InscriptionToFinalExamDTO> save(@RequestBody InscriptionToFinalExamDTO entity) {
         inscriptionToFinalExamService.createInscription(entity);
         return ResponseEntity.ok(entity);
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/commission")
+    public ResponseEntity<?> saveCommission(@RequestBody InscriptionToCommissionDTO entity) {
+        inscriptionToCommissionService.createInscription(entity);
+        return ResponseEntity.ok(entity);
+    }
+
+    @PutMapping("/final-exam/{id}")
     public ResponseEntity<InscriptionToFinalExamDTO> update(@PathVariable Long id, @RequestBody InscriptionToFinalExamDTO entity) {
         inscriptionToFinalExamService.updateInscription(entity, id);
         return ResponseEntity.ok(entity);
     }
 
-    @PutMapping("/register-student-for-exam/{id}")
+    @PutMapping("/commission/update/{id}")
+    public ResponseEntity<?> updateCommission(@PathVariable Long id, @RequestBody InscriptionToCommissionDTO entity) {
+        inscriptionToCommissionService.updateInscription(entity, id);
+        return ResponseEntity.ok(entity);
+    }
+
+    @PutMapping("/final-exam/register-student-for-exam/{id}")
     public ResponseEntity<?> inscriptionAtStudentToExam(@PathVariable Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -72,9 +113,16 @@ public class InscriptionsController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/final-exam/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         inscriptionToFinalExamService.deleteInscription(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/commission/{id}")
+    public ResponseEntity<Void> deleteCommission(@PathVariable Long id) {
+        inscriptionToCommissionService.deleteInscriptionById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

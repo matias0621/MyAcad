@@ -11,11 +11,13 @@ import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
 import MyAcad.Project.backend.Repository.Inscriptions.InscriptionToCommissionRepository;
 import MyAcad.Project.backend.Service.Academic.CommissionService;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Service
 @AllArgsConstructor
 public class InscriptionToCommissionService {
     private final InscriptionToCommissionRepository inscriptionToCommissionRepository;

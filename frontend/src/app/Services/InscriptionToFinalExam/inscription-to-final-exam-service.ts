@@ -9,7 +9,7 @@ import {
   providedIn: 'root',
 })
 export class InscriptionToFinalExamService {
-  readonly api_url = 'http://localhost:8080/inscriptions';
+  readonly api_url = 'http://localhost:8080/inscriptions/final-exam';
 
   inscriptionList: InscriptionToFinalExam[] = [];
 

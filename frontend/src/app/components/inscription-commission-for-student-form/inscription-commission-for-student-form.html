@@ -1,0 +1,48 @@
+<form class="exam-form" [formGroup]="form" (submit)="OnSubmit()">
+    <div class="exam-form-field">
+        <label for="inscription-date">Fecha de inscripción</label>
+        <input id="inscription-date" type="datetime-local" formControlName="inscriptionDate"
+            placeholder="Seleccioná la fecha y hora de apertura">
+    </div>
+
+    <div class="exam-form-field">
+        <label for="final-date">Fecha de cierre</label>
+        <input id="final-date" type="datetime-local" formControlName="finishDate"
+            placeholder="Seleccioná la fecha y hora del examen">
+    </div>
+
+    <div class="exam-form-field">
+        <label for="final-date">Carrera</label>
+        <select name="programName" id="programName" formControlName="programName">
+            @for (program of programs; track $index) {
+                <option [value]="program.name"> {{ program.name }} </option>
+            }
+        </select>
+    </div>
+
+
+    <button type="submit" class="exam-form-submit" [disabled]="form.invalid || commissionId === null">Guardar inscripción</button>
+</form>
+
+<section class="exam-form-subjects">
+    <header class="exam-form-subjects__header">
+        <h3>Comisiones disponibles</h3>
+        <p>Asigná la comision correspondiente a esta inscripcion.</p>
+    </header>
+
+    @if (form.get('programName')?.errors?.['required']) {
+    <p class="exam-empty-text">Aún no hay materias cargadas en el sistema.</p>
+    }
+    @else {
+    <ul class="exam-subject-list">
+        @for (commission of commissionList; track $index) {
+        <li class="exam-subject-item" [class.exam-subject-item--selected]="commissionId === commission.id">
+            <span class="exam-subject-name">Comision {{ commission.number }}</span>
+            <span class="exam-subject-name">Capacidad: {{ commission.capacity }}</span>
+            <button type="button" class="exam-subject-action"
+                (click)="addToCommission(commission.id)">Asignar</button>
+        </li>
+        }
+    </ul>
+    }
+</section>

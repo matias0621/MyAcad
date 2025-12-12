@@ -96,7 +96,7 @@ public class InscriptionsController {
         return ResponseEntity.ok(entity);
     }
 
-    @PutMapping("/commission/update/{id}")
+    @PutMapping("/commission/{id}")
     public ResponseEntity<?> updateCommission(@PathVariable Long id, @RequestBody InscriptionToCommissionDTO entity) {
         inscriptionToCommissionService.updateInscription(entity, id);
         return ResponseEntity.ok(entity);

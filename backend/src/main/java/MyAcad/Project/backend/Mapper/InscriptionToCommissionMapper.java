@@ -4,6 +4,7 @@ import MyAcad.Project.backend.Model.Inscriptions.InscriptionToCommission.Inscrip
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToCommission.InscriptionToCommissionEntity;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToCommission.InscriptionToCommissionResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -11,6 +12,10 @@ import java.util.List;
 public interface InscriptionToCommissionMapper {
     InscriptionToCommissionEntity toEntity(InscriptionToCommissionDTO inscriptionToCommissionDTO);
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "commission", target = "commission")
+    @Mapping(source = "inscriptionDate", target = "inscriptionDate")
+    @Mapping(source = "finishInscriptionDate", target = "finishInscriptionDate")
     InscriptionToCommissionResponse toResponse(InscriptionToCommissionEntity inscriptionToCommissionEntity);
     List<InscriptionToCommissionResponse> toResponseList(List<InscriptionToCommissionEntity> inscriptionToCommissionEntityList);
 }

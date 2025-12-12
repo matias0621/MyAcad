@@ -52,6 +52,7 @@ export class InscriptionToExamForm implements OnInit {
 
     this.programName.valueChanges.subscribe({
       next: () => {
+        console.log("AAAAAAAAAAAAAA")
         this.getSubjectsByNameProgram(this.programName.value)
       },
       error: (err) => {
@@ -102,6 +103,7 @@ export class InscriptionToExamForm implements OnInit {
     this.subjectsServices.getByProgram(careerName).subscribe({
       next: (res) => {
         this.subjectsList = res;
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
       },
       error: (err) => {
         console.error(err);

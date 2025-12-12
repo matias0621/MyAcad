@@ -1,0 +1,137 @@
+<section class="exam-inscription" aria-labelledby="final-inscriptions-title">
+    <header class="exam-header">
+        <div class="exam-header-text">
+            <h2 id="final-inscriptions-title" class="exam-title">Inscripción a comisiones</h2>
+
+        </div>
+        <button type="button" class="exam-add-btn" data-bs-toggle="modal" data-bs-target="#modal-add">
+            Nueva inscripción
+        </button>
+    </header>
+
+    <div class="exam-table-wrapper">
+        <table class="exam-table">
+            <thead>
+                <tr>
+                    <th scope="col">Materia</th>
+                    <th scope="col">Fecha examen</th>
+                    <th scope="col" class="responsive-hide-2">Fecha inscripción</th>
+                    <th scope="col" class="exam-table-actions-header">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (inscription of inscriptionList; track $index) {
+                <tr>
+                    <td data-label="Materia">{{ inscription.commission.program}}</td>
+                    <td data-label="Materia">{{ inscription.commission.number}}</td>
+                    <td data-label="Fecha examen">{{ inscription.finishInscriptionDate| date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="responsive-hide-2" data-label="Fecha inscripción">{{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="exam-actions" data-label="Acciones">
+                        <button type="button" class="exam-action exam-action--info" (click)="selectedInscription = inscription"
+                            data-bs-toggle="modal" data-bs-target="#modal-detail">
+                            Detalles
+                        </button>
+                        <button type="button" class="exam-action exam-action--primary" data-bs-toggle="modal"
+                            data-bs-target="#modal-edit" (click)="openEdit(inscription)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="4" class="exam-empty-state">
+                        Aún no hay inscripciones a finales cargadas.
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="exam-pagination">
+        <ul class="pagination-container"></ul>
+    </div>
+</section>
+
+<!-- Modal agregar inscripción -->
+<div class="modal fade" id="modal-add" tabindex="-1" aria-labelledby="modal-add-title" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-medium">
+        <div class="modal-content exam-modal">
+            <div class="modal-header exam-modal__header">
+                <div>
+                    <p class="exam-modal__tag">Nueva mesa final</p>
+                    <h1 id="modal-add-title" class="exam-modal__title">Crear inscripción</h1>
+                </div>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body exam-modal__body">
+                <app-inscription-commission-for-student-form (inscriptionCreated)="getAllInscription()"></app-inscription-commission-for-student-form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal editar inscripción -->
+<div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-title" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-medium">
+        <div class="modal-content exam-modal">
+            <div class="modal-header exam-modal__header">
+                <div>
+                    <p class="exam-modal__tag">Actualizar mesa final</p>
+                    <h1 id="modal-edit-title" class="exam-modal__title">Editar inscripción</h1>
+                </div>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body exam-modal__body">
+                <app-inscription-commission-for-student-form-edit [inscription]="editingInscription" (updated)="handleInscriptionUpdated()"></app-inscription-commission-for-student-form-edit>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal ver detalle -->
+<div class="modal fade" id="modal-detail" tabindex="-1" aria-labelledby="modal-detail-title" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-narrow">
+        <div class="modal-content exam-modal">
+            <div class="modal-header exam-modal__header exam-modal__header--compact">
+                <h1 id="modal-detail-title" class="exam-modal__title" style="color: #fff;">Detalle de la inscripción</h1>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body exam-modal__body exam-modal__body--detail" style="max-height: 480px; overflow-y: auto;">
+                @if (selectedInscription) {
+                <div class="exam-detail-grid">
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">ID</span>
+                        <span class="exam-detail-value">{{ selectedInscription.id }}</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">Carrera</span>
+                        <span class="exam-detail-value">{{ selectedInscription.commission.program}}</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">Comision</span>
+                        <span class="exam-detail-value">{{ selectedInscription.commission.number}}</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">Fecha de inscripción</span>
+                        <span class="exam-detail-value">{{ selectedInscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <span class="exam-detail-label">Fecha de cierre</span>
+                        <span class="exam-detail-value">{{ selectedInscription.finishInscriptionDate| date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

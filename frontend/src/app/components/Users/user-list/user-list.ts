@@ -132,30 +132,29 @@ export class UserList implements OnInit {
   }
 
   deleteUser(id: number) {
-    this.notificationService
-      .confirm(
-        '¿Estás seguro de que deseas eliminar este usuario?',
-        'Confirmar eliminación',
-        'Eliminar',
-        'Cancelar'
-      )
-      .then((confirmed) => {
-        if (confirmed) {
-          this.service.deleteUser(id, this.endpoint).subscribe({
-            next: (data) => {
-              this.notificationService.success('Usuario eliminado exitosamente');
-              this.getUsers();
-            },
-            error: (error) => {
-              this.notificationService.error(
-                'Error al eliminar el usuario. Por favor, intenta nuevamente',
-                true
-              );
-              console.error(error);
-            },
-          });
-        }
-      });
+    if (id === 1) {
+      this.notificationService.warning('No se puede eliminar el gestor principal.');
+      return;
+    }
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar este usuario?',
+      'Confirmar eliminación',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.service.deleteUser(id, this.endpoint).subscribe({
+          next: (data) => {
+            this.notificationService.success('Usuario eliminado exitosamente');
+            this.getUsers();
+          },
+          error: (error) => {
+            this.notificationService.error('Error al eliminar el usuario. Por favor, intenta nuevamente', true);
+            console.error(error);
+          }
+        });
+      }
+    });
   }
 
   // BAJA DEFINITIVA

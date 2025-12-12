@@ -86,6 +86,9 @@ public class ManagerService {
     }
     
     public ResponseEntity<Void> delete(Long id){
+        if (id == 1){
+            throw new RuntimeException("No se puede eliminar este manager");
+        }
         Optional<Manager> optionalManager = repository.findById(id);
         if (optionalManager.isEmpty()) {
             return ResponseEntity.notFound().build();

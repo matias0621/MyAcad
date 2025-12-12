@@ -97,6 +97,10 @@ export class UserList implements OnInit {
   }
 
   deleteUser(id: number) {
+    if (id === 1) {
+      this.notificationService.warning('No se puede eliminar el gestor principal.');
+      return;
+    }
     this.notificationService.confirm(
       '¿Estás seguro de que deseas eliminar este usuario?',
       'Confirmar eliminación',

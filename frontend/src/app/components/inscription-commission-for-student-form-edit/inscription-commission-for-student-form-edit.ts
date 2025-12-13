@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { InscriptionToCommission, PostInscriptionToCommission } from '../../Models/InscriptionToCommission/InscritionToCommission';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InscriptionToCommissionService } from '../../Services/InscriptionToCommission/inscription-to-commission-service';
@@ -14,7 +14,7 @@ import { NotificationService } from '../../Services/notification/notification.se
   templateUrl: './inscription-commission-for-student-form-edit.html',
   styleUrl: './inscription-commission-for-student-form-edit.css'
 })
-export class InscriptionCommissionForStudentFormEdit {
+export class InscriptionCommissionForStudentFormEdit implements OnInit, OnChanges {
 
   @Input() inscription: InscriptionToCommission | null = null;
   @Output() updated = new EventEmitter<void>();
@@ -61,6 +61,14 @@ export class InscriptionCommissionForStudentFormEdit {
     })
   }
 
+  // Detectar cambios en el @Input inscription
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['inscription'] && this.inscription) {
+      console.log('Inscription received:', this.inscription);
+      this.setValuesOfInscription(this.inscription);
+    }
+  }
+
   addToCommission(id: number) {
     this.commissionId = id;
     this.notificationService.info('Comision asignada a la inscripción.');
@@ -77,6 +85,13 @@ export class InscriptionCommissionForStudentFormEdit {
     });
   }
 
+  setValuesOfInscription(inscription:InscriptionToCommission){
+    this.programName.setValue(inscription.commission.program)
+    this.inscriptionDate.setValue(inscription.inscriptionDate)
+    this.finishDate.setValue(inscription.finishInscriptionDate)
+    this.idInscription = inscription.id
+    this.commissionId = inscription.commission.id
+  }
 
   getProgram() {
     this.programService.getPrograms().subscribe({
@@ -138,13 +153,12 @@ export class InscriptionCommissionForStudentFormEdit {
     this.inscriptionsCommission.updateInscription(this.idInscription ,inscriptionUpdate).subscribe({
       next: () => {
         this.notificationService.success("Se creo con exito la nueva inscripcion")
+        this.getInscription()
       },
       error: (err) => {
         console.log(err)
         this.notificationService.error("Hubo un error", true)
       }
     })
-
   }
-
 }

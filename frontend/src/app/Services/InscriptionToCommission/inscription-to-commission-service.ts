@@ -30,6 +30,10 @@ export class InscriptionToCommissionService {
     return this.http.get<InscriptionToCommission[]>(`${this.apiUrl}/find/${commissionId}`)
   }
 
+  getInscriptionByStudent(studentId:number){
+    return this.http.get<InscriptionToCommission[]>(`${this.apiUrl}/student/${studentId}`)
+  }
+
   saveInscription(inscription:PostInscriptionToCommission){
     return this.http.post(this.apiUrl, inscription)
   }

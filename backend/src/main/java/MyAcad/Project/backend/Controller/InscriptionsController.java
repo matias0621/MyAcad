@@ -78,6 +78,16 @@ public class InscriptionsController {
         return ResponseEntity.ok(inscriptionToFinalExamService.getActiveInscriptionsForStudent(studentId));
     }
 
+    @GetMapping("/commission/student/{id}")
+    public ResponseEntity<List<InscriptionToCommissionResponse>> findByStudentId(@PathVariable Long id) {
+        return ResponseEntity.ok(inscriptionToCommissionService.findByCareertoStudent(id));
+    }
+
+    @GetMapping("/commission/inscriptionsBeforeFinish")
+    public ResponseEntity<List<InscriptionToCommissionResponse>> findByInscriptionsBeforeFinish() {
+        return ResponseEntity.ok(inscriptionToCommissionService.findByInscriptionDateBeforeAndFinishInscriptionDateAfter());
+    }
+
     @PostMapping("/final-exam")
     public ResponseEntity<InscriptionToFinalExamDTO> save(@RequestBody InscriptionToFinalExamDTO entity) {
         inscriptionToFinalExamService.createInscription(entity);

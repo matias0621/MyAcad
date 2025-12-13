@@ -1,1 +1,39 @@
-<p>register-commission works!</p>
+<section class="exam-inscription" aria-labelledby="final-inscriptions-title">
+    @for (inscription of inscriptionList; track $index) {
+    <section class="exam-header">
+        <div class="exam-header-text">
+            <h2 id="final-inscriptions-title" class="exam-title">Comision {{inscription.commission.number}} </h2>
+        </div>
+    </section>
+
+    <div class="exam-table-wrapper">
+        <table class="exam-table">
+            <thead>
+                <tr>
+                    <th scope="col"> Carrera </th>
+                    <th scope="col"> Materia </th>
+                    <th scope="col" class="exam-table-actions-header">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (subject of inscription.commission.subjects; track $index) {
+                <tr>
+                    <td data-label="Materia">{{ inscription.commission.program}}</td>
+                    <td data-label="Materia"> {{ subject.name }} </td>
+                    <td class="exam-actions" data-label="Acciones">
+                        
+                        <button type="button" class="exam-action exam-action--info"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal-detail"
+                            (click)="registerByStudent(subject.id, inscription.commission.id)"
+                            >
+                            Registrarse
+                        </button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</section>

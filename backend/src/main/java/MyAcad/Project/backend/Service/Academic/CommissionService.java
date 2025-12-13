@@ -276,9 +276,15 @@ public class CommissionService {
     }
 
     public void registerStudentByToken(Long studentId, Long commissionId, Long subjectsId){
-        Student s = studentRepository.findById(studentId).orElseThrow();
-        Commission commission = repository.findById(commissionId).orElseThrow();
-        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
+        Student s = studentRepository.findById(studentId).orElseThrow(() -> new InscriptionException(
+                "No existe el estudiante con id " + studentId
+        ));
+        Commission commission = repository.findById(commissionId).orElseThrow(() -> new InscriptionException(
+                "No existe la comisión con id " + commissionId
+        ));
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow(() -> new InscriptionException(
+                "No existe la materia con id " + subjectsId
+        ));
         try {
             registerToStudent(s, commission, subjectsEntity);
         }catch (InscriptionException e){

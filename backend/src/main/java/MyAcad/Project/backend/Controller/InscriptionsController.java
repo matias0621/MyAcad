@@ -5,6 +5,7 @@ import MyAcad.Project.backend.Model.Inscriptions.InscriptionToCommission.Inscrip
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToCommission.InscriptionToCommissionResponse;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamDTO;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamEntity;
+import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamResponse;
 import MyAcad.Project.backend.Service.Inscriptions.InscriptionToCommissionService;
 import MyAcad.Project.backend.Service.Inscriptions.InscriptionToFinalExamService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class InscriptionsController {
     private final InscriptionToCommissionService inscriptionToCommissionService;
 
     @GetMapping("/final-exam")
-    public ResponseEntity<List<InscriptionToFinalExamEntity>> findAll() {
+    public ResponseEntity<List<InscriptionToFinalExamResponse>> findAll() {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptions());
     }
 
@@ -34,7 +35,7 @@ public class InscriptionsController {
     }
 
     @GetMapping("/final-exam/{id}")
-    public ResponseEntity<InscriptionToFinalExamEntity> findById(@PathVariable Long id) {
+    public ResponseEntity<InscriptionToFinalExamResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getInscriptionById(id));
     }
 
@@ -44,7 +45,7 @@ public class InscriptionsController {
     }
 
     @GetMapping("/final-exam/date-inscription/{date}")
-    public ResponseEntity<List<InscriptionToFinalExamEntity>> findByInscriptionDate(@PathVariable String date) {
+    public ResponseEntity<List<InscriptionToFinalExamResponse>> findByInscriptionDate(@PathVariable String date) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsByInscriptionDate(date));
     }
 
@@ -54,7 +55,7 @@ public class InscriptionsController {
     }
 
     @GetMapping("/final-exam/date-exam/{date}")
-    public ResponseEntity<List<InscriptionToFinalExamEntity>> findByInscriptionDateExam(@PathVariable String date) {
+    public ResponseEntity<List<InscriptionToFinalExamResponse>> findByInscriptionDateExam(@PathVariable String date) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsByExamDate(date));
     }
 
@@ -64,7 +65,7 @@ public class InscriptionsController {
     }
 
     @GetMapping("/final-exam/subjects/{id}")
-    public ResponseEntity<List<InscriptionToFinalExamEntity>> findBySubjectId(@PathVariable Long id) {
+    public ResponseEntity<List<InscriptionToFinalExamResponse>> findBySubjectId(@PathVariable Long id) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getAllInscriptionsBySubjectId(id));
     }
 
@@ -74,7 +75,7 @@ public class InscriptionsController {
     }
 
     @GetMapping("/final-exam/final-exams-students/{studentId}")
-    public ResponseEntity<List<InscriptionToFinalExamEntity>> findByFinalExamStudentId(@PathVariable Long studentId) {
+    public ResponseEntity<List<InscriptionToFinalExamResponse>> findByFinalExamStudentId(@PathVariable Long studentId) {
         return ResponseEntity.ok(inscriptionToFinalExamService.getActiveInscriptionsForStudent(studentId));
     }
 
@@ -120,6 +121,12 @@ public class InscriptionsController {
 
         inscriptionToFinalExamService.addToStudent(id, studentId);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("final-exam/unregister-student-for-exam/{inscriptionId}")
+    public ResponseEntity<?> unregisterStudentForExam(@PathVariable Long inscriptionId, @RequestBody Long studentId) {
+        inscriptionToFinalExamService.unregisterStudent(inscriptionId, studentId);
         return ResponseEntity.ok().build();
     }
 

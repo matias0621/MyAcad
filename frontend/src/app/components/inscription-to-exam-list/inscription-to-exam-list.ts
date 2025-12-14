@@ -29,6 +29,7 @@ export class InscriptionToExamList implements OnInit {
     this.inscriptionService.getAllInscription().subscribe({
       next: (res) => {
         this.inscriptionList = res;
+        console.log(res)
         if (this.pendingSelectionId !== null) {
           this.selectedInscription = this.inscriptionList.find(item => item.id === this.pendingSelectionId) ?? this.selectedInscription;
           this.pendingSelectionId = null;

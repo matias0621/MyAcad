@@ -23,10 +23,18 @@
                     <td data-label="Fecha examen">{{ inscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td class="responsive-hide-2" data-label="Fecha inscripción">{{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td class="exam-actions" data-label="Acciones">
-                        <button type="button" class="exam-action exam-action--secondary"
-                            (click)="addStudent(inscription.id)">
-                            Registrarse
-                        </button>
+                        @if(!studentInInscription(inscription.students)){
+                            <button type="button" class="exam-action exam-action--secondary"
+                                (click)="addStudent(inscription.id)">
+                                Registrarse
+                            </button>
+                        }
+                        @else {
+                            <button type="button" class="exam-action delete-action--info"
+                                (click)="unregister(inscription.id)">
+                                Darse de baja
+                            </button>
+                        }
                     </td>
                 </tr>
                 } @empty {

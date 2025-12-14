@@ -303,6 +303,10 @@
 	font-weight: 500;
 }
 
+.delete-action--info {
+	background: linear-gradient(135deg, #ff5252, #d50000);
+}
+
 @media (max-width: 992px) {
 	.exam-inscription {
 		padding: 1.2rem;

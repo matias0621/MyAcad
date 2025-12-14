@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { InscriptionToFinalExamService } from '../../../Services/InscriptionToFinalExam/inscription-to-final-exam-service';
 import { InscriptionToFinalExam } from '../../../Models/InscriptionToFinalExam/InscriptionToFinalExam';
 import { DatePipe } from '@angular/common';
+import Student from '../../../Models/Users/Student';
 
 @Component({
   selector: 'app-register-to-final-exam',
@@ -15,6 +16,8 @@ import { DatePipe } from '@angular/common';
 export class RegisterToFinalExam implements OnInit {
 
   inscriptionList!:InscriptionToFinalExam[]
+  token!:any 
+  
 
   constructor(
     public inscriptionFinalExamsService:InscriptionToFinalExamService,
@@ -23,12 +26,11 @@ export class RegisterToFinalExam implements OnInit {
   ){}
 
   ngOnInit(): void {
-    const token:any = this.authService.getDecodedToken()
-
+    this.token = this.authService.getDecodedToken()
 
     console.log(this.authService.getToken())
 
-    this.getAllInscriptionForStudent(token.id)
+    this.getAllInscriptionForStudent(this.token.id)
   }
 
 
@@ -48,9 +50,27 @@ export class RegisterToFinalExam implements OnInit {
     this.inscriptionFinalExamsService.addStudentToFinalExam(inscriptionId).subscribe({
       next: () => {
         this.notificationService.success("Te anotaste a al examen")
+        this.getAllInscriptionForStudent(this.token.id)
       },
       error: (err) => {
         this.notificationService.error("Hubo un error, intentelo denuevo mas tarde", true)
+        console.log(err)
+      }
+    })
+  }
+
+  studentInInscription(studentList:Student[]){
+    return studentList.some((s) => s.id === this.token.id)
+  }
+
+  unregister(inscriptionId:number){
+    this.inscriptionFinalExamsService.unregisterStudent(inscriptionId,this.token.id).subscribe({
+      next: () => {
+        this.notificationService.success("Te diste de baja con exito")
+        this.getAllInscriptionForStudent(this.token.id)
+      },
+      error: (err) => {
+        this.notificationService.error("Hubo un error", true)
         console.log(err)
       }
     })

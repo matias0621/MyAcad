@@ -55,6 +55,10 @@ export class InscriptionToFinalExamService {
     return this.http.put(`${this.api_url}/register-student-for-exam/${idInscription}`, {});
   }
 
+  unregisterStudent(idInscription: number, idStudent:number){
+    return this.http.put(`${this.api_url}/unregister-student-for-exam/${idInscription}`, idStudent)
+  }
+
   deleteInscription(idInscription: number) {
     return this.http.delete(`${this.api_url}/${idInscription}`);
   }

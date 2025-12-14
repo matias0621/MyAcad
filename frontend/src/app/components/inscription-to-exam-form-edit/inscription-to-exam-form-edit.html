@@ -11,7 +11,7 @@
             placeholder="Actualizá la fecha y hora del examen">
     </div>
 
-    <button type="submit" class="exam-form-submit" [disabled]="form.invalid || subjectId === null">Guardar cambios</button>
+    <button type="submit" class="exam-form-submit" [disabled]="form.invalid && subjectId === null">Guardar cambios</button>
 </form>
 
 <section class="exam-form-subjects">

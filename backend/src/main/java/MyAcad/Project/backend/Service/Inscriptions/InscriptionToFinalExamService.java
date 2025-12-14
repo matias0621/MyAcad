@@ -1,8 +1,10 @@
 package MyAcad.Project.backend.Service.Inscriptions;
 
+import MyAcad.Project.backend.Mapper.InscriptionToFinalExamMapper;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamDTO;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamEntity;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamResponse;
 import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Repository.Inscriptions.InscriptionToFinalExamRepository;
@@ -24,6 +26,7 @@ public class InscriptionToFinalExamService {
     private final SubjectService subjectService;
     private final StudentRepository studentRepository;
     private final ProgramRepository programRepository;
+    private final InscriptionToFinalExamMapper inscriptionToFinalExamMapper;
 
     public void createInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO) {
         SubjectsEntity subjects = subjectService.getById(inscriptionToFinalExamDTO.getSubjectsId()).orElseThrow();
@@ -46,32 +49,32 @@ public class InscriptionToFinalExamService {
         inscriptionToFinalExamRepository.save(inscriptionToFinalExamEntity);
     }
 
-    public List<InscriptionToFinalExamEntity> getAllInscriptions() {
-        return inscriptionToFinalExamRepository.findAll();
+    public List<InscriptionToFinalExamResponse> getAllInscriptions() {
+        return inscriptionToFinalExamMapper.toResponseList(inscriptionToFinalExamRepository.findAll());
     }
 
-    public InscriptionToFinalExamEntity getInscriptionById(Long id) {
-        return inscriptionToFinalExamRepository.findById(id).orElseThrow();
+    public InscriptionToFinalExamResponse getInscriptionById(Long id) {
+        return inscriptionToFinalExamMapper.toResponse(inscriptionToFinalExamRepository.findById(id).orElseThrow());
     }
 
-    public List<InscriptionToFinalExamEntity> getAllInscriptionsBySubjectId(Long subjectId) {
+    public List<InscriptionToFinalExamResponse> getAllInscriptionsBySubjectId(Long subjectId) {
         SubjectsEntity subjects = subjectService.getById(subjectId).orElseThrow();
 
-        return inscriptionToFinalExamRepository.findInscriptionToFinalExamEntitiesBySubjects(subjects);
+        return inscriptionToFinalExamMapper.toResponseList(inscriptionToFinalExamRepository.findInscriptionToFinalExamEntitiesBySubjects(subjects));
     }
 
-    public List<InscriptionToFinalExamEntity> getAllInscriptionsByInscriptionDate(String inscriptionDate) {
+    public List<InscriptionToFinalExamResponse> getAllInscriptionsByInscriptionDate(String inscriptionDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime inscription = LocalDateTime.parse(inscriptionDate, formatter);
-        return  inscriptionToFinalExamRepository.findInscriptionToFinalExamEntitiesByInscriptionDate(inscription);
+        return  inscriptionToFinalExamMapper.toResponseList(inscriptionToFinalExamRepository.findInscriptionToFinalExamEntitiesByInscriptionDate(inscription));
     }
 
-    public List<InscriptionToFinalExamEntity> getAllInscriptionsByExamDate(String examDate) {
+    public List<InscriptionToFinalExamResponse> getAllInscriptionsByExamDate(String examDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         LocalDateTime exam = LocalDateTime.parse(examDate, formatter);
 
-        return inscriptionToFinalExamRepository.findInscriptionToFinalExamEntitiesByFinalExamDate(exam);
+        return inscriptionToFinalExamMapper.toResponseList(inscriptionToFinalExamRepository.findInscriptionToFinalExamEntitiesByFinalExamDate(exam));
     }
 
     public void updateInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO, Long id) {
@@ -103,9 +106,17 @@ public class InscriptionToFinalExamService {
         inscriptionToFinalExamRepository.save(inscription);
     }
 
-    public List<InscriptionToFinalExamEntity> getActiveInscriptionsForStudent(Long studentId) {
+    public void unregisterStudent(Long inscriptionId, Long studentId) {
+        Student student = studentRepository.findById(studentId).orElseThrow();
+        InscriptionToFinalExamEntity inscription = inscriptionToFinalExamRepository.findById(inscriptionId).orElseThrow();
+
+        inscription.getStudents().remove(student);
+        inscriptionToFinalExamRepository.save(inscription);
+    }
+
+    public List<InscriptionToFinalExamResponse> getActiveInscriptionsForStudent(Long studentId) {
         LocalDateTime now = LocalDateTime.now();
-        return inscriptionToFinalExamRepository.findActiveInscriptionsForStudent(studentId, now);
+        return inscriptionToFinalExamMapper.toResponseList(inscriptionToFinalExamRepository.findActiveInscriptionsForStudent(studentId, now));
     }
 
     public void deleteInscription(Long id) {

@@ -802,9 +802,9 @@ fieldset {
 .crud-table-actions {
     display: flex;
     gap: 0.7em;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-end;
-    padding: 0.2em 0.5em;
+    padding: 0;
 }
 
 .crud-table-item .modify-crud-btn,

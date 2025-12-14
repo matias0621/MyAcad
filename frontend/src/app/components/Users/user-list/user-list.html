@@ -41,10 +41,12 @@
                     <td class="responsive-hide">{{user.dni}}</td>
                     <td class="responsive-hide">{{user.email}}</td>
                     @if (endpoint != "managers") {
-                    <td class="responsive-hide">
-                        @for (program of user.programs; track $index) {
-                        <p> {{ program.name }} </p>
-                        }
+                    <td class="responsive-hide programs-cell-td">
+                        <div class="programs-cell">
+                            @for (program of user.programs; track $index) {
+                            <span class="program-badge">{{ program.name }}</span>
+                            }
+                        </div>
                     </td>
                     }
                     <td class="crud-table-actions">
@@ -157,11 +159,13 @@
                                 <strong><i class="fa-solid fa-id-badge"></i> DNI</strong>
                                 <span>{{selectedUser.dni | number:'1.0-0'}}</span>
                             </div>
-                            <div class="detail-item">
-                                <strong>Carreras:</strong>
-                                @for (program of programList; track $index) {
-                                <span> {{ program.name }} </span>
-                                }
+                            <div class="detail-card">
+                                <strong><i class="fa-solid fa-graduation-cap"></i> Carreras</strong>
+                                <div class="programs-list">
+                                    @for (program of programList; track $index) {
+                                    <span class="program-badge">{{ program.name }}</span>
+                                    }
+                                </div>
                             </div>
                         </div>
                         }

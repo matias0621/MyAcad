@@ -37,6 +37,7 @@ export class InscriptionToCommission implements OnInit {
     public commisionService: CommissionService
   ) {
     this.programName = this.actRouter.snapshot.params['name'];
+    this.programSelected = this.programName;
     this.legajo = new FormControl('', Validators.required);
     this.form = new FormGroup({
       legajo: this.legajo,

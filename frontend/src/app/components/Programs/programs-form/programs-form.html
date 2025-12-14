@@ -38,13 +38,6 @@
         <p>La matrícula debe ser un número entre 4 y 30 dígitos.</p>
         }
     </fieldset>
-    <fieldset>
-        <label for="active">Activo:</label>
-        <input type="checkbox" id="active" formControlName="active">
-        @if (formPrograms.controls['active'].invalid && formPrograms.controls['active'].touched) {
-        <p>El estado activo es obligatorio.</p>
-        }
-    </fieldset>
 
     <div id="buttons">
         <button type="button" (click)="cleanForm()">Limpiar</button>

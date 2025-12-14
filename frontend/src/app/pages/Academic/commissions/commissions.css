@@ -1,1 +1,115 @@
-/* Vacío: todos los estilos ahora son globales en styles.css */
+#modal-add-subjects .subjects-modal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+}
+
+#modal-add-subjects .subjects-modal-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#modal-add-subjects .subjects-modal-list::-webkit-scrollbar-thumb {
+    background: rgba(61, 91, 105, 0.3);
+    border-radius: 999px;
+}
+
+#modal-add-subjects .subject-modal-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+#modal-add-subjects .subject-modal-item:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(39, 58, 67, 0.1);
+}
+
+#modal-add-subjects .subject-modal-item--selected {
+    background: rgba(61, 91, 105, 0.08);
+    border-color: #3d5b69;
+}
+
+#modal-add-subjects .subject-modal-item--selected:hover {
+    background: rgba(61, 91, 105, 0.12);
+    border-color: #3d5b69;
+}
+
+#modal-add-subjects .subject-modal-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+#modal-add-subjects .subject-modal-name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #273a43;
+    letter-spacing: 0.02em;
+}
+
+#modal-add-subjects .subject-modal-description {
+    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(39, 58, 67, 0.7);
+    line-height: 1.4;
+}
+
+#modal-add-subjects .subject-modal-btn {
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    background: linear-gradient(135deg, #3d5b69, #273a43);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(39, 58, 67, 0.15);
+}
+
+#modal-add-subjects .subject-modal-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(39, 58, 67, 0.25);
+}
+
+#modal-add-subjects .subject-modal-btn--remove {
+    background: linear-gradient(135deg, #e11d48, #be123c);
+}
+
+#modal-add-subjects .subject-modal-btn--remove:hover {
+    box-shadow: 0 4px 16px rgba(225, 29, 72, 0.3);
+}
+
+#modal-add-subjects .subjects-modal-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: rgba(39, 58, 67, 0.6);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+@media (max-width: 576px) {
+    #modal-add-subjects .subject-modal-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    #modal-add-subjects .subject-modal-btn {
+        width: 100%;
+    }
+}

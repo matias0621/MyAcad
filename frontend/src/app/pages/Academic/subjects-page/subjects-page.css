@@ -3,6 +3,31 @@
     height: 2em;
 }
 
+.program-select,
+.crud-modal .modal-form select.select-filter,
+.crud-modal .modal-form fieldset select.select-filter {
+    color: #273a43 !important;
+    background-color: #f9fafb !important;
+    -webkit-text-fill-color: #273a43 !important;
+}
+
+.program-select:focus,
+.program-select:active,
+.program-select:hover,
+.crud-modal .modal-form select.select-filter:focus,
+.crud-modal .modal-form select.select-filter:active,
+.crud-modal .modal-form select.select-filter:hover {
+    color: #273a43 !important;
+    background-color: #f9fafb !important;
+    -webkit-text-fill-color: #273a43 !important;
+}
+
+.program-select option,
+.crud-modal .modal-form select.select-filter option {
+    color: #273a43 !important;
+    background-color: #fff !important;
+}
+
 #modal-prerequisite .modal-dialog {
     max-width: 520px;
 }

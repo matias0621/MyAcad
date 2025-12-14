@@ -124,26 +124,35 @@
             </div>
         </div>
 
-        <!-- Modal agregar materia a comision -->
-        <div class="modal fade" id="modal-add-subjects" tabindex="-1" aria-labelledby="modal-label"
+        <div class="modal fade crud-modal" id="modal-add-subjects" tabindex="-1" aria-labelledby="modal-label"
             style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <h1 class="modal-title fs-5 titles"> Añadir materia </h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-x"></i>
-                        </button>
+            <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
+                <div class="modal-content crud-modal__content">
+                    <div class="modal-header crud-modal__header">
+                        <h1 class="modal-title fs-5 titles crud-modal__title">Añadir materia</h1>
+                        <button type="button" class="btn-close crud-modal__close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        @for (s of subjectsList; track $index) {
-                        <div [class.selected]="selectedSubjectsIds.includes(s.id)">
-                            <p> {{ s.name }} </p>
-                            <button (click)="addToCommission(s.id)" [class.remove]="selectedSubjectsIds.includes(s.id)">
-                                {{ selectedSubjectsIds.includes(s.id) ? 'Eliminar' : 'Añadir' }}
-                            </button>
+                    <div class="modal-body crud-modal__body">
+                        <div class="subjects-modal-list">
+                            @for (s of subjectsList; track $index) {
+                            <div class="subject-modal-item" [class.subject-modal-item--selected]="selectedSubjectsIds.includes(s.id)">
+                                <div class="subject-modal-info">
+                                    <h3 class="subject-modal-name">{{ s.name }}</h3>
+                                    @if (s.description) {
+                                    <p class="subject-modal-description">{{ s.description }}</p>
+                                    }
+                                </div>
+                                <button type="button" class="subject-modal-btn" 
+                                    [class.subject-modal-btn--remove]="selectedSubjectsIds.includes(s.id)"
+                                    (click)="addToCommission(s.id)">
+                                    {{ selectedSubjectsIds.includes(s.id) ? 'Eliminar' : 'Añadir' }}
+                                </button>
+                            </div>
+                            } @empty {
+                            <p class="subjects-modal-empty">No hay materias disponibles</p>
+                            }
                         </div>
-                        }
                     </div>
                 </div>
             </div>

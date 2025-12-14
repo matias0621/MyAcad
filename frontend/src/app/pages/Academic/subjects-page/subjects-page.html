@@ -118,7 +118,7 @@
 
                             <fieldset>
                                 <label for="program">Carrera/Curso:</label>
-                                <select class="select-filter" id="program" formControlName="program">
+                                <select class="select-filter program-select" id="program" formControlName="program">
                                     @for(program of programs; track $index){
                                     <option [value]="program.name">{{ program.name }}</option>
                                     }

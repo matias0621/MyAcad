@@ -25,4 +25,7 @@ public interface SubjectsRepository extends JpaRepository<SubjectsEntity, Long> 
 
     List<SubjectsEntity> findByProgramAndSemestersLessThan(String program, int semester);
 
+    @Query("SELECT s FROM SubjectsEntity s JOIN s.teachers t WHERE t.id = :teacherId")
+    List<SubjectsEntity> findSubjectsByTeacherId(@Param("teacherId") Long teacherId);
+
 }

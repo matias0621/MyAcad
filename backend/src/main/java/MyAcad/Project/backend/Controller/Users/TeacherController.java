@@ -111,6 +111,23 @@ public class TeacherController {
     public ResponseEntity<Void> deleteTeacher(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> definitiveDeleteTeacher(@PathVariable(name = "id") Long id){
+        try {
+            return services.definitiveDeleteTeacher(id);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            String errorMsg = "Error al eliminar el profesor";
+            if (e.getMessage() != null && e.getMessage().contains("rollback")) {
+                errorMsg = "No se puede eliminar el profesor porque tiene relaciones activas. Verifica las comisiones, materias o programas asignados.";
+            } else if (e.getMessage() != null) {
+                errorMsg += ": " + e.getMessage();
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMsg);
+        }
+    }
     //PUT
     @PutMapping
     public ResponseEntity<?> updateTeacher(@RequestBody Teacher updatedUser) {

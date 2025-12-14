@@ -127,13 +127,14 @@ export class ProgramsList implements OnInit {
       'Cancelar'
     ).then((confirmed) => {
       if (confirmed) {
-        this.service.deleteCareer(id, this.endpoint).subscribe({
+        this.service.definitiveDeleteCareer(id, this.endpoint).subscribe({
           next: (data) => {
             this.notificationService.success('Programa eliminado exitosamente');
             this.getCareers();
           },
           error: (error) => {
-            this.notificationService.error('Error al eliminar el programa permanentemente. Por favor, intenta nuevamente', true);
+            const errorMessage = this.getErrorMessage(error, 'programa');
+            this.notificationService.error(errorMessage, true);
           }
         });
       }
@@ -183,6 +184,48 @@ export class ProgramsList implements OnInit {
 
   registerToStudent(nameProgram: string) {
     this.router.navigate(['/register-student-to-commission/', nameProgram]);
+  }
+
+  private getErrorMessage(error: any, entityType: string): string {
+    let errorMessage = `Error al eliminar el ${entityType}. Por favor, intenta nuevamente`;
+    
+    if (error?.error) {
+      if (typeof error.error === 'string') {
+        errorMessage = error.error;
+      } else if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else if (error.error?.error) {
+        errorMessage = error.error.error;
+      }
+    } else if (error?.message) {
+      errorMessage = error.message;
+    }
+    
+    if (errorMessage.includes('Unable to find')) {
+      if (errorMessage.includes('Program')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con los programas asociados. Verifica que todas las relaciones estén correctas.';
+      } else if (errorMessage.includes('Student')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con los estudiantes asociados.';
+      } else if (errorMessage.includes('Teacher')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con los profesores asociados.';
+      } else {
+        errorMessage = 'No se puede eliminar porque hay relaciones asociadas que no se pueden procesar.';
+      }
+    }
+    
+    if (errorMessage.includes('with id 0')) {
+      errorMessage = 'No se puede eliminar porque hay datos incompletos o inválidos en las relaciones asociadas.';
+    }
+    
+    if (errorMessage.includes('foreign key constraint') || errorMessage.includes('constraint')) {
+      errorMessage = 'No se puede eliminar porque está asociado a otros registros en el sistema.';
+    }
+    
+    if (errorMessage.includes('Transaction silently rolled back') || errorMessage.includes('rollback-only')) {
+      errorMessage = 'No se puede eliminar porque hay relaciones asociadas que impiden la eliminación. Verifica los estudiantes, profesores o materias asignados.';
+    }
+    
+    return errorMessage;
   }
 
 }

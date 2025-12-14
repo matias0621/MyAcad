@@ -6,6 +6,7 @@ import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Service.Programs.ProgramService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -103,8 +104,20 @@ public class ProgramController {
 
     @DeleteMapping("/definitive-delete/{id}")
     public ResponseEntity<?> deleteProgram(@PathVariable Long id) {
-        programService.deleteProgram(id);
-        return ResponseEntity.ok().build();
+        try {
+            programService.deleteProgram(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            String errorMsg = "Error al eliminar el programa";
+            if (e.getMessage() != null && e.getMessage().contains("rollback")) {
+                errorMsg = "No se puede eliminar el programa porque tiene relaciones activas. Verifica los estudiantes, profesores o materias asignados.";
+            } else if (e.getMessage() != null) {
+                errorMsg += ": " + e.getMessage();
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMsg);
+        }
     }
 
     @DeleteMapping("/logic-delete/{id}")

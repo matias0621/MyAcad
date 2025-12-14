@@ -39,4 +39,7 @@ public interface CommissionRepository extends JpaRepository<Commission, Long> {
 
     Optional<Object> findCommissionByNumberAndProgram(int number, String program);
 
+    @Query("SELECT c FROM Commission c JOIN c.teachers t WHERE t.id = :teacherId")
+    List<Commission> findCommissionsByTeacherId(@Param("teacherId") Long teacherId);
+
 }

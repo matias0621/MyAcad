@@ -6,13 +6,16 @@ import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
+import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,7 @@ public class SubjectService {
     private final SubjectsRepository subjectsRepository;
     private final SubjectsMapper subjectsMapper;
     private final ProgramRepository programRepository;
+    private final SubjectsXStudentRepository subjectsXStudentRepository;
 
     public void createSubject(SubjectsDTO subject) {
         if (subjectsRepository.findByName(subject.getName()).isPresent()){
@@ -80,12 +84,75 @@ public class SubjectService {
         return ResponseEntity.noContent().build();
     }
 
+    @Transactional
     public ResponseEntity<Void> definitiveDeleteSubject(Long subjectId) {
         if (!subjectsRepository.existsById(subjectId)) {
             return ResponseEntity.notFound().build();
         }
-        subjectsRepository.deleteById(subjectId);
-        return ResponseEntity.ok().build();
+        
+        Optional<SubjectsEntity> subjectOpt = subjectsRepository.findById(subjectId);
+        if (subjectOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        SubjectsEntity subject = subjectOpt.get();
+        List<String> conflicts = new ArrayList<>();
+        
+        if (subject.getCommissions() != null && !subject.getCommissions().isEmpty()) {
+            List<String> commissionNumbers = subject.getCommissions().stream()
+                    .filter(c -> c != null && c.getNumber() != 0)
+                    .map(c -> "Comisión " + c.getNumber() + " (" + c.getProgram() + ")")
+                    .toList();
+            if (!commissionNumbers.isEmpty()) {
+                conflicts.add("Comisiones: " + String.join(", ", commissionNumbers));
+            }
+        }
+        
+        if (subject.getTeachers() != null && !subject.getTeachers().isEmpty()) {
+            List<String> teacherNames = subject.getTeachers().stream()
+                    .filter(t -> t != null && t.getName() != null && t.getLastName() != null)
+                    .map(t -> t.getName() + " " + t.getLastName())
+                    .toList();
+            if (!teacherNames.isEmpty()) {
+                conflicts.add("Profesores: " + teacherNames.size() + " profesor(es) - " + String.join(", ", teacherNames.stream().limit(5).toList()) + (teacherNames.size() > 5 ? " y más..." : ""));
+            }
+        }
+        
+        List<SubjectsXStudentEntity> subjectsXStudent = subjectsXStudentRepository.findAll().stream()
+                .filter(sxs -> sxs.getSubjects() != null && sxs.getSubjects().getId() != null && sxs.getSubjects().getId().equals(subjectId))
+                .toList();
+        if (!subjectsXStudent.isEmpty()) {
+            conflicts.add("Inscripciones de estudiantes: " + subjectsXStudent.size() + " inscripción(es)");
+        }
+        
+        List<Program> programs = programRepository.findAll().stream()
+                .filter(p -> p.getSubjects() != null && 
+                        p.getSubjects().stream()
+                                .anyMatch(s -> s != null && s.getId() != null && s.getId().equals(subjectId)))
+                .toList();
+        if (!programs.isEmpty()) {
+            List<String> programNames = programs.stream()
+                    .filter(p -> p != null && p.getName() != null)
+                    .map(Program::getName)
+                    .toList();
+            if (!programNames.isEmpty()) {
+                conflicts.add("Programas: " + String.join(", ", programNames));
+            }
+        }
+        
+        if (!conflicts.isEmpty()) {
+            String errorMsg = "No se puede eliminar la materia porque está asociada a: " + String.join("; ", conflicts);
+            throw new RuntimeException(errorMsg);
+        }
+        
+        try {
+            subjectsRepository.deleteById(subjectId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Error inesperado al eliminar la materia: " + e.getMessage(), e);
+        }
     }
 
     public Optional<SubjectsEntity> getById(Long subjectId) {

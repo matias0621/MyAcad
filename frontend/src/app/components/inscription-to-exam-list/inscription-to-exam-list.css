@@ -182,7 +182,7 @@
 }
 
 .modal-dialog-medium {
-	max-width: 640px;
+	max-width: 560px;
 }
 
 .modal-dialog-narrow {
@@ -191,11 +191,10 @@
 
 .exam-modal {
 	border: none;
-	border-radius: 26px;
-	overflow: initial;
-	background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(233, 240, 244, 0.96));
-	border: 1px solid rgba(61, 91, 105, 0.16);
-	box-shadow: 0 32px 54px rgba(39, 58, 67, 0.28);
+	border-radius: 20px;
+	overflow: hidden;
+	background: #fff;
+	box-shadow: 0 24px 48px rgba(39, 58, 67, 0.22);
 }
 
 .exam-modal__header {
@@ -203,48 +202,61 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 1.2rem;
-	padding: 1.6rem 1.8rem;
-	background: rgba(61, 91, 105, 0.08);
-	border-bottom: 1px solid rgba(61, 91, 105, 0.12);
+	padding: 1.2rem 1.6rem;
+	background: linear-gradient(135deg, #3d5b69, #273a43);
+	border-bottom: none;
 }
 
 .exam-modal__header--compact {
-	padding: 1.3rem 1.6rem;
+	padding: 1.4rem 1.8rem;
 }
 
 .exam-modal__tag {
-	margin: 0;
-	font-size: 0.78rem;
+	margin: 0 0 0.3rem;
+	font-size: 0.75rem;
 	text-transform: uppercase;
-	letter-spacing: 0.22rem;
-	color: rgba(180, 200, 210, 0.65);
+	letter-spacing: 0.2rem;
+	color: rgba(255, 255, 255, 0.7);
+	font-weight: 600;
 }
 
 .exam-modal__title {
 	margin: 0;
-	font-size: 1.6rem;
+	font-size: 1.3rem;
 	font-weight: 700;
-	color: var(--color-3);
+	color: #fff;
+	letter-spacing: 0.02em;
 }
 
-.modal-close {
+.exam-modal__header .modal-close {
 	border: none;
 	background: transparent;
-	color: var(--color-5);
-	font-size: 1.2rem;
+	color: #fff;
+	font-size: 1.4rem;
+	opacity: 0.85;
+	padding: 0.4rem;
+	border-radius: 8px;
 	cursor: pointer;
-	transition: transform 0.2s ease, color 0.2s ease;
+	transition: all 0.2s ease;
+	line-height: 1;
+	width: 2rem;
+	height: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-.modal-close:hover {
+.exam-modal__header .modal-close:hover {
+	opacity: 1;
+	background: rgba(255, 255, 255, 0.15);
 	transform: rotate(90deg);
-	color: #5a8dee;
 }
 
 .exam-modal__body {
-	padding: 1.8rem 2rem 2.1rem;
+	padding: 1.5rem 1.6rem 1.8rem;
 	max-height: 70vh;
 	overflow-y: auto;
+	background: #fff;
 }
 
 .exam-modal__body--detail {

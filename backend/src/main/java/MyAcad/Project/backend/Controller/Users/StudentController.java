@@ -113,6 +113,17 @@ public class StudentController {
     public ResponseEntity<Void> deleteStudent(@PathVariable(name = "id") Long id){
         return services.delete(id);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> definitiveDeleteStudent(@PathVariable(name = "id") Long id){
+        try {
+            return services.definitiveDeleteStudent(id);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el estudiante: " + e.getMessage());
+        }
+    }
     //PUT
     @PutMapping
     public ResponseEntity<?> updateStudent(@RequestBody Student updatedUser) {

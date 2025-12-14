@@ -176,7 +176,7 @@ public class CommissionController {
 
     @PutMapping("/unregister-student/{studentId}/commission/{commissionId}")
     public ResponseEntity<?> unregisterStudent(@PathVariable Long studentId, @PathVariable Long commissionId, @RequestBody Long subjectsId){
-        services.unregister(studentId, commissionId, subjectsId);
+        services.unregister(studentId, subjectsId, commissionId);
         return ResponseEntity.ok().build();
     }
 

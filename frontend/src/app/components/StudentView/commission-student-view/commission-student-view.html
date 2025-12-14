@@ -22,13 +22,11 @@
             </thead>
             <tbody class="crud-table-body">
                 <!-- USERS -->
-                @for (com of commissionList; track $index) {
+                @for (subXStu of listSubjects; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{com.number}}</td>
+                    <td>{{subXStu.commission.number}}</td>
                     <td>
-                        @for (s of com.subjects; track $index; let last = $last) {
-                        {{ s.name }}{{ !last ? ', ' : '' }}
-                        }
+                        {{ subXStu.subjects.name }}
                     </td>
 
                 </tr>

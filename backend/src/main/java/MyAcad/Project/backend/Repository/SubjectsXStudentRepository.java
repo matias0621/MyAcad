@@ -17,4 +17,9 @@ public interface SubjectsXStudentRepository extends JpaRepository<SubjectsXStude
             Long subjectId,
             Long commissionId
     );
+
+    boolean existsByStudent_IdAndCommission_Id(
+            Long studentId,
+            Long commissionId
+    );
 }

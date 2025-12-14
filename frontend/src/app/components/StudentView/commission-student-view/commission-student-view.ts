@@ -19,7 +19,7 @@ export class CommissionStudentView implements OnInit {
   programName!: string;
   commissionList!: Commission[];
   listExams!:Exams[]
-  listSubjects!: SubjectsXStudent[];
+  listSubjects: SubjectsXStudent[] = [];
 
   constructor(
     private commissionService: CommissionService,
@@ -34,13 +34,15 @@ export class CommissionStudentView implements OnInit {
   ngOnInit(): void {
     this.getCommissionByProgramName()
     this.getExamByStudentId()
-    this.getSubjectsByProgram();
   }
 
   getCommissionByProgramName() {
     this.commissionService.getCommissionByStudentInfo(this.programName).subscribe({
       next: (res) => {
+        console.log(res)
         this.commissionList = res;
+
+        this.commissionList.forEach(c => c.subjects.forEach(s => this.getSubjectsByProgram(c.id,s.id)) )
       },
       error: (err) => {
         console.log(err);
@@ -48,13 +50,15 @@ export class CommissionStudentView implements OnInit {
     });
   }
 
-  getSubjectsByProgram(){
+  getSubjectsByProgram(commissionId:number, subjectId:number){
     const token:any = this.auth.getDecodedToken()
     if (!token) return;
 
-    this.subjectsXStudentService.getAllSubjectsXStudent().subscribe({
+    this.subjectsXStudentService.getBySubjectIdStudentIdCommissionId(subjectId,token.id,commissionId).subscribe({
       next:(res)=>{
-        this.listSubjects = res.filter(item => item.subjects.program == this.programName);
+        if (!this.listSubjects.includes(res)){
+          this.listSubjects.push(res)
+        }
       },
       error: (err)=>{
         console.log(err);

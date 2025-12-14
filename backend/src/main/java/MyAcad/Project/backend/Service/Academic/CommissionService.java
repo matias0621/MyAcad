@@ -18,6 +18,7 @@ import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -403,17 +404,46 @@ public class CommissionService {
         return commissionMapper.toResponseList(commissions);
     }
 
-    public void unregister(Long studentId, Long subjectsId, Long commissionId){
-        Student student = studentRepository.findById(studentId).orElseThrow();
-        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
-        Commission commission = repository.findById(commissionId).orElseThrow();
+    @Transactional
+    public void unregister(Long studentId, Long subjectsId, Long commissionId) {
 
-        commission.getStudents().remove(student);
-        SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId,subjectsId).orElseThrow();
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new InscriptionException("Estudiante inexistente"));
 
-        subjectsXStudentRepository.delete(subjectsXStudentEntity);
-        repository.save(commission);
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId)
+                .orElseThrow(() -> new InscriptionException("Materia inexistente"));
+
+        Commission commission = repository.findById(commissionId)
+                .orElseThrow(() -> new InscriptionException("Comisión inexistente"));
+
+        // 🔍 Buscar inscripción EXACTA
+        SubjectsXStudentEntity inscription =
+                subjectsXStudentRepository
+                        .findByStudent_IdAndSubjects_IdAndCommission_Id(
+                                studentId,
+                                subjectsId,
+                                commissionId
+                        )
+                        .orElseThrow(() ->
+                                new InscriptionException(
+                                        "El estudiante no está inscripto en esta materia y comisión"
+                                )
+                        );
+
+        // 🗑️ Eliminar inscripción académica
+        subjectsXStudentRepository.delete(inscription);
+
+        // 👥 Remover de la comisión SOLO si no le queda ninguna materia en ella
+        boolean stillInCommission =
+                subjectsXStudentRepository
+                        .existsByStudent_IdAndCommission_Id(studentId, commissionId);
+
+        if (!stillInCommission) {
+            commission.getStudents().remove(student);
+            repository.save(commission);
+        }
     }
+
 
     public void deleteSubjectXStudent(Long studentId, Long subjectsId) {
         SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId,subjectsId).orElseThrow(() -> new RuntimeException("SubjectsXStudent not found"));

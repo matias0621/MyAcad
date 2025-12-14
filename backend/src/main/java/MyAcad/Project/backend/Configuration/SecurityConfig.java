@@ -55,8 +55,9 @@ public class SecurityConfig {
                                 "/certificate/**",
                                 "/subject-x-student/**"
                         ).hasAnyRole("STUDENT", "TEACHER", "MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/students/delete/**").hasAnyRole("MANAGER", "TEACHER")
+                        .requestMatchers(HttpMethod.DELETE, "/teachers/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(
-                                "/**",
                                 //USERS
                                 "/teachers/**",
                                 "/students/**",

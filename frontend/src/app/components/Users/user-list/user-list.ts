@@ -132,7 +132,7 @@ export class UserList implements OnInit {
   }
 
   deleteUser(id: number) {
-    if (id === 1) {
+    if (this.endpoint === 'managers' && id === 1) {
       this.notificationService.warning('No se puede eliminar el gestor principal.');
       return;
     }
@@ -174,10 +174,8 @@ export class UserList implements OnInit {
               this.getUsers();
             },
             error: (error) => {
-              this.notificationService.error(
-                'Error al eliminar el usuario. Por favor, intenta nuevamente',
-                true
-              );
+              const errorMessage = this.getErrorMessage(error, 'usuario');
+              this.notificationService.error(errorMessage, true);
             },
           });
         }
@@ -278,5 +276,51 @@ export class UserList implements OnInit {
         }
       },
     });
+  }
+
+  private getErrorMessage(error: any, entityType: string): string {
+    let errorMessage = `Error al eliminar el ${entityType}. Por favor, intenta nuevamente`;
+    
+    if (error?.error) {
+      if (typeof error.error === 'string') {
+        errorMessage = error.error;
+      } else if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else if (error.error?.error) {
+        errorMessage = error.error.error;
+      }
+    } else if (error?.message) {
+      errorMessage = error.message;
+    }
+    
+    if (errorMessage.includes('Unable to find')) {
+      if (errorMessage.includes('Commission')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con las comisiones asociadas. Verifica que todas las relaciones estén correctas.';
+      } else if (errorMessage.includes('Student')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con los estudiantes asociados.';
+      } else if (errorMessage.includes('Teacher')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con los profesores asociados.';
+      } else if (errorMessage.includes('Program')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con los programas asociados.';
+      } else if (errorMessage.includes('Subject')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con las materias asociadas.';
+      } else {
+        errorMessage = 'No se puede eliminar porque hay relaciones asociadas que no se pueden procesar.';
+      }
+    }
+    
+    if (errorMessage.includes('with id 0')) {
+      errorMessage = 'No se puede eliminar porque hay datos incompletos o inválidos en las relaciones asociadas.';
+    }
+    
+    if (errorMessage.includes('foreign key constraint') || errorMessage.includes('constraint')) {
+      errorMessage = 'No se puede eliminar porque está asociado a otros registros en el sistema.';
+    }
+    
+    if (errorMessage.includes('Transaction silently rolled back') || errorMessage.includes('rollback-only')) {
+      errorMessage = 'No se puede eliminar porque hay relaciones asociadas que impiden la eliminación. Verifica las comisiones, materias o programas asignados.';
+    }
+    
+    return errorMessage;
   }
 }

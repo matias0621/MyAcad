@@ -200,7 +200,8 @@ export class SubjectsPage {
             this.getAllSubject();
           },
           error: (error) => {
-            this.notificationService.error('Error al eliminar la materia. Por favor, intenta nuevamente', true);
+            const errorMessage = this.getErrorMessage(error, 'materia');
+            this.notificationService.error(errorMessage, true);
           }
         });
       }
@@ -348,5 +349,43 @@ export class SubjectsPage {
 
   cleanForm() {
     this.form.reset();
+  }
+
+  private getErrorMessage(error: any, entityType: string): string {
+    let errorMessage = `Error al eliminar la ${entityType}. Por favor, intenta nuevamente`;
+    
+    if (error?.error) {
+      if (typeof error.error === 'string') {
+        errorMessage = error.error;
+      } else if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else if (error.error?.error) {
+        errorMessage = error.error.error;
+      }
+    } else if (error?.message) {
+      errorMessage = error.message;
+    }
+    
+    if (errorMessage.includes('Unable to find')) {
+      if (errorMessage.includes('Subject')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con las materias asociadas. Verifica que todas las relaciones estén correctas.';
+      } else if (errorMessage.includes('Commission')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con las comisiones asociadas.';
+      } else if (errorMessage.includes('Teacher')) {
+        errorMessage = 'No se puede eliminar porque hay un problema con los profesores asociados.';
+      } else {
+        errorMessage = 'No se puede eliminar porque hay relaciones asociadas que no se pueden procesar.';
+      }
+    }
+    
+    if (errorMessage.includes('with id 0')) {
+      errorMessage = 'No se puede eliminar porque hay datos incompletos o inválidos en las relaciones asociadas.';
+    }
+    
+    if (errorMessage.includes('foreign key constraint') || errorMessage.includes('constraint')) {
+      errorMessage = 'No se puede eliminar porque está asociado a otros registros en el sistema.';
+    }
+    
+    return errorMessage;
   }
 }

@@ -33,7 +33,7 @@ export class CareerService {
   }
 
   definitiveDeleteCareer(id: number, endpoint: string) {
-    return this.http.delete<Course | Technical | Career>(`${this.API_URL}/delete/${endpoint}/${id}`);
+    return this.http.delete<Course | Technical | Career>(`${this.API_URL}/${endpoint}/delete/${id}`);
   }
 
   updateCareer(career: Career, endpoint: string) {

@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Service.Programs;
 import MyAcad.Project.backend.Enum.ProgramType;
 import MyAcad.Project.backend.Exception.CareerAlreadyExistsException;
 import MyAcad.Project.backend.Mapper.ProgramMapper;
+import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Programs.*;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.Teacher;
@@ -13,8 +14,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +28,7 @@ public class ProgramService {
     private final TeacherRepository teacherRepository;
     private final ProgramRepository programRepository;
     private final ProgramMapper programMapper;
+    private final EntityManager entityManager;
 
     public void createEngineering(ProgramsDTO programsDTO) {
         if (programRepository.findByName(programsDTO.getName()).isPresent()){
@@ -130,8 +136,136 @@ public class ProgramService {
         return programMapper.toResponse(programRepository.findByName(programName).orElseThrow());
     }
 
+    @Transactional
     public void deleteProgram(Long programId){
+        if (!programRepository.existsById(programId)) {
+            throw new RuntimeException("El programa no existe");
+        }
+        
+        List<String> conflicts = new ArrayList<>();
+        
+        String[] studentTableNames = {"career_students", "course_students", "technical_students"};
+        for (String tableName : studentTableNames) {
+            try {
+                Number count = (Number) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + tableName + " WHERE program_id = :programId")
+                        .setParameter("programId", programId)
+                        .getSingleResult();
+                if (count != null && count.longValue() > 0) {
+                    @SuppressWarnings("unchecked")
+                    List<Object[]> studentData = entityManager.createNativeQuery(
+                            "SELECT u.name, u.last_name FROM " + tableName + " ps " +
+                            "JOIN user u ON ps.user_id = u.user_id " +
+                            "WHERE ps.program_id = :programId LIMIT 5")
+                            .setParameter("programId", programId)
+                            .getResultList();
+                    
+                    List<String> studentNames = studentData.stream()
+                            .map(row -> String.valueOf(row[0]) + " " + String.valueOf(row[1]))
+                            .toList();
+                    
+                    conflicts.add("Estudiantes: " + count + " estudiante(s)" + 
+                            (studentNames.isEmpty() ? "" : " - " + String.join(", ", studentNames) + (count.longValue() > 5 ? " y más..." : "")));
+                    break;
+                }
+            } catch (Exception e) {
+            }
+        }
+        
+        String[] teacherTableNames = {"career_teachers", "course_teachers", "technical_teachers"};
+        for (String tableName : teacherTableNames) {
+            try {
+                Number count = (Number) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + tableName + " WHERE program_id = :programId")
+                        .setParameter("programId", programId)
+                        .getSingleResult();
+                if (count != null && count.longValue() > 0) {
+                    @SuppressWarnings("unchecked")
+                    List<Object[]> teacherData = entityManager.createNativeQuery(
+                            "SELECT u.name, u.last_name FROM " + tableName + " pt " +
+                            "JOIN user u ON pt.user_id = u.user_id " +
+                            "WHERE pt.program_id = :programId LIMIT 5")
+                            .setParameter("programId", programId)
+                            .getResultList();
+                    
+                    List<String> teacherNames = teacherData.stream()
+                            .map(row -> String.valueOf(row[0]) + " " + String.valueOf(row[1]))
+                            .toList();
+                    
+                    conflicts.add("Profesores: " + count + " profesor(es)" + 
+                            (teacherNames.isEmpty() ? "" : " - " + String.join(", ", teacherNames) + (count.longValue() > 5 ? " y más..." : "")));
+                    break;
+                }
+            } catch (Exception e) {
+            }
+        }
+        
+        String[] subjectTableNames = {"career_subjects", "course_subjects", "technical_subjects"};
+        for (String tableName : subjectTableNames) {
+            try {
+                Number count = (Number) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + tableName + " WHERE program_id = :programId")
+                        .setParameter("programId", programId)
+                        .getSingleResult();
+                if (count != null && count.longValue() > 0) {
+                    @SuppressWarnings("unchecked")
+                    List<Object> subjectData = entityManager.createNativeQuery(
+                            "SELECT s.name FROM " + tableName + " ps " +
+                            "JOIN subject s ON ps.subject_id = s.subject_id " +
+                            "WHERE ps.program_id = :programId")
+                            .setParameter("programId", programId)
+                            .getResultList();
+                    
+                    List<String> subjectNames = subjectData.stream()
+                            .map(String::valueOf)
+                            .toList();
+                    
+                    conflicts.add("Materias: " + String.join(", ", subjectNames));
+                    break;
+                }
+            } catch (Exception e) {
+            }
+        }
+        
+        if (!conflicts.isEmpty()) {
+            String errorMsg = "No se puede eliminar el programa porque tiene: " + String.join("; ", conflicts);
+            throw new RuntimeException(errorMsg);
+        }
+        
+        deleteProgramEntity(programId);
+    }
+    
+    private void deleteProgramEntity(Long programId) {
+        String[] studentTableNames = {"career_students", "course_students", "technical_students"};
+        for (String tableName : studentTableNames) {
+            try {
+                entityManager.createNativeQuery("DELETE FROM " + tableName + " WHERE program_id = :programId")
+                        .setParameter("programId", programId)
+                        .executeUpdate();
+            } catch (Exception e) {
+            }
+        }
+        
+        String[] teacherTableNames = {"career_teachers", "course_teachers", "technical_teachers"};
+        for (String tableName : teacherTableNames) {
+            try {
+                entityManager.createNativeQuery("DELETE FROM " + tableName + " WHERE program_id = :programId")
+                        .setParameter("programId", programId)
+                        .executeUpdate();
+            } catch (Exception e) {
+            }
+        }
+        
+        String[] subjectTableNames = {"career_subjects", "course_subjects", "technical_subjects"};
+        for (String tableName : subjectTableNames) {
+            try {
+                entityManager.createNativeQuery("DELETE FROM " + tableName + " WHERE program_id = :programId")
+                        .setParameter("programId", programId)
+                        .executeUpdate();
+            } catch (Exception e) {
+            }
+        }
+        
+        entityManager.flush();
         programRepository.deleteById(programId);
+        programRepository.flush();
     }
 
     public void logicDeleteProgram(Long programId){

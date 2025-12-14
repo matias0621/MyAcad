@@ -79,12 +79,70 @@ public class CommissionService {
         return ResponseEntity.noContent().build();
     }
 
+    @Transactional
     public ResponseEntity<Void> definitiveDeleteCommission(Long id) {
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        repository.deleteById(id);
-        return ResponseEntity.ok().build();
+        
+        Optional<Commission> commissionOpt = repository.findById(id);
+        if (commissionOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        Commission commission = commissionOpt.get();
+        List<String> conflicts = new ArrayList<>();
+        
+        if (commission.getStudents() != null && !commission.getStudents().isEmpty()) {
+            List<String> studentNames = commission.getStudents().stream()
+                    .filter(s -> s != null && s.getName() != null && s.getLastName() != null)
+                    .map(s -> s.getName() + " " + s.getLastName())
+                    .toList();
+            if (!studentNames.isEmpty()) {
+                conflicts.add("Estudiantes: " + studentNames.size() + " estudiante(s) - " + String.join(", ", studentNames.stream().limit(5).toList()) + (studentNames.size() > 5 ? " y más..." : ""));
+            }
+        }
+        
+        if (commission.getTeachers() != null && !commission.getTeachers().isEmpty()) {
+            List<String> teacherNames = commission.getTeachers().stream()
+                    .filter(t -> t != null && t.getName() != null && t.getLastName() != null)
+                    .map(t -> t.getName() + " " + t.getLastName())
+                    .toList();
+            if (!teacherNames.isEmpty()) {
+                conflicts.add("Profesores: " + teacherNames.size() + " profesor(es) - " + String.join(", ", teacherNames.stream().limit(5).toList()) + (teacherNames.size() > 5 ? " y más..." : ""));
+            }
+        }
+        
+        if (commission.getSubjects() != null && !commission.getSubjects().isEmpty()) {
+            List<String> subjectNames = commission.getSubjects().stream()
+                    .filter(s -> s != null && s.getName() != null)
+                    .map(SubjectsEntity::getName)
+                    .toList();
+            if (!subjectNames.isEmpty()) {
+                conflicts.add("Materias: " + String.join(", ", subjectNames));
+            }
+        }
+        
+        List<SubjectsXStudentEntity> subjectsXStudent = subjectsXStudentRepository.findAll().stream()
+                .filter(sxs -> sxs.getCommission() != null && sxs.getCommission().getId() != null && sxs.getCommission().getId().equals(id))
+                .toList();
+        if (!subjectsXStudent.isEmpty()) {
+            conflicts.add("Inscripciones académicas: " + subjectsXStudent.size() + " inscripción(es)");
+        }
+        
+        if (!conflicts.isEmpty()) {
+            String errorMsg = "No se puede eliminar la comisión porque tiene: " + String.join("; ", conflicts);
+            throw new RuntimeException(errorMsg);
+        }
+        
+        try {
+            repository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Error inesperado al eliminar la comisión: " + e.getMessage(), e);
+        }
     }
 
     public List<RegisterStudentToCommissionByCsv> parseCsv(MultipartFile file) throws IOException {

@@ -60,11 +60,20 @@ public class CareerController {
         return ResponseEntity.ok().build();
     }
 
-    // Baja definitiva
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> definitiveDeleteCareer(@PathVariable Long id) {
-        programService.deleteProgram(id);
-        return ResponseEntity.ok().build();
+        try {
+            programService.deleteProgram(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            String errorMsg = "Error al eliminar el programa";
+            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
+                errorMsg += ": " + e.getMessage();
+            }
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).body(errorMsg);
+        }
     }
     //PUT
     @PutMapping("/{id}")

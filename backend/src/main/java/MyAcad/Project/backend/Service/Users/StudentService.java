@@ -11,15 +11,20 @@ import MyAcad.Project.backend.Mapper.ProgramMapper;
 import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.StudentCsvDto;
+import MyAcad.Project.backend.Model.Academic.Commission;
+import MyAcad.Project.backend.Model.Academic.ExamsEntity;
+import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
+import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamEntity;
+import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
+import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
+import MyAcad.Project.backend.Repository.Inscriptions.InscriptionToFinalExamRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
-
-import MyAcad.Project.backend.Model.Programs.ProgramResponse;
-import MyAcad.Project.backend.Model.Users.Student;
-import MyAcad.Project.backend.Model.Users.StudentCsvDto;
-
+import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import MyAcad.Project.backend.Model.Users.StudentResponse;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Service.Programs.ProgramService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
@@ -44,10 +49,15 @@ import java.util.Optional;
 @AllArgsConstructor
 public class StudentService {
     private final StudentRepository repository;
-     private final ProgramMapper programMapper;
+    private final ProgramMapper programMapper;
     private final ProgramRepository programRepository;
     private final UserLookupService userLookupService;
     private final ProgramService programService;
+    private final CommissionRepository commissionRepository;
+    private final SubjectsXStudentRepository subjectsXStudentRepository;
+    private final ExamsRepository examsRepository;
+    private final InscriptionToFinalExamRepository inscriptionToFinalExamRepository;
+    private final EntityManager entityManager;
     private PasswordEncoder passwordEncoder;
 
     public void add(Student t) {
@@ -170,12 +180,113 @@ public class StudentService {
         return ResponseEntity.noContent().build();
     }
 
+    @Transactional
     public ResponseEntity<Void> definitiveDeleteStudent(Long studentId) {
         if (!repository.existsById(studentId)) {
             return ResponseEntity.notFound().build();
         }
-        repository.deleteById(studentId);
-        return ResponseEntity.ok().build();
+        
+        List<String> conflicts = new ArrayList<>();
+        
+        List<Commission> commissions = commissionRepository.findCommissionsByStudentId(studentId);
+        if (commissions != null && !commissions.isEmpty()) {
+            List<String> commissionNumbers = commissions.stream()
+                    .filter(c -> c != null && c.getNumber() != 0)
+                    .map(c -> "Comisión " + c.getNumber() + " (" + c.getProgram() + ")")
+                    .toList();
+            if (!commissionNumbers.isEmpty()) {
+                conflicts.add("Comisiones: " + String.join(", ", commissionNumbers));
+            }
+        }
+        
+        List<SubjectsXStudentEntity> subjectsXStudent = subjectsXStudentRepository.findByStudent_Id(studentId);
+        if (subjectsXStudent != null && !subjectsXStudent.isEmpty()) {
+            List<String> subjectNames = subjectsXStudent.stream()
+                    .filter(sxs -> sxs != null && sxs.getSubjects() != null)
+                    .map(sxs -> sxs.getSubjects().getName())
+                    .distinct()
+                    .toList();
+            if (!subjectNames.isEmpty()) {
+                conflicts.add("Materias: " + String.join(", ", subjectNames));
+            }
+        }
+        
+        List<Program> programs = programRepository.findByStudent(studentId);
+        if (programs != null && !programs.isEmpty()) {
+            List<String> programNames = programs.stream()
+                    .filter(p -> p != null && p.getName() != null)
+                    .map(Program::getName)
+                    .toList();
+            if (!programNames.isEmpty()) {
+                conflicts.add("Programas: " + String.join(", ", programNames));
+            }
+        }
+        
+        List<ExamsEntity> exams = examsRepository.findAllByStudent_Id(studentId);
+        if (exams != null && !exams.isEmpty()) {
+            conflicts.add("Exámenes: " + exams.size() + " examen(es) registrado(s)");
+        }
+        
+        List<InscriptionToFinalExamEntity> inscriptions = inscriptionToFinalExamRepository.findAll();
+        boolean hasInscriptions = inscriptions.stream()
+                .anyMatch(i -> i.getStudents() != null && 
+                        i.getStudents().stream()
+                                .anyMatch(s -> s != null && s.getId() != null && s.getId().equals(studentId)));
+        if (hasInscriptions) {
+            conflicts.add("Inscripciones a exámenes finales");
+        }
+        
+        if (!conflicts.isEmpty()) {
+            String errorMsg = "No se puede eliminar el estudiante porque está anotado en: " + String.join("; ", conflicts);
+            throw new RuntimeException(errorMsg);
+        }
+        
+        try {
+            subjectsXStudentRepository.findByStudent_Id(studentId).forEach(subjectsXStudentRepository::delete);
+            subjectsXStudentRepository.flush();
+            
+            examsRepository.findAllByStudent_Id(studentId).forEach(examsRepository::delete);
+            examsRepository.flush();
+            
+            try {
+                entityManager.createNativeQuery("DELETE FROM student_x_inscription WHERE user_id = :studentId")
+                        .setParameter("studentId", studentId)
+                        .executeUpdate();
+            } catch (Exception e) {
+            }
+            
+            try {
+                entityManager.createNativeQuery("DELETE FROM students_in_commission WHERE user_id = :studentId")
+                        .setParameter("studentId", studentId)
+                        .executeUpdate();
+            } catch (Exception e) {
+            }
+            
+            try {
+                entityManager.createNativeQuery("DELETE FROM program_students WHERE user_id = :studentId")
+                        .setParameter("studentId", studentId)
+                        .executeUpdate();
+            } catch (Exception e) {
+                try {
+                    entityManager.createNativeQuery("DELETE FROM program_students WHERE students_id = :studentId")
+                            .setParameter("studentId", studentId)
+                            .executeUpdate();
+                } catch (Exception e2) {
+                }
+            }
+            
+            entityManager.flush();
+            repository.deleteById(studentId);
+            repository.flush();
+            
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            System.err.println("Error al eliminar estudiante " + studentId + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Error inesperado al eliminar el estudiante: " + e.getMessage(), e);
+        }
     }
 
     public List<StudentResponse> list() {

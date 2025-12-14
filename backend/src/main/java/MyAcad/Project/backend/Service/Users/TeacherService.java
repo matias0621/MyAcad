@@ -9,9 +9,15 @@ import MyAcad.Project.backend.Mapper.TeacherMapper;
 import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Model.Programs.ProgramResponse;
 import MyAcad.Project.backend.Model.Users.*;
+import MyAcad.Project.backend.Model.Academic.Commission;
+import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
+import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
+import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import MyAcad.Project.backend.Service.Programs.ProgramService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
@@ -27,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +45,9 @@ public class TeacherService {
     private final ProgramService programService;
     private final TeacherMapper mapper;
     private final UserLookupService userLookupService;
+    private final CommissionRepository commissionRepository;
+    private final SubjectsRepository subjectsRepository;
+    private final EntityManager entityManager;
     private PasswordEncoder passwordEncoder;
 
     public Teacher add(Teacher t) {
@@ -108,7 +118,7 @@ public class TeacherService {
         List<TeacherResponse> responseList = teacherPage.getContent()
                 .stream()
                 .map(mapper::toResponse)
-                .map(this::getProgramsForTeacher)   // ✔ ahora sí tiene sentido
+                .map(this::getProgramsForTeacher) 
                 .toList();
 
         return new PageImpl<>(
@@ -151,6 +161,96 @@ public class TeacherService {
         teacher.setActive(false);
         repository.save(teacher);
         return ResponseEntity.noContent().build();
+    }
+
+    public ResponseEntity<Void> definitiveDeleteTeacher(Long teacherId) {
+        if (!repository.existsById(teacherId)) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        List<String> conflicts = new ArrayList<>();
+        
+        List<Commission> commissions = commissionRepository.findCommissionsByTeacherId(teacherId);
+        if (commissions != null && !commissions.isEmpty()) {
+            List<String> commissionNumbers = commissions.stream()
+                    .filter(c -> c != null && c.getNumber() != 0 && c.getProgram() != null)
+                    .map(c -> "Comisión " + c.getNumber() + " (" + c.getProgram() + ")")
+                    .toList();
+            if (!commissionNumbers.isEmpty()) {
+                conflicts.add("Comisiones: " + String.join(", ", commissionNumbers));
+            }
+        }
+        
+        List<SubjectsEntity> subjects = subjectsRepository.findSubjectsByTeacherId(teacherId);
+        if (subjects != null && !subjects.isEmpty()) {
+            List<String> subjectNames = subjects.stream()
+                    .filter(s -> s != null && s.getName() != null)
+                    .map(SubjectsEntity::getName)
+                    .toList();
+            if (!subjectNames.isEmpty()) {
+                conflicts.add("Materias: " + String.join(", ", subjectNames));
+            }
+        }
+        
+        List<Program> programs = programRepository.findByTeacher(teacherId);
+        if (programs != null && !programs.isEmpty()) {
+            List<String> programNames = programs.stream()
+                    .filter(p -> p != null && p.getName() != null)
+                    .map(Program::getName)
+                    .toList();
+            if (!programNames.isEmpty()) {
+                conflicts.add("Programas: " + String.join(", ", programNames));
+            }
+        }
+        
+        if (!conflicts.isEmpty()) {
+            String errorMsg = "No se puede eliminar el profesor porque está asignado en: " + String.join("; ", conflicts);
+            throw new RuntimeException(errorMsg);
+        }
+        
+        return deleteTeacherRelations(teacherId);
+    }
+    
+    @Transactional
+    private ResponseEntity<Void> deleteTeacherRelations(Long teacherId) {
+        try {
+            try {
+                entityManager.createNativeQuery("DELETE FROM teacher_x_commission WHERE user_id = :teacherId")
+                        .setParameter("teacherId", teacherId)
+                        .executeUpdate();
+            } catch (Exception e) {
+            }
+            
+            try {
+                entityManager.createNativeQuery("DELETE FROM subject_x_teacher WHERE user_id = :teacherId")
+                        .setParameter("teacherId", teacherId)
+                        .executeUpdate();
+            } catch (Exception e) {
+            }
+            
+            try {
+                entityManager.createNativeQuery("DELETE FROM program_teachers WHERE teachers_id = :teacherId")
+                        .setParameter("teacherId", teacherId)
+                        .executeUpdate();
+            } catch (Exception e) {
+                try {
+                    entityManager.createNativeQuery("DELETE FROM program_teachers WHERE user_id = :teacherId")
+                            .setParameter("teacherId", teacherId)
+                            .executeUpdate();
+                } catch (Exception e2) {
+                }
+            }
+            
+            entityManager.flush();
+            repository.deleteById(teacherId);
+            repository.flush();
+            
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            System.err.println("Error al eliminar profesor " + teacherId + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Error inesperado al eliminar el profesor: " + e.getMessage(), e);
+        }
     }
 
     public List<TeacherResponse> list() {

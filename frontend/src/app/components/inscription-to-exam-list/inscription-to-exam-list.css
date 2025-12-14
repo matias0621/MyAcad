@@ -129,6 +129,18 @@
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.exam-action {
+	min-width: 110px;
+	padding: 0.55rem 1rem;
+	border: none;
+	border-radius: 12px;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+	color: #fff;
+	cursor: pointer;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .exam-action:hover {
 	transform: translateY(-1px);
 	box-shadow: 0 14px 24px rgba(61, 91, 105, 0.22);
@@ -137,6 +149,8 @@
 .exam-action--info {
 	background: linear-gradient(135deg, #5a8dee, #3d5bba);
 }
+
+
 
 .exam-action--secondary {
 	background: linear-gradient(135deg, #6da37a, #3d6951);

@@ -1,12 +1,10 @@
 package MyAcad.Project.backend.Service;
 
 import MyAcad.Project.backend.Mapper.SubjectsXStudentMapper;
-import MyAcad.Project.backend.Model.Academic.SubjectsXStudentDTO;
-import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
-import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
-import MyAcad.Project.backend.Model.Academic.SubjectsXStudentResponse;
+import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Users.Student;
 import MyAcad.Project.backend.Model.Users.StudentResponse;
+import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
 import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
 import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
@@ -28,10 +26,12 @@ public class SubjectsXStudentService {
     private final StudentService studentService;
     private final StudentRepository studentRepository;
     private final ExamsRepository examsRepository;
+    private final CommissionRepository commissionRepository;
 
     public void createSubjectsXStudent(SubjectsXStudentDTO subjectsXStudentDTO) {
         SubjectsEntity subjects = subjectService.getById(subjectsXStudentDTO.getSubjectsId()).orElseThrow();
         Student student = studentRepository.findById(subjectsXStudentDTO.getStudentId()).orElseThrow();
+        Commission commission = commissionRepository.findById(subjectsXStudentDTO.getCommissionId()).orElseThrow();
 
         // Verificar si ya está inscripto
         Optional<SubjectsXStudentEntity> existingRelation =
@@ -45,6 +45,7 @@ public class SubjectsXStudentService {
                 .student(student)
                 .subjects(subjects)
                 .stateStudent(subjectsXStudentDTO.getAcademicStatus())
+                .commission(commission)
                 .build();
 
         subjectsXStudentRepository.save(subjectsXStudentEntity);
@@ -66,6 +67,10 @@ public class SubjectsXStudentService {
         return subjectsXStudentRepository
                 .findByStudent_IdAndSubjects_Id(studentId, subjectsId)
                 .map(subjectsXStudentMapper::toResponse);
+    }
+
+    public Optional<SubjectsXStudentResponse> getSubjectsXStudentByStudentIdSubjectsIdAndCommissionId(Long studentId, Long commissionId, Long subjectsId) {
+        return subjectsXStudentRepository.findByStudent_IdAndSubjects_IdAndCommission_Id(studentId,subjectsId,commissionId).map(subjectsXStudentMapper::toResponse);
     }
 
     public void updateSubjectsXStudent(SubjectsXStudentDTO subjectsXStudentDTO, Long SubjectXStudentId) {

@@ -36,6 +36,11 @@ public class SubjectsXStudentController {
         return ResponseEntity.ok(subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(studentId, subjectId).orElseThrow());
     }
 
+    @GetMapping("/student/{studentId}/commission/{commissionId}/subject/{subjectId}")
+    public ResponseEntity<SubjectsXStudentResponse> getSubjectsXStudentBySubjectIdStudentIdAndCommissionId(@PathVariable Long studentId, @PathVariable Long commissionId, @PathVariable Long subjectId) {
+        return ResponseEntity.ok(subjectsXStudentService.getSubjectsXStudentByStudentIdSubjectsIdAndCommissionId(studentId, commissionId, subjectId).orElseThrow());
+    }
+
     @PostMapping()
     public ResponseEntity<SubjectsXStudentDTO> createSubjectsXStudent(@RequestBody SubjectsXStudentDTO subjectsXStudentDTO){
         subjectsXStudentService.createSubjectsXStudent(subjectsXStudentDTO);

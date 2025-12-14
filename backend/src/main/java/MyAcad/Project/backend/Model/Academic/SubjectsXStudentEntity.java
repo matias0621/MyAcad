@@ -26,6 +26,10 @@ public class SubjectsXStudentEntity {
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
+    @ManyToOne
+    @JoinColumn(name = "commission_id", nullable = false)
+    private Commission commission;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "state_student", nullable = false)
     private AcademicStatus stateStudent;

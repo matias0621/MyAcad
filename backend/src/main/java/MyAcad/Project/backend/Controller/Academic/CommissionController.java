@@ -174,6 +174,13 @@ public class CommissionController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/unregister-student/{studentId}/commission/{commissionId}")
+    public ResponseEntity<?> unregisterStudent(@PathVariable Long studentId, @PathVariable Long commissionId, @RequestBody Long subjectsId){
+        services.unregister(studentId, commissionId, subjectsId);
+        return ResponseEntity.ok().build();
+    }
+
+
     @GetMapping("/teacher/{teacherId}")
     public ResponseEntity<List<CommissionResponse>> getByTeacherId(@PathVariable Long teacherId) {
         return ResponseEntity.ok(services.findByTeacherId(teacherId));

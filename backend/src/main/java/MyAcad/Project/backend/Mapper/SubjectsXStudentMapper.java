@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {SubjectsMapper.class})
+@Mapper(componentModel = "spring", uses = {SubjectsMapper.class, CommissionMapper.class})
 public interface SubjectsXStudentMapper {
 
     SubjectsXStudentEntity toEntity(SubjectsXStudentDTO subjectsXStudentDTO);

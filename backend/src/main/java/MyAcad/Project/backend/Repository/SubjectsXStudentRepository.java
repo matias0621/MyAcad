@@ -10,4 +10,11 @@ public interface SubjectsXStudentRepository extends JpaRepository<SubjectsXStude
     List<SubjectsXStudentEntity> findByStudent_Id(Long studentId);
 
     Optional<SubjectsXStudentEntity> findByStudent_IdAndSubjects_Id(Long studentId, Long subjectId);
+
+    Optional<SubjectsXStudentEntity>
+    findByStudent_IdAndSubjects_IdAndCommission_Id(
+            Long studentId,
+            Long subjectId,
+            Long commissionId
+    );
 }

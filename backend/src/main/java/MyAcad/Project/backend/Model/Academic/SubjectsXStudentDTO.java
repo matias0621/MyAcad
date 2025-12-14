@@ -14,5 +14,7 @@ public class SubjectsXStudentDTO {
 
     private Long studentId;
 
+    private Long commissionId;
+
     private AcademicStatus academicStatus;
 }

@@ -15,6 +15,7 @@ public class SubjectsXStudentResponse {
 
     private SubjectsResponse subjects;
     private Student student;
+    private CommissionResponse commission;
     private AcademicStatus stateStudent;
 
 }

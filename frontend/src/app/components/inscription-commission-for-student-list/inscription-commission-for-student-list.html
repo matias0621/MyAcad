@@ -25,8 +25,8 @@
                 <tr>
                     <td data-label="Materia">{{ inscription.commission.program}}</td>
                     <td data-label="Materia">{{ inscription.commission.number}}</td>
-                    <td data-label="Fecha examen">{{ inscription.finishInscriptionDate| date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td class="responsive-hide-2" data-label="Fecha inscripción">{{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td data-label="Fecha examen">{{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="responsive-hide-2" data-label="Fecha inscripción">{{ inscription.finishInscriptionDate | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td class="exam-actions" data-label="Acciones">
                         <button type="button" class="exam-action exam-action--info" (click)="selectedInscription = inscription"
                             data-bs-toggle="modal" data-bs-target="#modal-detail">

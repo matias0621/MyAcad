@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/programs/student/**",
                                 "/commissions/program/**",
+                                "/commissions/unregister-student/**",
                                 "/program/info-student/",
                                 "/exams/student/**",
                                 "/program/not-enrolled/**",

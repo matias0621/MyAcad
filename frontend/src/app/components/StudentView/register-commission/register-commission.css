@@ -146,6 +146,10 @@
 	background: linear-gradient(135deg, #3d5b69, #273a43);
 }
 
+.delete-action--info {
+	background: linear-gradient(135deg, #ff5252, #d50000);
+}
+
 .exam-empty-state {
 	padding: 2.4rem 1.6rem;
 	text-align: center;

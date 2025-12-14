@@ -60,6 +60,10 @@ export class CommissionService {
     return this.http.put<Commission>(`${this.API_URL}/${Commission.id}`, Commission);
   }
 
+  unregisterByStudent(studentId:number,subjectId:number, commissionId:number){
+    return this.http.put(`${this.API_URL}/unregister-student/${studentId}/commission/${commissionId}`, subjectId)
+  }
+
   addSubjectsToCommission(idCommission: number, idSubjects: number) {
     return this.http.put(`${this.API_URL}/add-subject/${idCommission}`, idSubjects)
   }

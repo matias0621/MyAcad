@@ -1,3 +1,4 @@
+import Commission from "../Commission/commission"
 import Subjects from "../Subjects/Subjects"
 import Student from "../Users/Student"
 
@@ -11,5 +12,6 @@ export interface SubjectsXStudent {
     id: number,
     subjects:Subjects,
     student:Student,
-    stateStudent: string
+    stateStudent: string,
+    commission:Commission
 }

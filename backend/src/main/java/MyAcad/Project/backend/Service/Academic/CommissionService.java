@@ -320,6 +320,7 @@ public class CommissionService {
                 .subjectsId(subjectsEntity.getId())
                 .studentId(student.getId())
                 .academicStatus(AcademicStatus.INPROGRESS)
+                .commissionId(commission.getId())
                 .build();
 
         registerStudentToProgram(student, commission.getProgram());
@@ -400,5 +401,22 @@ public class CommissionService {
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
         List<Commission> commissions = teacher.getCommissions();
         return commissionMapper.toResponseList(commissions);
+    }
+
+    public void unregister(Long studentId, Long subjectsId, Long commissionId){
+        Student student = studentRepository.findById(studentId).orElseThrow();
+        SubjectsEntity subjectsEntity = subjectsRepository.findById(subjectsId).orElseThrow();
+        Commission commission = repository.findById(commissionId).orElseThrow();
+
+        commission.getStudents().remove(student);
+        SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId,subjectsId).orElseThrow();
+
+        subjectsXStudentRepository.delete(subjectsXStudentEntity);
+        repository.save(commission);
+    }
+
+    public void deleteSubjectXStudent(Long studentId, Long subjectsId) {
+        SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId,subjectsId).orElseThrow(() -> new RuntimeException("SubjectsXStudent not found"));
+        subjectsXStudentRepository.delete(subjectsXStudentEntity);
     }
 }

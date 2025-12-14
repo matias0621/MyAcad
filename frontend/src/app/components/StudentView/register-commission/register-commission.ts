@@ -1,64 +1,119 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { InscriptionToCommission } from '../../../Models/InscriptionToCommission/InscritionToCommission';
 import { InscriptionToCommissionService } from '../../../Services/InscriptionToCommission/inscription-to-commission-service';
-import { DatePipe } from '@angular/common';
-import { ProgramService } from '../../../Services/Program/program-service';
 import { CommissionService } from '../../../Services/Commission/commission-service';
 import { AuthService } from '../../../Services/Auth/auth-service';
 import { NotificationService } from '../../../Services/notification/notification.service';
+import { SubjectsXStudentService } from '../../../Services/SubjectsXStudent/subjects-xstudent-service';
+
+import Subjects from '../../../Models/Subjects/Subjects';
+import { SubjectsXStudent } from '../../../Models/SubjectsXStudent/SubjectsXStudent';
+import Commission from '../../../Models/Commission/commission';
 import Student from '../../../Models/Users/Student';
 
-declare const bootstrap: { Modal: any };
 @Component({
   selector: 'app-register-commission',
-  imports: [DatePipe],
   templateUrl: './register-commission.html',
-  styleUrl: './register-commission.css'
+  styleUrl: './register-commission.css',
 })
 export class RegisterCommission {
 
-  inscriptionList !: InscriptionToCommission[];
-  token:any 
+  inscriptionList: InscriptionToCommission[] = [];
+  listOfSubjectsXStudent: SubjectsXStudent[] = [];
+  token!: any;
 
   constructor(
-    public inscriptionService:InscriptionToCommissionService, 
-    public programService:ProgramService,
-    public commissionService: CommissionService,
-    private authService:AuthService,
-    private notificationService:NotificationService,
-    private crd:ChangeDetectorRef){}
+    private inscriptionService: InscriptionToCommissionService,
+    private commissionService: CommissionService,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    private subjectXStudentService: SubjectsXStudentService
+  ) {}
 
   ngOnInit(): void {
-    this.getAllInscriptionOfStudent()
-    this.token = this.authService.getDecodedToken()
+    this.token = this.authService.getDecodedToken();
+    this.loadData();
   }
-  
-  getAllInscriptionOfStudent(){
 
-    const token:any = this.authService.getDecodedToken()
+  /* ===========================
+     📦 CARGA DE DATOS
+     =========================== */
 
-    this.inscriptionService.getInscriptionByStudent(token.id).subscribe({
-      next: (res) => {
+  private loadData(): void {
+    this.inscriptionService
+      .getInscriptionByStudent(this.token.id)
+      .subscribe(res => {
         this.inscriptionList = res;
-        console.log(res)
+      });
 
-        this.crd.detectChanges()
-      },
-      error: (err) => {
-        console.log(err)
-      }
-    })
+    this.subjectXStudentService
+      .getSubjectsByStudentId(this.token.id)
+      .subscribe(res => {
+        this.listOfSubjectsXStudent = res;
+      });
   }
 
-  registerByStudent(subjectId:number, commissionId:number){
-    console.log(commissionId)
-    this.commissionService.regiterByStudent(commissionId, subjectId).subscribe({
-      next: () =>{
-        this.notificationService.success("Te registraste correctamente")
+  /* ===========================
+     🔍 CHEQUEOS CORRECTOS
+     =========================== */
+
+  // Está en ESTA materia Y ESTA comisión
+  isStudentInSubjectAndCommission(
+    subject: Subjects,
+    commission: Commission
+  ): boolean {
+    return this.listOfSubjectsXStudent.some(
+      s =>
+        s.subjects.id === subject.id &&
+        s.commission.id === commission.id
+    );
+  }
+
+  // Está en la materia pero en OTRA comisión
+  isStudentInSubjectOtherCommission(
+    subject: Subjects,
+    commission: Commission
+  ): boolean {
+    return this.listOfSubjectsXStudent.some(
+      s =>
+        s.subjects.id === subject.id &&
+        s.commission.id !== commission.id
+    );
+  }
+
+  // Está en la comisión (sin importar la materia)
+  isStudentInCommission(commission: Commission): boolean {
+    return commission.students.some(
+      (s: Student) => s.id === this.token.id
+    );
+  }
+
+  /* ===========================
+     🎯 ACCIONES
+     =========================== */
+
+  registerByStudent(subjectId: number, commissionId: number): void {
+    this.commissionService
+      .regiterByStudent(commissionId, subjectId)
+      .subscribe({
+        next: () => {
+          this.notificationService.success('Te registraste correctamente');
+          this.loadData();
+        },
+        error: err =>
+          this.notificationService.error(err.error, true),
+      });
+  }
+
+  unregister(subjectId: number, commissionId: number): void {
+    this.commissionService.unregisterByStudent(this.token.id, subjectId,commissionId).subscribe({
+      next: () => {
+        this.notificationService.success("Te diste de baja de la materia")
+        this.loadData()
       },
       error: (err) => {
-        this.notificationService.error(err.error, true)
         console.log(err)
+        this.notificationService.error("Hubo un error intente denuevo mas tarde", true)
       }
     })
   }

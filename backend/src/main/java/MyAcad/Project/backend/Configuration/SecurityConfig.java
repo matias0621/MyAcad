@@ -53,8 +53,9 @@ public class SecurityConfig {
                                 "/commissions/register-commision-to-student/**",
                                 "/inscriptions/**",
                                 "/certificate/**",
-                                "/subject-x-student/**"
-                        ).hasAnyRole("STUDENT", "TEACHER", "MANAGER")
+                                "/subject-x-student/**",
+                                "/SubjectPrerrequisite/**"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/students/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(HttpMethod.DELETE, "/teachers/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(
@@ -74,8 +75,9 @@ public class SecurityConfig {
 
                                 "/exams/**",
                                 "/inscriptions/**",
-                                "/subject-x-student/**"
-                        ).hasAnyRole("MANAGER", "TEACHER")
+                                "/subject-x-student/**",
+                                "/SubjectPrerrequisite/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(service))

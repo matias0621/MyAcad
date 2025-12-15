@@ -17,6 +17,6 @@ public class SubjectsResponse {
     private int semesters;
     private boolean subjectActive;
     private AcademicStatus academicStatus;
-    private List<SubjectsResponse> prerequisites;
+    private List<SubjectPrerequisiteResponse> prerequisites;
     private String program;
 }

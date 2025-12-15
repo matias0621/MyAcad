@@ -82,24 +82,6 @@ public class SubjectController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/prerequisite-list/{id}")
-    public ResponseEntity<?> addPrerequisiteList(@PathVariable Long id, @RequestBody List<Long> IdPrerequisite) {
-        subjectService.addPrerequisiteList(IdPrerequisite, id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/prerequisite/{id}")
-    public ResponseEntity<?> addPrerequisite(@PathVariable Long id, @RequestBody Long subjectPrerequiste){
-        subjectService.addPrerequisite(subjectPrerequiste, id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping(value = "/prerequisite/delete/{id}")
-    public ResponseEntity<?> deletePrerequisite(@PathVariable Long id, @RequestBody Long IdPrerequisite) {
-        subjectService.deleteAPrerequisite(IdPrerequisite, id);
-        return ResponseEntity.ok().build();
-    }
-
     @PutMapping("/add-subject-to-career/{nameCareer}")
     public ResponseEntity<?> addSubjectsToCareer(@PathVariable String nameCareer, @RequestBody SubjectsEntity subjects) {
         subjectService.addSubjectsToCareer(nameCareer, subjects);

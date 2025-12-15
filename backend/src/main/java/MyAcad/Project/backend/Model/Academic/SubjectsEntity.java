@@ -44,13 +44,9 @@ public class SubjectsEntity {
     )
     private List<Teacher> teachers;
 
-    @ManyToMany
-    @JoinTable(
-            name = "subject_prerequisites",
-            joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "prerequisite_id")
-    )
-    private List<SubjectsEntity> prerequisites;
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SubjectPrerequisiteEntity> prerequisites;
+
     //Nombre de la carrera.
     private String program;
 }

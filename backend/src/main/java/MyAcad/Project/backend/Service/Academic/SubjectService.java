@@ -36,7 +36,6 @@ public class SubjectService {
                 .name(subject.getName())
                 .description(subject.getDescription())
                 .semesters(subject.getSemesters())
-                .prerequisites(subject.getPrerequisites())
                 .subjectActive(subject.getSubjectActive())
                 .academicStatus(subject.getAcademicStatus())
                 .program(subject.getProgram())
@@ -186,49 +185,6 @@ public class SubjectService {
 
     public List<SubjectsResponse> findByProgramAndSemesterLessThan(String programName, int semester) {
         return subjectsMapper.toResponseList(subjectsRepository.findByProgramAndSemestersLessThan(programName, semester));
-    }
-
-    public void addPrerequisite(Long subjectPrerequisiteId, Long subjectId) {
-        SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
-        SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(subjectPrerequisiteId).orElseThrow();
-
-        if (subjects.getPrerequisites().contains(subjectsPrerequisite)) {
-            throw new NameMateriaAlreadyExistsException();
-        }
-
-        subjects.getPrerequisites().add(subjectsPrerequisite);
-        subjectsRepository.save(subjects);
-    }
-
-    public void addPrerequisiteList(List<Long> subjectPrerequisiteId, Long subjectId) {
-        SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
-
-        for (Long aLong : subjectPrerequisiteId) {
-            SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(aLong).orElseThrow();
-
-            if (subjectsPrerequisite.getPrerequisites().contains(subjects)) {
-                throw new NameMateriaAlreadyExistsException();
-            }
-
-            if (subjects.getSemesters() < subjectsPrerequisite.getSemesters()) {
-                throw new RuntimeException("you can't do prerequisite a subject of semester upper");
-            }
-
-            subjects.getPrerequisites().add(subjects);
-        }
-
-        subjectsRepository.save(subjects);
-    }
-
-    public void deleteAPrerequisite(Long subjectPrerequisiteId, Long subjectId) {
-        SubjectsEntity subjectsPrerequisite = subjectsRepository.findById(subjectPrerequisiteId).orElseThrow();
-        SubjectsEntity subjects = subjectsRepository.findById(subjectId).orElseThrow();
-
-        if (!subjects.getPrerequisites().contains(subjectsPrerequisite)){
-            throw new NameMateriaAlreadyExistsException();
-        }
-        subjects.getPrerequisites().remove(subjectsPrerequisite);
-        subjectsRepository.save(subjects);
     }
 
     public List<SubjectsResponse> findBySemestersLessThan(Integer semesters) {

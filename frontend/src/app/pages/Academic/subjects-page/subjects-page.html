@@ -36,7 +36,7 @@
                     @if (subject?.prerequisites!.length > 0 || !subject.prerequisites) {
                     <td class="responsive-hide">
                         @for (s of subject.prerequisites; track $index) {
-                        {{ s.name }}
+                        {{ s.subject.name }} - {{ s.requiredStatus }}
                         }
                     </td>
                     }@else{
@@ -71,8 +71,8 @@
         </table>
 
         <!-- MODAL -->
-        <div class="modal fade crud-modal" id="modal" tabindex="-1" aria-labelledby="modal-label"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade crud-modal" id="modal" tabindex="-1" aria-labelledby="modal-label" style="display: none;"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
                 <div class="modal-content crud-modal__content">
                     <div class="modal-header crud-modal__header">
@@ -97,15 +97,6 @@
                                 @if (form.controls['description'].invalid && form.controls['description'].touched) {
                                 <p>El apellido debe tener entre 2 y 30 caracteres, solo letras.</p>
                                 }
-                            </fieldset>
-
-                            <fieldset>
-                                <label for="description">Aprobar o promocionar:</label>
-                                <select formControlName="acacademicStatus" name="acacademicStatus" id="academicStatus">
-                                    <option value="">Necesidad para correlativas</option>
-                                    <option value="COMPLETED">Aprobar</option>
-                                    <option value="APPROVED">Promocionar</option>
-                                </select>
                             </fieldset>
 
                             <fieldset>
@@ -139,28 +130,41 @@
             </div>
         </div>
 
-        <!-- MODAL de correlativas -->
-        <div class="modal fade" id="modal-prerequisite" tabindex="-1" aria-labelledby="modal-label"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade" id="modal-prerequisite" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
+
                     <div class="modal-header justify-content-center">
                         <h1 class="modal-title fs-5 titles">Correlativas</h1>
-                        <button data-bs-dismiss="modal" aria-label="Close">
+                        <button data-bs-dismiss="modal">
                             <i class="fa-solid fa-x"></i>
                         </button>
                     </div>
+
                     <div class="modal-body">
-                        @for (sub of listPrerequisite; track $index) {
+
+                        @for (sub of listPrerequisite; track sub.id) {
                         <div>
                             <span>{{ sub.name }}</span>
+
                             @if (isPrerequisite(sub.id)) {
-                            <button class="delete-crud-btn" (click)="deletePrerequisite(sub.id)">Eliminar</button>
+                            <button class="delete-crud-btn">Eliminar</button>
                             } @else {
-                            <button class="modify-crud-btn" (click)="addPrerequisite(sub.id)">Añadir</button>
+
+                            <select class="select-filter" [(ngModel)]="selectedStatus[sub.id]">
+                                <option value="">Necesidad</option>
+                                <option value="COMPLETED">Aprobar</option>
+                                <option value="APPROVED">Promocionar</option>
+                            </select>
+
+                            <button class="modify-crud-btn" (click)="addPrerequisite(sub.id)">
+                                Añadir
+                            </button>
+
                             }
                         </div>
                         }
+
                     </div>
                 </div>
             </div>
@@ -208,7 +212,7 @@
                                     Esta materia no tiene correlativas.
                                     } @else {
                                     @for (s of selectedSubject.prerequisites; track $index) {
-                                    {{ s.name }}{{ !$last ? ', ' : '' }}
+                                    {{ s.subject.name }}{{ !$last ? ', ' : '' }}
                                     }
                                     }
                                 </span>

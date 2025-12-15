@@ -1,3 +1,4 @@
+import { SubjectPrerequisite } from "../SubjectPrerequisite/SubjectPrerequisite";
 
 
 export default interface Subjects {
@@ -6,7 +7,7 @@ export default interface Subjects {
   description: string;
   semesters: number;
   academicStatus: string;
-  prerequisites?: Subjects[];
+  prerequisites?: SubjectPrerequisite[];
   program : string;
   subjectActive: boolean
 }

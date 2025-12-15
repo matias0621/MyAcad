@@ -11,10 +11,12 @@ import MyAcad.Project.backend.Model.Users.StudentCsvDto;
 import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
+import MyAcad.Project.backend.Repository.SubjectPrerequisiteRepository;
 import MyAcad.Project.backend.Repository.SubjectsXStudentRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
 import MyAcad.Project.backend.Repository.Academic.SubjectsRepository;
 import MyAcad.Project.backend.Repository.Users.TeacherRepository;
+import MyAcad.Project.backend.Service.SubjectPrerequisiteService;
 import MyAcad.Project.backend.Service.SubjectsXStudentService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -46,6 +48,7 @@ public class CommissionService {
     private final SubjectsXStudentRepository subjectsXStudentRepository;
     private final TeacherRepository teacherRepository;
     private final ProgramRepository programRepository;
+    private final SubjectPrerequisiteRepository subjectPrerequisiteRepository;
 
     public void add(Commission c) {
         if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
@@ -351,40 +354,59 @@ public class CommissionService {
         }
     }
 
-    public void registerToStudent(Student student, Commission commission, SubjectsEntity subjectsEntity){
+    @Transactional
+    public void registerToStudent(
+            Student student,
+            Commission commission,
+            SubjectsEntity subjectsEntity
+    ) {
 
-        Optional<Student> optStudent = studentRepository.findById(student.getId());
+        Student s = studentRepository.findById(student.getId())
+                .orElseThrow(() -> new InscriptionException("El estudiante no existe."));
 
-        if (optStudent.isEmpty()){
-            throw new InscriptionException("El legajo no existe.");
+        // 👤 Agregar estudiante a la comisión si no está
+        if (!commission.getStudents().contains(s)) {
+            commission.getStudents().add(s);
         }
 
-        if (!commission.getStudents().contains(student)){
-            commission.getStudents().add(student);
+        // ❌ Evitar doble inscripción a la misma materia
+        if (subjectsXStudentService
+                .getSubjectsXStudentByStudentIdAndSubjectsId(
+                        s.getId(),
+                        subjectsEntity.getId()
+                )
+                .isPresent()) {
+            throw new InscriptionException("El estudiante ya está anotado a la materia.");
         }
 
-        if (subjectsXStudentService.getSubjectsXStudentByStudentIdAndSubjectsId(student.getId(), subjectsEntity.getId()).isPresent()){
-            throw new InscriptionException("El alumno ya está anotado a la materia.");
+        // 📚 Validar correlativas
+        List<SubjectPrerequisiteEntity> prerequisites =
+                subjectPrerequisiteRepository
+                        .findBySubject_Id(subjectsEntity.getId());
+
+        for (SubjectPrerequisiteEntity spr : prerequisites) {
+            validatePrerequisite(
+                    s,
+                    spr.getPrerequisite(),
+                    spr.getRequiredStatus()
+            );
         }
 
-        if (!subjectsEntity.getPrerequisites().isEmpty()){
-            for (SubjectsEntity prerequisite : subjectsEntity.getPrerequisites()) {
-                if (prerequisite.isSubjectActive()){
-                    validatePrerequisite(student, prerequisite);
-                }
-            }
-        }
+        // 📝 Crear inscripción académica
+        SubjectsXStudentDTO subjectsXStudentDTO =
+                SubjectsXStudentDTO.builder()
+                        .studentId(s.getId())
+                        .subjectsId(subjectsEntity.getId())
+                        .commissionId(commission.getId())
+                        .academicStatus(AcademicStatus.INPROGRESS)
+                        .build();
 
-        SubjectsXStudentDTO subjectsXStudentDTO = SubjectsXStudentDTO.builder()
-                .subjectsId(subjectsEntity.getId())
-                .studentId(student.getId())
-                .academicStatus(AcademicStatus.INPROGRESS)
-                .commissionId(commission.getId())
-                .build();
-
-        registerStudentToProgram(student, commission.getProgram());
+        registerStudentToProgram(s, commission.getProgram());
         subjectsXStudentService.createSubjectsXStudent(subjectsXStudentDTO);
+
+        repository.save(commission);
     }
+
 
     public void registerStudentToProgram(Student student, String programName){
         Program program = findProgramByName(programName);
@@ -420,29 +442,51 @@ public class CommissionService {
         repository.save(commission);
     }
 
-    private void validatePrerequisite(Student student, SubjectsEntity prerequisite) {
-        Optional<SubjectsXStudentEntity> opt = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(student.getId(), prerequisite.getId());
+    private void validatePrerequisite(
+            Student student,
+            SubjectsEntity prerequisite,
+            AcademicStatus requiredStatus
+    ) {
 
-        if (opt.isEmpty()) {
-            throw new RuntimeException("Subject not found");
-        }
+        SubjectsXStudentEntity sxStudentEntity =
+                subjectsXStudentRepository
+                        .findByStudent_IdAndSubjects_Id(
+                                student.getId(),
+                                prerequisite.getId()
+                        )
+                        .orElseThrow(() ->
+                                new InscriptionException(
+                                        "El alumno no cursó la materia correlativa: "
+                                                + prerequisite.getName()
+                                )
+                        );
 
-        SubjectsXStudentEntity sxStudentEntity = opt.get();
         AcademicStatus statusStudent = sxStudentEntity.getStateStudent();
-        AcademicStatus statusRequired = prerequisite.getAcademicStatus();
 
-        switch (statusRequired) {
-            case COMPLETED -> {
-                if (!(statusStudent.equals(AcademicStatus.COMPLETED) || statusStudent.equals(AcademicStatus.APPROVED))) {
-                    throw new InscriptionException("El alumno no ha aprobado las correlativas.");
-                }
-            }
+        switch (requiredStatus) {
+
             case APPROVED -> {
-                if (!statusStudent.equals(AcademicStatus.APPROVED)) {
-                    throw new InscriptionException("El alumno no ha aprobado las correlativas.");
+                if (!(statusStudent == AcademicStatus.APPROVED
+                        || statusStudent == AcademicStatus.COMPLETED)) {
+                    throw new InscriptionException(
+                            "La materia " + prerequisite.getName()
+                                    + " debe estar APROBADA"
+                    );
                 }
             }
-            default -> throw new InscriptionException("El alumno no ha aprobado las correlativas.");
+
+            case COMPLETED -> {
+                if (statusStudent != AcademicStatus.COMPLETED) {
+                    throw new InscriptionException(
+                            "La materia " + prerequisite.getName()
+                                    + " debe estar PROMOCIONADA"
+                    );
+                }
+            }
+
+            default -> throw new InscriptionException(
+                    "Estado académico inválido para correlativas"
+            );
         }
     }
 

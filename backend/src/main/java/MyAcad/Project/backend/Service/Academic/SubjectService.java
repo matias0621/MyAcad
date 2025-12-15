@@ -48,7 +48,7 @@ public class SubjectService {
     public List<SubjectsResponse> getAllSubjects() {
         return subjectsRepository.findAll()
                 .stream()
-                .map(subjectsMapper::toResponseWithPrerequisites)
+                .map(this::mapSubjectManually)
                 .toList();
     }
 
@@ -56,7 +56,7 @@ public class SubjectService {
         Page<SubjectsEntity> subjectsPage = subjectsRepository.findAll(PageRequest.of(page, size));
         List<SubjectsResponse> responseList = subjectsPage.getContent()
                 .stream()
-                .map(subjectsMapper::toResponseWithPrerequisites)
+                .map(this::mapSubjectManually)
                 .toList();
 
         return new PageImpl<>(
@@ -67,10 +67,10 @@ public class SubjectService {
     }
 
     public List<SubjectsResponse> getByNameIgnoringCase(String name) {
-        return subjectsMapper.toResponseList(subjectsRepository.findByNameContainingIgnoreCase(name));
+        return subjectsRepository.findByNameContainingIgnoreCase(name).stream().map(this::mapSubjectManually).toList();
     }
     public List<SubjectsResponse> findByProgram(String program) {
-        return subjectsMapper.toResponseList(subjectsRepository.findByProgram(program));
+        return subjectsRepository.findByProgram(program).stream().map(this::mapSubjectManually).toList();
     }
 
     public ResponseEntity<Void> deleteSubject(Long subjectId) {
@@ -184,11 +184,11 @@ public class SubjectService {
     }
 
     public List<SubjectsResponse> findByProgramAndSemesterLessThan(String programName, int semester) {
-        return subjectsMapper.toResponseList(subjectsRepository.findByProgramAndSemestersLessThan(programName, semester));
+        return subjectsRepository.findByProgramAndSemestersLessThan(programName, semester).stream().map(this::mapSubjectManually).toList();
     }
 
     public List<SubjectsResponse> findBySemestersLessThan(Integer semesters) {
-        return subjectsMapper.toResponseList(subjectsRepository.findBySemestersLessThan(semesters));
+        return subjectsRepository.findBySemestersLessThan(semesters).stream().map(this::mapSubjectManually).toList();
     }
 
     public Program findProgramByName(String name) {
@@ -209,6 +209,64 @@ public class SubjectService {
         program.getSubjects().remove(subjectsEntity);
 
         programRepository.save(program);
+    }
+
+    private SubjectsResponse mapSubjectManually(SubjectsEntity entity) {
+        if (entity == null) return null;
+
+        SubjectsResponse res = new SubjectsResponse();
+        res.setId(entity.getId());
+        res.setName(entity.getName());
+        res.setDescription(entity.getDescription());
+        res.setSemesters(entity.getSemesters());
+        res.setSubjectActive(entity.isSubjectActive());
+        res.setAcademicStatus(entity.getAcademicStatus());
+        res.setProgram(entity.getProgram());
+
+        // Mapear prerrequisitos a mano (un solo nivel)
+        if (entity.getPrerequisites() != null) {
+            List<SubjectPrerequisiteResponse> prereqResponses = entity.getPrerequisites().stream()
+                    .map(sp -> {
+                        SubjectPrerequisiteResponse r = new SubjectPrerequisiteResponse();
+                        r.setId((long) sp.getId());
+                        r.setRequiredStatus(sp.getRequiredStatus());
+
+                        // subject
+                        SubjectsEntity subject = sp.getSubject();
+                        if (subject != null) {
+                            SubjectsResponse sr = new SubjectsResponse();
+                            sr.setId(subject.getId());
+                            sr.setName(subject.getName());
+                            sr.setDescription(subject.getDescription());
+                            sr.setSemesters(subject.getSemesters());
+                            sr.setSubjectActive(subject.isSubjectActive());
+                            sr.setAcademicStatus(subject.getAcademicStatus());
+                            sr.setProgram(subject.getProgram());
+                            r.setSubject(sr);
+                        }
+
+                        // prerequisite
+                        SubjectsEntity pre = sp.getPrerequisite();
+                        if (pre != null) {
+                            SubjectsResponse pr = new SubjectsResponse();
+                            pr.setId(pre.getId());
+                            pr.setName(pre.getName());
+                            pr.setDescription(pre.getDescription());
+                            pr.setSemesters(pre.getSemesters());
+                            pr.setSubjectActive(pre.isSubjectActive());
+                            pr.setAcademicStatus(pre.getAcademicStatus());
+                            pr.setProgram(pre.getProgram());
+                            r.setPrerequisite(pr);
+                        }
+
+                        return r;
+                    })
+                    .toList();
+
+            res.setPrerequisites(prereqResponses);
+        }
+
+        return res;
     }
 
 }

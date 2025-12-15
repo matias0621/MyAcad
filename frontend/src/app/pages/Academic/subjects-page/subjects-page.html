@@ -33,10 +33,16 @@
                     <td>{{subject.name}}</td>
                     <td>{{subject.program}}</td>
                     <td class="responsive-hide-2">{{subject.semesters}}</td>
-                    @if (subject?.prerequisites!.length > 0 || !subject.prerequisites) {
+                    @if (subject?.prerequisites!.length > 0) {
                     <td class="responsive-hide">
                         @for (s of subject.prerequisites; track $index) {
-                        {{ s.subject.name }} - {{ s.requiredStatus }}
+                        {{ s.subject.name }} - 
+                        @if(s.requiredStatus === "COMPLETED"){
+                            Promocionar
+                        }
+                        @else{
+                            Aprobar
+                        }
                         }
                     </td>
                     }@else{
@@ -153,8 +159,8 @@
 
                             <select class="select-filter" [(ngModel)]="selectedStatus[sub.id]">
                                 <option value="">Necesidad</option>
-                                <option value="COMPLETED">Aprobar</option>
-                                <option value="APPROVED">Promocionar</option>
+                                <option value="APPROVED">Aprobar</option>
+                                <option value="COMPLETED">Promocionar</option>
                             </select>
 
                             <button class="modify-crud-btn" (click)="addPrerequisite(sub.id)">

@@ -25,7 +25,6 @@ public interface SubjectPrerequisiteMapper {
     )
     SubjectPrerequisiteResponse toResponse(SubjectPrerequisiteEntity entity);
 
-    List<SubjectPrerequisiteResponse> toResponseList(
-            List<SubjectPrerequisiteEntity> entities
-    );
+    // Simple list mapping; MapStruct will reuse toResponse for each element
+    List<SubjectPrerequisiteResponse> toResponseList(List<SubjectPrerequisiteEntity> entities);
 }

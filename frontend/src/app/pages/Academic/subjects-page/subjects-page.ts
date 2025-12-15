@@ -148,6 +148,8 @@ export class SubjectsPage {
     });
   }
 
+  
+
   // deletePrerequisite(prerequisiteSubjectId: number) {
   //   const sp = this.selectedSubject?.prerequisites?.find(
   //     p => p.prerequisite.id === prerequisiteSubjectId

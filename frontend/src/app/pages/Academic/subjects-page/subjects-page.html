@@ -20,7 +20,7 @@
             <thead>
                 <tr class="text-center">
                     <th scope="col">Nombre</th>
-                    <th scope="col">Carrera/Curso</th>
+                    <th scope="col" class="responsive-hide">Carrera/Curso</th>
                     <th scope="col" class="responsive-hide-2">Cuatrimestre</th>
                     <th scope="col" class="responsive-hide">Correlativas</th>
                     <th scope="col"></th>
@@ -31,7 +31,7 @@
                 @for (subject of subjects; track $index) {
                 <tr class="crud-table-item">
                     <td>{{subject.name}}</td>
-                    <td>{{subject.program}}</td>
+                    <td class="responsive-hide">{{subject.program}}</td>
                     <td class="responsive-hide-2">{{subject.semesters}}</td>
                     @if (subject?.prerequisites!.length > 0) {
                     <td class="responsive-hide">

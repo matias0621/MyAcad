@@ -182,8 +182,8 @@ export class ProgramsList implements OnInit {
     }
   }
 
-  registerToStudent(nameProgram: string) {
-    this.router.navigate(['/register-student-to-commission/', nameProgram]);
+  registerToStudent() {
+    this.router.navigate(['/show-career-for-register']);
   }
 
   private getErrorMessage(error: any, entityType: string): string {

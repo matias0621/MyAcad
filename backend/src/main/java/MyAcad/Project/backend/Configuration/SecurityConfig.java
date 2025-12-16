@@ -54,30 +54,11 @@ public class SecurityConfig {
                                 "/inscriptions/**",
                                 "/certificate/**",
                                 "/subject-x-student/**",
-                                "/SubjectPrerrequisite/**"
+                                "/SubjectPrerrequisite/**",
+                                "/exams/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/students/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(HttpMethod.DELETE, "/teachers/delete/**").hasAnyRole("MANAGER", "TEACHER")
-                        .requestMatchers(
-                                //USERS
-                                "/teachers/**",
-                                "/students/**",
-                                "/managers/**",
-
-                                //ACADEMIC
-                                "/programs/**",
-                                "/careers/**",
-                                "/engineering/**",
-                                "/courses/**",
-                                "/commissions/**",
-                                "/subject/**",
-                                "/technicals/**",
-
-                                "/exams/**",
-                                "/inscriptions/**",
-                                "/subject-x-student/**",
-                                "/SubjectPrerrequisite/**"
-                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(service))

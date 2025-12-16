@@ -7,9 +7,8 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Legajo</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col" class="responsive-hide-2"></th>
+                    <th scope="col"></th>
 
                 </tr>
             </thead>
@@ -17,9 +16,8 @@
                 <!-- USERS -->
                 @for (program of listProgram; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{program.id}}</td>
                     <td>{{program.name}}</td>
-                    <td class="responsive-hide-2">
+                    <td class="table-buttons">
                         <button class="exam-add-btn" data-bs-toggle="modal" data-bs-target="#modal-add-student"
                             (click)="setName(program.name)">Inscribir alumno</button>
                         <button class="exam-add-btn" data-bs-toggle="modal" data-bs-target="#modal-add-teacher"
@@ -51,9 +49,9 @@
             <div class="modal-body modal-body-custom">
                 <form class="modal-form" [formGroup]="form">
                     <label for="legajo-alumno">Legajo</label>
-                    <input id="legajo-alumno" type="text" formControlName="legajo" placeholder="Ingresá el legajo">
+                    <input id="legajo-alumno" type="number" formControlName="legajo" placeholder="Ingresá el legajo">
                     <div class="form-buttons">
-                        <button type="button" class="modal-submit primary" (click)="addToStudent()"
+                        <button type="button" class="modal-submit primary exam-add-btn" (click)="addToStudent()"
                             [disabled]="form.invalid">Añadir alumno</button>
                     </div>
                 </form>
@@ -75,9 +73,9 @@
             <div class="modal-body modal-body-custom">
                 <form class="modal-form" [formGroup]="form">
                     <label for="legajo-profesor">Legajo</label>
-                    <input id="legajo-profesor" type="text" formControlName="legajo" placeholder="Ingresá el legajo">
+                    <input id="legajo-profesor" type="number" formControlName="legajo" placeholder="Ingresá el legajo">
                     <div class="form-buttons">
-                        <button type="button" class="modal-submit secondary" (click)="addToTeacher()"
+                        <button type="button" class="modal-submit secondary exam-add-btn" (click)="addToTeacher()"
                             [disabled]="form.invalid">Añadir profesor</button>
                     </div>
                 </form>

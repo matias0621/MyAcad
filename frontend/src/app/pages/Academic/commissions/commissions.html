@@ -46,7 +46,7 @@
                         <button class="modify-crud-btn" (click)="modifyCommission(commission)" data-bs-toggle="modal"
                             data-bs-target="#modal">Editar</button>
                         <button class="modify-crud-btn" data-bs-toggle="modal" data-bs-target="#modal-add-subjects"
-                            (click)="setCommisionId(commission.id)">
+                            (click)="setCommisionId(commission.id)" (click)="getSubjects(commission.program)">
                             Asignar materia
                         </button>
                     </td>

@@ -105,7 +105,6 @@ export class UserList implements OnInit {
     this.programService.getPrograms().subscribe({
       next: (res) => {
         this.programList = res;
-        console.log(res);
       },
       error: (err) => {
         console.log(err);

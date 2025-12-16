@@ -47,7 +47,7 @@ export class ExamsPage implements OnInit {
   ) {
     this.legajo = new FormControl('', [Validators.required]);
     this.examType = new FormControl('', [Validators.required]);
-    this.score = new FormControl('', [Validators.required]);
+    this.score = new FormControl('', [Validators.required, Validators.min(0), Validators.max(100)]);
     this.careerName = new FormControl('');
     this.subjects = new FormControl('', [Validators.required]);
 

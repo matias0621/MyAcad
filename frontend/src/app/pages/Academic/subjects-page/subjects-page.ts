@@ -87,8 +87,6 @@ export class SubjectsPage {
       next: (res: Subjects[]) => {
         this.subjects = res;
         this.allSubjects = res;
-        console.log(res)
-        console.log(this.subjects)
       },
       error: (err) => console.error(err),
     });

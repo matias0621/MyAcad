@@ -378,10 +378,6 @@ fieldset>input {
     font-family: inherit;
 }
 
-.crud-modal .modal-form select{
-    padding: 0 .7em!important;
-}
-
 .crud-modal .modal-form input:focus,
 .crud-modal .modal-form select:focus,
 .crud-modal .modal-form textarea:focus {
@@ -555,10 +551,6 @@ fieldset {
     .crud-table-item>*:not(:last-child) {
         max-width: 180px;
     }
-
-    .responsive-hide-2 {
-        display: none;
-    }
 }
 
 @media (max-width: 992px) {
@@ -637,6 +629,10 @@ fieldset {
 @media (max-width: 576px) {
     .pagination-container>* {
         min-width: 100px;
+    }
+
+    .responsive-hide-2 {
+        display: none;
     }
 
     .add-crud-btn {
@@ -979,9 +975,6 @@ fieldset {
 }
 
 @media (max-width: 768px) {
-    .crud-table td:last-child{
-        padding: .7em 0;
-    }
     .crud-modal .modal-dialog {
         max-width: 95vw;
         margin: 1.5rem auto;

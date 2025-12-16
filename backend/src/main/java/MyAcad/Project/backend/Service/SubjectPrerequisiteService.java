@@ -108,4 +108,9 @@ public class SubjectPrerequisiteService {
     public List<SubjectPrerequisiteResponse> findSubjectsRequiringStatus(String program, AcademicStatus status) {
         return subjectPrerequisiteMapper.toResponseList(subjectPrerequisiteRepository.findSubjectsRequiringStatus(program,status));
     }
+
+    public void deletePrerequisite(Long subjectId, Long prerequisiteId) {
+        SubjectPrerequisiteEntity s = subjectPrerequisiteRepository.findBySubject_IdAndPrerequisite_Id(subjectId, prerequisiteId).orElseThrow();
+        subjectPrerequisiteRepository.delete(s);
+    }
 }

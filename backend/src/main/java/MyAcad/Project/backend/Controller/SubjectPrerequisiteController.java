@@ -134,4 +134,10 @@ public class SubjectPrerequisiteController {
         );
     }
 
+    @DeleteMapping("/{subjectId}/{prerequisiteId}")
+    public ResponseEntity<Void> delete(@PathVariable Long subjectId, @PathVariable Long prerequisiteId) {
+        subjectPrerequisiteService.deletePrerequisite(subjectId, prerequisiteId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -150,23 +150,27 @@ export class SubjectsPage {
 
   
 
-  // deletePrerequisite(prerequisiteSubjectId: number) {
-  //   const sp = this.selectedSubject?.prerequisites?.find(
-  //     p => p.prerequisite.id === prerequisiteSubjectId
-  //   );
+  deletePrerequisiteRelation(prerequisiteSubjectId: number) {
+  if (!this.selectedSubject?.prerequisites) return;
 
-  //   if (!sp) return;
+  const relation = this.selectedSubject.prerequisites.find(
+    p => p.prerequisite.id === prerequisiteSubjectId
+  );
 
-  //   this.subjectPrerequisiteService.delete(sp.id).subscribe({
-  //     next: () => {
-  //       this.notificationService.success('Correlativa eliminada');
-  //       this.reloadPrerequisites();
-  //     },
-  //     error: () => {
-  //       this.notificationService.error('Error al eliminar correlativa', false);
-  //     }
-  //   });
-  // }
+  if (!relation) return;
+
+  this.subjectPrerequisiteService
+    .delete(this.selectedSubject.id, relation.prerequisite.id)
+    .subscribe({
+      next: () => {
+        this.notificationService.success('Correlativa eliminada');
+        this.reloadPrerequisites();
+      },
+      error: () => {
+        this.notificationService.error('Error al eliminar correlativa', false);
+      }
+    });
+}
 
   private reloadPrerequisites() {
     this.subjectPrerequisiteService.findBySubject(this.subjectId).subscribe({

@@ -55,7 +55,7 @@ public class SecurityConfig {
                                 "/certificate/**",
                                 "/subject-x-student/**",
                                 "/SubjectPrerrequisite/**"
-                        ).permitAll()
+                        ).hasAnyRole("STUDENT", "TEACHER", "MANAGER")
                         .requestMatchers(HttpMethod.DELETE, "/students/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(HttpMethod.DELETE, "/teachers/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(
@@ -77,7 +77,7 @@ public class SecurityConfig {
                                 "/inscriptions/**",
                                 "/subject-x-student/**",
                                 "/SubjectPrerrequisite/**"
-                        ).permitAll()
+                        ).hasAnyRole("MANAGER", "TEACHER")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(service))

@@ -26,8 +26,8 @@ export class SubjectPrerequisiteService {
 
   // ===================== DELETE =====================
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/${id}`);
+  delete(subjectId:number, prerequisiteId:number): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${subjectId}/${prerequisiteId}`);
   }
 
   // ===================== READ =====================

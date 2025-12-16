@@ -154,7 +154,7 @@
                             <span>{{ sub.name }}</span>
 
                             @if (isPrerequisite(sub.id)) {
-                            <button class="delete-crud-btn">Eliminar</button>
+                            <button (click)="deletePrerequisiteRelation(sub.id)" class="delete-crud-btn">Eliminar</button>
                             } @else {
 
                             <select class="select-filter" [(ngModel)]="selectedStatus[sub.id]">

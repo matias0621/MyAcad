@@ -1,9 +1,9 @@
 <header>
   <nav [class.menu-open]="isMenuOpen">
     @if (!service.getRole()) {
-      <a routerLink="">
-        <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
-      </a>
+    <a routerLink="">
+      <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
+    </a>
     }
     <!-- ---------------HEADER GESTORES--------------- -->
     @else if (service.getRole() == "ROLE_MANAGER") {
@@ -74,6 +74,13 @@
     }
     <!-- ---------------HEADER PROFESORES--------------- -->
     @else if (service.getRole() == "ROLE_TEACHER") {
+    <!-- Botón hamburguesa-->
+    <button class="hamburger" type="button" aria-label="Abrir menú" [attr.aria-expanded]="isMenuOpen"
+      (click)="toggleMenu()">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
     <a routerLink="">
       <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
     </a>
@@ -93,6 +100,13 @@
     }
     <!-- ---------------HEADER ALUMNOS--------------- -->
     @else if (service.getRole() == "ROLE_STUDENT") {
+    <!-- Botón hamburguesa-->
+    <button class="hamburger" type="button" aria-label="Abrir menú" [attr.aria-expanded]="isMenuOpen"
+      (click)="toggleMenu()">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
     <a routerLink="">
       <img src="/Media/Logo.png" alt="Logo UTN" id="logo">
     </a>
@@ -102,13 +116,13 @@
       <a routerLink="/certificates">Certificados</a>
       <div class="dropdown">
         <button class="dropdown-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Inscripciones
-      </button>
+          Inscripciones
+        </button>
 
-      <ul class="dropdown-menu">
-        <li> <a routerLink="/register-student-to-final-exam"> Inscripciones a examenes </a> </li>
-        <li> <a routerLink="/register-student-commission"> Inscripciones a comisiones </a> </li>
-      </ul>
+        <ul class="dropdown-menu">
+          <li> <a routerLink="/register-student-to-final-exam"> Inscripciones a examenes </a> </li>
+          <li> <a routerLink="/register-student-commission"> Inscripciones a comisiones </a> </li>
+        </ul>
       </div>
     </div>
 

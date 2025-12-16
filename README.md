@@ -9,15 +9,8 @@ Nuestro fin es demostrar que en nuestra institución se adquieren conocimientos 
 Diagramas:
 https://miro.com/welcomeonboard/WFl5V2tIWjgyZFFlais2eXNlckE5U2MzbENvbnk2elRORldtcGcwMXVmSlUzcDQ5T0ZhWWRGMllPek9EM2l4czZrZk5yRGE2N1BNMElHU205RnRyTTMvYlRiOThHWXBXQmVmTlhvYlc0TGF3NkFPOXVKTzFEVmxTN1hTckhRRkpBS2NFMDFkcUNFSnM0d3FEN050ekl3PT0hdjE=?share_link_id=522856016739
 
-Pasos para descargar Docker:
-1. ir a: https://www.docker.com
-2. descargar Docker Desktop la Windows AMD X64
-3. abren el instalar y todo siguiente
-<img width="369" height="86" alt="image" src="https://github.com/user-attachments/assets/fbde30e0-2ee4-4fbd-9c7f-24b45ffdf6ec" />
-(Aseguranse de cuando lo estan instalando tener esas dos opciones marcadas)
-4. Reiniciar la PC cuando termine
-5. Abrir el programa y hacerse una cuenta
+Documentación oficial:
+https://docs.google.com/document/d/1jxIEPwiV4Wbj1FhT1NGHGc-JwDX-vwiEinvgnOquXEw/edit?tab=t.0
 
-- EL COMANDO PARA EJECUTAR EL PROYECTO ES ESTE: docker compose up --build
-Se tiene que parar en la carpeta que tienen guardado el front y el back y ejecutarlo desde el visual
-Les va a tardar un poco, bueno a mi me tardo bastante. 
+Jira:
+https://matiasezequiel062169-1760443573994.atlassian.net/?continue=https%3A%2F%2Fmatiasezequiel062169-1760443573994.atlassian.net%2Fwelcome%2Fsoftware%3FprojectId%3D10000&atlOrigin=eyJpIjoiNGYwNjBlNDJjN2JjNDYwYzg2YzI2N2RlODcwYjk5N2YiLCJwIjoiamlyYS1zb2Z0d2FyZSJ9

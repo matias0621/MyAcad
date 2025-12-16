@@ -1,0 +1,237 @@
+.student-ticket-container {
+    min-height: calc(100vh - 120px);
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: linear-gradient(to bottom, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 1rem;
+}
+
+.header-section h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-5);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    color: #64748b;
+    font-weight: 400;
+}
+
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.requirements-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.requirements-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.requirements-card h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--color-5);
+    margin-bottom: 0.75rem;
+}
+
+.requirements-intro {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.requirements-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.requirements-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.requirements-list li:hover {
+    border-color: var(--color-4);
+    background: #f1f5f9;
+    transform: translateX(4px);
+}
+
+.requirement-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-4) 0%, var(--color-5) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.requirement-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.requirement-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.requirement-content strong {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-5);
+    display: block;
+}
+
+.requirement-content span {
+    font-size: 0.9375rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.action-card {
+    background: linear-gradient(135deg, var(--color-4) 0%, var(--color-5) 100%);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-content {
+    text-align: center;
+    color: white;
+    max-width: 500px;
+}
+
+.action-content h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.action-content > p {
+    font-size: 1.0625rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+    line-height: 1.6;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    color: var(--color-5);
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    background: #f8fafc;
+}
+
+.action-button svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.action-button:hover svg {
+    transform: translateX(4px);
+}
+
+.link-text {
+    display: block;
+    font-size: 0.9375rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+@media (min-width: 768px) {
+    .student-ticket-container {
+        padding: 3rem 2rem;
+    }
+
+    .header-section h1 {
+        font-size: 3rem;
+    }
+
+    .content-wrapper {
+        grid-template-columns: 1.2fr 1fr;
+        gap: 2.5rem;
+    }
+
+    .action-card {
+        padding: 3.5rem 2.5rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .header-section h1 {
+        font-size: 2rem;
+    }
+
+    .requirements-card {
+        padding: 1.5rem;
+    }
+
+    .requirements-list li {
+        padding: 1.25rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .requirement-icon {
+        align-self: center;
+    }
+
+    .action-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .action-content h2 {
+        font-size: 1.5rem;
+    }
+}
+

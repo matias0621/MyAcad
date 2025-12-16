@@ -5,7 +5,7 @@
         <div class="w-100 d-flex flex-column align-items-center mb-3">
             <button class="add-crud-btn" data-bs-toggle="modal" data-bs-target="#modal"
                 (click)="addCommission()">Agregar</button>
-            <select class="select-filter" [(ngModel)]="filter" (change)="filterCommissions()">
+            <select class="select-filter" [(ngModel)]="filter" (ngModelChange)="filterCommissions()">
                 <option value="">Mostrar todo</option>
                 <option value="Activas">Activas</option>
                 <option value="Inactivas">Inactivas</option>

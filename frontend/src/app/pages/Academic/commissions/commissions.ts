@@ -25,8 +25,8 @@ import Teacher from '../../../Models/Users/Teachers';
 })
 export class Commissions {
   programs: Program[] = [];
-  commissions!: Commission[];
-  allCommissions!: Commission[];
+  commissions: Commission[] = [];
+  allCommissions: Commission[] = [];
   subjectsList!: Subjects[];
   form!: FormGroup;
   filter: string = '';
@@ -54,6 +54,7 @@ export class Commissions {
   ) { }
 
   ngOnInit(): void {
+    this.loadAllCommissions();
     this.getCommissions();
     this.getPrograms();
     this.getSubjects()
@@ -62,21 +63,26 @@ export class Commissions {
       number: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
       capacity: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
       program: ['', [Validators.required]],
-      // envia las listas vacias para que no de error, en las listas se cargan materias y alumnos desde otras interfaces
       subjectIds: [[]],
       studentIds: [[]],
+    });
+  }
+
+  loadAllCommissions() {
+    this.service.getCommissions().subscribe({
+      next: (data) => {
+        this.allCommissions = data;
+      },
+      error: (error) => {
+        console.error(error);
+      },
     });
   }
 
   getCommissions(page: number = 0, size: number = 10) {
     this.service.getCommissionsPaginated(page, size).subscribe({
       next: (data) => {
-        // Guarda las comisiones filtradas
         this.commissions = data.content;
-        // Guarda todas las comisiones
-        this.allCommissions = data.content;
-        console.log(data.content)
-        // Paginación
         this.totalPages = data.totalPages;
         this.currentPage = data.number;
       },
@@ -156,6 +162,7 @@ export class Commissions {
           this.notificationService.success('Comision modificada exitosamente');
           this.form.reset();
           this.commissionId = 0;
+          this.loadAllCommissions();
           this.getCommissions();
         },
         error: (error) => {
@@ -173,6 +180,7 @@ export class Commissions {
           this.notificationService.success('Comision agregada exitosamente');
           this.form.reset();
           this.commissionId = 0;
+          this.loadAllCommissions();
           this.getCommissions();
         },
         error: (error) => {
@@ -197,6 +205,7 @@ export class Commissions {
           this.service.deleteCommission(id).subscribe({
             next: (data) => {
               this.notificationService.success('Comisión eliminada exitosamente');
+              this.loadAllCommissions();
               this.getCommissions();
             },
             error: (error) => {
@@ -224,6 +233,7 @@ export class Commissions {
       this.service.removeSubjectFromCommission(this.commissionId, subjectsId).subscribe({
         next: () => {
           this.notificationService.success('Se eliminó la materia de la comisión');
+          this.loadAllCommissions();
           this.getCommissions();
         },
         error: (err) => {
@@ -237,6 +247,7 @@ export class Commissions {
       this.service.addSubjectsToCommission(this.commissionId, subjectsId).subscribe({
         next: () => {
           this.notificationService.success('Se añadió la materia a la comisión y carrera');
+          this.loadAllCommissions();
           this.getCommissions();
         },
         error: (err) => {
@@ -265,6 +276,7 @@ export class Commissions {
           this.service.definitiveDeleteCommission(id).subscribe({
             next: (data) => {
               this.notificationService.success('Comisión eliminada exitosamente');
+              this.loadAllCommissions();
               this.getCommissions();
             },
             error: (error) => {
@@ -348,15 +360,39 @@ export class Commissions {
 
   filterCommissions() {
     if (this.filter === '') {
-      this.getCommissions();
+      this.currentPage = 0;
+      this.loadAllCommissions();
+      this.getCommissions(0, 10);
     } else if (this.filter === 'Activas') {
-      this.commissions = this.allCommissions.filter((c) => c.active === true);
+      this.service.getCommissions().subscribe({
+        next: (data) => {
+          this.allCommissions = data;
+          this.commissions = this.allCommissions.filter((c) => c.active === true);
+          this.totalPages = 0;
+          this.currentPage = 0;
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
     } else if (this.filter === 'Inactivas') {
-      this.commissions = this.allCommissions.filter((c) => c.active === false);
+      this.service.getCommissions().subscribe({
+        next: (data) => {
+          this.allCommissions = data;
+          this.commissions = this.allCommissions.filter((c) => c.active === false);
+          this.totalPages = 0;
+          this.currentPage = 0;
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
     } else {
       this.service.getByProgram(this.filter).subscribe({
         next: (data) => {
           this.commissions = data;
+          this.totalPages = 0;
+          this.currentPage = 0;
         },
         error: (error) => {
           console.error(error);
@@ -381,6 +417,7 @@ export class Commissions {
               this.notificationService.success(
                 `Comisión ${commission.number} de ${commission.program} activada exitosamente`
               );
+              this.loadAllCommissions();
               this.getCommissions();
             },
             error: (error) => {

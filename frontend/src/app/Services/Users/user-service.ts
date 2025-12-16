@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import Teacher from '../../Models/Users/Teachers';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,10 @@ export class UserService {
 
   getUsersByCommission(commissionId: number, endpoint: string) {
     return this.http.get<any>(`${this.API_URL}/${endpoint}/commission/${commissionId}`);
+  }
+
+  getTeacherByCommissionAndSubject(commissionId:number, subjectId:number){
+    return this.http.get<Teacher>(`${this.API_URL}/teachers/commission/${commissionId}/subject/${subjectId}`)
   }
 
   getUsersPaginated(endpoint: string, page: number, size: number) {

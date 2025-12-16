@@ -30,4 +30,17 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
     @Query("SELECT u FROM #{#entityName} u WHERE u.dni = :dni")
     Optional<Teacher> findByDni(@Param("dni")int dni);
+
+    @Query("""
+        SELECT DISTINCT t
+        FROM Teacher t
+        JOIN t.commissions c
+        JOIN t.subjects s
+        WHERE c.id = :commissionId
+          AND s.id = :subjectId
+    """)
+    Optional<Teacher> findTeacherByCommissionAndSubject(
+            @Param("commissionId") Long commissionId,
+            @Param("subjectId") Long subjectId
+    );
 }

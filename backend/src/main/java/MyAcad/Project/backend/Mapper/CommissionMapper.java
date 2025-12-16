@@ -20,6 +20,7 @@ public interface CommissionMapper {
 
     @Mapping(source = "subjects", target = "subjects")
     @Mapping(source = "students", target = "students")
+
     CommissionResponse toResponse(Commission commission);
     List<CommissionResponse> toResponseList(List<Commission> commissions);
 }

@@ -75,6 +75,11 @@ public class TeacherController {
         }
     }
 
+    @GetMapping("/commission/{commissionId}/subject/{subjectId}")
+    public ResponseEntity<TeacherResponse> getByCommissionAndSubject(@PathVariable(name = "commissionId") Long commissionId, @PathVariable Long subjectId) {
+        return ResponseEntity.ok(services.getByCommissionIdAndSubjectId(commissionId, subjectId));
+    }
+
     //POST
     @PostMapping
     public ResponseEntity<?> addTeacher(@RequestBody TeacherDTO dto) {

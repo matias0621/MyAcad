@@ -54,7 +54,10 @@ public class SecurityConfig {
                                 "/inscriptions/**",
                                 "/certificate/**",
                                 "/subject-x-student/**",
-                                "/SubjectPrerrequisite/**"
+                                "/SubjectPrerrequisite/**",
+                                "/course-evaluations/**",
+                                "/settings/**",
+                                "/teachers/commission/**"
                         ).hasAnyRole("STUDENT", "TEACHER", "MANAGER")
                         .requestMatchers(HttpMethod.DELETE, "/students/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(HttpMethod.DELETE, "/teachers/delete/**").hasAnyRole("MANAGER", "TEACHER")
@@ -76,7 +79,8 @@ public class SecurityConfig {
                                 "/exams/**",
                                 "/inscriptions/**",
                                 "/subject-x-student/**",
-                                "/SubjectPrerrequisite/**"
+                                "/SubjectPrerrequisite/**",
+                                "/settings/**"
                         ).hasAnyRole("MANAGER", "TEACHER")
                         .anyRequest().authenticated()
                 )

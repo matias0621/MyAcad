@@ -211,7 +211,7 @@ public class SubjectService {
         programRepository.save(program);
     }
 
-    private SubjectsResponse mapSubjectManually(SubjectsEntity entity) {
+    public SubjectsResponse mapSubjectManually(SubjectsEntity entity) {
         if (entity == null) return null;
 
         SubjectsResponse res = new SubjectsResponse();

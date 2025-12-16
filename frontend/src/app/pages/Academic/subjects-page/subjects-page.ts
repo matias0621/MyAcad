@@ -13,6 +13,7 @@ import { NotificationService } from '../../../Services/notification/notification
 import { PostSubjectPrerequisite } from '../../../Models/SubjectPrerequisite/SubjectPrerequisite';
 import { ProgramService } from '../../../Services/Program/program-service';
 import { SubjectPrerequisiteService } from '../../../Services/subject-prerequisite-service';
+import { SettingService } from '../../../Services/setting-service';
 
 @Component({
   selector: 'app-subjects-page',
@@ -30,6 +31,7 @@ export class SubjectsPage {
 
   selectedSubject?: Subjects;
   listPrerequisite: Subjects[] = [];
+  evaluationsEnabled: boolean = false; 
 
   subjectId = 0;
 
@@ -41,6 +43,7 @@ export class SubjectsPage {
   currentPage: number = 0;
   private allSubjectsLoaded = false;
   private showingAllSubjects = true;
+  
 
   filter = '';
 
@@ -49,6 +52,7 @@ export class SubjectsPage {
     private subjectService: SubjectsService,
     private subjectPrerequisiteService: SubjectPrerequisiteService,
     private programService: ProgramService,
+    public settingService:SettingService,
     private notificationService: NotificationService
   ) {}
 
@@ -62,6 +66,7 @@ export class SubjectsPage {
 
     this.getAllSubject();
     this.getPrograms();
+    this.loadEvaluationSetting()
   }
 
   // ===================== SUBJECTS =====================
@@ -390,5 +395,18 @@ export class SubjectsPage {
     this.subjects = this.allSubjects.filter((s) => s.program === this.filter);
     this.totalPages = 1;
     this.currentPage = 0;
+  }
+
+   loadEvaluationSetting() {
+    this.settingService.isCourseEvaluationEnabled().subscribe(value => {
+      this.evaluationsEnabled = value;
+    });
+  }
+
+  toggleEvaluations(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.evaluationsEnabled = checked;
+
+    this.settingService.setCourseEvaluationEnabled(checked).subscribe();
   }
 }

@@ -138,6 +138,9 @@ public class TeacherService {
                 .toList();
     }
 
+    public TeacherResponse getByCommissionIdAndSubjectId(Long commissionId, Long subjectId) {
+        return mapper.toResponse(repository.findTeacherByCommissionAndSubject(commissionId,subjectId).orElseThrow(() -> new RuntimeException("No existe el profe")));
+    }
 
     public List<TeacherResponse> getByLegajoContaining(String legajo) {
         return mapper.toResponseList(repository.findByLegajoContaining(legajo))

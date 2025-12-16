@@ -13,6 +13,10 @@
                 <option [value]="program.name">{{ program.name }}</option>
                 }
             </select>
+            <section>
+                <label for="">Activar encuestas: </label>
+                <input type="checkbox" [checked]="evaluationsEnabled" (change)="toggleEvaluations($event)" />
+            </section>
         </div>
 
         <!-- TABLA -->
@@ -36,12 +40,12 @@
                     @if (subject?.prerequisites!.length > 0) {
                     <td class="responsive-hide">
                         @for (s of subject.prerequisites; track $index) {
-                        {{ s.subject.name }} - 
+                        {{ s.subject.name }} -
                         @if(s.requiredStatus === "COMPLETED"){
-                            Promocionar
+                        Promocionar
                         }
                         @else{
-                            Aprobar
+                        Aprobar
                         }
                         }
                     </td>
@@ -154,7 +158,8 @@
                             <span>{{ sub.name }}</span>
 
                             @if (isPrerequisite(sub.id)) {
-                            <button (click)="deletePrerequisiteRelation(sub.id)" class="delete-crud-btn">Eliminar</button>
+                            <button (click)="deletePrerequisiteRelation(sub.id)"
+                                class="delete-crud-btn">Eliminar</button>
                             } @else {
 
                             <select class="select-filter" [(ngModel)]="selectedStatus[sub.id]">

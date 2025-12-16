@@ -27,6 +27,10 @@
                     <td>{{subXStu.commission.number}}</td>
                     <td>
                         {{ subXStu.subjects.name }}
+                        @if(showEvaluation){
+                        <button class="subjects-state-btn" data-bs-toggle="modal"
+                            data-bs-target="#modal-course-evaluetion" (click)="setDataForEvaluetion(subXStu.commission,subXStu.subjects)" >Realizar encuenta</button>
+                        }
                     </td>
 
                 </tr>
@@ -142,6 +146,30 @@
                         <span>{{subjects.subjects.prerequisites}}</span>
                     </div>
                     }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de encuesta de la materia -->
+<div class="modal fade crud-modal" id="modal-course-evaluetion" tabindex="-1" aria-labelledby="modal-subjects-plan-label"
+    style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
+        <div class="modal-content crud-modal__content">
+            <div class="modal-header justify-content-center">
+                <h1 class="modal-title fs-5 titles">Encuenta de materia</h1>
+                <button data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-x"></i>
+                </button>
+            </div>
+            <div class="modal-body crud-modal__body">
+                <label for="">Ponga su opinion respecto a la materia y al profesor</label>
+                <div class="detail-container">
+                    <form action="" [formGroup]="formReview" (submit)="createCourseEvaluetion()">
+                        <textarea name="" id="" formControlName="feedback"></textarea>
+                        <button class="subjects-state-btn">Subir encuesta</button>
+                    </form>
                 </div>
             </div>
         </div>

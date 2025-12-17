@@ -36,6 +36,7 @@ import { StudentTicket } from './pages/student-ticket/student-ticket';
 import { Certificates } from './pages/certificates/certificates';
 import { InscriptionCommisionPage } from './pages/inscription-commision-page/inscription-commision-page';
 import { RegisterCommission } from './components/StudentView/register-commission/register-commission';
+import { Surveys } from './pages/surveys/surveys';
 
 
 
@@ -75,6 +76,7 @@ export const routes: Routes = [
 
     { path: 'student-ticket', component: StudentTicket, canActivate: [AuthGuard] },
     { path: 'certificates', component: Certificates, canActivate: [AuthGuard] },
+    { path: 'surveys', component: Surveys, canActivate: [AuthGuard] },
 
     { path: 'show-career-for-register', component:ShowCareerForRegister, canActivate:[AuthGuard] },
     { path: 'show-career-for-commission', component:ShowCareerForCommission, canActivate:[AuthGuard]},

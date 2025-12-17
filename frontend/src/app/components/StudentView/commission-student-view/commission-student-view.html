@@ -1,6 +1,6 @@
 <section class="crud-management d-flex justify-content-center">
     <div class="crud-management-container">
-        <h1 style="text-align: center;">{{programName}}</h1>
+        <h1 style="text-align: center;">{{capitalizeFirst(programName)}}</h1>
 
         <div id="subjects">
             <button class="subjects-state-btn" data-bs-toggle="modal" data-bs-target="#modal-subjects">Estado de
@@ -23,14 +23,17 @@
                 @for (subXStu of listSubjects; track $index) {
                 <tr class="crud-table-item">
                     <td>{{subXStu.commission.number}}</td>
-                    <td>
-                        {{ subXStu.subjects.name }}
-                        @if(showEvaluation){
-                        <button class="subjects-state-btn" data-bs-toggle="modal"
-                            data-bs-target="#modal-course-evaluetion"
-                            (click)="setDataForEvaluetion(subXStu.commission,subXStu.subjects)">Realizar
-                            encuenta</button>
-                        }
+                    <td class="subject-cell">
+                        <span class="subject-name">{{ subXStu.subjects.name }}</span>
+                        <div class="subject-actions">
+                            @if(showEvaluation && !hasEvaluated(subXStu.subjects.id, subXStu.commission.id)){
+                                <button class="subjects-state-btn evaluation-btn" data-bs-toggle="modal"
+                                    data-bs-target="#modal-course-evaluetion" (click)="setDataForEvaluetion(subXStu.commission,subXStu.subjects)" >Realizar encuesta</button>
+                            }
+                            @if(showEvaluation && hasEvaluated(subXStu.subjects.id, subXStu.commission.id)){
+                                <span class="evaluation-done">Encuesta realizada</span>
+                            }
+                        </div>
                     </td>
 
                 </tr>
@@ -94,29 +97,28 @@
     style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
         <div class="modal-content crud-modal__content">
-            <div class="modal-header justify-content-center">
+            <div class="modal-header">
                 <h1 class="modal-title fs-5 titles">Estado de materias</h1>
                 <button data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa-solid fa-x"></i>
                 </button>
             </div>
             <div class="modal-body crud-modal__body">
-                <div class="detail-container">
+                <div class="subjects-status-container">
                     @for (subjects of listSubjects; track $index) {
-                    <div class="detail-item">
-                        <strong>Materia:</strong>
-                        <span>{{subjects.subjects.name}}</span>
-                        <strong>Estado:</strong>
-                        @if (subjects.stateStudent == 'FAILED') {
-                        <span>Recursa</span>
-                        }@else if (subjects.stateStudent == 'INPROGRESS') {
-                        <span>Cursando</span>
-                        }
-                        @else if (subjects.stateStudent == 'COMPLETED') {
-                        <span>Cursada</span>
-                        }@else if (subjects.stateStudent == 'APPROVED') {
-                        <span>Aprobada</span>
-                        }
+                    <div class="subject-status-card">
+                        <div class="subject-status-header">
+                            <h3 class="subject-name-title">{{subjects.subjects.name}}</h3>
+                            @if (subjects.stateStudent == 'FAILED') {
+                                <span class="status-badge status-failed">Recursa</span>
+                            } @else if (subjects.stateStudent == 'INPROGRESS') {
+                                <span class="status-badge status-inprogress">Cursando</span>
+                            } @else if (subjects.stateStudent == 'COMPLETED') {
+                                <span class="status-badge status-completed">Cursada</span>
+                            } @else if (subjects.stateStudent == 'APPROVED') {
+                                <span class="status-badge status-approved">Aprobada</span>
+                            }
+                        </div>
                     </div>
                     }@empty {
                     <div class="detail-item">
@@ -134,20 +136,25 @@
     style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
         <div class="modal-content crud-modal__content">
-            <div class="modal-header justify-content-center">
-                <h1 class="modal-title fs-5 titles">Estado de materias</h1>
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 titles">Materias del plan</h1>
                 <button data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa-solid fa-x"></i>
                 </button>
             </div>
             <div class="modal-body crud-modal__body">
-                <div class="detail-container">
+                <div class="subjects-plan-container">
                     @for (subjects of listSubjects; track $index) {
-                    <div class="detail-item">
-                        <strong>Materia:</strong>
-                        <span>{{subjects.subjects.name}}</span>
-                        <strong>Correlativas:</strong>
-                        <span>{{subjects.subjects.prerequisites}}</span>
+                    <div class="subject-plan-card">
+                        <div class="subject-plan-header">
+                            <h3 class="subject-name-title">{{subjects.subjects.name}}</h3>
+                        </div>
+                        <div class="subject-plan-body">
+                            <div class="plan-detail-row">
+                                <span class="plan-label">Correlativas:</span>
+                                <span class="plan-value">{{subjects.subjects.prerequisites || 'Ninguna'}}</span>
+                            </div>
+                        </div>
                     </div>
                     }@empty {
                     <div class="detail-item">
@@ -165,19 +172,37 @@
     aria-labelledby="modal-subjects-plan-label" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
         <div class="modal-content crud-modal__content">
-            <div class="modal-header justify-content-center">
-                <h1 class="modal-title fs-5 titles">Encuenta de materia</h1>
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 titles">
+                    @if (teacher) {
+                        Encuesta de materia - {{ teacher.name }} {{ teacher.lastName }}
+                    } @else {
+                        Encuesta de materia
+                    }
+                </h1>
                 <button data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa-solid fa-x"></i>
                 </button>
             </div>
             <div class="modal-body crud-modal__body">
-                <label for="">Ponga su opinion respecto a la materia y al profesor</label>
-                <div class="detail-container">
-                    <form action="" [formGroup]="formReview" (submit)="createCourseEvaluetion()">
-                        <textarea name="" id="" formControlName="feedback"></textarea>
-                        <button class="subjects-state-btn" data-bs-dismiss="modal" aria-label="Close">Subir
-                            encuesta</button>
+                <div class="evaluation-form-container">
+                    <form [formGroup]="formReview" (submit)="createCourseEvaluetion()">
+                        <div class="form-group-evaluation">
+                            <label for="teacherFeedback">¿Qué te pareció el docente?</label>
+                            <textarea id="teacherFeedback" formControlName="teacherFeedback" placeholder="Escribe tu opinión sobre el docente..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group-evaluation">
+                            <label for="contentFeedback">¿Qué te parecieron los contenidos?</label>
+                            <textarea id="contentFeedback" formControlName="contentFeedback" placeholder="Escribe tu opinión sobre los contenidos..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group-evaluation">
+                            <label for="suggestion">Sugerencias para el docente</label>
+                            <textarea id="suggestion" formControlName="suggestion" placeholder="Escribe tus sugerencias..." rows="3"></textarea>
+                        </div>
+                        <div class="form-actions-evaluation">
+                            <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="subjects-state-btn" [disabled]="formReview.invalid" data-bs-dismiss="modal">Enviar encuesta</button>
+                        </div>
                     </form>
                 </div>
             </div>

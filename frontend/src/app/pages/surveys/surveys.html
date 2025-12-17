@@ -1,0 +1,74 @@
+<div class="surveys-container">
+    <h1>Encuestas</h1>
+
+    @if (loading) {
+        <p class="loading-text">Cargando encuestas...</p>
+    } @else if (surveysList.length === 0) {
+        <div class="empty-state">
+            <p>No hay encuestas disponibles</p>
+        </div>
+    } @else {
+        <div class="surveys-list">
+            @for (survey of surveysList; track survey.id) {
+                <div class="survey-card">
+                    <div class="survey-header">
+                        <div class="survey-info">
+                            <h3>{{ survey.subject.name }}</h3>
+                            <div class="survey-meta">
+                                <span class="badge">Profesor: {{ survey.teacher.name }} {{ survey.teacher.lastName }}</span>
+                                <span class="badge">Fecha: {{ survey.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                            </div>
+                        </div>
+                        <button class="expand-btn" (click)="toggleSurvey(survey.id)" [attr.aria-expanded]="isExpanded(survey.id)">
+                            @if (isExpanded(survey.id)) {
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                                </svg>
+                            } @else {
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            }
+                        </button>
+                    </div>
+                    @if (isExpanded(survey.id)) {
+                        <div class="survey-body">
+                        @if (survey.feedback) {
+                            @let feedbackData = parseFeedback(survey.feedback);
+                            <div class="feedback-section">
+                                @if (feedbackData.teacher) {
+                                    <div class="feedback-item">
+                                        <strong>¿Qué te pareció el docente?</strong>
+                                        <p>{{ feedbackData.teacher }}</p>
+                                    </div>
+                                }
+                                @if (feedbackData.content) {
+                                    <div class="feedback-item">
+                                        <strong>¿Qué te parecieron los contenidos?</strong>
+                                        <p>{{ feedbackData.content }}</p>
+                                    </div>
+                                }
+                                @if (feedbackData.suggestion) {
+                                    <div class="feedback-item">
+                                        <strong>Sugerencias:</strong>
+                                        <p>{{ feedbackData.suggestion }}</p>
+                                    </div>
+                                }
+                            </div>
+                        } @else {
+                            <p class="no-feedback">Sin comentarios</p>
+                        }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="pagination">
+            <button (click)="previousPage()" [disabled]="currentPage === 0">Anterior</button>
+            <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">Siguiente</button>
+        </div>
+    }
+</div>
+

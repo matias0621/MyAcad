@@ -5,7 +5,7 @@ import Teacher from "../Users/Teachers";
 export interface CourseEvaluation {
     id: number,
     feedback: string,
-    createAt: string,
+    createdAt: string,
     subject: Subjects,
     teacher: Teacher
 }
@@ -13,5 +13,8 @@ export interface CourseEvaluation {
 export interface PostCourseEvaluation {
     feedback: string,
     subjectId: number,
-    teacherId: number
+    teacherId: number,
+    teacherFeedback?: string,
+    contentFeedback?: string,
+    suggestion?: string
 }

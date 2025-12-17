@@ -31,9 +31,13 @@ export class CommissionStudentView implements OnInit {
   subject!:Subjects | null
   commission!:Commission | null
   teacher!:Teacher | null
+  evaluatedSubjects: Set<string> = new Set()
 
   formReview!:FormGroup
   feedbackInput!: FormControl
+  teacherFeedbackInput!: FormControl
+  contentFeedbackInput!: FormControl
+  suggestionInput!: FormControl
 
   constructor(
     private commissionService: CommissionService,
@@ -48,10 +52,16 @@ export class CommissionStudentView implements OnInit {
   ) {
     this.programName = this.activatedRoute.snapshot.params['name'];
 
-    this.feedbackInput = new FormControl("", Validators.required)
+    this.feedbackInput = new FormControl("")
+    this.teacherFeedbackInput = new FormControl("", Validators.required)
+    this.contentFeedbackInput = new FormControl("", Validators.required)
+    this.suggestionInput = new FormControl("")
 
     this.formReview = new FormGroup({
-      feedback: this.feedbackInput
+      feedback: this.feedbackInput,
+      teacherFeedback: this.teacherFeedbackInput,
+      contentFeedback: this.contentFeedbackInput,
+      suggestion: this.suggestionInput
     })
   }
 
@@ -83,12 +93,25 @@ export class CommissionStudentView implements OnInit {
       next:(res)=>{
         if (!this.listSubjects.includes(res)){
           this.listSubjects.push(res)
+          this.checkIfEvaluated(subjectId, commissionId)
         }
       },
       error: (err)=>{
         console.log(err);
       }
     })
+  }
+
+  checkIfEvaluated(subjectId: number, commissionId: number) {
+    const token:any = this.auth.getDecodedToken()
+    if (!token) return;
+    
+    const key = `evaluation-${token.id}-${subjectId}-${commissionId}`
+    const evaluated = localStorage.getItem(key)
+    if (evaluated === 'true') {
+      const setKey = `${subjectId}-${commissionId}`
+      this.evaluatedSubjects.add(setKey)
+    }
   }
 
   getExamByStudentIdAndProgram(){
@@ -134,21 +157,50 @@ export class CommissionStudentView implements OnInit {
     })
   }
 
+  capitalizeFirst(text: string): string {
+    if (!text) return text
+    return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
+  hasEvaluated(subjectId: number, commissionId: number): boolean {
+    const key = `${subjectId}-${commissionId}`
+    return this.evaluatedSubjects.has(key)
+  }
+
   createCourseEvaluetion(){
     if(this.commission === null || this.teacher === null || this.subject === null){
       this.notificationService.error("Hubo un error", true)
       return
     }
 
+    const teacherFeedback = this.teacherFeedbackInput.value || ''
+    const contentFeedback = this.contentFeedbackInput.value || ''
+    const suggestion = this.suggestionInput.value || ''
+    
+    const combinedFeedback = `DOCENTE: ${teacherFeedback}\n\nCONTENIDOS: ${contentFeedback}\n\nSUGERENCIAS: ${suggestion}`
+
     const evaluation:PostCourseEvaluation = {
-      feedback: this.feedbackInput.value,
+      feedback: combinedFeedback,
       subjectId: this.subject.id,
-      teacherId: this.teacher.id
+      teacherId: this.teacher.id,
+      teacherFeedback: teacherFeedback,
+      contentFeedback: contentFeedback,
+      suggestion: suggestion
     }
 
     this.courseEvaluationService.create(evaluation).subscribe({
       next: () => {
-        this.notificationService.success("Tu reseña se subio correctamente")
+        const token:any = this.auth.getDecodedToken()
+        const key = `${this.subject!.id}-${this.commission!.id}`
+        this.evaluatedSubjects.add(key)
+        
+        if (token) {
+          const storageKey = `evaluation-${token.id}-${this.subject!.id}-${this.commission!.id}`
+          localStorage.setItem(storageKey, 'true')
+        }
+        
+        this.notificationService.success("Tu encuesta se subió correctamente")
+        this.formReview.reset()
       },
       error: (err) => {
         this.notificationService.error("Hubo un error", true)

@@ -49,6 +49,7 @@ public class CommissionService {
     private final TeacherRepository teacherRepository;
     private final ProgramRepository programRepository;
     private final SubjectPrerequisiteRepository subjectPrerequisiteRepository;
+    private final SubjectService subjectService;
 
     public void add(Commission c) {
         if (repository.findCommissionByNumberAndProgram(c.getNumber(), c.getProgram()).isPresent()) {
@@ -61,7 +62,25 @@ public class CommissionService {
         Page<Commission> commissionPage = repository.findAll(PageRequest.of(page, size));
         List<CommissionResponse> responseList = commissionPage.getContent()
                 .stream()
-                .map(commissionMapper::toResponse)
+                .map(commission -> {
+
+                    // 1️⃣ MapStruct solo lo básico
+                    CommissionResponse response =
+                            commissionMapper.toResponse(commission);
+
+                    // 2️⃣ Mapear materias A MANO
+                    if (commission.getSubjects() != null) {
+                        List<SubjectsResponse> subjects =
+                                commission.getSubjects()
+                                        .stream()
+                                        .map(subjectService::mapSubjectManually)
+                                        .toList();
+
+                        response.setSubjects(subjects);
+                    }
+
+                    return response;
+                })
                 .toList();
 
         return new PageImpl<>(
@@ -279,8 +298,30 @@ public class CommissionService {
     }
 
     public List<CommissionResponse> findByProgram(String program) {
-        return commissionMapper.toResponseList(repository.findByProgram(program));
+
+        return repository.findByProgram(program)
+                .stream()
+                .map(commission -> {
+
+                    // 1️⃣ MapStruct solo lo básico
+                    CommissionResponse response =
+                            commissionMapper.toResponse(commission);
+
+                    // 2️⃣ Subjects a mano
+                    if (commission.getSubjects() != null) {
+                        response.setSubjects(
+                                commission.getSubjects()
+                                        .stream()
+                                        .map(subjectService::mapSubjectManually)
+                                        .toList()
+                        );
+                    }
+
+                    return response;
+                })
+                .toList();
     }
+
 
     public Optional<Optional<Commission>> getByNumber(int number) {
         return Optional.ofNullable(repository.findByNumber(number));

@@ -79,6 +79,14 @@ public class TeacherService {
 
     public void saveTeacherByCsv(List<TeacherCsvDto> records) {
 
+        for (TeacherCsvDto record: records){
+            if(userLookupService.findByEmail(record.getEmail()).isPresent()) {
+                throw new EmailAlreadyExistsException();
+            }else if(userLookupService.findByDni(Integer.parseInt(record.getDni())).isPresent()) {
+                throw new DniAlreadyExistsException();
+            }
+        }
+
         for (TeacherCsvDto record : records) {
 
             Teacher teacher = new Teacher();
@@ -106,8 +114,6 @@ public class TeacherService {
                                 programRepository.save(program);
                             });
                 }
-
-
             }
         }
     }
@@ -215,7 +221,7 @@ public class TeacherService {
     }
     
     @Transactional
-    private ResponseEntity<Void> deleteTeacherRelations(Long teacherId) {
+    protected ResponseEntity<Void> deleteTeacherRelations(Long teacherId) {
         try {
             try {
                 entityManager.createNativeQuery("DELETE FROM teacher_x_commission WHERE user_id = :teacherId")

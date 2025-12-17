@@ -60,6 +60,14 @@ public class ManagerService {
     }
 
     public void saveStudentByCsv(List<ManagerCsvDto> records){
+        for (ManagerCsvDto record: records){
+            if(userLookupService.findByEmail(record.getEmail()).isPresent()) {
+                throw new EmailAlreadyExistsException();
+            }else if(userLookupService.findByDni(Integer.parseInt(record.getDni())).isPresent()) {
+                throw new DniAlreadyExistsException();
+            }
+        }
+
         for (ManagerCsvDto record : records) {
             Manager manager = new Manager();
             manager.setEmail(record.getEmail());

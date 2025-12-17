@@ -19,6 +19,7 @@ export class UserForm implements OnInit {
 
   form !: FormGroup;
   selectedFile!: File
+  loadingCsv: boolean = false;
 
   constructor(
     private service: UserService,
@@ -79,16 +80,19 @@ export class UserForm implements OnInit {
       return
     }
 
+    this.loadingCsv = true;
     const formData = new FormData()
     formData.append('file', this.selectedFile)
 
     this.service.uploadCsv(formData, this.endpoint).subscribe({
       next: () => {
+        this.loadingCsv = false;
         this.notificationService.success('CSV procesado correctamente')
         this.added.emit(true)
         this.cleanForm()
       },
       error: (err) => {
+        this.loadingCsv = false;
         this.notificationService.error("Error procesando el CSV")
         console.log(err)
       }

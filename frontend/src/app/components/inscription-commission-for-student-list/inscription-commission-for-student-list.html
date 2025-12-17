@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for (inscription of inscriptionList; track $index) {
+                @for (inscription of inscriptionList; track inscription.id) {
                 <tr>
                     <td data-label="Materia">{{ inscription.commission.program}}</td>
                     <td data-label="Materia">{{ inscription.commission.number}}</td>
@@ -72,7 +72,7 @@
                 </button>
             </div>
             <div class="modal-body exam-modal__body">
-                <app-inscription-commission-for-student-form (inscriptionCreated)="getAllInscription()"></app-inscription-commission-for-student-form>
+                <app-inscription-commission-for-student-form (inscriptionCreated)="handleInscriptionCreated()"></app-inscription-commission-for-student-form>
             </div>
         </div>
     </div>

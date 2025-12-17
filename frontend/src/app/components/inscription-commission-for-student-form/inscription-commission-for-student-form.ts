@@ -23,7 +23,7 @@ export class InscriptionCommissionForStudentForm {
   programs!:Program[]
   inscriptionList!:InscriptionToCommission[]
   commissionList!:Commission[]
-  commissionId!:number
+  commissionId: number | null | undefined
 
   constructor(
     public inscriptionsCommission:InscriptionToCommissionService,
@@ -48,6 +48,7 @@ export class InscriptionCommissionForStudentForm {
 
     this.programName.valueChanges.subscribe({
       next: () => {
+        this.commissionId = undefined;
         this.getCommissionbyProgramName(this.programName.value)
       },
       error: (err) => {
@@ -126,6 +127,9 @@ export class InscriptionCommissionForStudentForm {
     this.inscriptionsCommission.saveInscription(inscription).subscribe({
       next: () => {
         this.notificationService.success("Se creo con exito la nueva inscripcion")
+        this.form.reset();
+        this.commissionId = undefined;
+        this.inscriptionCreated.emit();
       },
       error: (err) => {
         console.log(err)

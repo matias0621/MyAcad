@@ -28,6 +28,7 @@ export class InscriptionToCommission implements OnInit {
   programName!: string;
   selectedFile!: File
   commissionId!: number
+  loadingCsv: boolean = false;
 
   constructor(
     public careerService: CareerService,
@@ -159,14 +160,17 @@ export class InscriptionToCommission implements OnInit {
       return
     }
 
+    this.loadingCsv = true;
     const formData = new FormData()
     formData.append('file', this.selectedFile)
 
     this.commisionService.uploadCsv(this.commissionId, formData).subscribe({
       next: () => {
+        this.loadingCsv = false;
         this.notificationService.success('CSV procesado correctamente')
       },
       error: (err) => {
+        this.loadingCsv = false;
         this.notificationService.error("Error procesando el CSV")
         console.log(err)
       }

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { InscriptionToCommission } from '../../Models/InscriptionToCommission/InscritionToCommission';
 import { InscriptionToCommissionService } from '../../Services/InscriptionToCommission/inscription-to-commission-service';
 import { DatePipe } from '@angular/common';
@@ -25,7 +26,8 @@ export class InscriptionCommissionForStudentList {
 
   constructor(public inscriptionService: InscriptionToCommissionService,
     private crd: ChangeDetectorRef,
-    private notificationService: NotificationService) { }
+    private notificationService: NotificationService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.getAllInscription()
@@ -34,13 +36,12 @@ export class InscriptionCommissionForStudentList {
   getAllInscription() {
     this.inscriptionService.getAllInscriptions().subscribe({
       next: (res) => {
-        this.inscriptionList = res;
-        console.log(res)
+        this.inscriptionList = [...res];
         if (this.pendingSelectionId !== null) {
           this.selectedInscription = this.inscriptionList.find(item => item.id === this.pendingSelectionId) ?? this.selectedInscription;
           this.pendingSelectionId = null;
         }
-        this.crd.detectChanges()
+        this.crd.detectChanges();
       },
       error: (err) => {
         console.log(err)
@@ -70,6 +71,15 @@ export class InscriptionCommissionForStudentList {
 
   openEdit(inscription: InscriptionToCommission) {
     this.editingInscription = inscription;
+  }
+
+  handleInscriptionCreated() {
+    this.closeModal('modal-add');
+    setTimeout(() => {
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['/inscriptionToCommission']);
+      });
+    }, 100);
   }
 
   handleInscriptionUpdated() {

@@ -35,8 +35,6 @@
 }
 
 .crud-table tbody td.crud-table-actions {
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
     vertical-align: top;
 }
 

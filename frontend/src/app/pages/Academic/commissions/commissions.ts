@@ -57,7 +57,6 @@ export class Commissions {
     this.loadAllCommissions();
     this.getCommissions();
     this.getPrograms();
-    this.getSubjects()
 
     this.form = this.fb.group({
       number: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
@@ -92,8 +91,8 @@ export class Commissions {
     });
   }
 
-  getSubjects() {
-    this.sService.getAllSubject().subscribe({
+  getSubjects(program : String) {
+    this.sService.getByProgram(program).subscribe({
       next: (res) => {
         this.subjectsList = res
       },

@@ -13,7 +13,7 @@
                 <tr class="text-center">
                     <th scope="col">Nombre</th>
                     <th scope="col">Cuota</th>
-                    <th scope="col" class="responsive-hide">Matrícula</th>
+                    <th scope="col" class="responsive-hide-2">Matrícula</th>
                     <th scope="col" class="responsive-hide">Duración(meses)</th>
                     <th scope="col"></th>
                 </tr>
@@ -24,7 +24,7 @@
                 <tr class="crud-table-item">
                     <td>{{program.name}}</td>
                     <td>${{program.monthlyFee | number:'1.0-0'}}</td>
-                    <td class="responsive-hide">${{program.annualFee | number:'1.0-0'}}</td>
+                    <td class="responsive-hide-2">${{program.annualFee | number:'1.0-0'}}</td>
                     <td class="responsive-hide">{{program.durationMonths}}</td>
                     <td class="crud-table-actions">
                         @if (program.active) {
@@ -41,7 +41,7 @@
                         <button class="modify-crud-btn"
                             (click)="modifyProgram(program); programEditForm.loadData(program)" data-bs-toggle="modal"
                             data-bs-target="#modal-edit">Editar</button>
-                        <button class="modify-crud-btn inscribe-btn" (click)="registerToStudent(program.name)">Inscribir</button>
+                        <button class="modify-crud-btn inscribe-btn" (click)="registerToStudent()">Inscribir</button>
                     </td>
                 </tr>
                 }@empty {

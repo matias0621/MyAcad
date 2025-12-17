@@ -36,7 +36,7 @@ export class SubjectsService {
     return this.http.get<Subjects>(`${this.api_url}/${id}`);
   }
 
-  getByProgram(program: string) {
+  getByProgram(program: String) {
     return this.http.get<Subjects[]>(`${this.api_url}/program/${program}`);
   }
 

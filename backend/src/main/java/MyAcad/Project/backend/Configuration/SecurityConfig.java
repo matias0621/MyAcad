@@ -58,7 +58,7 @@ public class SecurityConfig {
                                 "/course-evaluations/**",
                                 "/settings/**",
                                 "/teachers/commission/**"
-                        ).hasAnyRole("STUDENT", "TEACHER", "MANAGER")
+                        ).permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/students/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(HttpMethod.DELETE, "/teachers/delete/**").hasAnyRole("MANAGER", "TEACHER")
                         .requestMatchers(

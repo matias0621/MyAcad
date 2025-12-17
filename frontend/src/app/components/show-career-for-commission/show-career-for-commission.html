@@ -7,9 +7,8 @@
         <table class="crud-table">
             <thead>
                 <tr class="text-center">
-                    <th scope="col">Legajo</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col" class="responsive-hide-2"></th>
+                    <th scope="col"></th>
 
                 </tr>
             </thead>
@@ -17,9 +16,8 @@
                 <!-- USERS -->
                 @for (program of listProgram; track $index) {
                 <tr class="crud-table-item">
-                    <td>{{program.id}}</td>
                     <td>{{program.name}}</td>
-                    <td class="responsive-hide-2">
+                    <td>
                         <button class="exam-add-btn" data-bs-toggle="modal"
                             data-bs-target="#modal-add-student" (click)="setName(program.name)">Inscribir</button>
                 </tr>

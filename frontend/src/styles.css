@@ -69,6 +69,20 @@ input[type=number] {
 }
 
 /* --------TABLE-------- */
+.csv-fieldset{
+    grid-column: 1/3 !important;
+}
+input[type="file"]{
+    height: fit-content !important;
+}
+.table-buttons{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+select{
+    padding: 0 .5em !important;
+}
 .select-filter {
     margin-top: 1em;
     height: 2em;
@@ -368,6 +382,7 @@ fieldset>input {
 .crud-modal .modal-form select,
 .crud-modal .modal-form textarea {
     width: 100%;
+    height: 2em;
     padding: 0.75rem 1rem;
     border: 1.5px solid #e5e7eb;
     border-radius: 10px;
@@ -538,6 +553,9 @@ fieldset {
     .crud-management-container {
         max-width: 98vw;
     }
+    .responsive-hide-2 {
+        display: none;
+    }
 
     .crud-table th {
         padding: 6px 8px;
@@ -631,9 +649,6 @@ fieldset {
         min-width: 100px;
     }
 
-    .responsive-hide-2 {
-        display: none;
-    }
 
     .add-crud-btn {
         width: 100%;

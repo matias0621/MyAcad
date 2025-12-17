@@ -21,7 +21,9 @@
     background-color: #f9fafb !important;
     -webkit-text-fill-color: #273a43 !important;
 }
-
+.select-2{
+    margin: 0 !important;
+}
 .program-select option,
 .crud-modal .modal-form select.select-filter option {
     color: #273a43 !important;

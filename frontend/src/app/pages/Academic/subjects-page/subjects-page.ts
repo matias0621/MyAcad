@@ -31,7 +31,7 @@ export class SubjectsPage {
 
   selectedSubject?: Subjects;
   listPrerequisite: Subjects[] = [];
-  evaluationsEnabled: boolean = false; 
+  evaluationsEnabled: boolean = false;
 
   subjectId = 0;
 
@@ -43,7 +43,7 @@ export class SubjectsPage {
   currentPage: number = 0;
   private allSubjectsLoaded = false;
   private showingAllSubjects = true;
-  
+
 
   filter = '';
 
@@ -52,9 +52,9 @@ export class SubjectsPage {
     private subjectService: SubjectsService,
     private subjectPrerequisiteService: SubjectPrerequisiteService,
     private programService: ProgramService,
-    public settingService:SettingService,
+    public settingService: SettingService,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -87,11 +87,14 @@ export class SubjectsPage {
     });
   }
 
-  getAllSubject() {
-    this.subjectService.getAllSubject().subscribe({
-      next: (res: Subjects[]) => {
-        this.subjects = res;
-        this.allSubjects = res;
+  getAllSubject(page: number = 0, size: number = 10) {
+    this.subjectService.getAllSubjectPaginated(page, size).subscribe({
+      next: (res) => {
+        this.subjects = res.content;
+        this.allSubjects = res.content;
+
+        this.totalPages = res.totalPages;
+        this.currentPage = res.number;
       },
       error: (err) => console.error(err),
     });
@@ -151,29 +154,29 @@ export class SubjectsPage {
     });
   }
 
-  
+
 
   deletePrerequisiteRelation(prerequisiteSubjectId: number) {
-  if (!this.selectedSubject?.prerequisites) return;
+    if (!this.selectedSubject?.prerequisites) return;
 
-  const relation = this.selectedSubject.prerequisites.find(
-    p => p.prerequisite.id === prerequisiteSubjectId
-  );
+    const relation = this.selectedSubject.prerequisites.find(
+      p => p.prerequisite.id === prerequisiteSubjectId
+    );
 
-  if (!relation) return;
+    if (!relation) return;
 
-  this.subjectPrerequisiteService
-    .delete(this.selectedSubject.id, relation.prerequisite.id)
-    .subscribe({
-      next: () => {
-        this.notificationService.success('Correlativa eliminada');
-        this.reloadPrerequisites();
-      },
-      error: () => {
-        this.notificationService.error('Error al eliminar correlativa', false);
-      }
-    });
-}
+    this.subjectPrerequisiteService
+      .delete(this.selectedSubject.id, relation.prerequisite.id)
+      .subscribe({
+        next: () => {
+          this.notificationService.success('Correlativa eliminada');
+          this.reloadPrerequisites();
+        },
+        error: () => {
+          this.notificationService.error('Error al eliminar correlativa', false);
+        }
+      });
+  }
 
   private reloadPrerequisites() {
     this.subjectPrerequisiteService.findBySubject(this.subjectId).subscribe({
@@ -197,10 +200,16 @@ export class SubjectsPage {
     };
 
     if (this.subjectId === 0) {
-      this.subjectService.postSubject(payload as Subjects).subscribe(() => {
+      this.subjectService.postSubject(payload as Subjects).subscribe({
+        next: (res) => {
         this.notificationService.success('Materia creada');
         this.getAllSubject();
         this.form.reset();
+        },
+        error: (err) => {
+          this.notificationService.error('Error al crear materia', true);
+          console.log(err);
+        }
       });
     } else {
       this.subjectService
@@ -290,9 +299,9 @@ export class SubjectsPage {
       .then((confirmed) => {
         if (confirmed) {
           const updatedItem = { ...subject, subjectActive: true };
+
           this.subjectService.putSubject(updatedItem).subscribe({
             next: (response) => {
-              console.log(updatedItem);
               this.notificationService.success(`${subject.name} activado/a exitosamente`);
               this.getAllSubject();
             },
@@ -395,7 +404,7 @@ export class SubjectsPage {
     this.currentPage = 0;
   }
 
-   loadEvaluationSetting() {
+  loadEvaluationSetting() {
     this.settingService.isCourseEvaluationEnabled().subscribe(value => {
       this.evaluationsEnabled = value;
     });

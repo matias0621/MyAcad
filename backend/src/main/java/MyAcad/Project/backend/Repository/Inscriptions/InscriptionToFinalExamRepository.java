@@ -29,4 +29,13 @@ public interface InscriptionToFinalExamRepository extends JpaRepository<Inscript
     """)
     List<InscriptionToFinalExamEntity> findActiveInscriptionsForStudent(Long studentId, LocalDateTime now);
 
+    @Query("""
+    SELECT DISTINCT i
+    FROM InscriptionToFinalExamEntity i
+    JOIN i.subjects s
+    JOIN s.teachers t
+    WHERE t.id = :teacherId
+    """)
+    List<InscriptionToFinalExamEntity> findByTeacherId(Long teacherId);
+
 }

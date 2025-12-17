@@ -79,6 +79,11 @@ public class InscriptionsController {
         return ResponseEntity.ok(inscriptionToFinalExamService.getActiveInscriptionsForStudent(studentId));
     }
 
+    @GetMapping("/final-exam/teacher/{teacherId}")
+    public ResponseEntity<List<InscriptionToFinalExamResponse>> findByTeacherId(@PathVariable Long teacherId) {
+        return ResponseEntity.ok(inscriptionToFinalExamService.getInscriptionsByTeacherId(teacherId));
+    }
+
     @GetMapping("/commission/student/{id}")
     public ResponseEntity<List<InscriptionToCommissionResponse>> findByStudentId(@PathVariable Long id) {
         return ResponseEntity.ok(inscriptionToCommissionService.findByCareertoStudent(id));

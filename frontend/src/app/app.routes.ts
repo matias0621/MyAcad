@@ -25,6 +25,7 @@ import { CommissionsTeacherView } from './components/Teacher/commissions-teacher
 import { TeacherExamsView } from './components/Teacher/teacher-exams-view/teacher-exams-view';
 import { TeacherGradesView } from './components/Teacher/teacher-grades-view/teacher-grades-view';
 import { SubjectsTeacherView } from './components/Teacher/subjects-teacher-view/subjects-teacher-view';
+import { TeacherFinalExamsView } from './components/Teacher/teacher-final-exams-view/teacher-final-exams-view';
 
 import { ShowCareerForRegister } from './components/show-career-for-register/show-career-for-register';
 import { SelectTypeRegisterPage } from './pages/select-type-register-page/select-type-register-page';
@@ -90,6 +91,7 @@ export const routes: Routes = [
     { path: 'teacher/program/:programId/commissions', component: CommissionsTeacherView, canActivate: [AuthGuard] },
     { path: 'teacher/program/:programId/subjects', component: SubjectsTeacherView, canActivate: [AuthGuard] },
     { path: 'teacher/exams', component: TeacherExamsView, canActivate: [AuthGuard] },
-    { path: 'teacher/grades', component: TeacherGradesView, canActivate: [AuthGuard] }
+    { path: 'teacher/grades', component: TeacherGradesView, canActivate: [AuthGuard] },
+    { path: 'teacher/final-exams', component: TeacherFinalExamsView, canActivate: [AuthGuard] }
 
 ];

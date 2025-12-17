@@ -4,6 +4,8 @@ import MyAcad.Project.backend.Enum.ExamType;
 import MyAcad.Project.backend.Model.Users.Student;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,4 +18,5 @@ public class ExamsResponse {
     private ExamType examType;
     private SubjectsResponse subject;
     private Student student;
+    private LocalDateTime date;
 }

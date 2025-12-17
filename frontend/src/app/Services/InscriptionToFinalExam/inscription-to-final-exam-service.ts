@@ -62,4 +62,8 @@ export class InscriptionToFinalExamService {
   deleteInscription(idInscription: number) {
     return this.http.delete(`${this.api_url}/${idInscription}`);
   }
+
+  getInscriptionsByTeacherId(teacherId: number) {
+    return this.http.get<InscriptionToFinalExam[]>(`${this.api_url}/teacher/${teacherId}`);
+  }
 }

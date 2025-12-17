@@ -55,14 +55,19 @@ public class ExamsService {
                 .build();
 
         examsRepository.save(exam);
+        subjectsXStudentService.updateSubjectStatus(exam.getStudent().getId(), exam.getSubject().getId());
     }
 
     public Page<ExamsResponse> listExamsPaginated(int page, int size) {
-        Page<ExamsEntity> examsPage = examsRepository.findAll(PageRequest.of(page, size));
-        List<ExamsResponse> responseList = examsPage.getContent()
-                .stream()
-                .map(examsMapper::toExamsResponse)
-                .toList();
+
+        Page<ExamsEntity> examsPage =
+                examsRepository.findAll(PageRequest.of(page, size));
+
+        List<ExamsResponse> responseList =
+                examsPage.getContent()
+                        .stream()
+                        .map(this::mapExamFull)
+                        .toList();
 
         return new PageImpl<>(
                 responseList,
@@ -71,25 +76,53 @@ public class ExamsService {
         );
     }
 
+
     public List<ExamsResponse> findAll() {
-        return examsMapper.toExamsResponseList(examsRepository.findAll());
+        return examsRepository.findAll()
+                .stream()
+                .map(this::mapExamFull)
+                .toList();
     }
+
 
     public ExamsResponse findById(Long id) {
-        return examsRepository.findById(id).map(examsMapper::toExamsResponse).orElse(null);
+        return examsRepository.findById(id)
+                .map(this::mapExamFull)
+                .orElse(null);
     }
+
 
     public List<ExamsResponse> findByStudentId(Long studentId) {
-        return examsMapper.toExamsResponseList(examsRepository.findAllByStudent_Id(studentId));
+        return examsRepository.findAllByStudent_Id(studentId)
+                .stream()
+                .map(this::mapExamFull)
+                .toList();
     }
 
+
     public List<ExamsResponse> findByStudentIdAndProgram(Long studentId, String program) {
-        return examsMapper.toExamsResponseList(examsRepository.findAllByStudent_IdAndProgram(studentId, program));
+        return examsRepository.findAllByStudent_IdAndProgram(studentId, program)
+                .stream()
+                .map(this::mapExamFull)
+                .toList();
     }
 
     public List<ExamsResponse> findAllBySubjectsId(Long id) {
-        return examsMapper.toExamsResponseList(examsRepository.findBySubject_Id(id));
+        return examsRepository.findBySubject_Id(id)
+                .stream()
+                .map(this::mapExamFull)
+                .toList();
     }
+
+
+    public List<ExamsResponse> findByScore(int score) {
+        return examsRepository.findAll()
+                .stream()
+                .filter(e -> e.getScore() == score)
+                .map(this::mapExamFull)
+                .toList();
+    }
+
 
     public void update(Long id, ExamsDTO dto) {
         ExamsEntity existingExam = examsRepository.findById(id)
@@ -125,11 +158,22 @@ public class ExamsService {
         return ResponseEntity.ok().build();
     }
 
-    public List<ExamsResponse> findByScore(int score) {
-        return examsMapper.toExamsResponseList(examsRepository.findAll()
-                .stream()
-                .filter(e -> e.getScore() == score)
-                .toList());
+    private ExamsResponse mapExamFull(ExamsEntity exam) {
+
+        if (exam == null) return null;
+
+        // 1️⃣ MapStruct: lo simple
+        ExamsResponse response = examsMapper.toExamsResponse(exam);
+
+        // 2️⃣ Subject: MANUAL (correlativas controladas)
+        if (exam.getSubject() != null) {
+            response.setSubject(
+                    subjectService.mapSubjectManually(exam.getSubject())
+            );
+        }
+
+        return response;
     }
+
 
 }

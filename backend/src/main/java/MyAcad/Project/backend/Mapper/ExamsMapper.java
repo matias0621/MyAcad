@@ -9,16 +9,15 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper(
-        componentModel = "spring",
-        uses = {SubjectsMapper.class} // 👈 Reutilizamos el mapper de materias
+        componentModel = "spring"
 )
 public interface ExamsMapper {
     ExamsEntity toExamsEntity(ExamsDTO examsDTO);
 
     ExamsDTO toExamsDTO(ExamsEntity examsEntity);
 
+    @Mapping(target = "subject", ignore = true)
     ExamsResponse toExamsResponse(ExamsEntity examsEntity);
-    @Mapping(source = "subject", target = "subject")
     List<ExamsResponse> toExamsResponseList(List<ExamsEntity> examsEntities);
 }
 

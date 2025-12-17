@@ -62,25 +62,7 @@ public class CommissionService {
         Page<Commission> commissionPage = repository.findAll(PageRequest.of(page, size));
         List<CommissionResponse> responseList = commissionPage.getContent()
                 .stream()
-                .map(commission -> {
-
-                    // 1️⃣ MapStruct solo lo básico
-                    CommissionResponse response =
-                            commissionMapper.toResponse(commission);
-
-                    // 2️⃣ Mapear materias A MANO
-                    if (commission.getSubjects() != null) {
-                        List<SubjectsResponse> subjects =
-                                commission.getSubjects()
-                                        .stream()
-                                        .map(subjectService::mapSubjectManually)
-                                        .toList();
-
-                        response.setSubjects(subjects);
-                    }
-
-                    return response;
-                })
+                .map(this::mapCommissionFull)
                 .toList();
 
         return new PageImpl<>(
@@ -191,7 +173,7 @@ public class CommissionService {
     }
 
     public List<CommissionResponse> list() {
-        return commissionMapper.toResponseList(repository.findAll());
+        return repository.findAll().stream().map(this::mapCommissionFull).toList();
     }
 
     public List<CommissionResponse> listForStudentInfo(String programName, Long studentId) {
@@ -212,7 +194,7 @@ public class CommissionService {
             filteredList.add(filteredCommission);
         }
 
-        return commissionMapper.toResponseList(filteredList);
+        return filteredList.stream().map(this::mapCommissionFull).toList();
     }
 
     public List<CommissionResponse> listSubjectsNotEnrolled(String programName, Long studentId) {
@@ -236,7 +218,7 @@ public class CommissionService {
             }
         }
 
-        return commissionMapper.toResponseList(filteredList);
+        return filteredList.stream().map(this::mapCommissionFull).toList();
     }
 
     private static Commission getCommission(Commission c, List<SubjectsEntity> filteredSubjects) {
@@ -264,7 +246,7 @@ public class CommissionService {
     }
 
     public List<CommissionResponse> listActive() {
-        return commissionMapper.toResponseList(repository.findAllActives());
+        return repository.findAllActives().stream().map(this::mapCommissionFull).toList();
     }
 
     public void modify(Long id, Commission c) {
@@ -544,7 +526,7 @@ public class CommissionService {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
         List<Commission> commissions = teacher.getCommissions();
-        return commissionMapper.toResponseList(commissions);
+        return commissions.stream().map(this::mapCommissionFull).toList();
     }
 
     @Transactional
@@ -591,5 +573,26 @@ public class CommissionService {
     public void deleteSubjectXStudent(Long studentId, Long subjectsId) {
         SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId,subjectsId).orElseThrow(() -> new RuntimeException("SubjectsXStudent not found"));
         subjectsXStudentRepository.delete(subjectsXStudentEntity);
+    }
+
+    private CommissionResponse mapCommissionFull(Commission commission) {
+
+        if (commission == null) return null;
+
+        // 1️⃣ MapStruct: campos simples
+        CommissionResponse response =
+                commissionMapper.toResponse(commission);
+
+        // 2️⃣ Subjects: MANUAL (correlativas controladas)
+        if (commission.getSubjects() != null) {
+            response.setSubjects(
+                    commission.getSubjects()
+                            .stream()
+                            .map(subjectService::mapSubjectManually)
+                            .toList()
+            );
+        }
+
+        return response;
     }
 }

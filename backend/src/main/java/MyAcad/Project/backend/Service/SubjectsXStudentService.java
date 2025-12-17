@@ -1,5 +1,7 @@
 package MyAcad.Project.backend.Service;
 
+import MyAcad.Project.backend.Enum.AcademicStatus;
+import MyAcad.Project.backend.Enum.ExamType;
 import MyAcad.Project.backend.Mapper.SubjectsXStudentMapper;
 import MyAcad.Project.backend.Model.Academic.*;
 import MyAcad.Project.backend.Model.Users.Student;
@@ -49,6 +51,7 @@ public class SubjectsXStudentService {
                 .build();
 
         subjectsXStudentRepository.save(subjectsXStudentEntity);
+
     }
 
     public List<SubjectsXStudentResponse> getAllSubjectsXStudent() {
@@ -88,5 +91,59 @@ public class SubjectsXStudentService {
     public void deleteSubjectsXStudent(Long SubjectXStudentId) {
         SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findById(SubjectXStudentId).orElseThrow();
         subjectsXStudentRepository.delete(subjectsXStudentEntity);
+    }
+
+    public void updateSubjectStatus(Long studentId, Long subjectId){
+        SubjectsXStudentEntity subjectsXStudentEntity = subjectsXStudentRepository.findByStudent_IdAndSubjects_Id(studentId,subjectId).orElseThrow();
+
+        List<ExamsEntity> exam = examsRepository.findAllBySubject_IdAndStudent_Id(subjectId,studentId);
+
+        if (exam.isEmpty()){
+
+            return;
+        }
+
+        List<ExamsEntity> parcitial = exam.stream().filter(e -> e.getExamType().equals(ExamType.EXAM)).toList();
+        List<ExamsEntity> makeUp = exam.stream().filter(e -> e.getExamType().equals(ExamType.MAKEUP_EXAM)).toList();
+        List<ExamsEntity> finalExam = exam.stream().filter(e -> e.getExamType().equals(ExamType.FINAL_EXAM)).toList();
+
+
+
+        if(!finalExam.isEmpty()){
+            ExamsEntity finalExamEntity = finalExam.getLast();
+
+            if (finalExamEntity.getScore() >= 60){
+                subjectsXStudentEntity.setStateStudent(AcademicStatus.COMPLETED);
+                subjectsXStudentRepository.save(subjectsXStudentEntity);
+                return;
+            }
+        } else if (makeUp.size() == parcitial.size()) {
+            boolean ap = makeUp.stream().allMatch(e -> e.getScore() >= 60);
+            if (ap){
+                subjectsXStudentEntity.setStateStudent(AcademicStatus.APPROVED);
+                subjectsXStudentRepository.save(subjectsXStudentEntity);
+                return;
+            }
+        } else if (parcitial.size() > makeUp.size()) {
+            List<ExamsEntity> examsAprobe = parcitial.stream().filter(e -> e.getScore() > 60).toList();
+            List<ExamsEntity> makeUpAprobe = makeUp.stream().filter(e -> e.getScore() > 60).toList();
+
+            boolean promotionExam = examsAprobe.stream().allMatch(e -> e.getScore() >= 80);
+            boolean promotionMakeUp = makeUpAprobe.stream().allMatch(e -> e.getScore() >= 80);
+
+            if (promotionExam && promotionMakeUp){
+                subjectsXStudentEntity.setStateStudent(AcademicStatus.COMPLETED);
+                subjectsXStudentRepository.save(subjectsXStudentEntity);
+                return;
+            }
+            else {
+                subjectsXStudentEntity.setStateStudent(AcademicStatus.APPROVED);
+                subjectsXStudentRepository.save(subjectsXStudentEntity);
+                return;
+            }
+        }
+
+        subjectsXStudentEntity.setStateStudent(AcademicStatus.FAILED);
+        subjectsXStudentRepository.save(subjectsXStudentEntity);
     }
 }

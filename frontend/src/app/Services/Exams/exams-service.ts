@@ -32,6 +32,11 @@ export class ExamsService {
     return this.http.get<Exams[]>(`${this.url_api}/student/${studentId}`)
   }
 
+  getExamsByStudentIdAndProgram(studentId: number, programName: String) {
+    console.log(`${this.url_api}/student/${studentId}/program/${programName}`)
+    return this.http.get<Exams[]>(`${this.url_api}/student/${studentId}/program/${programName}`)
+  }
+
   getExamsByTeacher(teacherId: number) {
     return this.http.get<Exams[]>(`${this.url_api}/teacher/${teacherId}`)
   }

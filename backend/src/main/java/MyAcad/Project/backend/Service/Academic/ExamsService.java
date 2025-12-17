@@ -83,6 +83,10 @@ public class ExamsService {
         return examsMapper.toExamsResponseList(examsRepository.findAllByStudent_Id(studentId));
     }
 
+    public List<ExamsResponse> findByStudentIdAndProgram(Long studentId, String program) {
+        return examsMapper.toExamsResponseList(examsRepository.findAllByStudent_IdAndProgram(studentId, program));
+    }
+
     public List<ExamsResponse> findAllBySubjectsId(Long id) {
         return examsMapper.toExamsResponseList(examsRepository.findBySubject_Id(id));
     }

@@ -21,7 +21,7 @@ export class SubjectsXStudentService {
   getSubjectsByStudentIdAnsSubjectsId(studentId:number, subjectsId:number){
     return this.http.get<SubjectsXStudent>(`${this.api_url}/student/${studentId}/subject/${subjectsId}`)
   }
-
+  
   getBySubjectIdStudentIdCommissionId(subjectId:number, studentId:number, commissionId:number){
     return this.http.get<SubjectsXStudent>(`${this.api_url}/student/${studentId}/commission/${commissionId}/subject/${subjectId}`)
   }

@@ -57,8 +57,8 @@ export class TeacherGradesView implements OnInit {
   }
 
   saveScore(exam: Exams) {
-    if (this.tempScore < 1 || this.tempScore > 10) {
-      this.notificationService.warning('La nota debe estar entre 1 y 10')
+    if (this.tempScore < 1 || this.tempScore > 100) {
+      this.notificationService.warning('La nota debe estar entre 1 y 100')
       return
     }
 

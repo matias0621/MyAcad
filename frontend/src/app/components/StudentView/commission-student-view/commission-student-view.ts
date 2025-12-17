@@ -56,9 +56,9 @@ export class CommissionStudentView implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadEvaluationSetting()
-    this.getCommissionByProgramName()
-    this.getExamByStudentId()
+    this.loadEvaluationSetting();
+    this.getCommissionByProgramName();
+    this.getExamByStudentIdAndProgram();
   }
 
   getCommissionByProgramName() {
@@ -91,11 +91,11 @@ export class CommissionStudentView implements OnInit {
     })
   }
 
-  getExamByStudentId(){
+  getExamByStudentIdAndProgram(){
     const token:any = this.auth.getDecodedToken()
     if (!token) return;
 
-    this.examsService.getExamsByStudents(token.id).subscribe({
+    this.examsService.getExamsByStudentIdAndProgram(token.id, this.programName).subscribe({
       next: (res) => {
         this.listExams = res
       },

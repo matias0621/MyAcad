@@ -49,7 +49,12 @@ public class ExamsController {
     public ResponseEntity<List<ExamsResponse>> getStudentFinalExamById(@PathVariable Long id) {
         return ResponseEntity.ok(examsService.findByStudentId(id));
     }
-    
+
+    @GetMapping("/student/{studentId}/program/{program}")
+    public ResponseEntity<List<ExamsResponse>> getStudentFinalExamById(@PathVariable Long studentId, @PathVariable String program) {
+        System.out.println("AAAAA" + program + "asd" + studentId);
+        return ResponseEntity.ok(examsService.findByStudentIdAndProgram(studentId, program));
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateFinalExam(@PathVariable Long id,

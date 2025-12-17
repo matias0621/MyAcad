@@ -41,7 +41,7 @@
                   <input type="number" 
                          [(ngModel)]="tempScore" 
                          min="1" 
-                         max="10" 
+                         max="100" 
                          class="score-input">
                 } @else {
                   <span class="score" [class.approved]="exam.score >= 6" [class.failed]="exam.score < 6">

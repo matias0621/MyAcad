@@ -151,8 +151,8 @@ export class CommissionsTeacherView implements OnInit {
   }
 
   addGrade() {
-    if (this.newGrade.score < 0 || this.newGrade.score > 10) {
-      this.notificationService.showToast('La nota debe estar entre 0 y 10', 'error')
+    if (this.newGrade.score < 0 || this.newGrade.score > 100) {
+      this.notificationService.showToast('La nota debe estar entre 0 y 100', 'error')
       return
     }
 

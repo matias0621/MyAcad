@@ -27,7 +27,9 @@
                         {{ subXStu.subjects.name }}
                         @if(showEvaluation){
                         <button class="subjects-state-btn" data-bs-toggle="modal"
-                            data-bs-target="#modal-course-evaluetion" (click)="setDataForEvaluetion(subXStu.commission,subXStu.subjects)" >Realizar encuenta</button>
+                            data-bs-target="#modal-course-evaluetion"
+                            (click)="setDataForEvaluetion(subXStu.commission,subXStu.subjects)">Realizar
+                            encuenta</button>
                         }
                     </td>
 
@@ -76,7 +78,7 @@
                 }@empty {
                 <tr>
                     <td colspan="6" class="text-center">
-                        <p style="color: red;"> Aun no hay ninguna comisión cargado.</p>
+                        <p style="color: red;"> Aun no hay ningun examen cargado.</p>
                     </td>
                 </tr>
                 }
@@ -116,6 +118,10 @@
                         <span>Aprobada</span>
                         }
                     </div>
+                    }@empty {
+                    <div class="detail-item">
+                        <strong style="color: red;">Aún no estás inscripto/a a ninguna materia.</strong>
+                    </div>
                     }
                 </div>
             </div>
@@ -143,6 +149,10 @@
                         <strong>Correlativas:</strong>
                         <span>{{subjects.subjects.prerequisites}}</span>
                     </div>
+                    }@empty {
+                    <div class="detail-item">
+                        <strong style="color: red;">Este programa no tiene materias asignadas.</strong>
+                    </div>
                     }
                 </div>
             </div>
@@ -151,8 +161,8 @@
 </div>
 
 <!-- Modal de encuesta de la materia -->
-<div class="modal fade crud-modal" id="modal-course-evaluetion" tabindex="-1" aria-labelledby="modal-subjects-plan-label"
-    style="display: none;" aria-hidden="true">
+<div class="modal fade crud-modal" id="modal-course-evaluetion" tabindex="-1"
+    aria-labelledby="modal-subjects-plan-label" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered crud-modal__dialog">
         <div class="modal-content crud-modal__content">
             <div class="modal-header justify-content-center">
@@ -166,7 +176,8 @@
                 <div class="detail-container">
                     <form action="" [formGroup]="formReview" (submit)="createCourseEvaluetion()">
                         <textarea name="" id="" formControlName="feedback"></textarea>
-                        <button class="subjects-state-btn" data-bs-dismiss="modal" aria-label="Close">Subir encuesta</button>
+                        <button class="subjects-state-btn" data-bs-dismiss="modal" aria-label="Close">Subir
+                            encuesta</button>
                     </form>
                 </div>
             </div>

@@ -105,7 +105,16 @@
                 </fieldset>
 
                 <div class="form-buttons">
-                    <button type="button" (click)="uploadCsv()">Subir CSV</button>
+                    <button type="button" (click)="uploadCsv()" [disabled]="loadingCsv">
+                        @if (loadingCsv) {
+                            <span class="csv-loading">
+                                <span class="csv-spinner"></span>
+                                <span>Procesando...</span>
+                            </span>
+                        } @else {
+                            <span>Subir CSV</span>
+                        }
+                    </button>
                 </div>
             </div>
         </div>

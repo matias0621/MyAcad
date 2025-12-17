@@ -19,6 +19,7 @@ export class InscriptionToExamFormEdit implements OnInit, OnChanges {
   form!: FormGroup;
   inscriptionDate!: FormControl;
   finalExamDate!: FormControl;
+  teacherLegajo!:FormControl;
   subjectId: number | null = null;
   idInscription: number | null = null;
   programName:FormControl
@@ -32,13 +33,15 @@ export class InscriptionToExamFormEdit implements OnInit, OnChanges {
     this.inscriptionDate = new FormControl('', [Validators.required]);
     this.finalExamDate = new FormControl('', [Validators.required]);
     this.programName = new FormControl('', [Validators.required])
+    this.teacherLegajo = new FormControl('', [Validators.required]);
 
     this.idInscription = this.activatedRoute.snapshot.params['id']
 
     this.form = new FormGroup({
       inscriptionDate: this.inscriptionDate,
       finalExamDate: this.finalExamDate,
-      program: this.programName
+      program: this.programName,
+      teacherLegajo:this.teacherLegajo
     });
   }
 
@@ -112,6 +115,7 @@ export class InscriptionToExamFormEdit implements OnInit, OnChanges {
       inscriptionDate: formatDate(this.inscriptionDate.value),
       finalExamDate: formatDate(this.finalExamDate.value),
       program: this.programName.value,
+      teacherLegajo: this.teacherLegajo.value,
       subjectsId: this.subjectId,
     };
 

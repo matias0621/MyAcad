@@ -7,9 +7,11 @@ import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamResponse;
 import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Inscriptions.InscriptionToFinalExamRepository;
 import MyAcad.Project.backend.Repository.Programs.ProgramRepository;
 import MyAcad.Project.backend.Repository.Users.StudentRepository;
+import MyAcad.Project.backend.Repository.Users.TeacherRepository;
 import MyAcad.Project.backend.Service.Academic.SubjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,28 +27,73 @@ public class InscriptionToFinalExamService {
     private final InscriptionToFinalExamRepository inscriptionToFinalExamRepository;
     private final SubjectService subjectService;
     private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
     private final ProgramRepository programRepository;
     private final InscriptionToFinalExamMapper inscriptionToFinalExamMapper;
 
-    public void createInscription(InscriptionToFinalExamDTO inscriptionToFinalExamDTO) {
-        SubjectsEntity subjects = subjectService.getById(inscriptionToFinalExamDTO.getSubjectsId()).orElseThrow();
+    public void createInscription(InscriptionToFinalExamDTO dto, String teacherLegajo) {
+
+        SubjectsEntity subject = subjectService.getById(dto.getSubjectsId()).orElseThrow();
+        Teacher teacher = teacherRepository.findByLegajo(teacherLegajo).orElseThrow();
+        Program programEntity = programRepository.findByName(dto.getProgram()).orElseThrow();
+
+        validateTeacherForSubjectAndProgram(
+                teacher,
+                subject,
+                programEntity.getName()
+        );
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime examDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getFinalExamDate(), formatter);
-        LocalDateTime inscriptionDate = LocalDateTime.parse(inscriptionToFinalExamDTO.getInscriptionDate(), formatter);
-        Program program = programRepository.findByName(inscriptionToFinalExamDTO.getProgram()).orElseThrow();
+        LocalDateTime examDate = LocalDateTime.parse(dto.getFinalExamDate(), formatter);
+        LocalDateTime inscriptionDate = LocalDateTime.parse(dto.getInscriptionDate(), formatter);
 
         if (!examDate.isAfter(inscriptionDate)) {
             throw new IllegalArgumentException("La fecha del examen debe ser posterior a la fecha de inscripción.");
         }
 
-        InscriptionToFinalExamEntity inscriptionToFinalExamEntity = InscriptionToFinalExamEntity.builder()
+        InscriptionToFinalExamEntity inscription = InscriptionToFinalExamEntity.builder()
                 .finalExamDate(examDate)
                 .inscriptionDate(inscriptionDate)
-                .subjects(subjects)
-                .program(program)
+                .subjects(subject)
+                .program(programEntity)
+                .teacher(teacher)
                 .build();
 
-        inscriptionToFinalExamRepository.save(inscriptionToFinalExamEntity);
+        inscriptionToFinalExamRepository.save(inscription);
+    }
+
+
+    private void validateTeacherForSubjectAndProgram(
+            Teacher teacher,
+            SubjectsEntity subject,
+            String program
+    ) {
+        boolean valid = teacher.getCommissions().stream()
+                .anyMatch(commission ->
+                        commission.getProgram().equalsIgnoreCase(program)
+                                && commission.getSubjects().stream()
+                                .anyMatch(s -> s.getId().equals(subject.getId()))
+                );
+
+        if (!valid) {
+            throw new RuntimeException(
+                    "El profesor no está asignado a la materia en la carrera seleccionada"
+            );
+        }
+    }
+
+
+
+
+    public void addToStudent(Long inscriptionId, Long studentId) {
+        Student student = studentRepository.findById(studentId).orElseThrow();
+        InscriptionToFinalExamEntity inscription = inscriptionToFinalExamRepository.findById(inscriptionId).orElseThrow();
+
+        if (inscription.getStudents().contains(student)){
+            throw new RuntimeException("Ya estas registrado al examen");
+        }
+        inscription.getStudents().add(student);
+        inscriptionToFinalExamRepository.save(inscription);
     }
 
     public List<InscriptionToFinalExamResponse> getAllInscriptions() {
@@ -93,17 +140,6 @@ public class InscriptionToFinalExamService {
 
         inscriptionToFinalExamRepository.save(inscriptionToFinalExamEntity);
 
-    }
-
-    public void addToStudent(Long inscriptionId, Long studentId) {
-        Student student = studentRepository.findById(studentId).orElseThrow();
-        InscriptionToFinalExamEntity inscription = inscriptionToFinalExamRepository.findById(inscriptionId).orElseThrow();
-
-        if (inscription.getStudents().contains(student)){
-            throw new RuntimeException("Ya estas registrado al examen");
-        }
-        inscription.getStudents().add(student);
-        inscriptionToFinalExamRepository.save(inscription);
     }
 
     public void unregisterStudent(Long inscriptionId, Long studentId) {

@@ -3,6 +3,7 @@ package MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam;
 import MyAcad.Project.backend.Model.Academic.SubjectsEntity;
 import MyAcad.Project.backend.Model.Programs.Program;
 import MyAcad.Project.backend.Model.Users.Student;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,14 @@ public class InscriptionToFinalExamEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<Student> students;
+
+    @ManyToOne
+    @JoinTable(
+            name = "teacher_x_inscription",
+            joinColumns = @JoinColumn(name = "inscription_to_final_exam_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Teacher teacher;
 
     @ManyToOne
     private Program program;

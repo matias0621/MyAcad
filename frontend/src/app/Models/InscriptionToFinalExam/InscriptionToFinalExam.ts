@@ -1,12 +1,14 @@
 import Program from "../Program/Program";
 import Subjects from "../Subjects/Subjects";
 import Student from "../Users/Student";
+import Teacher from "../Users/Teachers";
 
 export interface PostInscriptionToFinalExam {
     inscriptionDate: string,
     finalExamDate: string,
-    subjectsId: number
-    program: string
+    subjectsId: number,
+    program: string,
+    teacherLegajo: number
 }
 
 export interface InscriptionToFinalExam {
@@ -15,5 +17,6 @@ export interface InscriptionToFinalExam {
     finalExamDate: string,
     subjects: Subjects
     students: Student[]
-    program: Program 
+    program: Program,
+    teacher: Teacher
 }

@@ -20,6 +20,11 @@
         </select>
     </div>
 
+    <div class="exam-form-field">
+        <label for="final-date">Profesor</label>
+        <input type="number" name="teacherLegajo" id="teacherLegajo" formControlName="teacherLegajo" placeholder="Legajo del profesor">
+    </div>
+
 
     <button type="submit" class="exam-form-submit" [disabled]="form.invalid || subjectId === null">Guardar inscripción</button>
 </form>

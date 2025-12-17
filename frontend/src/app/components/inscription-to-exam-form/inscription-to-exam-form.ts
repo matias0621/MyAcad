@@ -22,8 +22,9 @@ export class InscriptionToExamForm implements OnInit {
   form!: FormGroup;
   inscriptionDate!: FormControl;
   finalExamDate!: FormControl;
+  programName!:FormControl;
+  teacherLegajo!:FormControl;
   subjectId: number | null = null;
-  programName!:FormControl
   programs!:Program[]
   subjectsList!:Subjects[]
 
@@ -36,12 +37,14 @@ export class InscriptionToExamForm implements OnInit {
   ) {
     this.inscriptionDate = new FormControl('', [Validators.required]);
     this.finalExamDate = new FormControl('', [Validators.required]);
-    this.programName = new FormControl('', [Validators.required])
+    this.programName = new FormControl('', [Validators.required]);
+    this.teacherLegajo = new FormControl('', [Validators.required]);
 
     this.form = new FormGroup({
       inscriptionDate: this.inscriptionDate,
       finalExamDate: this.finalExamDate,
-      programName:this.programName
+      programName:this.programName,
+      teacherLegajo:this.teacherLegajo
     });
   }
 
@@ -139,10 +142,11 @@ export class InscriptionToExamForm implements OnInit {
       inscriptionDate: formatDate(this.inscriptionDate.value),
       finalExamDate: formatDate(this.finalExamDate.value),
       program: this.programName.value,
-      subjectsId: this.subjectId,
+      teacherLegajo: this.teacherLegajo.value,
+      subjectsId: this.subjectId
     };
 
-    this.inscriptionToFinalExamService.postInscriptionToFinal(inscription).subscribe({
+    this.inscriptionToFinalExamService.postInscriptionToFinal(inscription, this.teacherLegajo.value).subscribe({
       next: (res) => {
         this.notificationService.success('Inscripcion al examen final realizada con exito');
         this.getInscription();

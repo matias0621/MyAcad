@@ -90,8 +90,8 @@ public class InscriptionsController {
     }
 
     @PostMapping("/final-exam")
-    public ResponseEntity<InscriptionToFinalExamDTO> save(@RequestBody InscriptionToFinalExamDTO entity) {
-        inscriptionToFinalExamService.createInscription(entity);
+    public ResponseEntity<InscriptionToFinalExamDTO> save(@RequestBody InscriptionToFinalExamDTO entity, @RequestParam String teacherLegajo) {
+        inscriptionToFinalExamService.createInscription(entity, teacherLegajo);
         return ResponseEntity.ok(entity);
     }
 

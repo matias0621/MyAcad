@@ -43,8 +43,8 @@ export class InscriptionToFinalExamService {
     return this.http.get<InscriptionToFinalExam[]>(`${this.api_url}/final-exams-students/${studentId}`)
   }
 
-  postInscriptionToFinal(inscription: PostInscriptionToFinalExam) {
-    return this.http.post(this.api_url, inscription);
+  postInscriptionToFinal(inscription: PostInscriptionToFinalExam, teacherLegajo: String) {
+    return this.http.post(`${this.api_url}?teacherLegajo=${teacherLegajo}`, inscription);
   }
 
   putInscriptionToFinal(inscriptionUpdate: PostInscriptionToFinalExam, idInscription: number) {

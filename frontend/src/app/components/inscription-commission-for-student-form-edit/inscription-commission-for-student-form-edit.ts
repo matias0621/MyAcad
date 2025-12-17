@@ -152,8 +152,8 @@ export class InscriptionCommissionForStudentFormEdit implements OnInit, OnChange
 
     this.inscriptionsCommission.updateInscription(this.idInscription ,inscriptionUpdate).subscribe({
       next: () => {
-        this.notificationService.success("Se creo con exito la nueva inscripcion")
-        this.getInscription()
+        this.notificationService.success("Se actualizó con éxito la inscripción")
+        this.updated.emit();
       },
       error: (err) => {
         console.log(err)

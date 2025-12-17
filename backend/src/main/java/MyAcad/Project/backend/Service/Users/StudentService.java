@@ -15,6 +15,7 @@ import MyAcad.Project.backend.Model.Academic.Commission;
 import MyAcad.Project.backend.Model.Academic.ExamsEntity;
 import MyAcad.Project.backend.Model.Academic.SubjectsXStudentEntity;
 import MyAcad.Project.backend.Model.Inscriptions.InscriptionToFinalExam.InscriptionToFinalExamEntity;
+import MyAcad.Project.backend.Model.Users.Teacher;
 import MyAcad.Project.backend.Repository.Academic.CommissionRepository;
 import MyAcad.Project.backend.Repository.Academic.ExamsRepository;
 import MyAcad.Project.backend.Repository.Inscriptions.InscriptionToFinalExamRepository;
@@ -60,7 +61,7 @@ public class StudentService {
     private final EntityManager entityManager;
     private PasswordEncoder passwordEncoder;
 
-    public void add(Student t) {
+    public Student add(Student t) {
         if (userLookupService.findByLegajo(t.getLegajo()).isPresent()) {
             throw new LegajoAlreadyExistsException();
         }else if(userLookupService.findByEmail(t.getEmail()).isPresent()) {
@@ -74,7 +75,7 @@ public class StudentService {
         t = repository.save(t);
         t.setLegajo(String.valueOf(t.getId() + 100000));
 
-        repository.save(t);
+        return repository.save(t);
     }
 
     public List<StudentCsvDto> parseCsv(MultipartFile file) throws IOException {
@@ -88,7 +89,17 @@ public class StudentService {
     }
 
     public void saveStudentByCsv(List<StudentCsvDto> records){
+
+        for (StudentCsvDto record: records){
+            if(userLookupService.findByEmail(record.getEmail()).isPresent()) {
+                throw new EmailAlreadyExistsException();
+            }else if(userLookupService.findByDni(Integer.parseInt(record.getDni())).isPresent()) {
+                throw new DniAlreadyExistsException();
+            }
+        }
+
         for (StudentCsvDto record : records) {
+
             Student student = new Student();
             student.setEmail(record.getEmail());
             student.setPassword(String.valueOf(record.getDni()));
@@ -97,7 +108,20 @@ public class StudentService {
             student.setName(record.getName());
             student.setLastName(record.getLastname());
             student.setRole(Role.STUDENT);
-            add(student);
+            student = add(student);
+
+            if (record.getCareer() != null && !record.getCareer().isEmpty()) {
+                String[] careers = record.getCareer().split(";");
+
+                for (String careerName : careers) {
+                    Student studentFinal = student;
+                    programRepository.findByName(careerName.trim())
+                            .ifPresent(program -> {
+                                program.getStudents().add(studentFinal);
+                                programRepository.save(program);
+                            });
+                }
+            }
         }
     }
 

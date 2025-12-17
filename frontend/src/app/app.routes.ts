@@ -91,6 +91,8 @@ export const routes: Routes = [
     { path: 'teacher/program/:programId/subjects', component: SubjectsTeacherView, canActivate: [AuthGuard] },
     { path: 'teacher/exams', component: TeacherExamsView, canActivate: [AuthGuard] },
     { path: 'teacher/grades', component: TeacherGradesView, canActivate: [AuthGuard] },
-    { path: 'teacher/final-exams', component: TeacherFinalExamsView, canActivate: [AuthGuard] }
+    { path: 'teacher/final-exams', component: TeacherFinalExamsView, canActivate: [AuthGuard] },
+
+    { path: '**', component: Home, canActivate: [AuthGuard] }
 
 ];

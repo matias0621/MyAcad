@@ -24,11 +24,17 @@
                 <tr>
                     <td data-label="Materia">{{ inscription.subjects.name }}</td>
                     <td data-label="Fecha examen">{{ inscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td class="responsive-hide-2" data-label="Fecha inscripción">{{ inscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="responsive-hide-2" data-label="Fecha inscripción">{{ inscription.inscriptionDate |
+                        date:'dd/MM/yyyy HH:mm' }}</td>
                     <td class="exam-actions" data-label="Acciones">
-                        <button type="button" class="exam-action exam-action--info" (click)="selectedInscription = inscription"
-                            data-bs-toggle="modal" data-bs-target="#modal-detail">
+                        <button type="button" class="exam-action exam-action--info"
+                            (click)="selectedInscription = inscription" data-bs-toggle="modal"
+                            data-bs-target="#modal-detail">
                             Detalles
+                        </button>
+                        <button type="button" class="exam-action delete-crud-btn"
+                            (click)="deleteExam(inscription.id)">
+                            Eliminar
                         </button>
                         <button type="button" class="exam-action exam-action--primary" data-bs-toggle="modal"
                             data-bs-target="#modal-edit" (click)="openEdit(inscription)">
@@ -88,7 +94,8 @@
                 </button>
             </div>
             <div class="modal-body exam-modal__body">
-                <app-inscription-to-exam-form-edit [inscription]="editingInscription" (updated)="handleInscriptionUpdated()"></app-inscription-to-exam-form-edit>
+                <app-inscription-to-exam-form-edit [inscription]="editingInscription"
+                    (updated)="handleInscriptionUpdated()"></app-inscription-to-exam-form-edit>
             </div>
         </div>
     </div>
@@ -100,12 +107,14 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-narrow">
         <div class="modal-content exam-modal">
             <div class="modal-header exam-modal__header exam-modal__header--compact">
-                <h1 id="modal-detail-title" class="exam-modal__title" style="color: #fff;">Detalle de la inscripción</h1>
+                <h1 id="modal-detail-title" class="exam-modal__title" style="color: #fff;">Detalle de la inscripción
+                </h1>
                 <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
                     <i class="fa-solid fa-x"></i>
                 </button>
             </div>
-            <div class="modal-body exam-modal__body exam-modal__body--detail" style="max-height: 480px; overflow-y: auto;">
+            <div class="modal-body exam-modal__body exam-modal__body--detail"
+                style="max-height: 480px; overflow-y: auto;">
                 @if (selectedInscription) {
                 <div class="exam-detail-grid">
                     <div class="exam-detail-item">
@@ -118,11 +127,13 @@
                     </div>
                     <div class="exam-detail-item">
                         <span class="exam-detail-label">Fecha de inscripción</span>
-                        <span class="exam-detail-value">{{ selectedInscription.inscriptionDate | date:'dd/MM/yyyy HH:mm' }}</span>
+                        <span class="exam-detail-value">{{ selectedInscription.inscriptionDate | date:'dd/MM/yyyy HH:mm'
+                            }}</span>
                     </div>
                     <div class="exam-detail-item">
                         <span class="exam-detail-label">Fecha del examen</span>
-                        <span class="exam-detail-value">{{ selectedInscription.finalExamDate | date:'dd/MM/yyyy HH:mm' }}</span>
+                        <span class="exam-detail-value">{{ selectedInscription.finalExamDate | date:'dd/MM/yyyy HH:mm'
+                            }}</span>
                     </div>
                     <div class="exam-detail-item exam-detail-item--students">
                         <span class="exam-detail-label">Alumnos registrados</span>

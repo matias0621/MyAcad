@@ -37,13 +37,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/auth/**",
-                                "/auth/changePassword"
-                        ).permitAll()
-                        // Specific patterns must come before general patterns
-                        .requestMatchers(
+                                "/auth/changePassword",
                                 "/programs/student/**",
                                 "/commissions/program/**",
                                 "/commissions/unregister-student/**",
@@ -51,7 +47,10 @@ public class SecurityConfig {
                                 "/exams/student/**",
                                 "/program/not-enrolled/**",
                                 "/commissions/register-commision-to-student/**",
-                                "/inscriptions/**",
+                                "/inscriptions/final-exam/register-student-for-exam/**",
+                                "/inscriptions/final-exam/unregister-student-for-exam/**",
+                                "/inscriptions/final-exam/final-exams-students/**",
+                                "/inscriptions/commission/student/**",
                                 "/certificate/**",
                                 "/subject-x-student/**",
                                 "/SubjectPrerrequisite/**",

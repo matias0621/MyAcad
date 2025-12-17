@@ -32,6 +32,9 @@
                             data-bs-toggle="modal" data-bs-target="#modal-detail">
                             Detalles
                         </button>
+                        <button type="button" class="exam-action delete-crud-btn" (click)="deleteCommission(inscription.id)">
+                            Eliminar
+                        </button>
                         <button type="button" class="exam-action exam-action--primary" data-bs-toggle="modal"
                             data-bs-target="#modal-edit" (click)="openEdit(inscription)">
                             Editar
@@ -62,7 +65,7 @@
             <div class="modal-header exam-modal__header">
                 <div>
                     <p class="exam-modal__tag">Nueva mesa final</p>
-                    <h1 id="modal-add-title" class="exam-modal__title">Crear inscripción</h1>
+                    <h1 id="modal-add-title" class="exam-modal__title" data-bs-dismiss="modal" aria-label="Cerrar">Crear inscripción</h1>
                 </div>
                 <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Cerrar">
                     <i class="fa-solid fa-x"></i>

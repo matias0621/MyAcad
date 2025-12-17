@@ -4,12 +4,13 @@ import { InscriptionToCommissionService } from '../../Services/InscriptionToComm
 import { DatePipe } from '@angular/common';
 import { InscriptionCommissionForStudentForm } from '../inscription-commission-for-student-form/inscription-commission-for-student-form';
 import { InscriptionCommissionForStudentFormEdit } from '../inscription-commission-for-student-form-edit/inscription-commission-for-student-form-edit';
+import { NotificationService } from '../../Services/notification/notification.service';
 
 declare const bootstrap: { Modal: any };
 
 @Component({
   selector: 'app-inscription-commission-for-student-list',
-  imports: [DatePipe,InscriptionCommissionForStudentForm,InscriptionCommissionForStudentFormEdit],
+  imports: [DatePipe, InscriptionCommissionForStudentForm, InscriptionCommissionForStudentFormEdit],
   templateUrl: './inscription-commission-for-student-list.html',
   styleUrl: './inscription-commission-for-student-list.css'
 })
@@ -18,18 +19,19 @@ declare const bootstrap: { Modal: any };
 export class InscriptionCommissionForStudentList {
 
   inscriptionList !: InscriptionToCommission[];
-  selectedInscription ?: InscriptionToCommission;
+  selectedInscription?: InscriptionToCommission;
   editingInscription: InscriptionToCommission | null = null;
   private pendingSelectionId: number | null = null;
 
-  constructor(public inscriptionService:InscriptionToCommissionService, 
-    private crd:ChangeDetectorRef){}
+  constructor(public inscriptionService: InscriptionToCommissionService,
+    private crd: ChangeDetectorRef,
+    private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.getAllInscription()
   }
-  
-  getAllInscription(){
+
+  getAllInscription() {
     this.inscriptionService.getAllInscriptions().subscribe({
       next: (res) => {
         this.inscriptionList = res;
@@ -44,6 +46,26 @@ export class InscriptionCommissionForStudentList {
         console.log(err)
       }
     })
+  }
+
+  deleteCommission(id: number) {
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar esta comisión?',
+      'Confirmar eliminación',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.inscriptionService.deleteInscription(id).subscribe({
+          next: (res) => {
+            this.getAllInscription()
+          },
+          error: (err) => {
+            console.log(err)
+          }
+        })
+      }
+    });
   }
 
   openEdit(inscription: InscriptionToCommission) {

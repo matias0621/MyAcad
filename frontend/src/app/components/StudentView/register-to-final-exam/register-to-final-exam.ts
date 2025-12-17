@@ -28,8 +28,6 @@ export class RegisterToFinalExam implements OnInit {
   ngOnInit(): void {
     this.token = this.authService.getDecodedToken()
 
-    console.log(this.authService.getToken())
-
     this.getAllInscriptionForStudent(this.token.id)
   }
 
@@ -38,7 +36,6 @@ export class RegisterToFinalExam implements OnInit {
     this.inscriptionFinalExamsService.getAllInscriptionForStudentsRegister(id).subscribe({
       next: (res) => {
         this.inscriptionList = res
-        console.log(res)
       },
       error: (err) => {
         console.log(err)

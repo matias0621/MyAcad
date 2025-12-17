@@ -1,6 +1,4 @@
 <section class="crud-management d-flex justify-content-center">
-
-
     <div class="crud-management-container">
         <h1 style="text-align: center;">{{programName}}</h1>
 
@@ -168,7 +166,7 @@
                 <div class="detail-container">
                     <form action="" [formGroup]="formReview" (submit)="createCourseEvaluetion()">
                         <textarea name="" id="" formControlName="feedback"></textarea>
-                        <button class="subjects-state-btn">Subir encuesta</button>
+                        <button class="subjects-state-btn" data-bs-dismiss="modal" aria-label="Close">Subir encuesta</button>
                     </form>
                 </div>
             </div>

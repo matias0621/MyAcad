@@ -38,7 +38,7 @@ public class InscriptionToCommissionService {
 
         InscriptionToCommissionEntity inscription = InscriptionToCommissionEntity.builder()
                 .commission(commission)
-                .finishInscriptionDate(inscriptionDate)
+                .finishInscriptionDate(finishInscriptionDate)
                 .inscriptionDate(inscriptionDate)
                 .build();
 

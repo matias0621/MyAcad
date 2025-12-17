@@ -4,6 +4,7 @@ import { InscriptionToFinalExam } from '../../Models/InscriptionToFinalExam/Insc
 import { InscriptionToExamForm } from "../inscription-to-exam-form/inscription-to-exam-form";
 import { InscriptionToExamFormEdit } from "../inscription-to-exam-form-edit/inscription-to-exam-form-edit";
 import { DatePipe } from '@angular/common';
+import { NotificationService } from '../../Services/notification/notification.service';
 
 declare const bootstrap: { Modal: any };
 
@@ -19,7 +20,9 @@ export class InscriptionToExamList implements OnInit {
   editingInscription: InscriptionToFinalExam | null = null;
   private pendingSelectionId: number | null = null;
 
-  constructor(public inscriptionService:InscriptionToFinalExamService, private crd:ChangeDetectorRef){}
+  constructor(public inscriptionService:InscriptionToFinalExamService,
+    private crd:ChangeDetectorRef,
+    private notificationService: NotificationService){}
 
   ngOnInit(): void {
     this.getAllInscription()
@@ -41,6 +44,27 @@ export class InscriptionToExamList implements OnInit {
       }
     })
   }
+
+  deleteExam(id: number) {
+    this.notificationService.confirm(
+      '¿Estás seguro de que deseas eliminar este examen?',
+      'Confirmar eliminación',
+      'Eliminar',
+      'Cancelar'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.inscriptionService.deleteInscription(id).subscribe({
+          next: (res) => {
+            this.getAllInscription()
+          },
+          error: (err) => {
+            console.log(err)
+          }
+        })
+      }
+    });
+  }
+
 
   openEdit(inscription: InscriptionToFinalExam) {
     this.editingInscription = inscription;

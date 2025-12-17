@@ -10,8 +10,28 @@
         </a>
     </li>
     }@empty {
-        <li>
-            <h2>Aún no has sido asignado/a a ninguna carrera o curso.</h2>
-        </li>
+    <li>
+        <h2>Aún no has sido asignado/a a ninguna carrera o curso.</h2>
+    </li>
     }
+</ul>
+
+<h2>Inscripciones</h2>
+<ul id="card-container">
+    <li>
+        <a [routerLink]="['/register-student-to-final-exam']" class="card">
+            <img src="/Media/final-exam.jpg" alt="">
+            <div class="card-content">
+                <h5>Exámenes </h5>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a [routerLink]="['/register-student-commission']" class="card">
+            <img src="/Media/commission.jpg" alt="">
+            <div class="card-content">
+                <h5>Comisiones/Materias </h5>
+            </div>
+        </a>
+    </li>
 </ul>

@@ -49,6 +49,7 @@ public class ExamsController {
     public ResponseEntity<List<ExamsResponse>> getStudentFinalExamById(@PathVariable Long id) {
         return ResponseEntity.ok(examsService.findByStudentId(id));
     }
+    
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateFinalExam(@PathVariable Long id,

@@ -177,7 +177,6 @@ public class SubjectService {
         existingSubject.setSemesters(updatedSubject.getSemesters());
         existingSubject.setAcademicStatus(updatedSubject.getAcademicStatus());
         existingSubject.setProgram(updatedSubject.getProgram());
-        existingSubject.setPrerequisites(updatedSubject.getPrerequisites());
         existingSubject.setSubjectActive(updatedSubject.isSubjectActive());
 
         subjectsRepository.save(existingSubject);

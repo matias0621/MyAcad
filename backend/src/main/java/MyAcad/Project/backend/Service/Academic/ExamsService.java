@@ -52,7 +52,6 @@ public class ExamsService {
                 .subject(subject)
                 .student(student)
                 .examType(dto.getExamType())
-                .date(examDate)
                 .build();
 
         examsRepository.save(exam);
@@ -103,7 +102,6 @@ public class ExamsService {
         existingExam.setSubject(subject);
         existingExam.setExamType(dto.getExamType());
         existingExam.setStudent(student);
-        existingExam.setDate(examDate);
 
         examsRepository.save(existingExam);
     }

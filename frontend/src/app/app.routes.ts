@@ -54,7 +54,6 @@ export const routes: Routes = [
     { path: 'subject/:id', component: SubjectsPage, canActivate: [AuthGuard] },
     { path: 'commissions', component: Commissions, canActivate: [AuthGuard] },
 
-
     { path: 'exams', component:ExamsPage, canActivate: [AuthGuard] },
 
     { path: 'inscriptionToFinalExam', component: InscriptionFinalExams, canActivate: [AuthGuard] },

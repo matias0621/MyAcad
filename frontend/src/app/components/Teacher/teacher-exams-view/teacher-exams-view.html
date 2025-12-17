@@ -12,10 +12,10 @@
       </fieldset>
 
       <fieldset>
-        <label for="score">Nota (1-10):</label>
+        <label for="score">Nota (1-100):</label>
         <input type="number" id="score" name="score" formControlName="score" min="1" max="10" placeholder="Ej: 8">
         @if (form.controls['score'].invalid && form.controls['score'].touched) {
-          <p class="error-message">La nota debe ser un número entre 1 y 10</p>
+          <p class="error-message">La nota debe ser un número entre 1 y 100</p>
         }
       </fieldset>
 

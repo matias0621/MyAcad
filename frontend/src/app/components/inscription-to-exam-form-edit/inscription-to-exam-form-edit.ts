@@ -133,7 +133,7 @@ export class InscriptionToExamFormEdit implements OnInit, OnChanges {
         this.loadInscriptionById(targetId);
       },
       error: (err) => {
-        this.notificationService.error(err.error, true);
+        this.notificationService.error(err.body, true);
         console.error(err);
       },
     });

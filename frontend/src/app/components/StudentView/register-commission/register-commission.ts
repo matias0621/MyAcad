@@ -117,4 +117,55 @@ export class RegisterCommission {
       }
     })
   }
+
+  registerToAllSubjects(commission: Commission): void {
+    if (!commission.subjects || commission.subjects.length === 0) {
+      this.notificationService.warning('Esta comisión no tiene materias disponibles');
+      return;
+    }
+
+    const subjectsToRegister = commission.subjects.filter(subject => 
+      !this.isStudentInSubjectAndCommission(subject, commission) &&
+      !this.isStudentInSubjectOtherCommission(subject, commission)
+    );
+
+    if (subjectsToRegister.length === 0) {
+      this.notificationService.warning('Ya estás registrado en todas las materias disponibles de esta comisión');
+      return;
+    }
+
+    let registeredCount = 0;
+    let errorCount = 0;
+    let currentIndex = 0;
+
+    const registerNext = () => {
+      if (currentIndex >= subjectsToRegister.length) {
+        if (registeredCount > 0) {
+          this.notificationService.success(`Te registraste a ${registeredCount} materia(s) correctamente`);
+        }
+        if (errorCount > 0) {
+          this.notificationService.error(`Hubo errores al registrar ${errorCount} materia(s)`, true);
+        }
+        this.loadData();
+        return;
+      }
+
+      const subject = subjectsToRegister[currentIndex];
+      currentIndex++;
+
+      this.commissionService.regiterByStudent(commission.id, subject.id).subscribe({
+        next: () => {
+          registeredCount++;
+          registerNext();
+        },
+        error: (err) => {
+          errorCount++;
+          console.error(`Error registrando materia ${subject.name}:`, err);
+          registerNext();
+        }
+      });
+    };
+
+    registerNext();
+  }
 }

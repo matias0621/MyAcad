@@ -7,12 +7,14 @@ export interface Exams {
     score: number,
     examType: string,
     subject: Subjects,
-    student: Student
+    student: Student,
+    date?: string
 }
 
 export interface ExamsPost {
     score: number,
     examType: string,
     subjectId: number,
-    legajoStudent: string
+    legajoStudent: string,
+    date?: string
 }

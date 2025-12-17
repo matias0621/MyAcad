@@ -121,10 +121,10 @@
               <tbody>
                 @for (grade of studentGrades; track grade.id) {
                   <tr>
-                    <td><span class="grade-type-badge">{{ getExamTypeLabel(grade.type) }}</span></td>
+                    <td><span class="grade-type-badge">{{ getExamTypeLabelForDisplay(grade.type, grade.subjectId, grade.id) }}</span></td>
                     <td>{{ getSubjectName(grade.subjectId) }}</td>
                     <td><span [class.approved]="grade.score >= 6" [class.failed]="grade.score < 6">{{ grade.score }}</span></td>
-                    <td>{{ grade.date ? (grade.date | date:'dd/MM/yyyy') : '-' }}</td>
+                    <td>{{ grade.date ? (grade.date | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
                     <td>
                       <button class="btn-edit" (click)="editGrade(grade)">✏️</button>
                       <button class="btn-delete" (click)="deleteGrade(grade.id!)">🗑️</button>

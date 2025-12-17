@@ -10,7 +10,7 @@
         </div>
 
         @if (!isStudentInCommission(inscription.commission)) {
-        <button class="exam-action exam-action--info">
+        <button class="exam-action exam-action--info" (click)="registerToAllSubjects(inscription.commission)">
             Registrarse a toda la comisión
         </button>
         }

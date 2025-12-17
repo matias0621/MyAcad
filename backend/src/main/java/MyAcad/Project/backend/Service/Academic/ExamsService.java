@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,11 +45,14 @@ public class ExamsService {
         }
 
 
+        LocalDateTime examDate = dto.getDate() != null ? dto.getDate() : LocalDateTime.now();
+
         ExamsEntity exam = ExamsEntity.builder()
                 .score(dto.getScore())
                 .subject(subject)
                 .student(student)
                 .examType(dto.getExamType())
+                .date(examDate)
                 .build();
 
         examsRepository.save(exam);
@@ -93,10 +97,13 @@ public class ExamsService {
 
         Student student = studentRepository.findByLegajo(dto.getLegajoStudent()).orElseThrow();
 
+        LocalDateTime examDate = dto.getDate() != null ? dto.getDate() : LocalDateTime.now();
+
         existingExam.setScore(dto.getScore());
         existingExam.setSubject(subject);
         existingExam.setExamType(dto.getExamType());
         existingExam.setStudent(student);
+        existingExam.setDate(examDate);
 
         examsRepository.save(existingExam);
     }

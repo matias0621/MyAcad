@@ -159,4 +159,8 @@ public class InscriptionToFinalExamService {
         inscriptionToFinalExamRepository.deleteById(id);
     }
 
+    public List<InscriptionToFinalExamResponse> getInscriptionsByTeacherId(Long teacherId) {
+        return inscriptionToFinalExamMapper.toResponseList(inscriptionToFinalExamRepository.findByTeacherId(teacherId));
+    }
+
 }

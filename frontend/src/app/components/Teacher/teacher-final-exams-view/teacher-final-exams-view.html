@@ -1,0 +1,81 @@
+<h2>Mesas de Examen</h2>
+
+@if (loading) {
+  <p>Cargando mesas de examen...</p>
+} @else if (examsList.length === 0) {
+  <div class="empty-state">
+    <p>No tienes mesas de examen asignadas</p>
+  </div>
+} @else {
+  @for (exam of examsList; track exam.id) {
+    <div class="exam-card">
+      <div class="exam-header">
+        <div class="title">
+          <h3>{{ exam.subjects.name }}</h3>
+          <div class="meta">
+            <span class="badge">ID: {{ exam.id }}</span>
+            @if (exam.program) { 
+              <span class="badge">Programa: {{ exam.program.name }}</span> 
+            }
+            <span class="students-count">{{ exam.students?.length || 0 }} alumnos inscriptos</span>
+          </div>
+        </div>
+        <button class="toggle-btn" (click)="toggleStudents(exam.id)">
+          {{ isExpanded(exam.id) ? 'Ocultar alumnos' : 'Ver alumnos' }}
+        </button>
+      </div>
+
+      <div class="exam-details">
+        <div class="detail-item">
+          <strong>Fecha de inscripción:</strong>
+          <span>{{ formatDate(exam.inscriptionDate) }}</span>
+        </div>
+        <div class="detail-item">
+          <strong>Fecha del examen:</strong>
+          <span>{{ formatDate(exam.finalExamDate) }}</span>
+        </div>
+        <div class="detail-item">
+          <strong>Materia:</strong>
+          <span>{{ exam.subjects.name }}</span>
+        </div>
+        @if (exam.subjects.description) {
+          <div class="detail-item">
+            <strong>Descripción:</strong>
+            <span>{{ exam.subjects.description }}</span>
+          </div>
+        }
+      </div>
+
+      @if (isExpanded(exam.id)) {
+        @if (exam.students && exam.students.length > 0) {
+          <div class="students-section">
+            <h4>Alumnos inscriptos</h4>
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th>Legajo</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (student of exam.students; track student.id) {
+                  <tr>
+                    <td>{{ student.legajo }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.lastName }}</td>
+                    <td>{{ student.email }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="no-students">No hay alumnos inscriptos en esta mesa de examen</p>
+        }
+      }
+    </div>
+  }
+}
+

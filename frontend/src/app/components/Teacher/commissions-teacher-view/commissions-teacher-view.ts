@@ -122,12 +122,12 @@ export class CommissionsTeacherView implements OnInit {
     this.loadingGrades = true
     this.examsService.getExamsByStudents(studentId).subscribe({
       next: (exams: Exams[]) => {
-        this.studentGrades = exams.map(exam => ({
+        this.studentGrades = exams.map((exam: any) => ({
           id: exam.id,
           type: exam.examType as 'EXAM' | 'FINAL_EXAM' | 'MAKEUP_EXAM',
           score: exam.score,
           subjectId: exam.subject?.id,
-          date: undefined
+          date: exam.date || undefined
         }))
         this.loadingGrades = false
       },
@@ -137,6 +137,17 @@ export class CommissionsTeacherView implements OnInit {
         this.loadingGrades = false
       }
     })
+  }
+
+  getNextExamTypeNumber(type: 'EXAM' | 'MAKEUP_EXAM'): number {
+    const sameTypeGrades = this.studentGrades.filter(g => 
+      g.type === type && g.subjectId === this.newGrade.subjectId
+    )
+    const count = sameTypeGrades.length
+    if (count >= 3) {
+      return -1
+    }
+    return count + 1
   }
 
   addGrade() {
@@ -155,13 +166,15 @@ export class CommissionsTeacherView implements OnInit {
       return
     }
 
+    const currentDate = new Date().toISOString()
+
     if (this.editingGradeId) {
-      // Editar nota existente
-      const examData: ExamsPost = {
+      const examData: any = {
         score: this.newGrade.score,
         examType: this.newGrade.type,
         subjectId: Number(this.newGrade.subjectId),
-        legajoStudent: this.selectedStudent.legajo
+        legajoStudent: this.selectedStudent.legajo,
+        date: currentDate
       }
 
       this.examsService.putExam(this.editingGradeId, examData).subscribe({
@@ -177,12 +190,20 @@ export class CommissionsTeacherView implements OnInit {
         }
       })
     } else {
-      // Agregar nueva nota
-      const examData: ExamsPost = {
+      if (this.newGrade.type === 'EXAM' || this.newGrade.type === 'MAKEUP_EXAM') {
+        const number = this.getNextExamTypeNumber(this.newGrade.type as 'EXAM' | 'MAKEUP_EXAM')
+        if (number === -1) {
+          this.notificationService.showToast('Ya se alcanzó el máximo de 3 ' + (this.newGrade.type === 'EXAM' ? 'parciales' : 'recuperatorios'), 'error')
+          return
+        }
+      }
+
+      const examData: any = {
         score: this.newGrade.score,
         examType: this.newGrade.type,
         subjectId: Number(this.newGrade.subjectId),
-        legajoStudent: this.selectedStudent.legajo
+        legajoStudent: this.selectedStudent.legajo,
+        date: currentDate
       }
 
       this.examsService.postExam(examData).subscribe({
@@ -240,6 +261,46 @@ export class CommissionsTeacherView implements OnInit {
   }
 
   getExamTypeLabel(type: string): string {
+    const labels: any = {
+      'EXAM': 'Parcial',
+      'FINAL_EXAM': 'Final',
+      'MAKEUP_EXAM': 'Recuperatorio'
+    }
+    return labels[type] || type
+  }
+
+  getExamTypeLabelForDisplay(type: string, subjectId?: number, gradeId?: number): string {
+    if (type === 'FINAL_EXAM') {
+      return 'Final'
+    }
+
+    if (!subjectId) {
+      const labels: any = {
+        'EXAM': 'Parcial',
+        'FINAL_EXAM': 'Final',
+        'MAKEUP_EXAM': 'Recuperatorio'
+      }
+      return labels[type] || type
+    }
+
+    const sameTypeGrades = this.studentGrades
+      .filter(g => g.subjectId === subjectId && g.type === type)
+      .sort((a, b) => (a.id || 0) - (b.id || 0))
+
+    let number = 1
+    if (gradeId) {
+      const currentGradeIndex = sameTypeGrades.findIndex(g => g.id === gradeId)
+      number = currentGradeIndex >= 0 ? currentGradeIndex + 1 : sameTypeGrades.length
+    } else {
+      number = sameTypeGrades.length + 1
+    }
+
+    if (type === 'EXAM') {
+      return `Parcial ${number}`
+    } else if (type === 'MAKEUP_EXAM') {
+      return `Recuperatorio ${number}`
+    }
+
     const labels: any = {
       'EXAM': 'Parcial',
       'FINAL_EXAM': 'Final',

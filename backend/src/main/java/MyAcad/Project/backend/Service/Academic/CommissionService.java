@@ -276,7 +276,7 @@ public class CommissionService {
     }
 
     public Optional<CommissionResponse> getById(Long id){
-        return repository.findById(id).map(commissionMapper::toResponse);
+        return repository.findById(id).map(this::mapCommissionFull);
     }
 
     public List<CommissionResponse> findByProgram(String program) {

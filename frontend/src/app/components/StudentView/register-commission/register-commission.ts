@@ -44,6 +44,7 @@ export class RegisterCommission {
       .getInscriptionByStudent(this.token.id)
       .subscribe(res => {
         this.inscriptionList = res;
+        console.log(res)
       });
 
     this.subjectXStudentService

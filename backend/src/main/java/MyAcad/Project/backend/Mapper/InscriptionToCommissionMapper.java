@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = CommissionMapper.class)
+@Mapper(componentModel = "spring", uses = {CommissionMapper.class, SubjectsMapper.class})
 public interface InscriptionToCommissionMapper {
     InscriptionToCommissionEntity toEntity(InscriptionToCommissionDTO inscriptionToCommissionDTO);
 

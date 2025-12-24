@@ -84,6 +84,7 @@ export class Commissions {
         this.commissions = data.content;
         this.totalPages = data.totalPages;
         this.currentPage = data.number;
+        console.log(data.content)
       },
       error: (error) => {
         console.error(error);
